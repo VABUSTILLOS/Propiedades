@@ -45,7 +45,8 @@ if (!DATABASE_URL) {
   process.exit(1);
 }
 
-const ssl = DATABASE_URL.includes("localhost") ? false : { rejectUnauthorized: false };
+const isLocal = /localhost|127\.0\.0\.1|::1/.test(DATABASE_URL);
+const ssl = isLocal ? false : { rejectUnauthorized: false };
 const client = new Client({ connectionString: DATABASE_URL, ssl });
 
 async function main() {
