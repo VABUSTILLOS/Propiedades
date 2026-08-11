@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, Bell } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { InvestorItem } from "@/app/investor/page";
 

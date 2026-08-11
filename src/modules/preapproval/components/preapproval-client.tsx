@@ -17,7 +17,6 @@ type SavedPreapproval = {
 };
 
 type Props = {
-  userId: string;
   saved: SavedPreapproval;
 };
 
@@ -40,7 +39,7 @@ type Result = {
   }>;
 };
 
-export function PreapprovalClient({ userId, saved }: Props) {
+export function PreapprovalClient({ saved }: Props) {
   const [nss, setNss] = useState(saved.infonavit_nss ?? "");
   const [dob, setDob] = useState("");
   const [monthlyIncome, setMonthlyIncome] = useState("");

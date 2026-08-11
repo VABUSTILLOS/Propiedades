@@ -15,6 +15,7 @@ Real estate SaaS & marketplace portal — two-sided marketplace (buyers/investor
 ```bash
 npm install
 cp .env.example .env.local   # fill in NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY
+npm run setup:db             # apply migrations 001→010 (see "Supabase provisioning")
 npm run dev
 ```
 
@@ -22,18 +23,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Supabase provisioning (one-shot)
 
-The app requires a Supabase project for all data pages (search, listings, auth, transactions).
+**Quickest path — direct connection (recommended):**
 
-**Reusing an existing project (no token, no new project needed — free plan allows only 2):** open your project at [supabase.com/dashboard](https://supabase.com/dashboard), then:
+1. Create a project at [supabase.com/dashboard](https://supabase.com/dashboard).
+2. **Settings → API** → copy **Project URL** + **anon key** → fill `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+3. **Settings → Database → Connection string** → copy the pooler **URI** (includes password) → add to `.env.local` as `SUPABASE_DB_URL`.
+4. Run **`npm run setup:db`** — it applies all migrations `001_init.sql` → `010_semantic_search.sql` in order, each in its own transaction (partial failure rolls back only that file).
 
-1. **Settings → Database → Connection string** — copy the pooler **URI** (it includes the password). Apply all migrations:
-   ```bash
-   DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres" \
-     node scripts/apply-migrations.mjs
-   ```
-   The runner applies `supabase/migrations/*.sql` in order, each in its own transaction. (Fallback: paste each file into the dashboard SQL Editor in order — 001 → 004.)
-2. **Settings → API** — copy the **Project URL** and **anon key** → add to Vercel (see table below).
-3. **Auth → URL Configuration** — set Site URL + Redirect URLs (see below).
+**Zero-tooling path:** paste the full contents of `supabase/migrations/_ALL_IN_ONE.sql` (regenerate with `npm run gen:migrations`) into the dashboard **SQL Editor** and run.
+
+**CLI path:** `brew install supabase/tap/supabase`, `supabase login`, then with `SUPABASE_PROJECT_REF` set run `npm run setup:db` (runs `supabase link` + `supabase db push`).
 
 **Creating a new project (requires an access token + a free project slot)** — the free plan allows only 2 projects per account. If both slots are taken, create a second Supabase account (the limit is per-account) or delete an unused project. Create a token at https://supabase.com/dashboard/account/tokens, then:
 
@@ -41,7 +40,7 @@ The app requires a Supabase project for all data pages (search, listings, auth, 
 SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh
 ```
 
-The script logs in, creates a project in `us-east-1` (nearest US region to Mexico; override with `REGION=...`, e.g. `sa-east-1` for São Paulo), links the repo, pushes all migrations (`001_init.sql` → `004_integrity_and_indexes.sql`), and prints the env vars to add to Vercel.
+The script logs in, creates a project in `us-east-1` (nearest US region to Mexico; override with `REGION=...`, e.g. `sa-east-1` for São Paulo), links the repo, pushes all migrations (`001_init.sql` → `010_semantic_search.sql`), and prints the env vars to add to Vercel.
 
 Manual equivalent:
 
@@ -98,6 +97,6 @@ src/
 │                               #   transactions, messaging, bookings, bids, reviews,
 │                               #   flyers, favorites, market-data, ai, lib
 └── supabase/
-    ├── migrations/             # 001_init → 004_integrity_and_indexes
-    └── functions/              # edge functions
+    ├── migrations/             # 001_init → 010_semantic_search (+ _ALL_IN_ONE.sql generated)
+    └── functions/              # edge functions (import-property-ai)
 ```

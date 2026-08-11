@@ -51,7 +51,7 @@ const client = new Client({ connectionString: DATABASE_URL, ssl });
 
 async function main() {
   const files = (await readdir(MIGRATIONS_DIR))
-    .filter((f) => f.endsWith(".sql"))
+    .filter((f) => /^0\d+_.*\.sql$/.test(f))
     .sort();
   if (files.length === 0) {
     console.error(`No migrations found in ${MIGRATIONS_DIR}`);

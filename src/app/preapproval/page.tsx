@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { requireUser } from "@/modules/auth/session";
 import { getMyPreapproval } from "@/modules/preapproval/actions";
 import { PreapprovalClient } from "@/modules/preapproval/components/preapproval-client";
 
@@ -9,7 +8,6 @@ export const metadata: Metadata = { title: "Preaprobación crediticia" };
 export const dynamic = "force-dynamic";
 
 export default async function PreapprovalPage() {
-  const user = await requireUser();
   const saved = await getMyPreapproval();
 
   return (
@@ -21,7 +19,7 @@ export default async function PreapprovalPage() {
       </p>
 
       <div className="mt-8">
-        <PreapprovalClient userId={user.id} saved={saved} />
+        <PreapprovalClient saved={saved} />
       </div>
     </div>
   );

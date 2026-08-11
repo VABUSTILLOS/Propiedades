@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Command as CommandIcon, Search, TrendingUp, Heart, FileText } from "lucide-react";
+import { Search, TrendingUp, Heart, FileText } from "lucide-react";
 import { Command } from "cmdk";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
