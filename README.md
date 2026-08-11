@@ -68,6 +68,17 @@ In the dashboard (`Auth → URL Configuration`):
 - **Site URL**: `https://vabustillos-scaling-potato.vercel.app`
 - **Redirect URLs**: `https://vabustillos-scaling-potato.vercel.app/**`, `http://localhost:3000/**`
 
+Demo credentials (seeded via SQL — verified working):
+
+| Email | Password | Role |
+|---|---|---|
+| `demo@propiedades.mx` | `demo12345` | agent |
+| `test2@propiedades.mx` | `test12345` | buyer |
+
+> Note: if a user created directly via SQL ever returns `500 Database error querying schema` at sign-in, run
+> `UPDATE auth.users SET email_change_token_current = '' WHERE email_change_token_current IS NULL;` — a NULL in
+> that column breaks GoTrue's schema query.
+
 Known gap: password reset redirects to `/auth/update-password`, which has no route yet — password reset is a follow-up.
 
 ## Deploy on Vercel
