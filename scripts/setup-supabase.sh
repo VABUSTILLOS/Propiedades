@@ -28,8 +28,18 @@ DB_PASSWORD="${DB_PASSWORD:-$(openssl rand -hex 16)}"
 SITE_URL="${SITE_URL:-https://vabustillos-scaling-potato.vercel.app}"
 
 if [[ -z "$SUPABASE_ACCESS_TOKEN" ]]; then
+  # Interactive prompt keeps the token out of shell history and works when
+  # running plain `bash scripts/setup-supabase.sh`.
+  if [[ -t 0 ]]; then
+    printf 'Paste your Supabase access token (create at https://supabase.com/dashboard/account/tokens): '
+    read -r -s SUPABASE_ACCESS_TOKEN
+    printf '\n'
+  fi
+fi
+
+if [[ -z "$SUPABASE_ACCESS_TOKEN" ]]; then
   echo "ERROR: SUPABASE_ACCESS_TOKEN is required." >&2
-  echo "Create one at https://supabase.com/dashboard/account/tokens then re-run:" >&2
+  echo "Run this script interactively to be prompted, or pass it explicitly:" >&2
   echo "  SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh" >&2
   exit 1
 fi
