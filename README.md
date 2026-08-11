@@ -35,7 +35,7 @@ The app requires a Supabase project for all data pages (search, listings, auth, 
 2. **Settings → API** — copy the **Project URL** and **anon key** → add to Vercel (see table below).
 3. **Auth → URL Configuration** — set Site URL + Redirect URLs (see below).
 
-**Creating a new project (requires an access token)** — only when you can create one. Create a token at https://supabase.com/dashboard/account/tokens, then:
+**Creating a new project (requires an access token + a free project slot)** — the free plan allows only 2 projects per account. If both slots are taken, create a second Supabase account (the limit is per-account) or delete an unused project. Create a token at https://supabase.com/dashboard/account/tokens, then:
 
 ```bash
 SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh
