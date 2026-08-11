@@ -2,6 +2,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
+import { env } from "@/modules/lib/env";
 import type { ProfilesRow, UserRole } from "@/modules/lib/database.types";
 
 export type AuthUser = {
@@ -16,6 +17,10 @@ export type AuthUser = {
  * Returns null when unauthenticated — never throws.
  */
 export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
+  if (!env.supabaseConfigured) {
+    return null;
+  }
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },

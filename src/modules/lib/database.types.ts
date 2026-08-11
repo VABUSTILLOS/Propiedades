@@ -116,6 +116,7 @@ export type TransactionsRow = {
   state: TransactionState;
   last_transition_at: string;
   created_at: string;
+  updated_at: string;
 }
 
 export type MessagesRow = {
@@ -126,6 +127,7 @@ export type MessagesRow = {
   is_system_event: boolean | null;
   action_payload: Json | null;
   created_at: string;
+  updated_at: string;
 }
 
 export type AvailabilitySlotsRow = {
@@ -137,6 +139,7 @@ export type AvailabilitySlotsRow = {
   is_booked: boolean | null;
   booked_by_user_id: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export type ReviewsRow = {
@@ -147,6 +150,7 @@ export type ReviewsRow = {
   rating: number;
   comment: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export type DigitalFlyersRow = {
@@ -158,6 +162,7 @@ export type DigitalFlyersRow = {
   is_white_label: boolean | null;
   views_count: number | null;
   created_at: string;
+  updated_at: string;
 }
 
 export type FlyerAnalyticsRow = {
@@ -170,6 +175,7 @@ export type FlyerAnalyticsRow = {
   engagement_score: number | null;
   lead_email: string | null;
   lead_phone: string | null;
+  updated_at: string;
 }
 
 export type BuyerFavoritesRow = {
@@ -181,6 +187,7 @@ export type BuyerFavoritesRow = {
   user_photos: string[] | null;
   co_buyer_votes: Json;
   created_at: string;
+  updated_at: string;
 }
 
 export type BidsRow = {
@@ -193,6 +200,7 @@ export type BidsRow = {
   status: BidStatus;
   counter_offer_price: number | null;
   created_at: string;
+  updated_at: string;
 }
 
 type Insertable<T> = { [K in keyof T]?: T[K] | null };

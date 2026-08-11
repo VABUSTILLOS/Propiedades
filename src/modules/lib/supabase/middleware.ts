@@ -6,9 +6,15 @@ import type { Database } from "@/modules/lib/database.types";
 
 /**
  * Edge runtime Supabase client used by middleware.ts to refresh sessions.
+ * Returns null when Supabase is not configured so the site can render
+ * (e.g. before env vars are added) instead of crashing every request.
  */
 export async function createSupabaseMiddlewareClient(request: NextRequest) {
   let response = NextResponse.next({ request });
+
+  if (!env.supabaseConfigured) {
+    return { supabase: null, response };
+  }
 
   const supabase = createServerClient<Database>(
     env.supabaseUrl,

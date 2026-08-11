@@ -17,8 +17,11 @@ export async function resolveTenant(): Promise<ResolvedTenant> {
   const headerStore = await headers();
   const host = headerStore.get("host") ?? "";
 
-  const apex = process.env.NEXT_PUBLIC_SITE_URL ?? "propiedades.mx";
-  const subdomain = subdomainFromHost(host, new URL(apex).hostname);
+  const rawApex = process.env.NEXT_PUBLIC_SITE_URL ?? "propiedades.mx";
+  const apex = rawApex.startsWith("http")
+    ? new URL(rawApex).hostname
+    : rawApex.replace(/:\d+$/, "").toLowerCase();
+  const subdomain = subdomainFromHost(host, apex);
 
   if (!subdomain) {
     return { subdomain: null, branding: parseBranding(null) };

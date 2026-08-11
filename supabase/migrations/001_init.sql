@@ -339,7 +339,7 @@ CREATE POLICY "No public flyer analytics deletes" ON flyer_analytics FOR DELETE 
 
 -- Buyer favorites -----------------------------------------------------------------------
 -- Only the owning user can manage their favorites list.
-CREATE POLICY "Users manage own favorites" ON buyer_favorites ALL USING (user_id = auth.uid());
+CREATE POLICY "Users manage own favorites" ON buyer_favorites FOR ALL USING (user_id = auth.uid());
 
 -- Bids ------------------------------------------------------------------------------------
 -- Buyers create their own bids.

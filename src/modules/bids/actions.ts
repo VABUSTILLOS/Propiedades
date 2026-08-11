@@ -7,6 +7,7 @@ import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { bidCreateSchema, bidRespondSchema } from "@/modules/lib/schemas";
 import type { BidStatus } from "@/modules/lib/database.types";
+import { sendSystemEvent } from "@/modules/messaging/actions";
 
 /**
  * Submit an offer on a property. The bid is created in "pending" status;
@@ -56,6 +57,20 @@ export async function createBid(
     return fail(error.message);
   }
 
+  // Notify the thread with an offer_submitted card when the bid belongs
+  // to a transaction (sendSystemEvent verifies the caller participates).
+  if (parsed.data.transactionId) {
+    await sendSystemEvent({
+      transactionId: parsed.data.transactionId,
+      type: "offer_submitted",
+      data: {
+        bid_id: data.id,
+        offered_price: parsed.data.offeredPrice,
+        payment_method: parsed.data.paymentMethod,
+      },
+    });
+  }
+
   revalidatePath("/transactions");
   return ok({ id: data.id });
 }
@@ -77,13 +92,14 @@ export async function respondToBid(
   const { data: bidRows } = await supabase
     .from("bids")
     .select(
-      "id, property_id, offered_price, payment_method, status, counter_offer_price",
+      "id, property_id, transaction_id, offered_price, payment_method, status, counter_offer_price",
     )
     .eq("id", parsed.data.bidId)
     .returns<
       {
         id: string;
         property_id: string;
+        transaction_id: string | null;
         offered_price: number;
         payment_method: string;
         status: BidStatus;
@@ -127,6 +143,37 @@ export async function respondToBid(
 
   if (error) {
     return fail(error.message);
+  }
+
+  // Reflect the owner's decision in the transaction thread. Accepted bids
+  // render as an offer_accepted card; counters and rejections are plain
+  // system lines (there is no dedicated card type for them).
+  if (bid.transaction_id) {
+    if (nextStatus === "accepted") {
+      await sendSystemEvent({
+        transactionId: bid.transaction_id,
+        type: "offer_accepted",
+        data: {
+          bid_id: bid.id,
+          offered_price: bid.offered_price,
+          counter_offer_price:
+            parsed.data.counterOfferPrice ?? bid.counter_offer_price,
+        },
+      });
+    } else {
+      const counterPrice =
+        parsed.data.counterOfferPrice ?? bid.counter_offer_price ?? 0;
+      await supabase.from("messages").insert({
+        transaction_id: bid.transaction_id,
+        sender_id: user.id,
+        content:
+          nextStatus === "countered"
+            ? `Owner countered with $${counterPrice.toLocaleString()}.`
+            : "Offer was declined.",
+        is_system_event: true,
+        action_payload: null,
+      });
+    }
   }
 
   revalidatePath("/transactions");

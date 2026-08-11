@@ -90,6 +90,7 @@ export default async function TransactionDetailPage({ params }: Props) {
               propertyId={property.id}
               ownerId={property.owner_id}
               currentUserId={user.id}
+              transactionId={transaction.id}
               slots={slots}
             />
           </section>
