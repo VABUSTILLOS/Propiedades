@@ -22,7 +22,20 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Supabase provisioning (one-shot)
 
-The app requires a Supabase project for all data pages (search, listings, auth, transactions). Run the provisioning script with your access token (create one at https://supabase.com/dashboard/account/tokens):
+The app requires a Supabase project for all data pages (search, listings, auth, transactions).
+
+**Reusing an existing project (no token, no new project needed — free plan allows only 2):** open your project at [supabase.com/dashboard](https://supabase.com/dashboard), then:
+
+1. **Settings → Database → Connection string** — copy the pooler **URI** (it includes the password). Apply all migrations:
+   ```bash
+   DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres" \
+     node scripts/apply-migrations.mjs
+   ```
+   The runner applies `supabase/migrations/*.sql` in order, each in its own transaction. (Fallback: paste each file into the dashboard SQL Editor in order — 001 → 004.)
+2. **Settings → API** — copy the **Project URL** and **anon key** → add to Vercel (see table below).
+3. **Auth → URL Configuration** — set Site URL + Redirect URLs (see below).
+
+**Creating a new project (requires an access token)** — only when you can create one. Create a token at https://supabase.com/dashboard/account/tokens, then:
 
 ```bash
 SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh
