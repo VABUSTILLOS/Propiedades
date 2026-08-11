@@ -13,8 +13,9 @@
  *
  * Get the connection string at:
  *   https://supabase.com/dashboard/project/<ref>/settings/database
- *   (Settings → Database → Connection string → "URI" / "Transaction" pooler,
- *    or use the direct/port-5432 connection for migrations)
+ *   (Settings → Database → Connection string → "URI". Use the session-mode
+ *    connection on port 5432, not the transaction-mode pooler on 6543 —
+ *    migrations need a single persistent connection.)
  *
  * The script applies migrations in filename order, each inside its own
  * transaction. Partial failures roll back the failing migration only.
