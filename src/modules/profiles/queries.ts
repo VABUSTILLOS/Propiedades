@@ -38,8 +38,9 @@ export const getProfileByUserId = cache(
 
 /**
  * Extracts a tenant subdomain from a request host header.
- * Handles `agencia.tuportal.com` → `agencia`, and bare apex hosts → null.
- * `www.` and the platform apex are not treated as tenant subdomains.
+ * Only hosts under the platform apex are treated as tenants:
+ * `agencia.tuportal.com` → `agencia` (apex = `tuportal.com`).
+ * The apex itself, `www.` and unrelated hosts → null.
  */
 export function subdomainFromHost(
   host: string,
@@ -49,9 +50,9 @@ export function subdomainFromHost(
   if (!clean || clean === platformApex || clean === `www.${platformApex}`) {
     return null;
   }
-  const parts = clean.split(".");
-  if (parts.length < 3) return null;
-  const candidate = parts[0] ?? null;
-  if (!candidate || candidate === "www") return null;
-  return candidate;
+  const suffix = `.${platformApex}`;
+  if (!clean.endsWith(suffix)) return null;
+  const subdomain = clean.slice(0, -suffix.length);
+  if (!subdomain || subdomain === "www") return null;
+  return subdomain;
 }
