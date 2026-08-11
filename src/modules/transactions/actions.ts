@@ -69,6 +69,15 @@ export async function createTransaction(
     return fail(error.message);
   }
 
+  // Seed the thread so a brand-new inquiry is never empty.
+  await supabase.from("messages").insert({
+    transaction_id: data.id,
+    sender_id: user.id,
+    content: "Inquiry started.",
+    is_system_event: true,
+    action_payload: null,
+  });
+
   revalidatePath("/transactions");
   return ok({ id: data.id });
 }
@@ -131,15 +140,24 @@ export async function transitionTransaction(
     return fail(error.message);
   }
 
-  // System event so the thread reflects the transition. The structured
-  // payload lets the thread render a status-change card.
+  // System event so the thread reflects the transition. Terminal moves use
+  // their dedicated action type; everything else renders a status-change card.
+  const payloadType =
+    parsed.data.toState === "in_escrow"
+      ? "escrow_started"
+      : parsed.data.toState === "closed"
+        ? "deal_closed"
+        : parsed.data.toState === "canceled"
+          ? "canceled"
+          : "status_change";
+
   await supabase.from("messages").insert({
     transaction_id: transaction.id,
     sender_id: user.id,
     content: `Transaction moved to "${parsed.data.toState}".`,
     is_system_event: true,
     action_payload: {
-      type: "status_change",
+      type: payloadType,
       data: {
         from: transaction.state,
         to: parsed.data.toState,

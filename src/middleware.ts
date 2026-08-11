@@ -20,10 +20,14 @@ export async function middleware(request: NextRequest) {
   const { supabase, response } =
     await createSupabaseMiddlewareClient(request);
 
-  // Refresh session if expired — required by createServerClient.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  if (supabase) {
+    // Refresh session if expired — required by createServerClient.
+    const {
+      data: { user: sessionUser },
+    } = await supabase.auth.getUser();
+    user = sessionUser;
+  }
 
   const { pathname } = request.nextUrl;
 
@@ -45,7 +49,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Always run user checks so expired sessions refresh their cookie.
-  await supabase.auth.getUser();
+  await supabase?.auth.getUser();
 
   return response;
 }

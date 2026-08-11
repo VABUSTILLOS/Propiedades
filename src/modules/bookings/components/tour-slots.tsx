@@ -12,13 +12,22 @@ type Props = {
   propertyId: string;
   ownerId: string;
   currentUserId: string;
+  transactionId?: string;
   slots: AvailabilitySlotsRow[];
 };
 
 /**
  * Tour scheduling. Owners can open new slots; buyers book available ones.
+ * When booking from a transaction page, the buyer passes `transactionId`
+ * so the booking emits a tour_request card into the thread.
  */
-export function TourSlots({ propertyId, ownerId, currentUserId, slots }: Props) {
+export function TourSlots({
+  propertyId,
+  ownerId,
+  currentUserId,
+  transactionId,
+  slots,
+}: Props) {
   const isOwner = ownerId === currentUserId;
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -52,7 +61,7 @@ export function TourSlots({ propertyId, ownerId, currentUserId, slots }: Props) 
     startTransition(async () => {
       setError(null);
       setMessage(null);
-      const res = await bookSlot({ slotId });
+      const res = await bookSlot({ slotId, transactionId });
       if (!res.ok) {
         setError(res.error);
         return;

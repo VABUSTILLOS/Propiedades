@@ -302,6 +302,7 @@ export const slotCreateSchema = z.object({
 
 export const slotBookSchema = z.object({
   slotId: uuidSchema,
+  transactionId: uuidSchema.optional(),
 });
 
 // --- Reviews ----------------------------------------------------------------------

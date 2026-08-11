@@ -6,6 +6,7 @@ import { requireUserOrThrow } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { slotBookSchema, slotCreateSchema } from "@/modules/lib/schemas";
+import { sendSystemEvent } from "@/modules/messaging/actions";
 
 /**
  * Create an availability slot for a property the caller owns.
@@ -91,7 +92,9 @@ export async function bookSlot(
 
   const { data: slotRows } = await supabase
     .from("availability_slots")
-    .select("id, property_id, agent_or_owner_id, is_booked")
+    .select(
+      "id, property_id, agent_or_owner_id, is_booked, start_time, end_time",
+    )
     .eq("id", parsed.data.slotId)
     .returns<
       {
@@ -99,6 +102,8 @@ export async function bookSlot(
         property_id: string;
         agent_or_owner_id: string;
         is_booked: boolean | null;
+        start_time: string;
+        end_time: string;
       }[]
     >()
     .limit(1);
@@ -123,6 +128,21 @@ export async function bookSlot(
 
   if (error) {
     return fail(error.message);
+  }
+
+  // Emit a tour_request card into the linked transaction thread so the
+  // owner sees and can confirm the booking. sendSystemEvent checks that
+  // the caller is a participant of that transaction.
+  if (parsed.data.transactionId) {
+    await sendSystemEvent({
+      transactionId: parsed.data.transactionId,
+      type: "tour_request",
+      data: {
+        slot_id: slot.id,
+        start_time: slot.start_time,
+        end_time: slot.end_time,
+      },
+    });
   }
 
   revalidatePath(`/property/${slot.property_id}`);
