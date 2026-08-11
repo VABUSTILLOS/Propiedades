@@ -94,8 +94,7 @@ export async function recordFlyerAnalytics(
  * Push a WhatsApp alert to the flyer owner about high-value engagement.
  * Uses the configurable WHATSAPP_WEBHOOK_URL; gracefully no-ops when the
  * webhook is not configured so the agent dashboard works without it.
- */
-export async function sendFlyerWhatsAppAlert(
+ */export async function sendFlyerWhatsAppAlert(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ sent: boolean }>> {
   const user = await requireUserOrThrow();
@@ -168,4 +167,70 @@ export async function captureFlyerLead(
   }
 
   return ok({ id: data.id });
+}
+
+/**
+ * White-label share: clone an existing public flyer and re-badge it as the
+ * caller's own agency brand. The clone keeps the same property but points
+ * `white_label_source_flyer_id` back to the original so the captor's
+ * attribution stays intact.
+ */
+export async function shareWhiteLabel(
+  input: Record<string, unknown>,
+): Promise<ActionResult<{ id: string; slug: string }>> {
+  const user = await requireUserOrThrow();
+
+  const sourceSlug = typeof input.slug === "string" ? input.slug.trim() : "";
+  if (!sourceSlug) {
+    return fail("slug is required.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  // Load the source flyer (public read is allowed for any active flyer).
+  const { data: sourceRows } = await supabase
+    .from("digital_flyers")
+    .select("id, property_id, custom_title, slug")
+    .eq("slug", sourceSlug)
+    .returns<{ id: string; property_id: string; custom_title: string | null; slug: string }[]>()
+    .limit(1);
+
+  const source = sourceRows?.[0];
+  if (!source) {
+    return fail("Source flyer not found.");
+  }
+
+  // The intermediary agent must own the underlying property to share it.
+  const { data: propRows } = await supabase
+    .from("properties")
+    .select("owner_id")
+    .eq("id", source.property_id)
+    .returns<{ owner_id: string }[]>()
+    .limit(1);
+
+  if (propRows?.[0]?.owner_id !== user.id) {
+    return fail("You do not own this property.");
+  }
+
+  const slug = `wl-${user.id.slice(0, 6)}-${source.slug.slice(0, 8)}`;
+
+  const { data, error } = await supabase
+    .from("digital_flyers")
+    .insert({
+      property_id: source.property_id,
+      agent_id: user.id,
+      slug,
+      custom_title: source.custom_title,
+      is_white_label: true,
+      white_label_source_flyer_id: source.id,
+    })
+    .select("id, slug")
+    .single();
+
+  if (error) {
+    return fail(error.message);
+  }
+
+  revalidatePath("/my-flyers");
+  return ok({ id: data.id, slug: data.slug });
 }

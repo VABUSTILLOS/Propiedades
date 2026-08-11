@@ -56,3 +56,19 @@ export function subdomainFromHost(
   if (!subdomain || subdomain === "www") return null;
   return subdomain;
 }
+
+/**
+ * Directory of agent profiles for the MLS network page.
+ */
+export const getAgentDirectory = cache(
+  async (): Promise<ProfilesRow[]> => {
+    const supabase = await createSupabaseServerClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("role", "agent")
+      .order("full_name", { ascending: true })
+      .returns<ProfilesRow[]>();
+    return data ?? [];
+  },
+);

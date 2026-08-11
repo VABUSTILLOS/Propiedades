@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -22,13 +23,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: listing?.title ?? "Property" };
 }
 
-export default async function PropertyDetailPage({ params }: Props) {
+export default async function PropertyDetailPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const listing = await getListingBySlug(slug);
 
   if (!listing) {
     notFound();
   }
+
+  const raw = await searchParams;
+  const mode = raw.mode === "investor" ? "inversionista" : "residencia";
 
   const user = await getCurrentUser();
   const canInquire = Boolean(user && user.id !== listing.owner_id);
@@ -56,6 +60,7 @@ export default async function PropertyDetailPage({ params }: Props) {
             property={listing}
             benchmark={benchmark}
             discountPct={discountPct}
+            initialMode={mode}
           />
         </section>
 

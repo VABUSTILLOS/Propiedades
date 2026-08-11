@@ -37,8 +37,7 @@ export async function getListingById(id: string): Promise<PropertiesRow | null> 
 
 /**
  * Fetch the current user's listings (drafts included — owner RLS scope).
- */
-export async function getMyListings(ownerId: string): Promise<PropertiesRow[]> {
+ */export async function getMyListings(ownerId: string): Promise<PropertiesRow[]> {
   const supabase = await createSupabaseServerClient();
 
   const { data: rows } = await supabase
@@ -69,6 +68,65 @@ export async function getActiveListings(options?: {
   const { data: rows } = await query
     .order("created_at", { ascending: false })
     .limit(options?.limit ?? 24)
+    .returns<PropertiesRow[]>();
+
+  return rows ?? [];
+}
+
+/**
+ * Active listings owned by a specific agent/owner (tenant microsite feed).
+ */
+export async function getActiveListingsByOwner(
+  ownerId: string,
+  options?: { limit?: number },
+): Promise<PropertiesRow[]> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("status", "active")
+    .eq("owner_id", ownerId)
+    .order("created_at", { ascending: false })
+    .limit(options?.limit ?? 30)
+    .returns<PropertiesRow[]>();
+
+  return rows ?? [];
+}
+
+/**
+ * MLS-shared listings for the agent-only network. `is_mls` listings are
+ * private to agents per RLS; regular active listings are readable publicly.
+ */
+export async function getMlsListings(options?: {
+  limit?: number;
+}): Promise<PropertiesRow[]> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("status", "active")
+    .eq("is_mls", true)
+    .order("updated_at", { ascending: false })
+    .limit(options?.limit ?? 60)
+    .returns<PropertiesRow[]>();
+
+  return rows ?? [];
+}
+
+/**
+ * Fetch up to 4 listings by ids for the side-by-side comparator.
+ * Public read — RLS restricts to active listings.
+ */
+export async function getListingsByIds(ids: string[]): Promise<PropertiesRow[]> {
+  if (ids.length === 0) return [];
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .in("id", ids.slice(0, 4))
     .returns<PropertiesRow[]>();
 
   return rows ?? [];

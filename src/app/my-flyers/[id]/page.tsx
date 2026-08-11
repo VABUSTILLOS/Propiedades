@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/modules/auth/session";
 import { getFlyerAnalytics, getMyFlyerById } from "@/modules/flyers/queries";
 import { FlyerEngagementPanel } from "@/modules/flyers/components/flyer-engagement-panel";
+import { WhiteLabelShareButton } from "@/modules/flyers/components/white-label-share-button";
 import { getListingById } from "@/modules/listings/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -60,6 +61,10 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
               : 0
           }
         />
+      </div>
+
+      <div className="mb-6 rounded-lg border bg-card p-4">
+        <WhiteLabelShareButton slug={flyer.slug} />
       </div>
 
       <Card>

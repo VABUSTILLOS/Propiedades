@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { QueryProvider } from "@/modules/lib/react-query/provider";
+import { CommandPalette } from "@/modules/search/components/command-palette";
 import { resolveTenant } from "@/modules/profiles/tenant";
 
 import "./globals.css";
@@ -41,7 +42,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       }
     >
       <body className="min-h-full flex flex-col">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          {children}
+          <CommandPalette />
+        </QueryProvider>
       </body>
     </html>
   );

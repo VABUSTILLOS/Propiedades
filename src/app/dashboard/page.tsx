@@ -51,6 +51,31 @@ export default async function DashboardPage() {
           description="Paste a Facebook URL, text or voice note — AI creates the listing + flyer."
           href="/import"
         />
+        <DashboardCard
+          title="FSBO (Sell it yourself)"
+          description="Quick-load your property, auto-AVM, and open 24/7 WhatsApp booking."
+          href="/fsbo"
+        />
+        <DashboardCard
+          title="MLS network"
+          description="Agent-only network with transparent commission splits."
+          href="/mls"
+        />
+        <DashboardCard
+          title="Preapproval"
+          description="Infonavit & bank pre-approval with smart matching."
+          href="/preapproval"
+        />
+        <DashboardCard
+          title="Planificar rutas"
+          description="Armar el itinerario óptimo de visitas del fin de semana."
+          href="/plan-tour"
+        />
+        <DashboardCard
+          title="Comparador"
+          description="Compara hasta 4 inmuebles lado a lado por $/m²."
+          href="/compare"
+        />
       </div>
     </div>
   );

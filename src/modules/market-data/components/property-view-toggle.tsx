@@ -1,9 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Building2, Landmark } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Building2,
+  Flame,
+  Landmark,
+  School,
+  ShieldAlert,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 import type {
+  Json,
   MarketBenchmarksRow,
   PropertiesRow,
 } from "@/modules/lib/database.types";
@@ -16,6 +27,7 @@ type Props = {
   property: PropertiesRow;
   benchmark: MarketBenchmarksRow | null;
   discountPct: number | null;
+  initialMode?: Mode;
 };
 
 type Mode = "residencia" | "inversionista";
@@ -28,8 +40,13 @@ type Mode = "residencia" | "inversionista";
  * Inversionista: financial table built on the DB generated $/m² columns and
  * the colonia discount computed server-side.
  */
-export function PropertyViewToggle({ property, benchmark, discountPct }: Props) {
-  const [mode, setMode] = useState<Mode>("residencia");
+export function PropertyViewToggle({
+  property,
+  benchmark,
+  discountPct,
+  initialMode = "residencia",
+}: Props) {
+  const [mode, setMode] = useState<Mode>(initialMode);
 
   return (
     <div>
@@ -130,6 +147,8 @@ function ResidentialView({
       {property.lat !== undefined && property.lng !== undefined ? (
         <POIMap lat={property.lat} lng={property.lng} className="h-80" />
       ) : null}
+
+      <LifestyleLayer property={property} />
 
       <details className="group rounded-lg border bg-card p-4">
         <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
@@ -275,4 +294,125 @@ function FinancialRow({
       <dd className="text-right font-medium">{value}</dd>
     </div>
   );
+}
+
+/** Risk / lifestyle layer for the residential mode (Zillow-style neighborhood data). */
+function LifestyleLayer({ property }: { property: PropertiesRow }) {
+  const vibe = parseJsonArray(property.neighborhood_vibe);
+  const schools = parseJsonArray(property.nearby_schools);
+
+  const hasAny =
+    property.noise_score != null ||
+    property.flood_risk_level != null ||
+    vibe.length > 0 ||
+    schools.length > 0;
+
+  if (!hasAny) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-lg border bg-card p-5">
+      <div className="flex items-center gap-2">
+        <Sparkles className="size-4 text-muted-foreground" />
+        <h3 className="font-semibold">Zona y estilo de vida</h3>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {property.noise_score != null && (
+          <RiskTile
+            icon={<Flame className="size-4" />}
+            label="Ruido (0-10)"
+            value={property.noise_score.toFixed(1)}
+            tone={property.noise_score < 5 ? "good" : "bad"}
+          />
+        )}
+        {property.flood_risk_level != null && (
+          <RiskTile
+            icon={<ShieldAlert className="size-4" />}
+            label="Riesgo de inundación"
+            value={property.flood_risk_level}
+            tone={
+              property.flood_risk_level.toLowerCase().includes("bajo")
+                ? "good"
+                : "bad"
+            }
+          />
+        )}
+      </div>
+
+      {schools.length > 0 && (
+        <div className="mt-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <School className="size-4" />
+            <span className="font-medium text-foreground">
+              Escuelas cercanas
+            </span>
+          </div>
+          <ul className="mt-2 space-y-1">
+            {schools.map((school) => (
+              <li key={school} className="text-sm text-muted-foreground">
+                {school}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {vibe.length > 0 && (
+        <div className="mt-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Users className="size-4" />
+            <span className="font-medium text-foreground">What Locals Say</span>
+          </div>
+          <ul className="mt-2 space-y-1">
+            {vibe.map((comment) => (
+              <li
+                key={comment}
+                className="text-sm text-muted-foreground first:mt-0"
+              >
+                “{comment}”
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RiskTile({
+  icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  tone: "good" | "bad";
+}) {
+  return (
+    <div className="rounded-md border bg-background p-3">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        {icon}
+        {label}
+      </div>
+      <p
+        className={cn(
+          "mt-1 text-lg font-bold",
+          tone === "good" ? "text-emerald-600" : "text-amber-600",
+        )}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function parseJsonArray(value: Json): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === "string");
+  }
+  return [];
 }

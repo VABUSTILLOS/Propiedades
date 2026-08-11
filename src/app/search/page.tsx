@@ -6,11 +6,14 @@ import {
   searchListings,
   type SearchFilters,
 } from "@/modules/search/queries";
+import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
 import { searchParamsSchema } from "@/modules/lib/schemas";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Building2, Landmark } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Search properties" };
 
@@ -36,7 +39,11 @@ export default async function SearchPage({ searchParams }: Props) {
   };
 
   const [listings, cities] = await Promise.all([
-    searchListings(filters),
+    // Natural-language queries go through semantic search when embeddings
+    // are configured; otherwise it falls back to the keyword path.
+    parsed.data?.query
+      ? searchSemantic(parsed.data.query, 24)
+      : searchListings(filters),
     getSearchableCities(),
   ]);
 
@@ -47,11 +54,35 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Search properties</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {listings.length} active listing{listings.length === 1 ? "" : "s"}
-          {hasFilters ? " matching your filters" : " available"}
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Search properties</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {listings.length} active listing{listings.length === 1 ? "" : "s"}
+              {hasFilters ? " matching your filters" : " available"}
+            </p>
+          </div>
+
+          <div className="inline-flex rounded-lg border bg-muted/40 p-1">
+            <Link
+              href="/search"
+              className="inline-flex items-center gap-2 rounded-md bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm"
+            >
+              <Landmark className="size-4" />
+              Modo hogar
+            </Link>
+            <Link
+              href="/investor"
+              className={cn(
+                "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium",
+                "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Building2 className="size-4" />
+              Inversionista
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="mb-8">
