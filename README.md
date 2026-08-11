@@ -28,13 +28,13 @@ The app requires a Supabase project for all data pages (search, listings, auth, 
 SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh
 ```
 
-The script logs in, creates a project in `eastus2` (nearest to Mexico City), links the repo, pushes all migrations (`001_init.sql` → `004_integrity_and_indexes.sql`), and prints the env vars to add to Vercel.
+The script logs in, creates a project in `us-east-1` (nearest US region to Mexico; override with `REGION=...`, e.g. `sa-east-1` for São Paulo), links the repo, pushes all migrations (`001_init.sql` → `004_integrity_and_indexes.sql`), and prints the env vars to add to Vercel.
 
 Manual equivalent:
 
 ```bash
 npx -y supabase login --access-token sbp_xxx
-npx -y supabase projects create propiedades-marketplace --region eastus2
+npx -y supabase projects create propiedades-marketplace --region us-east-1
 npx -y supabase link --project-ref <REF>
 npx -y supabase db push --yes
 ```
