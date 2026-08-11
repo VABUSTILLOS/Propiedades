@@ -314,13 +314,27 @@ export const reviewCreateSchema = z.object({
 });
 
 // --- Favorites ----------------------------------------------------------------------
+export const tierColumnSchema = z.enum(["top_choice", "plan_b", "discarded"]);
+export type TierColumn = z.infer<typeof tierColumnSchema>;
+
 export const favoriteUpsertSchema = z.object({
   propertyId: uuidSchema,
   tierRank: z.number().int().min(1).max(10).default(1),
+  tierColumn: tierColumnSchema.default("top_choice"),
   privateNotes: z.string().max(2000).optional(),
 });
 
 export const favoriteReorderSchema = z.object({
+  orderedIds: z.array(uuidSchema).min(1),
+});
+
+export const favoriteSetTierSchema = z.object({
+  favoriteId: uuidSchema,
+  tierColumn: tierColumnSchema,
+});
+
+export const favoriteKanbanReorderSchema = z.object({
+  column: tierColumnSchema,
   orderedIds: z.array(uuidSchema).min(1),
 });
 
@@ -368,4 +382,59 @@ export const flyerLeadSchema = z.object({
   visitorSessionId: z.string().trim().min(1).max(200),
   email: emailSchema.optional(),
   phone: z.string().trim().max(30).optional(),
+});
+
+// --- Ingestion (Stage 2: multimodal import) ------------------------------------------
+export const ingestionSourceSchema = z.enum(["url", "text", "voice"]);
+
+export const ingestionRequestSchema = z.object({
+  source: ingestionSourceSchema,
+  content: z.string().trim().min(3, "Content is too short").max(50_000),
+});
+
+/**
+ * Strict JSON contract returned by DeepSeek for a property import.
+ * `puntos_fuertes_bento` drives the Bento-grid highlights on the card.
+ */
+export const aiExtractedPropertySchema = z.object({
+  titulo: z.string().trim().min(1).max(200),
+  precio: mxnSchema,
+  recamaras: z.number().int().min(0).max(50).nullable().default(null),
+  banos: z.number().int().min(0).max(50).nullable().default(null),
+  amenidades_array: z.array(z.string().trim().min(1).max(100)).max(50).default([]),
+  puntos_fuertes_bento: z
+    .array(z.string().trim().min(1).max(140))
+    .max(6)
+    .default([]),
+  colonia: z.string().trim().max(100).nullable().default(null),
+  city: z.string().trim().max(100).nullable().default(null),
+  precio_m2_const: mxnSchema.optional(),
+});
+
+export type AiExtractedProperty = z.infer<typeof aiExtractedPropertySchema>;
+
+// --- Local surveys (Stage 4 "What Locals Say") -----------------------------------------
+export const localSurveyCreateSchema = z.object({
+  propertyId: uuidSchema,
+  safetyRating: z.number().int().min(1).max(5),
+  noiseRating: z.number().int().min(1).max(5),
+  walkabilityRating: z.number().int().min(1).max(5),
+  petFriendlyRating: z.number().int().min(1).max(5),
+  comment: z.string().trim().max(2000).optional(),
+});
+
+// --- Co-shopping (Stage 6) -----------------------------------------------------------------
+export const coShoppingVoteSchema = z.object({
+  favoriteId: uuidSchema,
+  vote: z.enum(["like", "dislike"]),
+});
+
+export const coShoppingInviteSchema = z.object({
+  favoriteId: uuidSchema,
+  coBuyerEmail: emailSchema,
+});
+
+export const coShoppingMessageSchema = z.object({
+  favoriteId: uuidSchema,
+  content: z.string().trim().min(1, "Message cannot be empty").max(2000),
 });

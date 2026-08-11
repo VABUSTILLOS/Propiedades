@@ -42,6 +42,24 @@ export async function getCityBenchmarks(
 }
 
 /**
+ * Compute the property's % discount vs the colonia benchmark via the
+ * `compute_colonia_discount` Postgres function. Returns null when there is
+ * no benchmark or the RPC is unavailable.
+ */
+export async function getColoniaDiscount(
+  propertyId: string,
+): Promise<number | null> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data, error } = await supabase.rpc("compute_colonia_discount", {
+    target_property_id: propertyId,
+  });
+
+  if (error) return null;
+  return typeof data === "number" ? data : null;
+}
+
+/**
  * Estimate property value (AVM) from benchmark $/m² against the listing area.
  * Falls back gracefully when no benchmark exists.
  */

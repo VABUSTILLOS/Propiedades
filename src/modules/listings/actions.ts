@@ -16,6 +16,7 @@ import {
 } from "@/modules/lib/schemas";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
+import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
 type WizardStep = 1 | 2 | 3 | 4;
 
@@ -209,4 +210,63 @@ export async function deleteListing(listingId: string): Promise<ActionResult<und
 
   revalidatePath("/my-listings");
   return ok(undefined);
+}
+
+/**
+ * Persist a property imported via the Universal Importer as a draft listing.
+ */
+export async function createImportedDraft(
+  input: Record<string, unknown>,
+): Promise<ActionResult<{ id: string; slug: string }>> {
+  const user = await requireUserOrThrow();
+  const parsed = parseInput(importedPropertyDraftSchema, input);
+  if (!parsed.success) {
+    return fail(parsed.error, parsed.fieldErrors);
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const slug = await buildUniqueSlug(parsed.data.title, async (candidate) => {
+    const { data } = await supabase
+      .from("properties")
+      .select("id")
+      .eq("slug", candidate)
+      .limit(1);
+    return (data?.length ?? 0) > 0;
+  });
+
+  const { data, error } = await supabase
+    .from("properties")
+    .insert({
+      owner_id: user.id,
+      title: parsed.data.title,
+      type: "sale",
+      description: parsed.data.description || null,
+      slug,
+      status: "draft",
+      current_wizard_step: 4,
+      price: parsed.data.price,
+      currency: parsed.data.currency,
+      terreno_m2: parsed.data.terreno_m2,
+      construccion_m2: parsed.data.construccion_m2,
+      address: parsed.data.address,
+      colonia: parsed.data.colonia,
+      city: parsed.data.city,
+      state: parsed.data.state,
+      zip_code: parsed.data.zip_code,
+      lat: parsed.data.lat,
+      lng: parsed.data.lng,
+      images: parsed.data.images,
+      source_url: parsed.data.source_url,
+      puntos_fuertes_bento: parsed.data.bento_highlights,
+    })
+    .select("id, slug")
+    .single();
+
+  if (error) {
+    return fail(error.message);
+  }
+
+  revalidatePath("/my-listings");
+  revalidatePath("/favorites");
+  return ok({ id: data.id, slug: data.slug });
 }

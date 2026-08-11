@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
-import { getBenchmark } from "@/modules/market-data/queries";
+import {
+  getBenchmark,
+  getColoniaDiscount,
+} from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
-import { MarketPanel } from "@/modules/market-data/components/market-panel";
+import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -31,6 +34,7 @@ export default async function PropertyDetailPage({ params }: Props) {
   const canInquire = Boolean(user && user.id !== listing.owner_id);
 
   const benchmark = await getBenchmark(listing.city, listing.colonia);
+  const discountPct = await getColoniaDiscount(listing.id);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-10">
@@ -48,29 +52,11 @@ export default async function PropertyDetailPage({ params }: Props) {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
         <section>
-          {listing.images && listing.images.length > 0 ? (
-            <div className="grid gap-2 sm:grid-cols-2">
-              {listing.images.slice(0, 4).map((src) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={src}
-                  src={src}
-                  alt={listing.title}
-                  className="aspect-[4/3] w-full rounded-lg object-cover"
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex aspect-[4/3] w-full items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-              No photos yet
-            </div>
-          )}
-
-          {listing.description && (
-            <p className="mt-6 whitespace-pre-line text-muted-foreground">
-              {listing.description}
-            </p>
-          )}
+          <PropertyViewToggle
+            property={listing}
+            benchmark={benchmark}
+            discountPct={discountPct}
+          />
         </section>
 
         <aside className="space-y-4">
@@ -95,13 +81,16 @@ export default async function PropertyDetailPage({ params }: Props) {
               </p>
               {listing.precio_m2_const != null && (
                 <p className="mt-1 text-sm text-muted-foreground">
-                  ~$ {listing.precio_m2_const.toLocaleString()} / m² construido
+                  ~${listing.precio_m2_const.toLocaleString()} / m² construido
+                </p>
+              )}
+              {listing.precio_m2_terreno != null && (
+                <p className="text-sm text-muted-foreground">
+                  ~${listing.precio_m2_terreno.toLocaleString()} / m² terreno
                 </p>
               )}
             </CardContent>
           </Card>
-
-          <MarketPanel property={listing} benchmark={benchmark} />
 
           <Card>
             <CardHeader>

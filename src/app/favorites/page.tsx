@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { requireUser } from "@/modules/auth/session";
 import { getMyFavorites } from "@/modules/favorites/queries";
-import { FavoritesList } from "@/modules/favorites/components/favorites-list";
+import { FavoritesView } from "@/modules/favorites/components/favorites-view";
 
 export const metadata: Metadata = { title: "Favorites" };
 
@@ -15,11 +15,11 @@ export default async function FavoritesPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Favorites</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Drag to rank your shortlist. Tier 1 is your top pick.
+          Organiza tu shortlist: arrastra para ordenar en la lista o clasifica en el Kanban (Top Choice / Plan B / Descartadas).
         </p>
       </div>
 
-      <FavoritesList initialFavorites={favorites} />
+      <FavoritesView favorites={favorites} />
     </div>
   );
 }

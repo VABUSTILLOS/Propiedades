@@ -103,6 +103,10 @@ export type PropertiesRow = {
   images: string[] | null;
   tour_360_url: string | null;
   video_url: string | null;
+  recamaras: number | null;
+  banos: number | null;
+  amenidades: Json;
+  puntos_fuertes_bento: Json;
   embedding: unknown | null;
   created_at: string;
   updated_at: string;
@@ -160,7 +164,31 @@ export type DigitalFlyersRow = {
   slug: string;
   custom_title: string | null;
   is_white_label: boolean | null;
+  white_label_source_flyer_id: string | null;
   views_count: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type PropertyLocalSurveysRow = {
+  id: string;
+  property_id: string;
+  author_id: string;
+  safety_rating: number | null;
+  noise_rating: number | null;
+  walkability_rating: number | null;
+  pet_friendly_rating: number | null;
+  comment: string | null;
+  is_verified: boolean | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type CoShoppingChatRow = {
+  id: string;
+  favorite_id: string;
+  sender_id: string;
+  content: string;
   created_at: string;
   updated_at: string;
 }
@@ -183,6 +211,7 @@ export type BuyerFavoritesRow = {
   user_id: string;
   property_id: string;
   tier_rank: number;
+  tier_column: string;
   private_notes: string | null;
   user_photos: string[] | null;
   co_buyer_votes: Json;
@@ -219,6 +248,8 @@ export type Database = {
       flyer_analytics: { Row: FlyerAnalyticsRow; Insert: Insertable<FlyerAnalyticsRow>; Update: Partial<FlyerAnalyticsRow>; Relationships: [] };
       buyer_favorites: { Row: BuyerFavoritesRow; Insert: Insertable<BuyerFavoritesRow>; Update: Partial<BuyerFavoritesRow>; Relationships: [] };
       bids: { Row: BidsRow; Insert: Insertable<BidsRow>; Update: Partial<BidsRow>; Relationships: [] };
+      property_local_surveys: { Row: PropertyLocalSurveysRow; Insert: Insertable<PropertyLocalSurveysRow>; Update: Partial<PropertyLocalSurveysRow>; Relationships: [] };
+      co_shopping_chat: { Row: CoShoppingChatRow; Insert: Insertable<CoShoppingChatRow>; Update: Partial<CoShoppingChatRow>; Relationships: [] };
     };
     Views: Record<string, never>,
     Functions: {
@@ -241,6 +272,10 @@ export type Database = {
       recompute_profile_rating: {
         Args: { subject_profile_id: string };
         Returns: undefined;
+      };
+      match_properties: {
+        Args: { query_embedding: string; match_count: number };
+        Returns: { id: string; similarity: number }[];
       };
     },
     Enums: {

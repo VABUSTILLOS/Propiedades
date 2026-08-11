@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireUserOrThrow } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
+import { env } from "@/modules/lib/env";
 import {
   flyerAnalyticsSchema,
   flyerCreateSchema,
@@ -90,8 +91,57 @@ export async function recordFlyerAnalytics(
 }
 
 /**
- * Capture a lead from a flyer (email/phone opt-in).
+ * Push a WhatsApp alert to the flyer owner about high-value engagement.
+ * Uses the configurable WHATSAPP_WEBHOOK_URL; gracefully no-ops when the
+ * webhook is not configured so the agent dashboard works without it.
  */
+export async function sendFlyerWhatsAppAlert(
+  input: Record<string, unknown>,
+): Promise<ActionResult<{ sent: boolean }>> {
+  const user = await requireUserOrThrow();
+
+  const flyerId = typeof input.flyerId === "string" ? input.flyerId : "";
+  const message =
+    typeof input.message === "string" && input.message.trim()
+      ? input.message.trim().slice(0, 500)
+      : "";
+  if (!flyerId || !message) {
+    return fail("flyerId and message are required.");
+  }
+
+  // Verify ownership before sending.
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("digital_flyers")
+    .select("id")
+    .eq("id", flyerId)
+    .eq("agent_id", user.id)
+    .returns<{ id: string }[]>()
+    .limit(1);
+
+  if (!rows?.[0]) {
+    return fail("Flyer not found.");
+  }
+
+  if (!env.whatsappWebhookUrl) {
+    // Graceful degradation: webhook not configured.
+    return ok({ sent: false });
+  }
+
+  try {
+    const res = await fetch(env.whatsappWebhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ flyerId, message }),
+    });
+    if (!res.ok) {
+      return fail(`WhatsApp webhook responded with status ${res.status}.`);
+    }
+    return ok({ sent: true });
+  } catch {
+    return fail("Could not reach the WhatsApp webhook.");
+  }
+}
 export async function captureFlyerLead(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string }>> {

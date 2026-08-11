@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { requireUser } from "@/modules/auth/session";
 import { buttonVariants } from "@/components/ui/button";
+import { UniversalImporterClient } from "@/modules/importer/components/universal-importer-client";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -25,7 +26,11 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8">
+        <UniversalImporterClient />
+      </div>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <DashboardCard
           title="My listings"
           description="Create and manage your property listings with the guided wizard."
@@ -40,6 +45,11 @@ export default async function DashboardPage() {
           title="Transactions"
           description="Track inquiries, tours, offers and escrow."
           href="/transactions"
+        />
+        <DashboardCard
+          title="Import with AI"
+          description="Paste a Facebook URL, text or voice note — AI creates the listing + flyer."
+          href="/import"
         />
       </div>
     </div>

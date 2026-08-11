@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { requireUser } from "@/modules/auth/session";
 import { getFlyerAnalytics, getMyFlyerById } from "@/modules/flyers/queries";
+import { FlyerEngagementPanel } from "@/modules/flyers/components/flyer-engagement-panel";
 import { getListingById } from "@/modules/listings/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -90,6 +91,16 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
               ))}
             </ul>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          <FlyerEngagementPanel
+            flyerId={flyer.id}
+            flyerSlug={flyer.slug}
+            analytics={analytics}
+          />
         </CardContent>
       </Card>
     </div>

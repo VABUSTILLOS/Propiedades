@@ -12,7 +12,10 @@ export const env = {
   deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? "",
   deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com",
   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+  googleMapsServerKey:
+    process.env.GOOGLE_MAPS_SERVER_KEY ?? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  whatsappWebhookUrl: process.env.WHATSAPP_WEBHOOK_URL ?? "",
 } as const;
 
 export function requireEnv(scope: "client" | "server" = "client"): void {

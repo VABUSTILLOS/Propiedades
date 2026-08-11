@@ -6,6 +6,11 @@ import { requireUserOrThrow } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, type ActionResult } from "@/modules/lib/action-result";
 import { generateDescription, scoreProperty } from "@/modules/ai/server";
+import {
+  embedText,
+  embeddingsConfigured,
+  propertyEmbeddingText,
+} from "@/modules/ai/embeddings";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
 /**
@@ -92,4 +97,79 @@ export async function scoreListing(
 
   revalidatePath(`/property/${listing.slug}`);
   return ok(result);
+}
+
+/**
+ * Backfill `properties.embedding` for a single property the caller owns.
+ * Only useful once an OpenAI API key is configured.
+ */
+export async function populatePropertyEmbedding(
+  propertyId: string,
+): Promise<ActionResult<{ embedded: boolean }>> {
+  const user = await requireUserOrThrow();
+  if (!embeddingsConfigured()) {
+    return fail("Embeddings are not configured (OPENAI_API_KEY missing).");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("id", propertyId)
+    .eq("owner_id", user.id)
+    .returns<PropertiesRow[]>()
+    .limit(1);
+  const property = rows?.[0];
+  if (!property) return fail("Property not found.");
+
+  const vector = await embedText(propertyEmbeddingText(property));
+  if (!vector) return fail("Failed to embed this property.");
+
+  const { error } = await supabase
+    .from("properties")
+    .update({ embedding: vector as unknown as never })
+    .eq("id", propertyId);
+  if (error) return fail(error.message);
+
+  revalidatePath(`/property/${property.slug}`);
+  return ok({ embedded: true });
+}
+
+/**
+ * Backfill embeddings for all active properties owned by the caller.
+ * Skips rows that already have a vector.
+ */
+export async function populateAllEmbeddings(): Promise<
+  ActionResult<{ embedded: number; skipped: number }>
+> {
+  const user = await requireUserOrThrow();
+  if (!embeddingsConfigured()) {
+    return fail("Embeddings are not configured (OPENAI_API_KEY missing).");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("owner_id", user.id)
+    .returns<PropertiesRow[]>();
+
+  let embedded = 0;
+  let skipped = 0;
+
+  for (const property of rows ?? []) {
+    if (property.embedding) {
+      skipped += 1;
+      continue;
+    }
+    const vector = await embedText(propertyEmbeddingText(property));
+    if (!vector) continue;
+    const { error } = await supabase
+      .from("properties")
+      .update({ embedding: vector as unknown as never })
+      .eq("id", property.id);
+    if (!error) embedded += 1;
+  }
+
+  return ok({ embedded, skipped });
 }
