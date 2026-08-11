@@ -1,0 +1,55 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { requireUser } from "@/modules/auth/session";
+import { getMyFlyers } from "@/modules/flyers/queries";
+import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = { title: "My flyers" };
+
+export default async function MyFlyersPage() {
+  const user = await requireUser();
+  const flyers = await getMyFlyers(user.id);
+
+  return (
+    <div className="mx-auto w-full max-w-4xl px-6 py-10">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight">Digital flyers</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Shareable, trackable pages for your listings.
+        </p>
+      </div>
+
+      {flyers.length === 0 ? (
+        <div className="rounded-lg border border-dashed px-6 py-16 text-center">
+          <p className="text-sm text-muted-foreground">
+            You have no flyers yet. Create one from any of your listings.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {flyers.map((flyer) => (
+            <Link key={flyer.id} href={`/my-flyers/${flyer.id}`} className="block">
+              <Card className="transition-colors hover:border-primary">
+                <CardContent className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-medium">
+                      {flyer.custom_title ?? "Untitled flyer"}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {flyer.views_count ?? 0} views ·{" "}
+                      {new Date(flyer.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    /f/{flyer.slug}
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

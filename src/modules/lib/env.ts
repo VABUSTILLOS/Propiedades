@@ -1,0 +1,29 @@
+/**
+ * Centralized, type-safe environment variable access.
+ * All reads go through this module so typos and missing keys are caught at boot.
+ */
+export const env = {
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
+  deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? "",
+  deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com",
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+} as const;
+
+export function requireEnv(scope: "client" | "server" = "client"): void {
+  if (scope === "client") {
+    if (!env.supabaseUrl || !env.supabaseAnonKey) {
+      throw new Error(
+        "Missing Supabase env vars. Copy .env.example to .env.local and fill in NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      );
+    }
+    return;
+  }
+  if (!env.supabaseServiceRoleKey) {
+    throw new Error(
+      "Missing SUPABASE_SERVICE_ROLE_KEY. It is required for server-side privileged operations.",
+    );
+  }
+}
