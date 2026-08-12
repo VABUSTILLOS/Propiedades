@@ -69,3 +69,10 @@ export async function getHomepageStats(): Promise<HomepageStats> {
 export async function getFeaturedListings(limit = 6): Promise<PropertiesRow[]> {
   return searchListings({ limit, sortBy: "newest" });
 }
+
+/**
+ * Top-rated active listings by AI score for the "Mejor calificadas" grid.
+ */
+export async function getTopRatedListings(limit = 6): Promise<PropertiesRow[]> {
+  return searchListings({ limit, sortBy: "score" });
+}

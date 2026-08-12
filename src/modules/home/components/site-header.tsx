@@ -20,7 +20,7 @@ export function SiteHeader({ user }: { user: AuthUser | null }) {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#C97B4A] to-[#8F3E22] text-white shadow-sm">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#D67E3C] to-[#A83810] text-white shadow-sm">
             <Building2 className="size-[18px]" />
           </span>
           <span className="text-lg font-bold tracking-tight">Propiedades</span>

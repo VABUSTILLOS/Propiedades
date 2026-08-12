@@ -60,7 +60,7 @@ export function HowItWorksSection() {
             const Icon = step.icon;
             return (
               <div key={step.title} className="relative rounded-2xl border bg-card p-6">
-                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#C97B4A] to-[#8F3E22] px-3 py-0.5 text-xs font-semibold text-white shadow-sm">
+                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#D67E3C] to-[#A83810] px-3 py-0.5 text-xs font-semibold text-white shadow-sm">
                   Paso {index + 1}
                 </span>
                 <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-muted text-foreground">

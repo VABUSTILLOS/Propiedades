@@ -14,6 +14,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { Badge } from "@/components/ui/badge";
+import { ScoreBadge } from "@/components/ui/score-badge";
 import { Building2, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -75,6 +76,7 @@ export default async function SearchPage({ searchParams }: Props) {
             <div className="inline-flex rounded-full border bg-muted/40 p-1">
               <Link
                 href="/search"
+                aria-current="page"
                 className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm"
               >
                 <Landmark className="size-4" />
@@ -164,7 +166,10 @@ function SearchResultCard({
   score: number | null;
 }) {
   return (
-    <Link href={`/property/${slug}`} className="group block">
+    <Link
+      href={`/property/${slug}`}
+      className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md"
+    >
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -178,22 +183,22 @@ function SearchResultCard({
             Sin foto
           </div>
         )}
-        <Badge className="absolute left-3 top-3 rounded-full shadow-sm">
-          {type === "rent" ? "Renta" : "Venta"}
-        </Badge>
+        <div className="absolute left-3 top-3 flex gap-2">
+          <Badge className="rounded-full shadow-sm">
+            {type === "rent" ? "Renta" : "Venta"}
+          </Badge>
+        </div>
+        <ScoreBadge
+          score={score}
+          solid
+          className="absolute right-3 top-3 rounded-full"
+        />
       </div>
 
       <div className="space-y-1.5 pt-3">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
-            {title}
-          </h3>
-          {score != null && (
-            <Badge variant="outline" className="shrink-0 rounded-full">
-              score {score.toFixed(1)}
-            </Badge>
-          )}
-        </div>
+        <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
+          {title}
+        </h3>
         <p className="line-clamp-1 text-sm text-muted-foreground">{city}</p>
         <p className="font-bold">
           ${price.toLocaleString()}{" "}

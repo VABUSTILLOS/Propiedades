@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
@@ -14,7 +14,9 @@ import {
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { Badge } from "@/components/ui/badge";
+import { ScoreBadge } from "@/components/ui/score-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 
@@ -67,12 +69,18 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               {listing.address} · {listing.colonia}, {listing.city}, {listing.state}
             </p>
           </div>
-          <Badge
-            variant={listing.type === "rent" ? "secondary" : "default"}
-            className="rounded-full shadow-sm"
-          >
-            {listing.type === "rent" ? "En renta" : "En venta"}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant={listing.type === "rent" ? "secondary" : "default"}
+              className="rounded-full shadow-sm"
+            >
+              {listing.type === "rent" ? "En renta" : "En venta"}
+            </Badge>
+            <ScoreBadge
+              score={listing.property_score}
+              className="rounded-full shadow-sm"
+            />
+          </div>
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
@@ -111,8 +119,30 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                     {listing.currency}
                   </span>
                 </p>
+                {discountPct != null && (
+                  <div
+                    className={cn(
+                      "mt-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold",
+                      discountPct >= 0
+                        ? "bg-emerald-600/10 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:text-emerald-400"
+                        : "bg-amber-500/10 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:text-amber-400",
+                    )}
+                  >
+                    {discountPct >= 0 ? (
+                      <>
+                        <ArrowDownRight className="size-3.5" />
+                        {discountPct.toFixed(1)}% vs. colonia
+                      </>
+                    ) : (
+                      <>
+                        <ArrowUpRight className="size-3.5" />
+                        {Math.abs(discountPct).toFixed(1)}% arriba vs. colonia
+                      </>
+                    )}
+                  </div>
+                )}
                 {listing.precio_m2_const != null && (
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-3 text-sm text-muted-foreground">
                     ~${listing.precio_m2_const.toLocaleString()} / m² construido
                   </p>
                 )}

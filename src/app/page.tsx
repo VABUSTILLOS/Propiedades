@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import {
   getFeaturedListings,
   getHomepageStats,
+  getTopRatedListings,
 } from "@/modules/home/queries";
 import { HeroSearch } from "@/modules/home/components/hero-search";
 import { SiteHeader } from "@/modules/home/components/site-header";
@@ -20,10 +21,11 @@ export const metadata: Metadata = { title: "Inicio" };
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [user, stats, listings] = await Promise.all([
+  const [user, stats, listings, topRated] = await Promise.all([
     getCurrentUser(),
     getHomepageStats(),
     getFeaturedListings(6),
+    getTopRatedListings(6),
   ]);
 
   const cityNames = stats.cities.map((city) => city.name);
@@ -35,10 +37,10 @@ export default async function HomePage() {
 
       <main className="flex-1">
         {/* Hero + búsqueda */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#C97B4A] via-[#B3562E] to-[#7C3A1E] text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#D67E3C] via-[#C4571D] to-[#8F2E0F] text-white">
           <div className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-white/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-40 -right-20 size-[28rem] rounded-full bg-[#2A1508]/25 blur-3xl" />
-          <div className="pointer-events-none absolute right-1/3 top-0 size-52 rounded-full bg-[#E8A17F]/25 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-40 -right-20 size-[28rem] rounded-full bg-[#6E1D00]/20 blur-3xl" />
+          <div className="pointer-events-none absolute right-1/3 top-0 size-52 rounded-full bg-[#FFC892]/15 blur-2xl" />
           <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-6 py-20 text-center sm:py-28">
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Encuentra tu próxima propiedad en México
@@ -103,6 +105,36 @@ export default async function HomePage() {
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {listings.map((listing) => (
+                  <PropertyCard key={listing.id} listing={listing} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {topRated.length > 0 && (
+          <section className="border-t bg-background">
+            <div className="mx-auto w-full max-w-6xl px-6 py-16">
+              <div className="mb-8 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+                    Las mejor valoradas del mercado
+                  </h2>
+                  <p className="mt-1 text-muted-foreground">
+                    Selección inteligente según análisis de calidad y precio
+                    por $/m². Tu atajo a lo mejor de Propiedades.
+                  </p>
+                </div>
+                <Link
+                  href="/search?sortBy=score"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Ver ranking completo →
+                </Link>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {topRated.map((listing) => (
                   <PropertyCard key={listing.id} listing={listing} />
                 ))}
               </div>

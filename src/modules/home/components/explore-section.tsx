@@ -58,7 +58,7 @@ export function ExploreSection({ cities }: { cities: CityStat[] }) {
               href={option.href}
               className="group rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
-              <span className="mb-4 flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#C97B4A] to-[#8F3E22] text-white shadow-sm">
+              <span className="mb-4 flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#D67E3C] to-[#A83810] text-white shadow-sm">
                 <Icon className="size-5" />
               </span>
               <h3 className="font-semibold group-hover:underline">

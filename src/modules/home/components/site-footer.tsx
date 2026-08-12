@@ -40,7 +40,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#C97B4A] to-[#8F3E22] text-white shadow-sm">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#D67E3C] to-[#A83810] text-white shadow-sm">
                 <Building2 className="size-[18px]" />
               </span>
               <span className="text-lg font-bold tracking-tight">

@@ -12,7 +12,7 @@ export type BrandingConfig = {
 };
 
 export const DEFAULT_BRANDING: BrandingConfig = {
-  primary_color: "#B3562E",
+  primary_color: "#C4571D",
   logo_url: null,
   company_name: "",
   whatsapp_cta: "",

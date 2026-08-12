@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
+import { ScoreBadge } from "@/components/ui/score-badge";
 import { Bath, BedDouble, Ruler } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
@@ -17,7 +18,7 @@ export function PropertyCard({ listing }: { listing: PropertiesRow }) {
   return (
     <Link
       href={`/property/${listing.slug}`}
-      className="group block"
+      className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md"
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {listing.images?.[0] ? (
@@ -32,9 +33,16 @@ export function PropertyCard({ listing }: { listing: PropertiesRow }) {
             Sin foto
           </div>
         )}
-        <Badge className="absolute left-3 top-3 rounded-full shadow-sm">
-          {listing.type === "rent" ? "Renta" : "Venta"}
-        </Badge>
+        <div className="absolute left-3 top-3 flex gap-2">
+          <Badge className="rounded-full shadow-sm">
+            {listing.type === "rent" ? "Renta" : "Venta"}
+          </Badge>
+        </div>
+        <ScoreBadge
+          score={listing.property_score}
+          solid
+          className="absolute right-3 top-3 rounded-full"
+        />
       </div>
 
       <div className="space-y-1.5 pt-3">
