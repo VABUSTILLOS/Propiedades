@@ -131,13 +131,6 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               </p>
             )}
 
-            <PropertyViewToggle
-              property={listing}
-              benchmark={benchmark}
-              discountPct={discountPct}
-              initialMode={mode}
-            />
-
             <div>
               <h2 className="mb-3 text-lg font-semibold">Ubicación</h2>
               <PropertyLocationMap
@@ -149,6 +142,13 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                 address={listing.address}
               />
             </div>
+
+            <PropertyViewToggle
+              property={listing}
+              benchmark={benchmark}
+              discountPct={discountPct}
+              initialMode={mode}
+            />
           </section>
 
           <aside className="space-y-4">
