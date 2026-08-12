@@ -978,13 +978,96 @@ GRANT EXECUTE ON FUNCTION public.is_agent() TO anon, authenticated, service_role
 
 
 -- ============================================================
--- SOURCE: 006_seed_demo_data.sql
+-- SOURCE: 006_fix_cap_rate_rent.sql
+-- ============================================================
+-- 007: Fix cap-rate overflow for rental listings
+--
+-- compute_cap_rate returns NUMERIC(5,2) (max 999.99). For 'rent' listings the
+-- price is a monthly figure, so (monthly_rent*12/price)*100 blows up (e.g. 1200)
+-- and the BEFORE INSERT trigger fails with numeric field overflow (22003).
+-- Cap rate is a purchase metric; only compute it for 'sale' listings.
+
+CREATE OR REPLACE FUNCTION public.maintain_property_financials()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  -- Cap rate applies to purchases only; rents have no capital value ratio.
+  IF NEW.type = 'sale' AND NEW.price IS NOT NULL AND NEW.price > 0 AND NEW.estimated_monthly_rent IS NOT NULL THEN
+    NEW.cap_rate_projected := public.compute_cap_rate(NEW.price, NEW.estimated_monthly_rent);
+  ELSE
+    NEW.cap_rate_projected := NULL;
+  END IF;
+
+  -- Discount vs. appraisal (savings vs. independent valuation).
+  IF NEW.valor_avaluo IS NOT NULL AND NEW.valor_avaluo > 0 THEN
+    NEW.porcentaje_descuento_avaluo := ROUND(((NEW.valor_avaluo - NEW.price) / NEW.valor_avaluo) * 100, 2);
+  ELSE
+    NEW.porcentaje_descuento_avaluo := NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+
+-- ============================================================
+-- SOURCE: 007_seed_demo_data.sql
 -- ============================================================
 -- 006: Seed demo marketplace data
 --
 -- Inserts a small set of active listings (Roma Norte, Condesa, Polanco, Coyoacán),
 -- market benchmarks, and sample reviews so the public marketplace renders data.
--- Owner = the demo agent profile created by 002's signup trigger.
+-- Self-contained: creates the demo auth.users rows first (fixed UUIDs) so the
+-- 002 signup trigger materializes the profiles before properties FK-insert.
+
+-- 0. Demo users (auth.users → profiles via 002 trigger) -----------------------
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- GoTrue breaks with "Database error querying schema" (HTTP 500) when any of
+-- these token columns are NULL, so default them to '' (README-documented fix).
+INSERT INTO auth.users (
+  instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  email_change_token_current, confirmation_token, recovery_token,
+  email_change_token_new, email_change, is_super_admin
+) VALUES
+(
+  '00000000-0000-0000-0000-000000000000',
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176', -- demo agent
+  'authenticated', 'authenticated', 'demo@propiedades.mx',
+  crypt('demo12345', gen_salt('bf')),
+  now(), '{"provider":"email","providers":["email"]}',
+  '{"full_name":"Demo Agent","role":"agent"}', now(), now(),
+  '', '', '', '', '', false
+),
+(
+  '00000000-0000-0000-0000-000000000000',
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b', -- test buyer
+  'authenticated', 'authenticated', 'test2@propiedades.mx',
+  crypt('test12345', gen_salt('bf')),
+  now(), '{"provider":"email","providers":["email"]}',
+  '{"full_name":"Test Buyer","role":"buyer"}', now(), now(),
+  '', '', '', '', '', false
+)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO auth.identities (
+  provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at
+) VALUES
+(
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+  '{"sub":"80a2428b-4d50-435d-8ce1-b1a9eba61176","email":"demo@propiedades.mx","email_verified":true}',
+  'email', now(), now(), now()
+),
+(
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b',
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b',
+  '{"sub":"5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b","email":"test2@propiedades.mx","email_verified":true}',
+  'email', now(), now(), now()
+)
+ON CONFLICT (provider_id, provider) DO NOTHING;
 
 -- Market benchmarks (ciudad, colonia) -----------------------------------------
 INSERT INTO market_benchmarks (city, colonia, avg_price_m2_const, avg_price_m2_land, historical_growth_rate) VALUES
@@ -1075,6 +1158,18 @@ INSERT INTO properties (
   '[]'::jsonb
 );
 
+-- Digital flyers (one per property, public at /f/<slug>) -----------------------
+INSERT INTO digital_flyers (property_id, agent_id, slug, custom_title, is_white_label, views_count)
+SELECT p.id,
+       '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+       p.slug,
+       p.title,
+       false,
+       0
+FROM properties p
+WHERE p.owner_id = '80a2428b-4d50-435d-8ce1-b1a9eba61176'
+ON CONFLICT (slug) DO NOTHING;
+
 -- Sample review for the demo agent ---------------------------------------------
 INSERT INTO reviews (transaction_id, author_id, subject_id, rating, comment)
 SELECT t.id, r.id, r.id, 5, 'Excelente asesoría, proceso transparente y ágil.'
@@ -1082,40 +1177,6 @@ FROM transactions t
 CROSS JOIN profiles r
 WHERE r.id = '80a2428b-4d50-435d-8ce1-b1a9eba61176'
 LIMIT 0; -- no transactions yet; review requires a transaction, skip seeding reviews.
-
-
--- ============================================================
--- SOURCE: 007_fix_cap_rate_rent.sql
--- ============================================================
--- 007: Fix cap-rate overflow for rental listings
---
--- compute_cap_rate returns NUMERIC(5,2) (max 999.99). For 'rent' listings the
--- price is a monthly figure, so (monthly_rent*12/price)*100 blows up (e.g. 1200)
--- and the BEFORE INSERT trigger fails with numeric field overflow (22003).
--- Cap rate is a purchase metric; only compute it for 'sale' listings.
-
-CREATE OR REPLACE FUNCTION public.maintain_property_financials()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  -- Cap rate applies to purchases only; rents have no capital value ratio.
-  IF NEW.type = 'sale' AND NEW.price IS NOT NULL AND NEW.price > 0 AND NEW.estimated_monthly_rent IS NOT NULL THEN
-    NEW.cap_rate_projected := public.compute_cap_rate(NEW.price, NEW.estimated_monthly_rent);
-  ELSE
-    NEW.cap_rate_projected := NULL;
-  END IF;
-
-  -- Discount vs. appraisal (savings vs. independent valuation).
-  IF NEW.valor_avaluo IS NOT NULL AND NEW.valor_avaluo > 0 THEN
-    NEW.porcentaje_descuento_avaluo := ROUND(((NEW.valor_avaluo - NEW.price) / NEW.valor_avaluo) * 100, 2);
-  ELSE
-    NEW.porcentaje_descuento_avaluo := NULL;
-  END IF;
-
-  RETURN NEW;
-END;
-$$;
 
 
 -- ============================================================
@@ -1292,5 +1353,26 @@ $$;
 revoke all on function public.match_properties(vector(1536), int) from public;
 grant execute on function public.match_properties(vector(1536), int) to authenticated;
 grant execute on function public.match_properties(vector(1536), int) to anon;
+
+
+-- ============================================================
+-- SOURCE: 011_add_demo_flyers.sql
+-- ============================================================
+-- 011: Digital flyers for demo properties
+--
+-- The Stage-3 public flyer lives at /f/<slug> and queries digital_flyers.slug.
+-- 007 seeded properties but no flyers, so /f/<slug> 404'd. This migration
+-- backfills one flyer per demo listing (idempotent via ON CONFLICT).
+
+INSERT INTO digital_flyers (property_id, agent_id, slug, custom_title, is_white_label, views_count)
+SELECT p.id,
+       '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+       p.slug,
+       p.title,
+       false,
+       0
+FROM properties p
+WHERE p.owner_id = '80a2428b-4d50-435d-8ce1-b1a9eba61176'
+ON CONFLICT (slug) DO NOTHING;
 
 

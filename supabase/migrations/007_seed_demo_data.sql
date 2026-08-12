@@ -2,7 +2,56 @@
 --
 -- Inserts a small set of active listings (Roma Norte, Condesa, Polanco, Coyoacán),
 -- market benchmarks, and sample reviews so the public marketplace renders data.
--- Owner = the demo agent profile created by 002's signup trigger.
+-- Self-contained: creates the demo auth.users rows first (fixed UUIDs) so the
+-- 002 signup trigger materializes the profiles before properties FK-insert.
+
+-- 0. Demo users (auth.users → profiles via 002 trigger) -----------------------
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- GoTrue breaks with "Database error querying schema" (HTTP 500) when any of
+-- these token columns are NULL, so default them to '' (README-documented fix).
+INSERT INTO auth.users (
+  instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  email_change_token_current, confirmation_token, recovery_token,
+  email_change_token_new, email_change, is_super_admin
+) VALUES
+(
+  '00000000-0000-0000-0000-000000000000',
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176', -- demo agent
+  'authenticated', 'authenticated', 'demo@propiedades.mx',
+  crypt('demo12345', gen_salt('bf')),
+  now(), '{"provider":"email","providers":["email"]}',
+  '{"full_name":"Demo Agent","role":"agent"}', now(), now(),
+  '', '', '', '', '', false
+),
+(
+  '00000000-0000-0000-0000-000000000000',
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b', -- test buyer
+  'authenticated', 'authenticated', 'test2@propiedades.mx',
+  crypt('test12345', gen_salt('bf')),
+  now(), '{"provider":"email","providers":["email"]}',
+  '{"full_name":"Test Buyer","role":"buyer"}', now(), now(),
+  '', '', '', '', '', false
+)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO auth.identities (
+  provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at
+) VALUES
+(
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+  '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+  '{"sub":"80a2428b-4d50-435d-8ce1-b1a9eba61176","email":"demo@propiedades.mx","email_verified":true}',
+  'email', now(), now(), now()
+),
+(
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b',
+  '5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b',
+  '{"sub":"5f0f1b1e-9c8d-4e6f-8a2b-3d4c5e6f7a8b","email":"test2@propiedades.mx","email_verified":true}',
+  'email', now(), now(), now()
+)
+ON CONFLICT (provider_id, provider) DO NOTHING;
 
 -- Market benchmarks (ciudad, colonia) -----------------------------------------
 INSERT INTO market_benchmarks (city, colonia, avg_price_m2_const, avg_price_m2_land, historical_growth_rate) VALUES
@@ -92,6 +141,18 @@ INSERT INTO properties (
   '[]'::jsonb,
   '[]'::jsonb
 );
+
+-- Digital flyers (one per property, public at /f/<slug>) -----------------------
+INSERT INTO digital_flyers (property_id, agent_id, slug, custom_title, is_white_label, views_count)
+SELECT p.id,
+       '80a2428b-4d50-435d-8ce1-b1a9eba61176',
+       p.slug,
+       p.title,
+       false,
+       0
+FROM properties p
+WHERE p.owner_id = '80a2428b-4d50-435d-8ce1-b1a9eba61176'
+ON CONFLICT (slug) DO NOTHING;
 
 -- Sample review for the demo agent ---------------------------------------------
 INSERT INTO reviews (transaction_id, author_id, subject_id, rating, comment)

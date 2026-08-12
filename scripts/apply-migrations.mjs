@@ -62,13 +62,39 @@ async function main() {
   await client.connect();
   console.log("Connected.\n");
 
+  // Ensure the migration tracking table exists (mirrors `supabase db push`).
+  await client.query(`
+    CREATE SCHEMA IF NOT EXISTS supabase_migrations;
+    CREATE TABLE IF NOT EXISTS supabase_migrations.schema_migrations (
+      version text primary key,
+      statements text[] default array[]::text[],
+      name text
+    );
+  `);
+  const tracked = await client.query(
+    `SELECT version FROM supabase_migrations.schema_migrations`,
+  );
+  const appliedVersions = new Set(tracked.rows.map((r) => r.version));
+
   let applied = 0;
+  let skipped = 0;
   for (const file of files) {
+    const version = file.split("_")[0];
+    if (appliedVersions.has(version)) {
+      console.log(`==> Skipping ${file} (already applied)`);
+      skipped += 1;
+      continue;
+    }
     const sql = await readFile(path.join(MIGRATIONS_DIR, file), "utf8");
     console.log(`==> Applying ${file} …`);
     try {
       await client.query("BEGIN");
       await client.query(sql);
+      await client.query(
+        `INSERT INTO supabase_migrations.schema_migrations (version, statements, name)
+         VALUES ($1, $2, $3)`,
+        [version, [sql], file],
+      );
       await client.query("COMMIT");
       console.log(`    OK (${sql.length} bytes)\n`);
       applied += 1;
@@ -79,7 +105,7 @@ async function main() {
     }
   }
 
-  console.log(`Done: ${applied}/${files.length} migrations applied.`);
+  console.log(`Done: ${applied} applied, ${skipped} skipped.`);
   console.log(
     "\nNext: copy the Project URL + anon key from\n" +
       "dashboard → Settings → API, then add to Vercel:\n" +

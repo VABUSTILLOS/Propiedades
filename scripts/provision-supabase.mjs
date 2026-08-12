@@ -203,7 +203,9 @@ if (!projectRef) {
       const list = asArray(sup("projects list", { json: true }), "projects");
       const proj = list.find((p) => p.id === projectRef || p.ref === projectRef);
       const status = proj?.status || proj?.region; // some CLIs don't surface status
-      if (proj && (status === "ACTIVE" || status === "active" || !proj.status)) {
+      // Accept any "ACTIVE…" status (ACTIVE, ACTIVE_HEALTHY, ACTIVE_RESIZING…) plus
+      // CLIs that never surface status at all.
+      if (proj && (String(status).toUpperCase().startsWith("ACTIVE") || !proj.status)) {
         ready = true;
         break;
       }
