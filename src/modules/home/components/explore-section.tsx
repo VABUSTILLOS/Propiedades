@@ -12,7 +12,7 @@ const EXPLORE_OPTIONS = [
     description: "Casas y departamentos entre particulares, con valuación y $/m².",
   },
   {
-    href: "/search?type=rent",
+    href: "/rentas",
     icon: Building2,
     title: "Rentar",
     description: "Renta con tours agendables y comunicación directa con el dueño.",

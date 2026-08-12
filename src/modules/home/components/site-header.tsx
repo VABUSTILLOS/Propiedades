@@ -5,7 +5,9 @@ import { buttonVariants } from "@/components/ui/button";
 import type { AuthUser } from "@/modules/auth/session";
 
 const NAV_LINKS = [
+  { href: "/rentas", label: "Rentar" },
   { href: "/search", label: "Comprar" },
+  { href: "/rentas", label: "Rentas" },
   { href: "/investor", label: "Invertir" },
   { href: "/fsbo", label: "Vender" },
   { href: "/listados", label: "Listados" },
@@ -30,7 +32,7 @@ export function SiteHeader({ user }: { user: AuthUser | null }) {
         <nav className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
               className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >

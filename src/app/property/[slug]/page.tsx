@@ -170,6 +170,50 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               className="w-full"
             />
 
+            {listing.contact_name && (
+              <Card className="rounded-2xl">
+                <CardHeader>
+                  <CardTitle>Contacto</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <p className="font-medium">{listing.contact_name}</p>
+                  {listing.contact_type && (
+                    <p className="text-muted-foreground capitalize">
+                      {listing.contact_type === "inmobiliaria"
+                        ? "Inmobiliaria"
+                        : listing.contact_type}
+                    </p>
+                  )}
+                  {listing.contact_phone && (
+                    <a
+                      href={`tel:+52${listing.contact_phone}`}
+                      className="block font-medium text-primary hover:underline"
+                    >
+                      {formatPhoneDisplay(listing.contact_phone)}
+                    </a>
+                  )}
+                  {listing.contact_whatsapp && (
+                    <a
+                      href={`https://wa.me/52${listing.contact_whatsapp}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block font-medium text-primary hover:underline"
+                    >
+                      Enviar WhatsApp
+                    </a>
+                  )}
+                  {listing.contact_email && (
+                    <a
+                      href={`mailto:${listing.contact_email}`}
+                      className="block font-medium text-primary hover:underline"
+                    >
+                      {listing.contact_email}
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="sticky top-24 rounded-2xl shadow-sm">
               <CardHeader>
                 <CardTitle>Precio</CardTitle>
@@ -317,4 +361,11 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       <dd className="font-medium">{value}</dd>
     </div>
   );
+}
+
+/** Format a 10-digit MX phone as "614 252 3883" for display. */
+function formatPhoneDisplay(phone: string) {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length !== 10) return phone;
+  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
 }

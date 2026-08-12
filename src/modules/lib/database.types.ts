@@ -86,6 +86,11 @@ export type PropertiesRow = {
   institucion_bancaria: string | null;
   fecha_remate: string | null;
   condiciones_traspaso: string | null;
+  contact_name: string | null;
+  contact_type: string | null;
+  contact_phone: string | null;
+  contact_whatsapp: string | null;
+  contact_email: string | null;
   price: number;
   currency: string;
   terreno_m2: number;

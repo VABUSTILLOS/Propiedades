@@ -145,6 +145,30 @@ async function jinaFetch(targetUrl, { format = "html", retries = 4, waitSelector
  *  Search page parsing (HTML format)
  * ------------------------------------------------------------------ */
 
+/** Map a Vivanuncios publisher logo slug to a human-readable agency name. */
+const AGENCY_NAMES = {
+  "gl-bienes-raices": "GL Bienes Raíces",
+  "kasar-bienes-raices": "Kasar Bienes Raíces",
+  "mitlich-asesores-inmobiliarios": "Mitlich Asesores Inmobiliarios",
+  "beall-bienes-raices": "Beall Bienes Raíces",
+  "cimex-inmobiliaria-cuu": "CIMEX Inmobiliaria CUU",
+  "city-brokers": "City Brokers",
+  "iad-mexico": "IAD México",
+  "renacer-asesores-inmobiliarios-s-de-rl-de-cv": "Renacer Asesores Inmobiliarios",
+  "w-real-estate": "W Real Estate",
+};
+
+/**
+ * Normalize a MX phone found in listing text to a whitespace-free 10-digit
+ * string (e.g. "614 2 52 38 83" → "6142523883"). Returns null when absent.
+ */
+function extractMxPhone(text) {
+  if (!text) return null;
+  const m = text.match(/\d{3}\s+\d\s+\d{2}\s+\d{2}\s+\d{2}/);
+  if (!m) return null;
+  return m[0].replace(/\s+/g, "");
+}
+
 function parseSearchPage(html) {
   const cards = html.split('data-qa="posting PROPERTY"').slice(1);
   const listings = [];
@@ -157,6 +181,12 @@ function parseSearchPage(html) {
     const listingUrl = urlMatch[1].replace(/&amp;/g, "&");
     const cleanUrl = listingUrl.split("?")[0];
     if (!/\/a-/.test(cleanUrl)) continue;
+
+    // Agency name from the publisher logo URL, e.g.
+    // img10.naventcdn.com/empresas/.../130x70/logo_kasar-bienes-raices_1768680150720.jpg
+    const publisherImg = card.match(/data-qa="POSTING_CARD_PUBLISHER"[^>]*src="([^"]+)"/);
+    const logoSlug = publisherImg?.[1].match(/logo_([a-z0-9-]+)_\d+\.jpg/)?.[1] ?? null;
+    const contactName = logoSlug ? AGENCY_NAMES[logoSlug] ?? logoSlug.replace(/-/g, " ") : null;
 
     // Visible text tokens (price, m², rec/baños, address, description)
     const visible = card
@@ -242,6 +272,12 @@ function parseSearchPage(html) {
         .find((t) => t.length > 60);
     }
 
+    // Contact phone: only phones visible in plain text are extractable (tile
+    // phone buttons are JS-masked behind "Ver datos"). Regex matches MX format
+    // "614 2 52 38 83" found in the description or any card token.
+    const contactPhone =
+      extractMxPhone(description) || extractMxPhone(tokens.join(" ")) || null;
+
     listings.push({
       id: idMatch[1],
       url: `https://www.vivanuncios.com.mx${cleanUrl}`,
@@ -257,6 +293,9 @@ function parseSearchPage(html) {
       address,
       description: description ?? "",
       images: photos,
+      contactName,
+      contactType: contactName ? "inmobiliaria" : null,
+      contactPhone,
     });
   }
   return listings;
@@ -311,7 +350,7 @@ async function chatCompletion({ system, user, jsonMode = false }) {
 }
 
 const EXTRACT_SYSTEM =
-  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica"), "category": one of "casa" | "departamento" | "local" | "bodega" | "terreno", "deal_type": one of "venta_directa" | "remate_bancario" | "flipping" | "traspaso". Classify from the title/description keywords: remate, adjudicación, banco → remate_bancario; traspaso, ceder → traspaso; reparar, remodelar, flipping → flipping; local/oficina → local; bodega/nave → bodega; terreno/lote → terreno. Default "venta_directa"/"casa". "institucion_bancaria": string or null (bank name for remates), "fecha_remate": string YYYY-MM-DD or null, "costo_reparacion_estimado": number MXN or null (flipping), "valor_post_reparacion_estimado": number MXN or null (flipping ARV), "condiciones_traspaso": string or null}';
+  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica"), "category": one of "casa" | "departamento" | "local" | "bodega" | "terreno", "deal_type": one of "venta_directa" | "remate_bancario" | "flipping" | "traspaso". Classify from the title/description keywords: remate, adjudicación, banco → remate_bancario; traspaso, ceder → traspaso; reparar, remodelar, flipping → flipping; local/oficina → local; bodega/nave → bodega; terreno/lote → terreno. Default "venta_directa"/"casa". "institucion_bancaria": string or null (bank name for remates), "fecha_remate": string YYYY-MM-DD or null, "costo_reparacion_estimado": number MXN or null (flipping), "valor_post_reparacion_estimado": number MXN or null (flipping ARV), "condiciones_traspaso": string or null, "contact_name": string or null (agency/broker name, from footer "Publicado por" or publisher section), "contact_type": "inmobiliaria" | "agencia" | "particular" or null, "contact_phone": string or null (whitespace-free MX phone, e.g. "6142523883"; only if a real phone number is visible in the page text), "contact_email": string or null (only if an email is visible)}';
 
 /** Ask DeepSeek to extract structured data from a detail page markdown. */
 async function extractFromDetail(markdown, fallbackTitle) {
@@ -584,6 +623,13 @@ async function insertProperty(listing, extracted, geocoded, forcedDealType = nul
   const terreno_m2 = extracted?.terreno_m2 || listing.terreno_m2;
   const construccion_m2 = extracted?.construccion_m2 || listing.construccion_m2;
   const description = extracted?.description || listing.description || "";
+  const contactName = extracted?.contact_name || listing.contactName || null;
+  const contactType = extracted?.contact_type || listing.contactType || null;
+  const contactPhone =
+    extracted?.contact_phone ||
+    listing.contactPhone ||
+    extractMxPhone(description) ||
+    null;
 
   // Classify the listing; LLM extraction wins, keyword heuristic is the fallback.
   const heuristic = classifyListing(title, description);
@@ -611,6 +657,11 @@ async function insertProperty(listing, extracted, geocoded, forcedDealType = nul
     condiciones_traspaso: extracted?.condiciones_traspaso ?? null,
     status: "active",
     current_wizard_step: 4,
+    contact_name: contactName,
+    contact_type: contactType,
+    contact_phone: contactPhone,
+    contact_whatsapp: contactPhone ?? null,
+    contact_email: extracted?.contact_email ?? null,
     price,
     currency: "MXN",
     terreno_m2,
