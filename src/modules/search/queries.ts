@@ -30,7 +30,14 @@ export type SearchFilters = {
   maxM2?: number;
   /** Minimum number of bedrooms (recamaras), inclusive. */
   minBedrooms?: number;
-  sortBy?: "price_asc" | "price_desc" | "newest" | "score" | "hot";
+  sortBy?:
+    | "price_asc"
+    | "price_desc"
+    | "newest"
+    | "score"
+    | "hot"
+    | "m2_const_asc"
+    | "m2_const_desc";
   limit?: number;
   /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
   isLand?: boolean;
@@ -239,6 +246,20 @@ async function selectListingsPage(filters: SearchFilters): Promise<{
       break;
     case "price_desc":
       query = query.order("price", { ascending: false });
+      break;
+    case "m2_const_asc":
+      // Cost per constructed m² (`precio_m2_const` is a generated column).
+      // Rows without construction area (null) always go last.
+      query = query.order("precio_m2_const", {
+        ascending: true,
+        nullsFirst: false,
+      });
+      break;
+    case "m2_const_desc":
+      query = query.order("precio_m2_const", {
+        ascending: false,
+        nullsFirst: false,
+      });
       break;
     case "score":
       query = query.order("property_score", { ascending: false });
