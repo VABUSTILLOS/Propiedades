@@ -26,7 +26,10 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
 
     @field
     def title(self) -> str | None:
-        return self._jsonld.get("name") or self.css("title::text").get()
+        title = self._jsonld.get("name") or self.css("title::text").get()
+        if title is None:
+            return None
+        return re.sub(r"\s+-\.\.\.$", "", title)
 
     @field
     def url(self) -> str | None:
@@ -100,7 +103,7 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
         if not (street_address and address_region and address_locality):
             return None
         locality = address_locality.split(",")[0]
-        return f"{street_address}, {address_region}, {locality}"
+        return f"{street_address},  {address_region}, {locality}"
 
     @field
     def number_of_bedrooms(self) -> int | None:
