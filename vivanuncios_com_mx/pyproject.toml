@@ -12,6 +12,7 @@ dependencies = [
     "price-parser>=0.3.4",
     "jmespath>=1",
     "pytest>=7",
+    "scrapy-playwright>=0.0.48",
 ]
 
 [tool.pytest.ini_options]

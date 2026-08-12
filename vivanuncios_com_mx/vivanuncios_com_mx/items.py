@@ -2,6 +2,13 @@ from dataclasses import dataclass, field
 
 
 @dataclass
+class NavigationItem:
+    items: list[dict] | None = None
+    next_page: str | None = None
+    subcategories: list[dict] | None = None
+
+
+@dataclass
 class PropertyItem:
     title: str | None = None
     url: str | None = None
