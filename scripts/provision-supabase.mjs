@@ -78,8 +78,7 @@ function asArray(maybe, ...keys) {
 
 function randomPassword(len = 24) {
   // Supabase requires: >=10 chars, uppercase, lowercase, number, and a non-alphanumeric char.
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
-  const special = "!@#$%^&*()-_=+";
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
   let s = "";
   for (let i = 0; i < len - 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
   // guarantee character classes
