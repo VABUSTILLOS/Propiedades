@@ -11,9 +11,7 @@ import {
   type ListadosTab,
   type MapBounds,
 } from "@/modules/lib/schemas";
-import { getCurrentUser } from "@/modules/auth/session";
 import { toQueryString } from "@/modules/search/query-string";
-import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { ListadosTabs } from "@/modules/listados/components/listados-tabs";
 import { SearchResults } from "@/modules/maps/components/search-results";
@@ -69,8 +67,7 @@ export default async function ListadosPage({ searchParams }: Props) {
     limit: 24,
   };
 
-  const [user, pageResult, counts] = await Promise.all([
-    getCurrentUser(),
+  const [pageResult, counts] = await Promise.all([
     searchListingsPage(filters),
     Promise.all([
       countActiveListings(tabToFilters.todos),
@@ -107,8 +104,6 @@ export default async function ListadosPage({ searchParams }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader user={user} />
-
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">Listados</h1>

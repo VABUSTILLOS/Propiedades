@@ -11,7 +11,6 @@ import {
 } from "@/modules/home/queries";
 import { HeroSearch } from "@/modules/home/components/hero-search";
 import { ChatAssistantSection } from "@/modules/chat/components/chat-assistant-section";
-import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { FeaturedListings } from "@/modules/home/components/featured-listings";
@@ -60,8 +59,6 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader user={user} />
-
       <main className="flex-1">
         {/* Hero + búsqueda */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#D67E3C] via-[#C4571D] to-[#8F2E0F] text-white">

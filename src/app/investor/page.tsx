@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { getCurrentUser } from "@/modules/auth/session";
-import { SiteHeader } from "@/modules/home/components/site-header";
 import {
   countActiveListings,
   searchListings,
@@ -98,8 +96,7 @@ export default async function InvestorPage({ searchParams }: Props) {
     limit: 100,
   };
 
-  const [user, listings, counts] = await Promise.all([
-    getCurrentUser(),
+  const [listings, counts] = await Promise.all([
     searchListings(filters),
     Promise.all([
       countActiveListings(tabToFilters.todos),
@@ -132,8 +129,6 @@ export default async function InvestorPage({ searchParams }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader user={user} />
-
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
           <div>

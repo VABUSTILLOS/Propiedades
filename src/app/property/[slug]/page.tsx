@@ -29,7 +29,6 @@ import {
   formatMxn,
   isFinanciable,
 } from "@/modules/lib/real-estate";
-import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 
 type Props = {
@@ -71,8 +70,6 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader user={user} />
-
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         <Link
           href="/search"

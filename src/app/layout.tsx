@@ -4,6 +4,8 @@ import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@/modules/lib/react-query/provider";
 import { CommandPalette } from "@/modules/search/components/command-palette";
 import { resolveTenant } from "@/modules/profiles/tenant";
+import { getCurrentUser } from "@/modules/auth/session";
+import { SiteHeader } from "@/modules/home/components/site-header";
 
 import "./globals.css";
 
@@ -27,7 +29,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const tenant = await resolveTenant();
+  const [tenant, user] = await Promise.all([
+    resolveTenant(),
+    getCurrentUser(),
+  ]);
   const brand = tenant.branding;
 
   return (
@@ -42,6 +47,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       }
     >
       <body className="min-h-full flex flex-col">
+        <SiteHeader user={user} />
         <QueryProvider>
           {children}
           <CommandPalette />

@@ -14,9 +14,7 @@ import { parseBoundsString,
   searchParamsSchema,
   type MapBounds,
 } from "@/modules/lib/schemas";
-import { getCurrentUser } from "@/modules/auth/session";
 import { toQueryString } from "@/modules/search/query-string";
-import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { Building2, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -54,8 +52,7 @@ export default async function SearchPage({ searchParams }: Props) {
     limit: 24,
   };
 
-  const [user, pageResult, cities] = await Promise.all([
-    getCurrentUser(),
+  const [pageResult, cities] = await Promise.all([
     // Natural-language queries go through semantic search when embeddings
     // are configured; otherwise it falls back to the keyword path.
     parsed.data?.query
@@ -93,8 +90,6 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader user={user} />
-
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         <div className="mb-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
