@@ -45,6 +45,7 @@ function loadMapsApi(): Promise<GoogleMaps | null> {
     script.defer = true;
     window.__gmapsBootstrap = () => {
       resolve(window.google ?? null);
+      void loadExtendedComponentLibrary();
     };
     script.addEventListener("error", () => resolve(null));
     document.head.appendChild(script);
@@ -184,3 +185,49 @@ export const GOOGLE_MAPS_MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ?? 
 export const GOOGLE_MAPS_ADVANCED = Boolean(
   GOOGLE_MAPS_AVAILABLE && GOOGLE_MAPS_MAP_ID,
 );
+
+/**
+ * Injects the @googlemaps/extended-component-library (gmpx-place-picker,
+ * gmp-map web components). Called once the Maps JS API boots.
+ */
+const EXTENDED_LIB_SRC =
+  "https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js";
+
+function loadExtendedComponentLibrary(): void {
+  if (document.querySelector(`script[src="${EXTENDED_LIB_SRC}"]`)) return;
+  const script = document.createElement("script");
+  script.src = EXTENDED_LIB_SRC;
+  script.type = "module";
+  document.head.appendChild(script);
+}
+
+/** True once the extended component library registered gmpx-place-picker. */
+export function useGmpxPlacePicker(): boolean {
+  const [available, setAvailable] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const check = () => {
+      if (cancelled) return;
+      const defined = window.customElements?.get("gmpx-place-picker");
+      if (defined) {
+        setAvailable(true);
+        return;
+      }
+      window.customElements?.whenDefined("gmpx-place-picker").then(
+        () => {
+          if (!cancelled) setAvailable(true);
+        },
+        () => {
+          /* library failed to load; stay on legacy fallback */
+        },
+      );
+    };
+    check();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return available;
+}

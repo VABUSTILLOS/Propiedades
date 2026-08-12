@@ -4,8 +4,9 @@ import { useState } from "react";
 import { MapPin, Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { useGoogleMaps, usePlacesAutocomplete, resolvePlace } from "@/modules/maps/hooks";
+import { useGoogleMaps, usePlacesAutocomplete, resolvePlace, useGmpxPlacePicker } from "@/modules/maps/hooks";
 import { GOOGLE_MAPS_AVAILABLE } from "@/modules/maps/hooks";
+import { PlacePickerField } from "@/modules/maps/components/place-picker-field";
 
 export type AutocompleteResult = {
   formatted_address: string;
@@ -19,6 +20,8 @@ export type AutocompleteResult = {
 
 /**
  * Address autocomplete field backed by Google Places.
+ * Uses the modern gmpx-place-picker web component when the extended
+ * component library is available; falls back to a legacy Places input.
  * Renders a plain input when the Maps API key is not configured.
  */
 export function PlacesAutocomplete({
@@ -31,6 +34,7 @@ export function PlacesAutocomplete({
   placeholder?: string;
 }) {
   const google = useGoogleMaps();
+  const gmpxReady = useGmpxPlacePicker();
   const suggestions = usePlacesAutocomplete(value);
   const [open, setOpen] = useState(false);
 
@@ -40,6 +44,15 @@ export function PlacesAutocomplete({
         value={value}
         onChange={(e) => onSelect({ formatted_address: e.target.value, city: "", state: "", colonia: "", zip_code: "", lat: null, lng: null }, e.target.value)}
         placeholder={placeholder}
+      />
+    );
+  }
+
+  if (gmpxReady) {
+    return (
+      <PlacePickerField
+        placeholder={placeholder}
+        onSelect={onSelect}
       />
     );
   }

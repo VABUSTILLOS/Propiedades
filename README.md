@@ -66,7 +66,9 @@ npx -y supabase db push --yes
 ### Google Maps Map ID (advanced markers)
 
 The app loads the Maps JS API on the `beta` channel with the modern Marker library
-(`libraries=maps,marker,places`). To enable **AdvancedMarkerElement**
+(`libraries=maps,marker,places`) plus the
+[`@googlemaps/extended-component-library`](https://www.npmjs.com/package/@googlemaps/extended-component-library)
+for the modern `gmpx-place-picker` address picker. To enable **AdvancedMarkerElement**
 (`<gmp-advanced-marker>` / PinElement pins):
 
 1. In [Google Cloud Console](https://console.cloud.google.com) → **APIs & Services**,
@@ -77,7 +79,9 @@ The app loads the Maps JS API on the `beta` channel with the modern Marker libra
 
 When the Map ID is set, pins render via the modern marker API; without it the
 module automatically falls back to the legacy `google.maps.Marker` API so the
-app keeps working either way.
+app keeps working either way. The address picker uses the modern `gmpx-place-picker`
+web component when the Maps JS API is configured, with a legacy Places input as
+fallback — no extra setup is required.
 
 ### Supabase auth config
 

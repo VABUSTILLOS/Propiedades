@@ -127,6 +127,50 @@ declare global {
       open(map?: Map, anchor?: Marker | null): void;
       close(): void;
     }
+
+    class Place {
+      name?: string;
+      displayName?: string | { text: string };
+      formattedAddress?: string;
+      location?: LatLng | LatLngLiteral | null;
+      viewport?: LatLngBounds | null;
+      types?: string[];
+      addressComponents?: Array<{
+        longText?: string;
+        shortText?: string;
+        types: string[];
+      }>;
+    }
+  }
+
+  /** Web components from the Maps JS beta (`maps,marker`) and extended lib. */
+  interface HTMLGmpMapElement extends HTMLElement {
+    innerMap?: google.maps.Map | null;
+    center?: google.maps.LatLngLiteral | string;
+    zoom?: number | string;
+    "map-id"?: string;
+  }
+
+  interface HTMLGmpAdvancedMarkerElement extends HTMLElement {
+    position?: google.maps.LatLng | google.maps.LatLngLiteral | null;
+    map?: google.maps.Map | null;
+  }
+
+  interface HTMLGmpxApiLoaderElement extends HTMLElement {
+    key?: string;
+    "solution-channel"?: string;
+  }
+
+  interface HTMLGmpxPlacePickerElement extends HTMLElement {
+    value?: google.maps.Place | null;
+    placeholder?: string;
+  }
+
+  interface HTMLElementTagNameMap {
+    "gmp-map": HTMLGmpMapElement;
+    "gmp-advanced-marker": HTMLGmpAdvancedMarkerElement;
+    "gmpx-api-loader": HTMLGmpxApiLoaderElement;
+    "gmpx-place-picker": HTMLGmpxPlacePickerElement;
   }
 
   namespace google.maps.marker {
