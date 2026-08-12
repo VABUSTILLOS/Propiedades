@@ -9,7 +9,8 @@ import {
   getSavedPropertyIds,
   getTopRatedListings,
 } from "@/modules/home/queries";
-import { ChatWidget } from "@/modules/chat/components/chat-widget";
+import { HeroSearch } from "@/modules/home/components/hero-search";
+import { ChatAssistantSection } from "@/modules/chat/components/chat-assistant-section";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { PropertyCard } from "@/modules/home/components/property-card";
@@ -35,6 +36,7 @@ export default async function HomePage() {
   ]);
 
   const topCities = stats.cities.slice(0, 3);
+  const cityNames = stats.cities.map((city) => city.name);
   const savedIds = await getSavedPropertyIds(user?.id ?? null);
 
   // Fetch featured listings per top city for the city-tabbed grid.
@@ -82,7 +84,7 @@ export default async function HomePage() {
             </p>
 
             <div className="mt-8 w-full max-w-3xl">
-              <ChatWidget />
+              <HeroSearch cities={cityNames} />
             </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
@@ -113,6 +115,8 @@ export default async function HomePage() {
         </section>
 
         <ExploreSection cities={stats.cities} />
+
+        <ChatAssistantSection />
 
         {listings.length > 0 && (
           <FeaturedListings
