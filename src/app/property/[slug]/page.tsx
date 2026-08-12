@@ -131,6 +131,12 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               </p>
             )}
 
+            {listing.description && (
+              <p className="whitespace-pre-line text-muted-foreground">
+                {listing.description}
+              </p>
+            )}
+
             <div>
               <h2 className="mb-3 text-lg font-semibold">Ubicación</h2>
               <PropertyLocationMap

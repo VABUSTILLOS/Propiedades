@@ -108,12 +108,6 @@ function ResidentialView({
 }) {
   return (
     <div className="space-y-6">
-      {property.description && (
-        <p className="whitespace-pre-line text-muted-foreground">
-          {property.description}
-        </p>
-      )}
-
       <details open className="group rounded-lg border bg-card p-4">
         <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
           <span>Calculadora de pago (PITI)</span>
