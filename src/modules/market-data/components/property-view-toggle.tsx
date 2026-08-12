@@ -128,7 +128,7 @@ function ResidentialView({
 
       <LifestyleLayer property={property} />
 
-      <details className="group rounded-lg border bg-card p-4">
+      <details open className="group rounded-lg border bg-card p-4">
         <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
           <span>Calculadora de pago (PITI)</span>
           <span className="text-xs font-normal text-muted-foreground">

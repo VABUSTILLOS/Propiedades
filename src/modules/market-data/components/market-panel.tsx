@@ -9,7 +9,7 @@ type Props = {
   benchmark: MarketBenchmarksRow | null;
 };
 
-const DEFAULT_RATE = 0.1049; // ~10.5% APR MX average
+const DEFAULT_RATE = 0.1049; // ~10.5% CAT MX average
 const DEFAULT_TERM = 20; // years
 
 /**
@@ -18,7 +18,7 @@ const DEFAULT_TERM = 20; // years
 export function MarketPanel({ property, benchmark }: Props) {
   const [rate, setRate] = useState(DEFAULT_RATE);
   const [term, setTerm] = useState(DEFAULT_TERM);
-  const [downPaymentPct, setDownPaymentPct] = useState(0.2);
+  const [downPaymentPct, setDownPaymentPct] = useState(0.1);
 
   const loanAmount = property.price * (1 - downPaymentPct);
   const monthlyRate = rate / 12;
@@ -63,7 +63,7 @@ export function MarketPanel({ property, benchmark }: Props) {
       </div>
 
       <div className="rounded-lg border bg-card p-4">
-        <h3 className="font-semibold">Estimación de pago (aprox. PITI)</h3>
+        <h3 className="font-semibold">Estimación de pago</h3>
         <p className="mt-1 text-xs text-muted-foreground">
           Estimación de hipoteca, predial y mantenimiento (HOA).
         </p>
@@ -73,19 +73,19 @@ export function MarketPanel({ property, benchmark }: Props) {
             Enganche: {(downPaymentPct * 100).toFixed(0)}%
             <input
               type="range"
-              min={5}
-              max={50}
+              min={10}
+              max={70}
               value={downPaymentPct * 100}
               onChange={(e) => setDownPaymentPct(Number(e.target.value) / 100)}
               className="mt-1 w-full"
             />
           </label>
           <label className="block text-xs text-muted-foreground">
-            APR: {(rate * 100).toFixed(1)}%
+            CAT: {(rate * 100).toFixed(1)}%
             <input
               type="range"
-              min={4}
-              max={18}
+              min={9}
+              max={15}
               step={0.1}
               value={rate * 100}
               onChange={(e) => setRate(Number(e.target.value) / 100)}

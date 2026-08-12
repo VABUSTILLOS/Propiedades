@@ -47,7 +47,7 @@ export function PitiCalculator({ price, currency, hoaFee, predialAnual }: Props)
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="space-y-1 text-xs text-muted-foreground">
-          Tasa anual (APR)
+          Tasa anual (CAT)
           <input
             type="number"
             step="0.001"
