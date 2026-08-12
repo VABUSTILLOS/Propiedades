@@ -110,7 +110,7 @@ function ResidentialView({
     <div className="space-y-6">
       <details open className="group rounded-lg border bg-card p-4">
         <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
-          <span>Calculadora de pago (PITI)</span>
+          <span>Calculadora de pago</span>
           <span className="text-xs font-normal text-muted-foreground">
             Estima tu mensualidad
           </span>

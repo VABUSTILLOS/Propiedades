@@ -16,6 +16,12 @@ import type { PropertiesRow } from "@/modules/lib/database.types";
  *   3. Search active listings (capped for chat display).
  *   4. Build a natural reply (LLM when available, templated fallback).
  *
+ * By default the search is STRICT: filters are never silently relaxed, so a
+ * request with no exact matches returns an honest "no encontré" reply instead
+ * of unrelated properties. The client can opt into relaxed "alternativas"
+ * (see `mode: "alternatives"`), where filters are dropped one at a time but
+ * every result is labelled so the user knows what was relaxed.
+ *
  * Returns the reply, the matching results, and the filters that produced
  * them (so the client can pass `previousFilters` on the next message).
  */
@@ -40,14 +46,14 @@ function buildTemplateReply(ctx: TemplateContext): string {
   const keyword = ctx.query ? ` que coincidan con "${ctx.query}"` : "";
 
   if (ctx.count === 0) {
-    return `No encontré ${what}${where}${budget}${keyword}. Prueba ajustar el precio o la ubicación.`;
+    return `No encontré ${what}${where}${budget}${keyword}. Prueba ajustar el precio o la ubicación, o pide "ver alternativas".`;
   }
   const noun = ctx.count === 1 ? "resultado" : "resultados";
   const note = ctx.relaxedNote ? ` ${ctx.relaxedNote}` : "";
   return `Encontré ${ctx.count} ${noun}${where}${budget}${keyword}.${note}`;
 }
 
-function toChatResult(row: PropertiesRow): ChatResult {
+function toChatResult(row: PropertiesRow, relaxed?: boolean): ChatResult {
   return {
     id: row.id,
     slug: row.slug,
@@ -61,8 +67,11 @@ function toChatResult(row: PropertiesRow): ChatResult {
     score: row.property_score,
     recamaras: row.recamaras,
     banos: row.banos,
+    estacionamientos: row.estacionamientos,
+    antiguedad: row.antiguedad,
     construccion_m2: row.construccion_m2,
     terreno_m2: row.terreno_m2,
+    relaxed,
   };
 }
 
@@ -155,12 +164,20 @@ async function fuseSemanticMatches(
   return merged;
 }
 
-/** Run the full search pipeline for a chat message. */
+/** Run the full search pipeline for a chat message.
+ *
+ * @param options.mode "strict" (default) returns an honest no-results reply
+ *   when nothing matches. "alternatives" drops filters one at a time to show
+ *   "alternativas", labelling every relaxed result. `type` (sale/rent) is
+ *   never dropped so we never present sale listings as rent and vice versa.
+ */
 export async function runChatSearch(
   message: string,
   cities: string[],
   previousFilters?: ChatFilters,
+  options: { mode?: "strict" | "alternatives" } = {},
 ): Promise<ChatResponse> {
+  const mode = options.mode ?? "strict";
   const extracted = await interpretMessage(message, cities);
   const filters = mergeFilters(previousFilters, extracted);
 
@@ -172,14 +189,15 @@ export async function runChatSearch(
     });
 
   let rows = await search(filters);
+  let relaxed: ChatResponse["relaxed"];
 
-  // Zero-result relaxation: drop the least specific filters one at a time so a
-  // too-narrow keyword or city still surfaces *something* instead of an empty
-  // answer. Drops accumulate (query → city → price → size) so the last tier
-  // searches the broadest set. The note tells the user what was relaxed.
-  let relaxedNote: string | undefined;
-  if (rows.length === 0) {
-    const relaxed = { ...filters };
+  // In strict mode we never relax filters silently: an empty result is an
+  // honest answer, not a licence to show unrelated properties.
+  if (rows.length === 0 && mode === "alternatives") {
+    // Drop the least specific filters one at a time so a too-narrow keyword
+    // or city still surfaces *something* — but every result is labelled so
+    // the user knows what was relaxed. type is deliberately excluded.
+    const relaxedFilters = { ...filters };
     const dropSteps: Array<{ name: string; drop: (f: ChatFilters) => void }> = [
       {
         name: `búsqueda ("${filters.query}")`,
@@ -187,7 +205,7 @@ export async function runChatSearch(
       },
       {
         name: "ciudad",
-        drop: (f) => { delete f.city; },
+        drop: (f) => { delete f.city; delete f.colonia; },
       },
       {
         name: "precio",
@@ -198,15 +216,20 @@ export async function runChatSearch(
         drop: (f) => { delete f.minM2; delete f.maxM2; delete f.minBedrooms; },
       },
     ];
+    const dropped: string[] = [];
     for (const step of dropSteps) {
-      const before = JSON.stringify(relaxed);
-      step.drop(relaxed);
-      if (JSON.stringify(relaxed) === before) continue; // nothing to drop
-      rows = await search(relaxed);
-      if (rows.length > 0) {
-        relaxedNote = `Mostrando resultados sin filtro de ${step.name}.`;
-        break;
-      }
+      const before = JSON.stringify(relaxedFilters);
+      step.drop(relaxedFilters);
+      if (JSON.stringify(relaxedFilters) === before) continue; // nothing to drop
+      dropped.push(step.name);
+      rows = await search(relaxedFilters);
+      if (rows.length > 0) break;
+    }
+    if (rows.length > 0) {
+      relaxed = {
+        dropped,
+        note: `Mostrando alternativas sin filtro de ${dropped.join(" y ")}.`,
+      };
     }
   }
 
@@ -218,11 +241,14 @@ export async function runChatSearch(
     rows = await fuseSemanticMatches(rows, filters, filters.query);
   }
 
+  const relaxedNote = relaxed?.note;
   const reply = await buildReply(rows.length, filters, message, relaxedNote);
 
   return {
     reply,
-    results: rows.map(toChatResult),
+    results: rows.map((r) => toChatResult(r, relaxed != null)),
     filters,
+    matched: rows.length > 0 && relaxed == null,
+    relaxed,
   };
 }

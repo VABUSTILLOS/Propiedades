@@ -180,6 +180,7 @@ function hasBookingIntent(body: string): boolean {
  * Handle one inbound WhatsApp text. Returns the message to send back, or null
  * when nothing should be sent. Greetings get the help menu, booking intents
  * get the human-advisor handoff, anything else runs the real property search.
+ * Asking for "alternativas" opts into the relaxed search mode.
  */
 export async function handleWhatsAppInbound(
   waId: string,
@@ -193,12 +194,18 @@ export async function handleWhatsAppInbound(
   if (hasBookingIntent(message)) return buildAdvisorMessage();
   if (isGreeting(message)) return buildHelpMenu();
 
+  const wantsAlternatives = /(?:ver|mu[eé]strame|dame|quiero)\s+alternativas?\b|alternativas?\s*$/i.test(
+    message,
+  );
+
   const previous = await getChatState(waId);
   const cities = await getSearchableCities().catch(() => []);
 
   let response: { reply: string; results: ChatResult[]; filters: ChatFilters };
   try {
-    response = await runChatSearch(message, cities, previous);
+    response = await runChatSearch(message, cities, previous, {
+      mode: wantsAlternatives ? "alternatives" : "strict",
+    });
   } catch {
     // Never let a search failure block the reply.
     return buildHelpMenu();

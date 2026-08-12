@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, ListPlus } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowLeft,
+  ArrowUpRight,
+  Bath,
+  BedDouble,
+  Building2,
+  CalendarClock,
+  Car,
+  LandPlot,
+  ListPlus,
+  type LucideIcon,
+} from "lucide-react";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
@@ -358,11 +370,40 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               </CardHeader>
               <CardContent>
                 <dl className="space-y-2 text-sm">
-                  <DetailRow label="Terreno" value={`${listing.terreno_m2} m²`} />
                   <DetailRow
-                    label="Construcción"
+                    icon={LandPlot}
+                    label={listing.category === "terreno" ? "m² lote" : "m² terreno"}
+                    value={`${listing.terreno_m2} m²`}
+                  />
+                  <DetailRow
+                    icon={Building2}
+                    label="m² construido"
                     value={`${listing.construccion_m2} m²`}
                   />
+                  {listing.recamaras != null && (
+                    <DetailRow
+                      icon={BedDouble}
+                      label="Recámaras"
+                      value={String(listing.recamaras)}
+                    />
+                  )}
+                  {listing.banos != null && (
+                    <DetailRow icon={Bath} label="Baños" value={String(listing.banos)} />
+                  )}
+                  {listing.estacionamientos != null && (
+                    <DetailRow
+                      icon={Car}
+                      label="Estacionamientos"
+                      value={String(listing.estacionamientos)}
+                    />
+                  )}
+                  {listing.antiguedad != null && (
+                    <DetailRow
+                      icon={CalendarClock}
+                      label="Antigüedad"
+                      value={`${listing.antiguedad} años`}
+                    />
+                  )}
                   {listing.zip_code && (
                     <DetailRow label="C.P." value={listing.zip_code} />
                   )}
@@ -382,10 +423,21 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+function DetailRow({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon?: LucideIcon;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <dt className="text-muted-foreground">{label}</dt>
+      <dt className="flex items-center gap-2 text-muted-foreground">
+        {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />}
+        {label}
+      </dt>
       <dd className="font-medium">{value}</dd>
     </div>
   );

@@ -129,6 +129,8 @@ export type PropertiesRow = {
   video_url: string | null;
   recamaras: number | null;
   banos: number | null;
+  estacionamientos: number | null;
+  antiguedad: number | null;
   amenidades: Json;
   puntos_fuertes_bento: Json;
   embedding: unknown | null;

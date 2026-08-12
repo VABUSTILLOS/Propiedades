@@ -62,6 +62,8 @@ export function ShareFavoritesDialog({ favorites, listsWithItems, trigger }: Pro
         score: null,
         recamaras: null,
         banos: null,
+        estacionamientos: null,
+        antiguedad: null,
         construccion_m2: 0,
         terreno_m2: 0,
       });
@@ -286,6 +288,8 @@ function toShareProperty(property: NonNullable<FavoriteWithProperty["property"]>
     score: property.property_score,
     recamaras: property.recamaras,
     banos: property.banos,
+    estacionamientos: property.estacionamientos,
+    antiguedad: property.antiguedad,
     construccion_m2: property.construccion_m2,
     terreno_m2: property.terreno_m2,
   };

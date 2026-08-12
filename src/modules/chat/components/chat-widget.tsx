@@ -40,7 +40,7 @@ export function ChatWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [turns, isLoading]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, includeAlternatives = false) => {
     const message = text.trim();
     if (!message || isLoading) return;
 
@@ -54,7 +54,11 @@ export function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, previousFilters: filters }),
+        body: JSON.stringify({
+          message,
+          previousFilters: filters,
+          includeAlternatives,
+        }),
       });
 
       if (!res.ok) {
@@ -67,6 +71,9 @@ export function ChatWidget() {
         role: "assistant",
         content: data.reply,
         results: data.results,
+        matched: data.matched,
+        relaxed: data.relaxed,
+        requestMessage: message,
       };
       setTurns((prev) => [...prev, assistantTurn]);
       setFilters(data.filters);

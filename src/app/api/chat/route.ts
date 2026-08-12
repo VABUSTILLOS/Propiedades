@@ -10,10 +10,11 @@ export const maxDuration = 30;
 
 /**
  * POST /api/chat
- * Body: { message: string, previousFilters?: ChatFilters }
+ * Body: { message: string, previousFilters?: ChatFilters, includeAlternatives?: boolean }
  * Interprets a natural-language query, searches active listings and returns
  * a reply plus result cards for the chat UI. Stateless per request — the
- * client holds the previous filters for follow-up refinements.
+ * client holds the previous filters for follow-up refinements. By default the
+ * search is strict; pass includeAlternatives to opt into relaxed results.
  */
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as unknown;
@@ -24,11 +25,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: detail }, { status: 400 });
   }
 
-  const { message, previousFilters } = parsed.data;
+  const { message, previousFilters, includeAlternatives } = parsed.data;
 
   try {
     const cities = await getSearchableCities();
-    const response = await runChatSearch(message, cities, previousFilters);
+    const response = await runChatSearch(message, cities, previousFilters, {
+      mode: includeAlternatives ? "alternatives" : "strict",
+    });
 
     return NextResponse.json(response satisfies ChatResponse);
   } catch {

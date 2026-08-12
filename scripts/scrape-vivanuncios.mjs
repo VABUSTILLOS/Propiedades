@@ -216,6 +216,12 @@ function parseSearchPage(html) {
     const banosMatch = tokens.find((t) => /(\d+)\s*baños?/i.test(t));
     const banos = banosMatch ? parseInt(banosMatch.match(/(\d+)/)[1], 10) : 0;
 
+    const estacMatch = tokens.find((t) => /(\d+)\s*estac\.?/i.test(t));
+    const estacionamientos = estacMatch ? parseInt(estacMatch.match(/(\d+)/)[1], 10) : 0;
+
+    const antiguedadMatch = tokens.find((t) => /(\d+)\s*años?/i.test(t));
+    const antiguedad = antiguedadMatch ? parseInt(antiguedadMatch.match(/(\d+)/)[1], 10) : 0;
+
     const pubMatch = card.match(/Publicado\s+(hoy|desde ayer|hace\s+\d+\s+(?:días?|horas?))/i);
     const publishedLabel = pubMatch ? pubMatch[0].replace(/^Publicado\s+/i, "").toLowerCase() : "";
 
@@ -291,6 +297,8 @@ function parseSearchPage(html) {
       construccion_m2: terreno_m2, // tile only exposes terreno; detail page refines it
       recamaras,
       banos,
+      estacionamientos,
+      antiguedad,
       address,
       description: description ?? "",
       images: photos,
@@ -351,7 +359,14 @@ async function chatCompletion({ system, user, jsonMode = false }) {
 }
 
 const EXTRACT_SYSTEM =
-  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica"), "category": one of "casa" | "departamento" | "local" | "bodega" | "terreno", "deal_type": one of "venta_directa" | "remate_bancario" | "flipping" | "traspaso". Classify from the title/description keywords: remate, adjudicación, banco → remate_bancario; traspaso, ceder → traspaso; reparar, remodelar, flipping → flipping; local/oficina → local; bodega/nave → bodega; terreno/lote → terreno. Default "venta_directa"/"casa". "institucion_bancaria": string or null (bank name for remates), "fecha_remate": string YYYY-MM-DD or null, "costo_reparacion_estimado": number MXN or null (flipping), "valor_post_reparacion_estimado": number MXN or null (flipping ARV), "condiciones_traspaso": string or null, "contact_name": string or null (agency/broker name, from footer "Publicado por" or publisher section), "contact_type": "inmobiliaria" | "agencia" | "particular" or null, "contact_phone": string or null (whitespace-free MX phone, e.g. "6142523883"; only if a real phone number is visible in the page text), "contact_email": string or null (only if an email is visible)}';
+  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "recamaras": number (bedrooms, 0 if unknown), "banos": number (bathrooms — count "medio baño" as 1, 0 if unknown), "estacionamientos": number (parking spaces, 0 if unknown), "antiguedad": number (property age in years, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica"), "category": one of "casa" | "departamento" | "local" | "bodega" | "terreno", "deal_type": one of "venta_directa" | "remate_bancario" | "flipping" | "traspaso". Classify from the title/description keywords: remate, adjudicación, banco → remate_bancario; traspaso, ceder → traspaso; reparar, remodelar, flipping → flipping; local/oficina → local; bodega/nave → bodega; terreno/lote → terreno. Default "venta_directa"/"casa". "institucion_bancaria": string or null (bank name for remates), "fecha_remate": string YYYY-MM-DD or null, "costo_reparacion_estimado": number MXN or null (flipping), "valor_post_reparacion_estimado": number MXN or null (flipping ARV), "condiciones_traspaso": string or null, "contact_name": string or null (agency/broker name, from footer "Publicado por" or publisher section), "contact_type": "inmobiliaria" | "agencia" | "particular" or null, "contact_phone": string or null (whitespace-free MX phone, e.g. "6142523883"; only if a real phone number is visible in the page text), "contact_email": string or null (only if an email is visible)}';
+
+/** Convert a raw LLM value to a positive integer or null (0/undefined → null). */
+function toPosIntOrNull(v) {
+  if (v === undefined || v === null) return null;
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0 ? Math.round(n) : null;
+}
 
 /** Ask DeepSeek to extract structured data from a detail page markdown. */
 async function extractFromDetail(markdown, fallbackTitle) {
@@ -382,6 +397,10 @@ async function extractFromDetail(markdown, fallbackTitle) {
       currency: typeof parsed.currency === "string" ? parsed.currency : "MXN",
       terreno_m2: Number(parsed.terreno_m2) || 0,
       construccion_m2: Number(parsed.construccion_m2) || 0,
+      recamaras: toPosIntOrNull(parsed.recamaras),
+      banos: toPosIntOrNull(parsed.banos),
+      estacionamientos: toPosIntOrNull(parsed.estacionamientos),
+      antiguedad: toPosIntOrNull(parsed.antiguedad),
       description: typeof parsed.description === "string" ? parsed.description : "",
       address_text: typeof parsed.address_text === "string" ? parsed.address_text : "",
       colonia: typeof parsed.colonia === "string" ? parsed.colonia : "",
@@ -623,6 +642,10 @@ async function insertProperty(listing, extracted, geocoded, forcedDealType = nul
   const price = extracted?.price || listing.price;
   const terreno_m2 = extracted?.terreno_m2 || listing.terreno_m2;
   const construccion_m2 = extracted?.construccion_m2 || listing.construccion_m2;
+  const recamaras = toPosIntOrNull(extracted?.recamaras ?? listing.recamaras);
+  const banos = toPosIntOrNull(extracted?.banos ?? listing.banos);
+  const estacionamientos = toPosIntOrNull(extracted?.estacionamientos ?? listing.estacionamientos);
+  const antiguedad = toPosIntOrNull(extracted?.antiguedad ?? listing.antiguedad);
   const description = extracted?.description || listing.description || "";
   const contactName = extracted?.contact_name || listing.contactName || null;
   const contactType = extracted?.contact_type || listing.contactType || null;
@@ -667,6 +690,10 @@ async function insertProperty(listing, extracted, geocoded, forcedDealType = nul
     currency: "MXN",
     terreno_m2,
     construccion_m2,
+    recamaras,
+    banos,
+    estacionamientos,
+    antiguedad,
     address,
     colonia: geocoded?.colonia || extracted?.colonia || "",
     city: geocoded?.city || extracted?.city || "Chihuahua",

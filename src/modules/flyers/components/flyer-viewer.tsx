@@ -232,7 +232,7 @@ export function FlyerViewer({ flyer, property }: Props) {
             data-section="finanzas"
             className="scroll-mt-16 rounded-lg border p-4"
           >
-            <h2 className="mb-3 font-semibold">Calculadora de pago (PITI)</h2>
+            <h2 className="mb-3 font-semibold">Calculadora de pago</h2>
             <PitiCalculator
               price={property.price}
               currency={property.currency}
