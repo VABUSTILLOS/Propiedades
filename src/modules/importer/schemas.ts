@@ -9,6 +9,13 @@ import {
 /** POST /api/properties/import-universal body. */
 export const importUrlSchema = z.object({
   url: z.string().trim().url("Must be a valid URL").max(2000),
+  /**
+   * Optional captured page content (text or raw HTML) copied from the user's
+   * logged-in browser. Facebook Marketplace blocks server-side scraping, so
+   * when the user pastes the listing from their own (authenticated) browser
+   * session we use this instead of fetching the URL.
+   */
+  content: z.string().max(2_000_000).optional(),
 });
 
 /**

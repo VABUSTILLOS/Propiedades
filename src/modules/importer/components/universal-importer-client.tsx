@@ -3,7 +3,15 @@
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link2, Loader2, MapPin, Save, Sparkles } from "lucide-react";
+import {
+  Clipboard,
+  Globe,
+  Link2,
+  Loader2,
+  MapPin,
+  Save,
+  Sparkles,
+} from "lucide-react";
 
 import { createImportedDraft } from "@/modules/listings/actions";
 import {
@@ -32,14 +40,29 @@ const STEPS = [
 
 const STEP_MS = 900;
 
+const FB_COPY_INSTRUCTIONS = `Abre el anuncio de Facebook Marketplace en tu navegador (debes estar con sesión iniciada en Facebook). Pulsa ⌘A (Mac) o Ctrl+A (Windows) para seleccionar todo el contenido del anuncio y pulsa ⌘C / Ctrl+C para copiarlo. Luego pégalo en el cuadro de abajo.`;
+
+const isFacebookUrl = (value: string) => {
+  try {
+    const host = new URL(value).hostname;
+    return host === "facebook.com" || host.endsWith(".facebook.com");
+  } catch {
+    return false;
+  }
+};
+
 /**
  * Universal Property Importer: paste any listing URL (Facebook Marketplace,
  * Inmuebles24, Mercado Libre, …) and get a pre-filled draft with a draggable
- * map pin, ready to save.
+ * map pin, ready to save. Facebook Marketplace blocks server-side scraping, so
+ * for Facebook URLs the user pastes the listing content copied from their own
+ * logged-in browser and it is sent alongside the URL.
  */
 export function UniversalImporterClient() {
   const router = useRouter();
   const [url, setUrl] = useState("");
+  const [fbContent, setFbContent] = useState("");
+  const [copied, setCopied] = useState(false);
   const [phase, setPhase] = useState<"idle" | "loading" | "error">("idle");
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +79,8 @@ export function UniversalImporterClient() {
   const [isSaving, startSaving] = useTransition();
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  const showFacebookHelper = isFacebookUrl(url);
+
   // Micro-animation: advance the loader step while the pipeline runs.
   useEffect(() => {
     if (phase !== "loading") return;
@@ -64,6 +89,16 @@ export function UniversalImporterClient() {
     }, STEP_MS);
     return () => window.clearInterval(timer);
   }, [phase]);
+
+  const copyInstructions = async () => {
+    try {
+      await navigator.clipboard.writeText(FB_COPY_INSTRUCTIONS);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Clipboard unavailable — the text is already visible on screen.
+    }
+  };
 
   const importFromUrl = () => {
     const trimmed = url.trim();
@@ -76,7 +111,10 @@ export function UniversalImporterClient() {
     fetch("/api/properties/import-universal", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: trimmed }),
+      body: JSON.stringify({
+        url: trimmed,
+        ...(fbContent.trim() ? { content: fbContent } : {}),
+      }),
     })
       .then(async (res) => {
         const json = (await res.json()) as {
@@ -136,6 +174,7 @@ export function UniversalImporterClient() {
       setDialogOpen(false);
       setDraft(null);
       setUrl("");
+      setFbContent("");
       router.push("/my-listings");
       router.refresh();
     });
@@ -178,6 +217,65 @@ export function UniversalImporterClient() {
             {phase === "loading" ? "Importando…" : "Importar"}
           </Button>
         </div>
+
+        <AnimatePresence>
+          {showFacebookHelper && phase === "idle" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
+                <div className="flex items-start gap-2">
+                  <Globe className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-semibold">
+                        Importar desde Facebook Marketplace
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={copyInstructions}
+                      >
+                        <Clipboard className="size-3.5" />
+                        {copied ? "Copiado" : "Copiar instrucciones"}
+                      </Button>
+                    </div>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      Facebook bloquea el acceso automático a los anuncios. Para
+                      que la IA lea los datos reales, copia el contenido del
+                      anuncio desde tu navegador (con tu sesión de Facebook
+                      iniciada) y pégalo aquí.
+                    </p>
+                    <ol className="list-decimal space-y-1 pl-4 text-xs text-muted-foreground">
+                      <li>
+                        Abre el anuncio en Facebook y selecciona todo el
+                        contenido (⌘A / Ctrl+A) y cópialo (⌘C / Ctrl+C).
+                      </li>
+                      <li>Pega el contenido en el cuadro de abajo.</li>
+                      <li>Pulsa Importar para extraer los datos con IA.</li>
+                    </ol>
+                    <textarea
+                      value={fbContent}
+                      onChange={(e) => setFbContent(e.target.value)}
+                      placeholder="Pega aquí el contenido del anuncio de Facebook…"
+                      rows={5}
+                      className="w-full rounded-lg border bg-background p-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                    />
+                    <p className="text-[11px] text-muted-foreground">
+                      ¿La pegaste como texto plano? Funciona igual: la IA
+                      extrae título, precio, metros y descripción desde lo que
+                      pegues.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {phase === "loading" && (

@@ -66,6 +66,57 @@ export async function fetchPageContent(url: string): Promise<string | null> {
   }
 }
 
+/**
+ * Convert raw HTML (e.g. captured from the user's authenticated browser) into
+ * readable text for the AI extractor. Strips scripts/styles/tags, decodes
+ * common entities, and collects absolute image URLs so listings keep photos.
+ */
+export function htmlToReadableText(html: string): {
+  text: string;
+  images: string[];
+} {
+  const images = new Set<string>();
+  for (const match of html.matchAll(
+    /<img[^>]+(?:src|data-src|data-lazy-src)=["'](https?:\/\/[^"']+)["']/gi,
+  )) {
+    const src = match[1] ?? "";
+    if (src && !src.includes("placeholder") && !src.includes("static.xx.fbcdn")) {
+      images.add(src);
+    }
+  }
+  // og:image is often the highest-quality listing photo.
+  for (const match of html.matchAll(
+    /<meta[^>]+property=["']og:image["'][^>]+content=["'](https?:\/\/[^"']+)["']/gi,
+  )) {
+    images.add(match[1] ?? "");
+  }
+  for (const match of html.matchAll(
+    /<meta[^>]+content=["'](https?:\/\/[^"']+)["'][^>]+property=["']og:image["']/gi,
+  )) {
+    images.add(match[1] ?? "");
+  }
+
+  const stripped = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|h[1-6]|li|tr|section|article)>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x2F;/gi, "/")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n");
+
+  return { text: stripped.trim(), images: [...images].slice(0, 20) };
+}
+
 function toNumber(value: unknown): number {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string") {
@@ -236,33 +287,12 @@ export async function geocodeAddress(input: {
 const MEXICO_CITY_CENTER = { lat: 19.4326, lng: -99.1332 };
 
 /**
- * Orchestrate the full import pipeline: fetch → extract → geocode.
+ * Turn an ExtractedProperty + geocoding into the final draft payload.
  */
-export async function importPropertyFromUrl(
+async function buildDraft(
+  extracted: ExtractedProperty,
   url: string,
-): Promise<
-  | { ok: true; data: ImportedPropertyDraft }
-  | { ok: false; error: string; status: number }
-> {
-  const content = await fetchPageContent(url);
-  if (!content) {
-    return {
-      ok: false,
-      error: "No se pudo leer el contenido de la página (puede estar bloqueada).",
-      status: 422,
-    };
-  }
-
-  const extracted = await extractPropertyFromMarkdown(content);
-  if (!extracted) {
-    return {
-      ok: false,
-      error:
-        "No se pudo extraer la propiedad con IA. Verifica DEEPSEEK_API_KEY o KIEAI_API_KEY o que el enlace sea una publicación válida.",
-      status: 422,
-    };
-  }
-
+): Promise<ImportedPropertyDraft> {
   const geocoded = await geocodeAddress({
     address_text: extracted.address_text,
     colonia: extracted.colonia,
@@ -273,7 +303,7 @@ export async function importPropertyFromUrl(
   const lng = geocoded?.lng ?? MEXICO_CITY_CENTER.lng;
   const address = geocoded?.formatted_address || extracted.address_text;
 
-  const data: ImportedPropertyDraft = {
+  return {
     title: extracted.title || "Propiedad importada",
     price: extracted.price,
     currency: extracted.currency || "MXN",
@@ -291,6 +321,70 @@ export async function importPropertyFromUrl(
     bento_highlights: extracted.bento_highlights,
     source_url: url,
   };
+}
 
+type ImportResult =
+  | { ok: true; data: ImportedPropertyDraft }
+  | { ok: false; error: string; status: number };
+
+/**
+ * Orchestrate the full import pipeline: fetch → extract → geocode.
+ */
+export async function importPropertyFromUrl(url: string): Promise<ImportResult> {
+  const content = await fetchPageContent(url);
+  if (!content) {
+    return {
+      ok: false,
+      error: "No se pudo leer el contenido de la página (puede estar bloqueada).",
+      status: 422,
+    };
+  }
+
+  return importPropertyFromContent(content, url);
+}
+
+/**
+ * Import a property from content captured directly from the user's browser
+ * (e.g. a logged-in Facebook Marketplace tab that blocks server-side fetch).
+ * Accepts raw HTML or readable text; HTML is normalized to text first.
+ */
+export async function importPropertyFromContent(
+  rawContent: string,
+  url: string,
+): Promise<ImportResult> {
+  const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(rawContent);
+  let content = rawContent;
+  let capturedImages: string[] = [];
+
+  if (looksLikeHtml) {
+    const normalized = htmlToReadableText(rawContent);
+    content = normalized.text;
+    capturedImages = normalized.images;
+  }
+
+  if (!content.trim()) {
+    return {
+      ok: false,
+      error: "El contenido capturado está vacío. Copia el anuncio completo de Facebook y vuelve a intentarlo.",
+      status: 422,
+    };
+  }
+
+  const extracted = await extractPropertyFromMarkdown(content);
+  if (!extracted) {
+    return {
+      ok: false,
+      error:
+        "No se pudo extraer la propiedad con IA. Verifica DEEPSEEK_API_KEY o KIEAI_API_KEY o que el enlace sea una publicación válida.",
+      status: 422,
+    };
+  }
+
+  // Prefer images found in the captured HTML when the AI didn't return any.
+  if (extracted.images.length === 0 && capturedImages.length > 0) {
+    extracted.images = capturedImages;
+  }
+
+  const data = await buildDraft(extracted, url);
   return { ok: true, data };
 }

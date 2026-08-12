@@ -1,7 +1,10 @@
 import { requireUserOrThrow } from "@/modules/auth/session";
 import { parseInput } from "@/modules/lib/action-result";
 import { importUrlSchema } from "@/modules/importer/schemas";
-import { importPropertyFromUrl } from "@/modules/importer/server";
+import {
+  importPropertyFromContent,
+  importPropertyFromUrl,
+} from "@/modules/importer/server";
 
 export const runtime = "nodejs";
 
@@ -32,7 +35,10 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
-  const result = await importPropertyFromUrl(parsed.data.url);
+  const { url, content } = parsed.data;
+  const result = content?.trim()
+    ? await importPropertyFromContent(content, url)
+    : await importPropertyFromUrl(url);
   if (!result.ok) {
     return Response.json({ ok: false, error: result.error }, { status: result.status });
   }
