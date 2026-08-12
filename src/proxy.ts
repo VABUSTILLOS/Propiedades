@@ -16,7 +16,7 @@ const PROTECTED_PREFIXES = [
   "/settings",
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { supabase, response } =
     await createSupabaseMiddlewareClient(request);
 
