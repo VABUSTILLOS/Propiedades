@@ -1,0 +1,2916 @@
+{
+  "generated_at": "2026-08-12T16:33:39.931Z",
+  "scope": "all properties",
+  "summary": {
+    "total": 105,
+    "statuses": {
+      "complete": 4,
+      "partial": 29,
+      "missing": 72
+    },
+    "contact_fields": {
+      "contact_name": 29,
+      "contact_type": 29,
+      "contact_phone": 8,
+      "contact_whatsapp": 8,
+      "contact_email": 0
+    },
+    "images": {
+      "total_urls": 185,
+      "unique_urls": 185,
+      "properties_with_images": 105,
+      "properties_without_images": 0,
+      "hosts": {
+        "img10.naventcdn.com": 185
+      }
+    },
+    "provenance": {
+      "properties_with_source_url": 105,
+      "properties_without_source_url": 0
+    }
+  },
+  "detail": [
+    {
+      "id": "00e2ea80-775a-459c-abf4-29a761fb217b",
+      "title": "Casa · 402m² · 3 Recámaras · 1 Estacionamiento · Casa - Lomas de San Charbel",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/lomas-de-san-charbel/casa-lomas-de-san-charbel/149428139",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/42/81/35/720x480/1597205898.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "0504bd3d-aa50-4034-9a13-244934d38cb6",
+      "title": "Casa · 304m² · 4 Recámaras · 2 Estacionamientos · Casa - Fraccionamiento Bosque Real",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-fraccionamiento-bosque-real/149428158",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/42/81/56/720x480/1597206393.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "06674110-8e9d-4af6-ba5d-d0d2a9a01e11",
+      "title": "Casa en Venta en Cumbres Universidad",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cumbres-universidad/casa-en-venta-en-cumbres-universidad/150763639",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/76/36/34/720x480/1624958054.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "0835223c-722f-4d40-ae9f-4525bbf6da89",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa de 2 Plantas en Venta Al Norte de La Ciudad - Modelo. Nisa",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/san-carlos/casa-de-2-plantas-en-venta-al-norte-de-la-ciudad-modelo-nisa/150758755",
+      "contact": {
+        "status": "partial",
+        "name": null,
+        "type": null,
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/84/31/720x480/1624841485.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "091ce303-1393-4204-8dd9-83ed379f8af1",
+      "title": "Casa · 260m² · 3 Recámaras · 3 Estacionamientos · oportunidad¡Venta en San Felipe | Inversión, Oficinas o Casa Habitación",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/parques-de-san-felipe/oportunidad-venta-en-san-felipe-inversion-oficinas-o-casa-habitacion/150756511",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/65/09/720x480/1624797388.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "0b026374-c7c9-4894-b60b-da32a3955d9b",
+      "title": "Terreno / Lote , Chihuahua · Terreno Venta Vistas de San Charbel 6,000,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/lomas-de-san-charbel/terreno-venta-vistas-de-san-charbel-6-000-000-gl2/149935350",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/93/52/07/720x480/1607918006.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "0b9914c4-0afd-463f-aab8-b8b0daedced9",
+      "title": "Casa de 5 habitaciones, Chihuahua · Casa en Venta con 298 m² de Construcción en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/las-granjas/casa-en-venta-con-298-m-sup2--de-construccion-en-chihuahua-chihuahua/148673384",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/33/28/720x480/1581977110.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "0ba09f35-ce2c-4a56-a26d-de6d6235afce",
+      "title": "Terreno / Lote · 669m² · Patio Logístico Industrial en Venta Al Sur Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/ejido-tabalaopa/patio-logistico-industrial-en-venta-al-sur-chihuahua-chihuahua/148007848",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/00/72/52/720x480/1568456155.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "0f759511-e007-461e-9655-a371006b4931",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta 127 m² Colonia Chulavista",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chulavista/casa-en-venta-127-m-sup2--colonia-chulavista/148849619",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/84/93/10/720x480/1585618108.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "13b64be4-56e8-41ca-a1b8-fe9ef02237f2",
+      "title": "Casa · 301m² · 3 Recámaras · Casa en Paseo de Las Misiones",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-las-misiones/casa-en-paseo-de-las-misiones/150759147",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/16/74/79/720x480/1612551409.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "1504f5ca-788b-4961-bba8-6e319626a9e4",
+      "title": "Terreno / Lote · 1195m² · Terreno Comercial en Venta Norte de La Cd $2,100,000.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/el-sacramento/terreno-comercial-en-venta-norte-de-la-cd-$2-100-000/146541666",
+      "contact": {
+        "status": "partial",
+        "name": "Mitlich Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/46/54/16/22/720x480/1534450377.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "1a71e1a5-5480-497d-81e0-69f4b29788cb",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa de 2 Plantas en Venta Ubicado en Mision del Bosque de $8,850,000",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/mision-del-bosque/casa-de-2-plantas-en-venta-ubicado-en-mision-del-bosque-de-$8-850-000/149669091",
+      "contact": {
+        "status": "complete",
+        "name": "Beall Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/66/69/51/720x480/1602362051.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "id": "1ceac0f8-113e-48c9-8f2d-d607ef96c267",
+      "title": "Casa · 126m² · 5 Recámaras · Casa en Los Girasoles",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/los-girasoles/casa-en-los-girasoles/150777193",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234215.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234198.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234200.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234212.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234197.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234199.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234203.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/71/90/720x480/1625234201.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "1ed378f4-9797-4733-8f4c-4ef4d9d69156",
+      "title": "Bodega comercial · 1398m² · Venta de Bodega Comercial en Chihuahua, Col. Aeropuerto.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-bodega/aeropuerto/venta-de-bodega-comercial-en-chihuahua-col-aeropuerto/145938066",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/45/93/77/48/720x480/1519680577.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "227c5c71-0ac1-4f8a-9f73-bdff3c0d5914",
+      "title": "Casa · 204m² · 4 Recámaras · 2 Estacionamientos · Venta Casa en Reliz Frente Presa Rejon en Cd. Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cerrada-castilla/venta-casa-en-reliz-frente-presa-rejon-en-cd-chihuahua/150514714",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/51/46/98/720x480/1619935517.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "258eddc0-7efe-4f6d-8e00-901d225f7aa0",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta en Residencial Cìbola, Al Norte de La Ciudad - Modelo Àurea",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/san-carlos/casa-en-venta-en-residencial-cibola-al-norte-de-la-ciudad-modelo-aurea/150761295",
+      "contact": {
+        "status": "partial",
+        "name": null,
+        "type": null,
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/76/11/20/720x480/1624898131.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "25aa4899-8963-4b88-b26f-fcc04ee6c2b1",
+      "title": "Casa de 4 habitaciones, Chihuahua · Casa en Venta de 314 m² de Construcción, en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-en-venta-de-314-m-sup2--de-construccion-en-chihuahua-chihuahua/148672945",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/28/18/720x480/1581966436.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "2996d289-e722-4dcf-8cbd-4421c7ad5757",
+      "title": "Casa · 166m² · 3 Recámaras · 2 Estacionamientos · Venta Casa en Bosques de San Pedro Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-de-san-pedro/venta-casa-en-bosques-de-san-pedro-chihuahua/150573183",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/57/31/60/720x480/1621081704.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "2c1308ed-89b0-48b9-a54d-abfc22b1eb7e",
+      "title": "Departamento de 1 habitación, Chihuahua · Departamento Venta Metroloft Distrito 1 - 5,600,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/saucito/departamento-venta-metroloft-distrito-1-5-600-000-gl2/150497984",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/49/78/47/720x480/1619592159.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "2e86eaa1-426c-45a9-86f4-516351ecec7e",
+      "title": "Casa · 431m² · 3 Recámaras · 4 Estacionamientos · Casa en Residencial Lomas del Valle",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/residencial-lomas-del-valle/casa-en-residencial-lomas-del-valle/150761424",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/96/55/720x480/1624864324.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "3053cd9d-1c0b-4f21-bf95-02c6c4bd3ab8",
+      "title": "Terreno / Lote · 80000m² · Terreno en Ocampo",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/ocampo/terreno-en-ocampo/150315412",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 2,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/31/54/00/720x480/1615530232.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/31/54/00/720x480/1615530242.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "35e27117-f1ae-43f1-8d06-0d81e528330d",
+      "title": "Casa en Venta en Los Frailes",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/los-frailes/casa-en-venta-en-los-frailes/149308645",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793333.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793334.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793336.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793340.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793341.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793338.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793339.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/30/86/31/720x480/1594793335.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "366b6300-9080-43da-9e1d-76d0ee6b0bd9",
+      "title": "Departamento de 1 habitación, Chihuahua · Departamento Venta Urban Lofts Col. Panamericana Chihuahua 3,365,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/panamericana/departamento-venta-urban-lofts-col-panamericana-chihuahua-3-365-000-gl2/150723332",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/72/28/46/720x480/1624117376.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "375cd60e-3010-4077-a552-57403f71fc28",
+      "title": "Departamento de 1 habitación, Chihuahua · Departamento Venta Torre Sophia San Felipe Chihuahua 2,790,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/san-felipe/departamento-venta-torre-sophia-san-felipe-chihuahua-2-790-000-gl2/147777750",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/47/77/28/98/720x480/1563883341.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "3be454be-0bbb-444e-9429-7f872493ef6b",
+      "title": "Casa uso de suelo de 5 habitaciones, Chihuahua · Casa en Venta Colonia Centro, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa-uso-de-suelo/zona-centro/casa-en-venta-colonia-centro-chihuahua/149619751",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/61/95/64/720x480/1601408534.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "3f2d44c4-c8fe-4734-9b84-7fecf4c31199",
+      "title": "Casa · 223m² · 3 Recámaras · 2 Estacionamientos · Venta Casa en Colonia San Felipe en Cd Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/san-felipe/venta-casa-en-colonia-san-felipe-en-cd-chihuahua/149588204",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/58/81/78/720x480/1600719603.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "43a86e3f-ace9-42b8-a577-6e399b9ea562",
+      "title": "Casa de 4 habitaciones, Chihuahua · Residencia en Venta en Club San Francisco $18,900,000",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/residencial-country-club-san-francisco/residencia-en-venta-en-club-san-francisco-$18-900-000/150746887",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/65/05/720x480/1624591517.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "4b05d974-a2c7-409f-bad0-e44d6bc46619",
+      "title": "Local comercial , Chihuahua · Local Comercial 375 m² Av San Felipe $30 Mil",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-local-comercial/san-felipe-iii/local-comercial-375-m-sup2--av-san-felipe-$30-mil/150323928",
+      "contact": {
+        "status": "partial",
+        "name": "CIMEX Inmobiliaria CUU",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/32/38/19/720x480/1623556536.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "53720300-67ad-4d3c-a997-a420a948694f",
+      "title": "Departamento · 92m² · 2 Recámaras · 2 Estacionamientos · Venta de Departamento Amueblado Nuevo en Zona Reliz",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-cerrada-castilla/venta-de-departamento-amueblado-nuevo-en-zona-reliz/150562009",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/56/19/99/720x480/1620849568.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "55798a48-5cb0-451c-9298-84792f00a87e",
+      "title": "Casa · 106m² · 4 Recámaras · Casa en Venta en Los Potreros, Chihuahua, Chih.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-los-potreros/casa-en-venta-en-los-potreros-chihuahua-chih/150749034",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/89/90/720x480/1624639958.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "56040897-93b4-4400-b22f-f5090e5fedeb",
+      "title": "Terreno / Lote · 220m² · Venta Lote Habitacional en Fracc Denali II en Reliz",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/fraccionamiento-cerrada-castilla/venta-lote-habitacional-en-fracc-denali-ii-en-reliz/150562048",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/55/88/03/720x480/1620785265.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "56a18593-6ec5-44c9-810d-28e838b68dde",
+      "title": "Casa Venta en Altozano Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/altozano-el-nuevo-chihuahua/casa-venta-en-altozano-chihuahua/150769876",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/76/98/60/720x480/1625081166.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "56d6ac9c-402a-476a-9277-74439f555d7b",
+      "title": "Terreno / Lote , Chihuahua · Terreno Venta Valle de Los Encinos Chihuahua 3,250,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/terreno-venta-valle-de-los-encinos-chihuahua-3-250-000-gl2/150722734",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/72/21/56/720x480/1624099182.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "59387f86-43f4-46e3-a049-90b43b351aa2",
+      "title": "Departamento de 1 habitación, Chihuahua · Departamento Venta Campus Living Chihuahua 2,933,214 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-campo-bello-etapa/departamento-venta-campus-living-chihuahua-2-933-214-gl2/150714952",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/71/47/20/720x480/1623942954.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "5ace2f44-8c30-41a6-85d0-3337b9deea19",
+      "title": "Casa · 313m² · 4 Recámaras · 2 Estacionamientos · *casa en Venta Sobre Francisco Villa en Bosque Real Chihuahua Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/-casa-en-venta-sobre-francisco-villa-en-bosque-real-chihuahua-chihuahua/150728028",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/70/95/41/720x480/1623830578.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "5c4298e2-96ba-4cbd-a149-038677410113",
+      "title": "Rancho de 1 habitación, Ahumada · Rancho en Venta en Sonora",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-rancho/villa-ahumada/rancho-en-venta-en-sonora/149179070",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/17/89/97/720x480/1592069742.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "5d071088-d8a0-47a4-984e-a22cb3019475",
+      "title": "Casa · 359m² · 7 Recámaras · 2 Estacionamientos · Inversionistas Venta de Complejo de Departamentos Col Granjas",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/las-granjas/inversionistas-venta-de-complejo-de-departamentos-col-granjas/148206504",
+      "contact": {
+        "status": "partial",
+        "name": "W Real Estate",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/20/65/02/720x480/1572507725.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "5e48c729-e2b0-4dab-afd9-9d624d3481ed",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta con 126 m² de Construcción, en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-las-lunas/casa-en-venta-con-126-m-sup2--de-construccion-en-chihuahua-chihuahua/148673131",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/30/97/720x480/1581972469.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "5faf8fce-c28a-486a-825a-427134b20429",
+      "title": "Terreno / Lote , Chihuahua · Terreno en Venta de 67,000 m² en Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/terreno-en-venta-de-67-000-m-sup2--en-chihuahua/149167320",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/16/05/82/720x480/1591843835.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "606e27c2-c68a-4db6-8c83-355e8291b0fe",
+      "title": "Propiedad Completamente Nueva y Equipada en Monte Caleres",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/propiedad-completamente-nueva-y-equipada-en-monte-caleres/149620852",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/62/08/37/720x480/1601744665.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "63dbbadd-8327-4583-8e57-2dfa77e68099",
+      "title": "Casa · 281m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta Fracc. Monte Caleres",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/casa-en-venta-fracc-monte-caleres/149315625",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934875.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934864.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934871.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934862.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934872.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934856.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x480/1594934874.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "66af4cff-d52c-4e9b-9dac-9c114806ba27",
+      "title": "Casa en Venta Cerca de Av Principal",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/cerro-de-la-cruz/casa-en-venta-cerca-de-av-principal/149620858",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/62/08/42/720x480/1601430689.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "68c8b3ab-5471-4755-bd17-0f78067857dc",
+      "title": "Casa · 159m² · 3 Recámaras · 2 Estacionamientos · Casa Venta Montecarlo, Chihuahua, Chih.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-quintas-montecarlo/casa-venta-montecarlo-chihuahua-chih/150769439",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072731.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072784.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072740.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072735.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072777.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072781.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072726.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/76/94/28/720x480/1625072738.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "6d7c7a92-e814-463f-8a0f-a5e246157759",
+      "title": "Casa · 129m² · 4 Recámaras · 2 Estacionamientos · Casa - Fraccionamiento Cumbres Universidad",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cumbres-universidad/casa-fraccionamiento-cumbres-universidad/150753261",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/32/54/720x480/1624727992.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "6d91ba87-795f-48bb-bc4f-decc6cf3aaa1",
+      "title": "Departamento · 111m² · 2 Recámaras · 2 Estacionamientos · Departamento en Venta en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/chihuahua/departamento-en-venta-en-chihuahua-chihuahua/150519613",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/96/05/33/720x480/1608436726.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "6f591519-38d8-4e5e-8b91-26f2d61dd8d5",
+      "title": "Casa · 187m² · 3 Recámaras · 2 Estacionamientos · Casa - Bosques Boreales",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-bosques-boreales/149994776",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118114.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118111.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118101.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118113.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118094.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118109.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118092.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/99/47/70/720x480/1609118089.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "7042c05a-0092-4b85-9119-5b6228d9cb8b",
+      "title": "Casa en Venta en Residencial Cumbres III",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/cumbres-iii-etapa/casa-en-venta-en-residencial-cumbres-iii-$7-150-000/150747246",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/69/68/720x480/1624599731.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "714fb213-135d-4378-a413-d988ff82cec9",
+      "title": "Terreno / Lote · 300m² · Terreno en Venta Altozano $2,250,000",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/terreno-en-venta-altozano-$2-250-000/147400407",
+      "contact": {
+        "status": "partial",
+        "name": "Mitlich Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/47/40/03/42/720x480/1555437676.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "7192ad53-d8bb-4295-89a4-421267d9f891",
+      "title": "Terreno / Lote · 5m² · Venta Terreno Zona Norte en Ciudad Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/venta-terreno-zona-norte-en-ciudad-chihuahua/150327646",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/32/76/17/720x480/1615876458.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "748bbb8b-004a-42b9-9ceb-c4498f23bf36",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta Al Norte de La Ciudad en Residencial Cibola - Modelo Àlvar",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/san-carlos/casa-en-venta-al-norte-de-la-ciudad-en-residencial-cibola-modelo-alvar/150761044",
+      "contact": {
+        "status": "partial",
+        "name": null,
+        "type": null,
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/97/28/720x480/1624883816.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "752080ce-f80b-49f5-b85b-16a9fd1a820f",
+      "title": "Bodega comercial · 676m² · Venta Bodega en Ciudad Juarez Preventa",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-bodega/waterfill-rio-bravo/venta-bodega-en-ciudad-juarez-preventa/149776860",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/77/68/52/720x480/1604546646.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "78f03ae2-cb2d-4ff5-85ea-8b840e029f54",
+      "title": "Casa · 305m² · Casa - Fraccionamiento Bosques del Valle",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-fraccionamiento-bosques-del-valle/149428154",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/42/81/50/720x480/1597206287.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "795c7d0b-dc90-4594-abac-792d2f846bfa",
+      "title": "Casa · 160m² · 2 Recámaras · 1 Estacionamiento · Casa Al Sur Zona Villa Juarez Sector Reloj (Antes Conocida Como Division del Norte)",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/division-del-norte-etapa/casa-al-sur-zona-villa-juarez-sector-reloj-antes-conocida-como-division-del-norte/150771105",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/10/95/720x480/1625104992.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "7e5bed75-46d7-482f-9c3a-0774b1547db4",
+      "title": "Casa de 2 habitaciones, Chihuahua · Casa en Venta con 121 m² de Construcción en Chihuahua, Chihuahua.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-quintas-montecarlo/casa-en-venta-con-121-m-sup2--de-construccion-en-chihuahua-chihuahua/148673317",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/32/71/720x480/1581976141.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "7e7189fc-db68-4ccc-928a-3c5540480673",
+      "title": "Casa Venta en Fraccionamiento Ambar",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-monteverde/casa-venta-en-fraccionamiento-ambar/150759761",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/75/97/43/720x480/1624866057.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "84ea2779-7b7c-474d-b3a4-408e8001d47f",
+      "title": "Casa de 4 habitaciones, Chihuahua · Casa en Venta o Renta en Bosques de San Francisco",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/punto-alto-e-2/casa-en-venta-o-renta-en-bosques-de-san-francisco/148268655",
+      "contact": {
+        "status": "complete",
+        "name": "Beall Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/26/85/39/720x480/1573768123.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "id": "937a7cd5-c14e-41c4-882b-1b8d446bf749",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta en Chihuahua, Chihuahua 154 m² de Construcción",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-senda-real/casa-en-venta-en-chihuahua-chihuahua-154-m-sup2--de-construccion/148672498",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/24/53/720x480/1581958441.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "94f50f19-5362-4f02-b3b3-f1a68a6eff4b",
+      "title": "Casa en Venta en Fracc. en Riscos del Sol Al Norte $3,100,000",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-riscos-del-sol/casa-en-venta-en-fracc-en-riscos-del-sol-al-norte-$3-100-000/150746336",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/60/61/720x480/1624582243.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "951911dc-f358-492e-a3bf-fc7403539fac",
+      "title": "Casa de 4 habitaciones, Cuauhtémoc · Casa en Venta de 145 m² de Construcción en Cuauhtémoc, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/colinas-del-puerto/casa-en-venta-de-145-m-sup2--de-construccion-en-cuauhtemoc-chihuahua/148673181",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/31/49/720x480/1581973391.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "9af80fe1-0644-4eff-be48-4d16376c6a1e",
+      "title": "Terreno / Lote , Julimes · Remate de Lote en Julimes Chih",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/pueblo-julimes/remate-de-lote-en-julimes-chih/24734266",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos-va/vamx-pt10-ads/9d/720x480/9d449876-acf2-4ec4-926f-d8ac8795dc88?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "9dc216d5-6158-4222-afd5-c2f56b9502a3",
+      "title": "Casa · 313m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta en Fraccionamiento Bosque Real en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-en-venta-en-fraccionamiento-bosque-real-en-chihuahua-chihuahua/150683487",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/68/34/73/720x480/1623324229.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "a06f0bb1-8acf-475f-8434-d6f7d5c5de33",
+      "title": "Casa · 290m² · 4 Estacionamientos · Casa - Altozano",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-altozano/150139290",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/13/92/86/720x480/1611972505.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "a2326712-b650-421f-93ca-bdfd0d126335",
+      "title": "Casa en Venta/renta 4 Rec. C Alberca y Páneles Solares $10.6 Millones /$60 Mil Cumbres de San Fco.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cumbres-de-san-francisco/casa-en-venta-renta-4-rec-c-alberca-y-paneles-solares-$106-millones-$60-mil-cumbres-de-san-fco/150746780",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/66/55/720x480/1624592906.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "a3d716c2-1abd-48a5-a772-df4a899708e9",
+      "title": "Casa · 180m² · 3 Recámaras · 2 Estacionamientos · Se Vende Casa en Altozano",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/se-vende-casa-en-altozano/150775516",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/55/13/720x480/1625195673.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "a48d7901-beaa-4ac0-a558-215a63a6a7e6",
+      "title": "Casa · 248m² · 2 Recámaras · 2 Estacionamientos · Casa en Venta Colonia Villa Juarez, Chihuahua, Chih",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/villa-juarez/casa-en-venta-colonia-villa-juarez-chihuahua-chih/150460815",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/46/07/97/720x480/1618570366.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "a957c3cf-060a-448f-9f1e-12234a5796ca",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa Venta Altozano 6,200,000 Gl2",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/altozano-el-nuevo-chihuahua/casa-venta-altozano-6-200-000-gl2/150621007",
+      "contact": {
+        "status": "partial",
+        "name": "GL Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/62/09/30/720x480/1622011185.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "ac2524bd-ac84-4f26-bf0a-5a0e7396ffda",
+      "title": "Casa · 94m² · 3 Recámaras · 1 Estacionamiento · oportunidad¡Casa en Venta en Fracc. Tarona, Jesenr",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-las-aldabas/oportunidad-casa-en-venta-en-fracc-tarona-jesenr/150743892",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/38/79/720x480/1624539372.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "aea07bc4-1d93-47f9-be62-404fb6d5689b",
+      "title": "Terreno / Lote · 338m² · Terreno Venta Las Fuentes, Chih.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/ampliacion-las-fuentes-2da-etapa/terreno-venta-las-fuentes-chih/150470574",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/46/83/58/720x480/1618723617.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "aeca72fa-f377-4f60-8400-1f3e560ad82f",
+      "title": "Casa de 1 Piso en Venta en Col. Independencia, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/independencia/casa-de-1-piso-en-venta-en-col-independencia-chihuahua/150775492",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 6,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195049.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195048.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195046.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195047.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195044.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/54/86/720x480/1625195045.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "b13da5cc-8b5e-4d29-8be4-1ee22ce2fe24",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa de 140 m² con 3 Recámaras en Venta en Fraccionamiento Tarragona",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-tarragona/casa-de-140-m-sup2--con-3-recamaras-en-venta-en-fraccionamiento-tarragona/150776109",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/58/68/720x480/1625206044.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "b1e8d2bc-5eda-4613-92a2-bf23a9ad9842",
+      "title": "Terreno / Lote · 250m² · Terreno Residencial en Venta Fracc. Cumbres de Dominio $2,600,000.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/valle-escondido/terreno-residencial-en-venta-fracc-cumbres-de-dominio-$2-600-000/148976974",
+      "contact": {
+        "status": "complete",
+        "name": "Mitlich Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": "6141007028",
+        "whatsapp": "6141007028",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/97/69/34/720x480/1588103840.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "id": "b84a70e9-f913-438c-869b-2950ed455857",
+      "title": "Casa · 390m² · 2 Recámaras · 4 Estacionamientos · Casa Nueva en Venta en Cerro Grande",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/cerro-grande/casa-nueva-en-venta-en-cerro-grande/150773057",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/30/51/720x480/1625143365.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "b970e1a0-42ae-4713-865e-4ed79affb8fd",
+      "title": "Casa · 208m² · 3 Recámaras · 2 Estacionamientos · Venta de Casa en Hacienda Loreto, Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/venta-de-casa-en-hacienda-loreto-chihuahua-chihuahua/150770555",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/05/38/720x480/1625094175.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "bb393e35-2377-41de-97d7-7f484b342875",
+      "title": "Edificio , Juárez · Venta de Remate Excelente Edificio de Oficinas Sobre Calle Plutarco Elias Calles",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-edificio/progresista/venta-de-remate-excelente-edificio-de-oficinas-sobre-calle-plutarco-elias-calles/143195886",
+      "contact": {
+        "status": "partial",
+        "name": "City Brokers",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/00/64/74/61/60/720x480/328298726.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "bb395550-43e8-462b-80d6-dab42360917b",
+      "title": "Casa · 395m² · Casa en Venta en San Felipe en Av Principal",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/parques-de-san-felipe/casa-en-venta-en-san-felipe-en-av-principal/150598113",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/59/76/43/720x480/1621564029.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "bc068072-25b0-4eab-84e0-12254950cd32",
+      "title": "Casa en Venta en Paseos Camino Real, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-en-venta-en-paseos-camino-real-chihuahua/150770550",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 5,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/resize/18/01/50/77/05/28/1200x1200/1625093968.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/05/28/720x480/1625094031.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/05/28/720x480/1625093965.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/05/28/720x480/1625094025.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/05/28/720x480/1625094028.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "be48288c-3b7d-4cad-98bc-c3801d569cbb",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta, 189 - m² de Construcción, en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-monteverde/casa-en-venta-189-m-sup2--de-construccion-en-chihuahua-chihuahua/148672622",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/25/15/720x480/1581960132.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "befe152c-8e33-4caf-8c06-c8094dde5d5e",
+      "title": "Casa · 307m² · 4 Recámaras · 2 Estacionamientos · Preventa de Casa en Condesa Rejon II",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/preventa-de-casa-en-condesa-rejon-ii/149428159",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/42/81/57/720x480/1597206452.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "bf591a3d-d9f6-45ad-b691-66f95fa3041a",
+      "title": "Casa de 2 habitaciones, Chihuahua · Col Zarco Aproveche Esta Casa en Venta!",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/zarco/col-zarco-aproveche-esta-casa-en-venta/150664406",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/66/38/25/720x480/1622903236.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "c117fcfe-12bb-403c-8d99-4c4943fddc6f",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta, 270 m² de Construcción, Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-lomas-universidad/casa-en-venta-270-m-sup2--de-construccion-chihuahua-chihuahua/148672793",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/27/40/720x480/1581964713.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "caffeab0-631b-4819-9617-e174a9e7551c",
+      "title": "Casa · 290m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta en Altozano",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/altozano-el-nuevo-chihuahua/casa-en-venta-en-altozano/148210307",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/21/02/96/720x480/1572588705.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d02431e2-c0df-4757-a3e8-78c88e199d69",
+      "title": "Casa · 359m² · 4 Recámaras · 2 Estacionamientos · Casa en Venta de Una Planta en Colonia Centro",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/ciudad-jimenez-centro/casa-en-venta-de-una-planta-en-colonia-centro/150452392",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795335.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795327.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795337.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795329.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795334.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795344.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x480/1615795333.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d0b0643e-9479-4a60-8722-893f8a4337c6",
+      "title": "Casa · 284m² · 4 Recámaras · Casa - Altozano",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-altozano/149428128",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/42/81/25/720x480/1597205718.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d2e780ba-37f0-4a52-ac91-8951ae1b7d1b",
+      "title": "Casa · 275m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta en Bosques del Valle, Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-en-venta-en-bosques-del-valle-chihuahua-chihuahua/149241975",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309007.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309027.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309038.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309019.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309030.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309036.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309026.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/49/24/15/23/720x480/1593309040.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d4bff1b7-5c22-4c10-ba5f-18d219159627",
+      "title": "Casa · 161m² · 3 Recámaras · 2 Estacionamientos · En Venta Casa, Valle Diamante, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/ampliacion-vista-del-valle/en-venta-casa-valle-diamante-chihuahua/91431468",
+      "contact": {
+        "status": "partial",
+        "name": "IAD México",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/00/66/70/10/23/720x480/1134300411.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "d54802c8-ee29-41c2-9232-da2fda131d20",
+      "title": "Casa · 252m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta Centrica Cd Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/santa-rita/casa-en-venta-centrica-cd-chihuahua/149521801",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/52/17/82/720x480/1599183297.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d5ccaaa0-0cbe-47a3-8f0b-a309f9cadbf5",
+      "title": "Casa · 331m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta en El Campanario Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/campanario/casa-en-venta-en-el-campanario-chihuahua-chihuahua/150205615",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314820.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314815.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314828.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314829.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314826.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314830.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314821.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/20/56/02/720x480/1613314813.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d5cebcf2-0ba2-462c-a4d4-52377be4adaa",
+      "title": "Terreno / Lote · 352m² · Terreno Residencial en Venta Fracc. Altozano $2,818,400",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/terreno-residencial-en-venta-fracc-altozano-$2-818-400/142368271",
+      "contact": {
+        "status": "complete",
+        "name": "Mitlich Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": "6141007028",
+        "whatsapp": "6141007028",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/42/33/58/67/720x480/1354760961.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "id": "d665a648-7d0d-4210-aa8e-a4b41db566c7",
+      "title": "Casa · 184m² · 3 Recámaras · 2 Estacionamientos · oportunidad¡Venta de Casa Una Planta en Colonia San Felipe, Tanpe",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/oportunidad-venta-de-casa-una-planta-en-colonia-san-felipe-tanpe/150743920",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/39/12/720x480/1624540182.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d7049b8d-f4db-4010-98ed-e61a32e52ab4",
+      "title": "Casa · 72m² · 3 Recámaras · 2 Estacionamientos · Llanura Ombu 2145 Monteverde II, Chihuahua Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-monteverde/llanura-ombu-2145-monteverde-ii-chihuahua-chihuahua/150027483",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/02/74/67/720x480/1609768469.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d7786920-3375-4c61-80e0-de9a1997ebd5",
+      "title": "Casa · 76m² · 3 Recámaras · 1 Estacionamiento · Venta de Casa en Villa del Real 3 Recamaras",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-villa-del-real/venta-de-casa-en-villa-del-real-3-recamaras/150740445",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/04/41/720x480/1624457431.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "d9fec971-b340-4f32-b848-dec541155851",
+      "title": "Departamento · 95m² · 2 Recámaras · 1 Estacionamiento · Departamento Venta Franrte Al San Francisco Country Club",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-jardines-de-san-francisco/departamento-venta-franrte-al-san-francisco-country-club/150366400",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/36/63/99/720x480/1616678005.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "dabbe64e-27a7-4cb6-a475-f075fe0c7ec1",
+      "title": "Casa · 160m² · 3 Recámaras · 1 Estacionamiento · Casa Venta Colonia San Felipe Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-venta-colonia-san-felipe-chihuahua/149614173",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/60/96/76/720x480/1624888924.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "dc89ae47-cdef-4d48-ba73-d7366f9aa44f",
+      "title": "Casa · 380m² · 3 Recámaras · 4 Estacionamientos · Casa en Venta en Residencial Campestre en Cd. Chihuahua.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-en-venta-en-residencial-campestre-en-cd-chihuahua/149604380",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/60/43/75/720x480/1625223363.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "de01e9e9-f371-4a17-a1de-74ee61561ad8",
+      "title": "Casa de 3 habitaciones, Chihuahua · Casa en Venta $2,000,¡000 Residencial El Leon!",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/residencial-el-leon/casa-en-venta-$2-000-000-residencial-el-leon/150726181",
+      "contact": {
+        "status": "partial",
+        "name": "Renacer Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/72/60/75/720x480/1624178422.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "e1b4987d-2cd3-4fe6-af86-fdb8a92b12d3",
+      "title": "Terreno / Lote , Chihuahua · Terreno en Venta de 11,715 m² en Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/saucito/terreno-en-venta-de-11-715-m-sup2--en-chihuahua/149160558",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/16/01/29/720x480/1591853697.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "e39f3d14-67bc-4232-8933-03dac5868593",
+      "title": "Casa · 260m² · 3 Recámaras · Casa en Venta",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-universidad-residencial/casa-en-venta/150551090",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646310.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646311.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646301.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646309.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646306.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646307.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646312.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/55/10/87/720x480/1620646303.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "e5d5ab82-25ff-4433-99dc-b4bb49db5faa",
+      "title": "Casa de 4 habitaciones, Chihuahua · Casa en Venta con 650 m² de Construcción, en Chihuahua, Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-rincon-de-las-lomas/casa-en-venta-con-650-m-sup2--de-construccion-en-chihuahua-chihuahua/148673056",
+      "contact": {
+        "status": "partial",
+        "name": "Kasar Bienes Raíces",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/48/67/30/00/720x480/1581970391.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "e8ba7b75-614f-48fd-a6c5-2ec1ac550feb",
+      "title": "Edificio · 469m² · Venta Edificio en Complejo Industrial en Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-edificio/parque-industrial-complejo-industrial/venta-edificio-en-complejo-industrial-en-chihuahua/150562005",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/56/19/92/720x480/1620849341.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "ea4b0a68-f9b0-479e-8804-85963d08fad6",
+      "title": "Casa de 2 habitaciones, Chihuahua · Casa de Una Planta en Venta en San Felipe $4,850,000.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/san-felipe/casa-de-una-planta-en-venta-en-san-felipe-$4-850-000/149671186",
+      "contact": {
+        "status": "partial",
+        "name": null,
+        "type": null,
+        "phone": "6142523883",
+        "whatsapp": "6142523883",
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/49/67/09/19/720x480/1602401087.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "f0535f15-dca8-484d-8838-2f587de9cd29",
+      "title": "Casa · 245m² · 3 Recámaras · 2 Estacionamientos · oportunidad¡Venta Casa en Fracc. Valdivia",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/residencial-valdivia/oportunidad-venta-casa-en-fracc-valdivia/150744199",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/74/41/87/720x480/1624545028.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "f2b6e168-e591-459d-a45e-65a44b4c06b5",
+      "title": "Casa · 255m² · 3 Recámaras · 2 Estacionamientos · Casa en Venta Vistas del Valle",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-en-venta-vistas-del-valle/150772208",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 8,
+        "origins": [
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com",
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126103.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126136.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126104.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126106.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126140.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126139.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126109.jpg?rapc=bXZhX2ltYWdl",
+          "https://img10.naventcdn.com/avisos/18/01/50/77/21/24/720x480/1625126105.jpg?rapc=bXZhX2ltYWdl"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "f39825f8-ed39-4da9-bb8c-127701b2e8fe",
+      "title": "Terreno / Lote · 20000m² · Terreno en Venta 20,000 m² $58,500,000.",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-terreno/zona-industrial-zona-industrial-nombre-de-dios/terreno-en-venta-20-000-m-sup2--$58-500-000/145516892",
+      "contact": {
+        "status": "partial",
+        "name": "Mitlich Asesores Inmobiliarios",
+        "type": "inmobiliaria",
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/45/51/68/63/720x480/1506114625.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "partial_contact"
+      ]
+    },
+    {
+      "id": "f632ca10-c7ce-409c-9801-2cf6f5662baf",
+      "title": "Casa · 185m² · 1 Recámara · 2 Estacionamientos · Venta Casa Fracc. Las Sendas en Zona Reliz Chihuahua",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-senda-real/venta-casa-fracc-las-sendas-en-zona-reliz-chihuahua/150210841",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/21/08/08/720x480/1613407610.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    },
+    {
+      "id": "fb47c0f4-930a-4cfa-9df0-20e1893b1ca3",
+      "title": "Casa · 150m² · 3 Recámaras · 2 Estacionamientos · Casa Nueva en Venta en Colonia Flores Magon",
+      "status": "active",
+      "source_url": "https://www.vivanuncios.com.mx/a-venta-casa/ampliacion-ampliacion-ricardo-flores-magon/casa-nueva-en-venta-en-colonia-flores-magon/150773259",
+      "contact": {
+        "status": "missing",
+        "name": null,
+        "type": null,
+        "phone": null,
+        "whatsapp": null,
+        "email": null
+      },
+      "images": {
+        "count": 1,
+        "origins": [
+          "img10.naventcdn.com"
+        ],
+        "urls": [
+          "https://img10.naventcdn.com/avisos/18/01/50/77/32/44/720x480/1625147203.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      },
+      "flags": [
+        "missing_contact"
+      ]
+    }
+  ]
+}

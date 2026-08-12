@@ -15,6 +15,20 @@ PROPERTY_URLS_PATH = "vivanuncios_com_mx/property_urls.json"
 
 print("### module imported", flush=True)
 
+# Browser context kwargs for each fresh per-request context. Cloudflare
+# rate-limits repeated renders within the SAME context (first render=200,
+# subsequent=403). Creating one fresh context per request restores the
+# "first render" behavior every time.
+FRESH_CONTEXT_KWARGS = {
+    "viewport": {"width": 1280, "height": 720},
+    "user_agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/125.0.0.0 Safari/537.36"
+    ),
+    "locale": "es-MX",
+}
+
 
 class PropertyDetailSpider(scrapy.Spider):
     name = "property_detail"
@@ -29,17 +43,6 @@ class PropertyDetailSpider(scrapy.Spider):
         },
         "PLAYWRIGHT_BROWSER_TYPE": "chromium",
         "PLAYWRIGHT_LAUNCH_OPTIONS": {"headless": True},
-        "PLAYWRIGHT_CONTEXTS": {
-            "default": {
-                "viewport": {"width": 1280, "height": 720},
-                "user_agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/125.0.0.0 Safari/537.36"
-                ),
-                "locale": "es-MX",
-            },
-        },
         "PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT": 30_000,
         "PLAYWRIGHT_DEFAULT_WAIT_TIMEOUT": 15_000,
         "PLAYWRIGHT_PROCESS_REQUEST_HEADERS": None,
@@ -86,23 +89,18 @@ class PropertyDetailSpider(scrapy.Spider):
                 url,
                 meta={
                     "playwright": True,
-                    # Unique context per request (with PLAYWRIGHT_MAX_CONTEXTS=1
-                    # this closes the previous context, giving each URL a
-                    # fresh fingerprint that dodges progressive rate-limiting).
+                    # Unique context per request: this is the ONLY place
+                    # per-request context kwargs are honored (startup
+                    # PLAYWRIGHT_CONTEXTS would hold the max-contexts semaphore
+                    # forever and deadlock custom-named contexts).
                     "playwright_context": f"c{i}",
+                    "playwright_context_kwargs": FRESH_CONTEXT_KWARGS,
+                    "playwright_include_page": True,
                     "playwright_page_goto_kwargs": {
                         "wait_until": "domcontentloaded",
                     },
                     "playwright_page_methods": [
-                        PageMethod(
-                            "wait_for_function",
-                            (
-                                "() => "
-                                "[...document.querySelectorAll('script[type=\"application/ld+json\"]')]"
-                                ".some(s => (s.textContent || '').includes('telephone'))"
-                            ),
-                            timeout=30_000,
-                        ),
+                        PageMethod("wait_for_timeout", 3000),
                     ],
                 },
                 dont_filter=True,
@@ -110,3 +108,23 @@ class PropertyDetailSpider(scrapy.Spider):
 
     async def parse(self, response, page: PropertyPage):
         yield await page.to_item()
+        await self._close_context(response)
+
+    async def errback(self, failure):
+        self.logger.warning("request failed: %s", failure.request.url)
+        await self._close_context(failure.request)
+
+    async def _close_context(self, request_or_response):
+        """Close the Playwright context tied to a request/response.
+
+        Without this, fresh per-request contexts accumulate (and, if a max is
+        ever set, hold the semaphore). Closing restores the next request's
+        "first render" behavior.
+        """
+        page = request_or_response.meta.get("playwright_page")
+        if page is None or page.is_closed():
+            return
+        try:
+            await page.context.close()
+        except Exception:  # noqa: BLE001 - best effort cleanup
+            pass
