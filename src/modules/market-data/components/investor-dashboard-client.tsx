@@ -25,7 +25,6 @@ import {
   estimateEscrituracion,
   estimatePredial,
   formatMxn,
-  isFinanciable,
 } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
 import type { InvestorItem } from "@/app/investor/page";
@@ -451,15 +450,6 @@ function InvestorCard({ item }: { item: InvestorItem }) {
             Predial est. {formatMxn(estimatePredial(item.price))}/año ·
             Escrituración est. {formatMxn(estimateEscrituracion(item.price))}
           </p>
-        )}
-
-        {isFinanciable(item.dealType) && (
-          <Link
-            href="/preapproval"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
-          >
-            Precalificate para un crédito
-          </Link>
         )}
 
         <HotnessGauge score={item.hotScore} />
