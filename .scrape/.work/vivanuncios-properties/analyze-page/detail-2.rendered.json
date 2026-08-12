@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "url": {
+      "type": "str",
+      "value": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/casa-en-venta-fracc-monte-caleres/149315625"
+    },
+    "title": {
+      "type": "str",
+      "value": "Casas en venta - 213m2 - 3 recamaras - Fraccionamiento Diamant..."
+    },
+    "listing_id_vivanuncios": {
+      "type": "str",
+      "value": "149315625"
+    },
+    "contact_phone": {
+      "type": "str",
+      "value": "52 6141185785"
+    },
+    "agency_name": {
+      "type": "str",
+      "value": "Century 21 Robles & Herrera"
+    },
+    "contact_methods_available": {
+      "type": "array",
+      "value": [
+        "email_form",
+        "whatsapp_button",
+        "phone_button"
+      ]
+    },
+    "price": {
+      "type": "str",
+      "value": "MN 5,950,000"
+    },
+    "location": {
+      "type": "str",
+      "value": "Circuito Monte Caleres 12099,  Fraccionamiento Diamante Reliz, Chihuahua"
+    },
+    "number_of_bedrooms": {
+      "type": "int",
+      "value": 3
+    },
+    "floor_size_m2": {
+      "type": "int",
+      "value": 213
+    },
+    "days_published": {
+      "type": "str",
+      "value": "Publicado hace 145 días"
+    },
+    "property_image": {
+      "type": "str",
+      "value": "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x532/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+    },
+    "description_full": {
+      "type": "str",
+      "value": "Casas en venta con 3 recamaras y 3 baños en Fraccionamiento Diamante Reliz por $5950000. Casa en Venta Fracc.Monte Caleres, Chihuahua DISTRIBUCIÓN: La ..."
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "json-ld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Vivanuncios",
+      "url": "https://www.vivanuncios.com.mx"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vivanuncios",
+      "url": "https://www.vivanuncios.com.mx",
+      "logo": "https://img10.naventcdn.com/ficha/RPFICv5.427.0-RC3/images/favicon-vamx.png"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "House",
+      "name": "Casas en venta - 213m2 - 3 recamaras - Fraccionamiento Diamant...",
+      "description": "Casas en venta con 3 recamaras y 3 baños en Fraccionamiento Diamante Reliz por $5950000. Casa en Venta Fracc.Monte Caleres, Chihuahua DISTRIBUCIÓN: La ...",
+      "image": "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x532/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+      "numberOfRooms": 3,
+      "floorSize": {
+        "@type": "QuantitativeValue",
+        "value": 213,
+        "unitCode": "MTK"
+      },
+      "numberOfBathroomsTotal": 3,
+      "numberOfBedrooms": 3,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Chihuahua, Chihuahua, Mexico vivanuncios, ",
+        "addressRegion": "Fraccionamiento Diamante Reliz",
+        "streetAddress": "Circuito Monte Caleres 12099"
+      },
+      "telephone": "52 6141185785"
+    }
+  ],
+  "opengraph": [
+    {
+      "namespace": {
+        "og": "http://ogp.me/ns#"
+      },
+      "properties": [
+        [
+          "og:site_name",
+          "Vivanuncios"
+        ],
+        [
+          "og:title",
+          "Casas en venta - 213m2 - 3 recamaras - Fraccionamiento Diamant..."
+        ],
+        [
+          "og:type",
+          "website"
+        ],
+        [
+          "og:description",
+          "Casas en venta con 3 recamaras y 3 baños en Fraccionamiento Diamante Reliz por $5950000. Casa en Venta Fracc.Monte Caleres, Chihuahua DISTRIBUCIÓN: La ..."
+        ],
+        [
+          "og:url",
+          "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/casa-en-venta-fracc-monte-caleres/149315625"
+        ],
+        [
+          "og:image",
+          "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x532/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+        ]
+      ]
+    }
+  ]
+}

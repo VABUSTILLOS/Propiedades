@@ -1,0 +1,1313 @@
+{
+  "json-ld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "https://www.vivanuncios.com.mx",
+      "logo": "https://img10.naventcdn.com/home/no_version/images/logo-r-vivanuncios.svg",
+      "name": "Vivanuncios",
+      "description": "Vivanuncios tiene la mayor oferta de inmuebles en México. Casas, departamentos y mucho más. Compra o renta una propiedad, o publica inmuebles ¡hoy mismo!",
+      "sameAs": [
+        "https://www.twitter.com/vivanuncios",
+        "https://www.facebook.com/vivanuncios",
+        "https://www.youtube.com/c/Vivanuncios",
+        "https://www.pinterest.com/vivanuncios/"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "3,864 Propiedades e inmuebles en venta - Chihuahua, Chihuahua - Vivanuncios",
+      "description": "Encuentra en Vivanuncios 3,864 Propiedades e inmuebles en venta en Chihuahua, Chihuahua. Descubre las mejores ofertas de propiedades e inmuebles en venta en Chihuahua.",
+      "image": "https://img10.naventcdn.com/avisos/18/01/45/93/77/48/720x532/1519680577.jpg?rapc=bXZhX2ltYWdl",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "MXN",
+        "highPrice": 74150000,
+        "lowPrice": 1859079,
+        "offerCount": "3864"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Bodega comercial · 1398m²",
+        "description": "Este moderna y espaciosa bodega cuenta con 4 Oficinas, 3 baños y una cocina nueva, a su vez encontrará equipamiento nuevo para el área de embarques, contenedores y trailers. Especificaciones: -Bodega en excelente condición renovada 100% por adentro y por afuera. -Pintura Vinílica nueva para todos interiores y exteriores, incluyendo murros y cabrillas. -Dos (2) portones Enrollables nuevos con dos (2) motores eléctricos Nuevos marca Lift-Master, los dos cuentan con un control remoto. -Puerta de seguridad nueva en la Marca roper en frente de bodega, con barra de pánico así como también con Puerta de Herrería con Chapa y Candado para Mayor Seguridad. -Buzón nuevo con llave (con reja de protección con candado). -Cuatro nuevos Mini-Split Marca Prime, Invertir Frio-Calor para cuatro (4) oficinas. -Cocina nueva con materiales de excelente calidad y fabricada en la misma bodega, con los bastidores y marcos hechos con madera de pino y forrados en melamina de muy alta calidad. -Refrigerador con congelador nuevo en cocina, también tiene sistema de purificación de agua. -Nueva ventana doble vidrio (con reja de protección) en área de cocina, con vistas a la calle en frente de bodega. -Zoclos nuevos de madera 100% de pino, pintados blanco, para todas oficinas y baños. -Concretos nuevos de piso de toda la bodega son Premezclado mr-40 (. 20cm) Fibratado. -Pisos nuevos de cerámica marca Interceramic para 2 oficinas, baños, balcón, escalones, banqueta en bodega, 2 oficinas con duela laminada de madera con terminado en barniz. -Sanitarios y lavabos nuevos de porcelana en color blanco con sus llaves mezcladoras nuevas y espejos decorativos. -Puertas nuevas de tambor con forro de triplay con chapas para oficinas y baños. -Extractores atmosféricos nuevos para techo de bodega. -Lámparas de bodega en la Línea ufo nuevas, 250 Watts led. -Lámparas para exterior de 250 watts cu de la marca tecno lite, Las tres lámparas cuentan con una sola celda fotovoltaica para su encendido nocturno automático, así como su apagado. -Servicio de alarma nuevo con sistema de monitoreo remoto desde móvil, con Punto Alerta, con bocina de alarma y seis cámaras de alta resolución. -Servicio de Internet Nuevo. -Ventanas con mosquiteros nuevos. -Puerta corrediza nueva de Vidrio Tintado Filtra-Sol de 10mm de grosor para poder salir al Balcón con vista al Almacén, vista de la Oficina Principal. -Muros de concreto premezclado con piedra, construcción Estilo Menonita de forma de concreto de 15cms de espesor. -Dock nuevo de concreto con barandal para montacargas con dos rampas, una mecánica marca Merik y otra rampa manual es de ½” pulgada fabricada con Placa de Acero de acero. -Tanque de agua nuevo de 800 litros, marca Rotoplas. -Boiler eléctrico nuevo de 70 litros para agua caliente para todos los baños y cocina. -Bomba nueva de agua ½ Caballo para presión de Agua. *Pregunte por los términos y condiciones. Los precios pueden variar dependiendo el plan de pagos. Consulte lista de precios y disponibilidad. *El precio es informativo. El desarrollador se reserva el derecho a modificar los precios sin previo aviso. *Las imágenes mostradas son renders que pueden tener variación con el producto final. Wig: p8aXwhp",
+        "url": "https://www.vivanuncios.com.mx/a-venta-bodega/aeropuerto/venta-de-bodega-comercial-en-chihuahua-col-aeropuerto/145938066",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-bodega/aeropuerto/venta-de-bodega-comercial-en-chihuahua-col-aeropuerto/145938066",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "1398m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Aeropuerto",
+          "streetAddress": "77a 8014",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.65067485189999985095710144378244876861572265625",
+          "longitude": "-106.010685632100006614564335905015468597412109375"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 223m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "*Casa habitacional. *En dos plantas. *Acceso porticad. *Vestibulo. *Sala. *Comedor. *Estancia. *Cocina. *Desayunador. *Lavanderia. *Medio baño. *Escaleras. *Planta Alta: *Vestibulo. *3 Recamaras. *2 baños completos (uno privado en la recamara principal) *Cochera dos carros techada. *Terraza descubierta. *Cuarto de tiliches. *En planta alta: *Pasillo lateral de servicio. *Patio al fondo muy amplio. Monica Salazar cel Ver datos",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/san-felipe/venta-casa-en-colonia-san-felipe-en-cd-chihuahua/149588204",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/san-felipe/venta-casa-en-colonia-san-felipe-en-cd-chihuahua/149588204",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "223m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "San Felipe ",
+          "postalCode": "615203--353",
+          "streetAddress": "FRANCISCO DE BRIONES 402",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.647017500000000467252903035841882228851318359375",
+          "longitude": "-106.098626499999994621248333714902400970458984375"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Apartment",
+        "name": "Departamento · 111m² · 2 Recámaras · 2 Estacionamientos",
+        "description": "*Departamento en venta en Frac Bahias en Chihuahua, Chihuahua: *Superficie 111. 56 m2 mas Bodega 3. 07 m2, Total 114. 63 m2. Cuenta con: * Dos recamara cada una con su closet. * 1 minisplits de 1. 5 tons en la Estancia. * 2 minisplits de 1. 0 tons, uno en cada recamara. * Estancia. * Cocina integral de chapa de encino, granito, parrilla, tarja y llaves. * 1 Baño completo y un medio baño. * Cuarto de Lavenderia. * Carpinteria de Encino y zoclo de madera. * Ventaneria de doble vidrio. * Cisterna individual de 1, 200 lts, * Hidroneumático. * Boiler de paso. * 2 cajones de estacionamiento. * Construcción extra: Bodega, Entrada común con puerta eléctrica y botonera electrica en cada Departamento para abrirla. * Area Comun con asador. * Cochera electrica con control remoto. * Medidor común para luz de pasillos, estacionamiento y puerta eléctrica. * Servicios, agua, luz, gas natural con servicio individual en cada Departamento. * Instalación eléctrica preparada para conectar paneles solares (no incluidos) Ana Luisa. Ver datos Ver datos",
+        "numberOfBathroomsTotal": 1,
+        "numberOfBedrooms": 2,
+        "url": "https://www.vivanuncios.com.mx/a-venta-departamento/chihuahua/departamento-en-venta-en-chihuahua-chihuahua/150519613",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-departamento/chihuahua/departamento-en-venta-en-chihuahua-chihuahua/150519613",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "111m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "618923--353",
+          "streetAddress": "BAHIA DE NAVIDAD 3659",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.676655857018982231920745107345283031463623046875",
+          "longitude": "-106.1414369404754580727967550046741962432861328125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Edificio · 469m²",
+        "description": "*Venta Oficina con bodega en Complejo Industrial Chihuahua. *Superficies: *Bodega 204 M2 mas Mezzanine 54 M2. *Oficina 212 m2. *10 cajones de estacionamiento privados. *Buena calidad acabados oficinas. *Facilidad acceso a principales avenidas. *Seguridad con circuito cerrado. *Cocineta y comedor. *Sala de Juntas. *Lobby. *Equipos de aire y calefacción. *Paneles solares. *Acceso de oficina a bodega. *Bodega con iluminación natural. Hector Leon. Ver datos Ver datos",
+        "url": "https://www.vivanuncios.com.mx/a-venta-edificio/parque-industrial-complejo-industrial/venta-edificio-en-complejo-industrial-en-chihuahua/150562005",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-edificio/parque-industrial-complejo-industrial/venta-edificio-en-complejo-industrial-en-chihuahua/150562005",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "469m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Parque industrial Complejo Industrial ",
+          "postalCode": "625415--353",
+          "streetAddress": "-",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.720529854088727716998619143851101398468017578125",
+          "longitude": "-106.1284373962951548264754819683730602264404296875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 290m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "Venta de casa en Residencial Altozano. ubicada en Cluster Venado a espaldas del exclusivo club deportivo de Altozano. Frente area verde. Cuenta con: -Cuarto de juegos en sótano con preparación para baño y salida al jardín. Planta baja: -Cochera para 2 autos. -Medio baño de visitas. -Sala. -Comedor. -Cocina. -Lavanderia. -Despensa. -Pasillo de servicio. -Patio. Planta alta: -Estancia. -Recamara principal con vestidor, baño y terraza. -Dos recamaras secundarias con vestidor y baño propio cada una. Construida con block térmico. Se entrega con carpintería en chapa de encino, escalera cubierta en madera, cocina con granito, lavabos con mueble de chapa de encino y cubierta de granito, aljibe, preparación para minisplits, ventanería doble vidrio, instalación para gas natural. Las imágenes, características, colores, equipo, accesorios y productos son de carácter informativo. El contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna y podrán cambiar sin previo aviso sin incurrir en ninguna obligación o responsabilidad. Vivienda nueva.",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/altozano-el-nuevo-chihuahua/casa-en-venta-en-altozano/148210307",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/altozano-el-nuevo-chihuahua/casa-en-venta-en-altozano/148210307",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "290m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Altozano el Nuevo Chihuahua",
+          "postalCode": "Vw0824",
+          "streetAddress": "Venta DE Casa EN Altozano (cluster Venado)",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.629855674000001641843482502736151218414306640625",
+          "longitude": "-106.1497647639999968305346556007862091064453125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Apartment",
+        "name": "Departamento · 95m² · 2 Recámaras · 1 Estacionamiento",
+        "description": "Venta Departamento Palmilla upi 3Palmilla 3600 jardines del san francisco frente a San Francisco country club! - Venta desde $3950, 000- Rentas desde $19, 000. 00Departamento acogedor dentro de un complejo de únicamente 8 departamentos en exclusiva zona a unos metros de el Distrito uno, San Francisco Country Club y hospital Star Médica, en una ubicación estratégicamente privada y con accesos controlados. Primera planta: salacomedorcocina medio bañopatioestacionamiento para un autoSegunda planta: dos recamarasun bañoEquipamiento: closets de enchapado de parotapisos en formato grande de 60 x 120, barandal en escalera en cristal templadoboilertinacoaire acondicionadoventanera doble vidriolamparas en todas las habitacionesespejo en bañoescalera forrada de enchapado de encinolava secadoracava de vinoscocina en enchapado de parota, con cubierta de granito negromuebles de baño marca Castelló o similar de primerapuerta principal de seguridadpersianas en todas las ventanasestacionamiento para un autocontrol de reja automatizado escalera marineraArea comun: terrazaAdemás podrás disfrutar los atardeceres en compañía de tus amigos desde su Mezzanine con espectaculares vistas al campo de golf que ese encontrara equipado al 100% en el mes de julio 2026",
+        "numberOfBathroomsTotal": 1,
+        "numberOfBedrooms": 2,
+        "url": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-jardines-de-san-francisco/departamento-venta-franrte-al-san-francisco-country-club/150366400",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-jardines-de-san-francisco/departamento-venta-franrte-al-san-francisco-country-club/150366400",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "95m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Jardines de San Francisco ",
+          "postalCode": "Wisbrun6550",
+          "streetAddress": "Palmilla  Jardines del San Francisco",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.666091080699999338321504183113574981689453125",
+          "longitude": "-106.133898861000005808818968944251537322998046875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Terreno  Lote · 220m²",
+        "description": "*Lote 09 frente parque y Vista a la Presa Rejon. *A unos pasos de Presa Rejon. *Con todos los servicios a pie de lote. Con las Siguientes amenidades: *Cancha de Padel. *Area Juegos Infantiles. *Area para mascotas. *Area para eventos con asadores y baños. Hector Leon. Ver datos Ver datos",
+        "url": "https://www.vivanuncios.com.mx/a-venta-terreno/fraccionamiento-cerrada-castilla/venta-lote-habitacional-en-fracc-denali-ii-en-reliz/150562048",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-terreno/fraccionamiento-cerrada-castilla/venta-lote-habitacional-en-fracc-denali-ii-en-reliz/150562048",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "220m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Cerrada Castilla",
+          "postalCode": "625366--353",
+          "streetAddress": "Pedro Zuloaga 3120",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.607509133712628823786872089840471744537353515625",
+          "longitude": "-106.1303664120428749129132484085857868194580078125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 204m² · 4 Recámaras · 2 Estacionamientos",
+        "description": "Casa Modelo Salamanca en lote 38. *Planta Baja: *Recamara con closet y baño independiente. *Sala. *Cocina. *Comedor. *Medio baño. *Lavanderia. *Cochera para dos carros. *Planta Alta: *Recamara principal con closet y baño. *Dos recamaras comparten baño completo. *Estancia. *Terraza. Equipada con: *Acabados de lujo. *Construccion de ladrillo. *Carpinteria enchapada en encino. *Ventaneria doble vidrio. *Cisterna de 2800 litros. * No van incluidos los muebles, son de la casa muestra.",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 4,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cerrada-castilla/venta-casa-en-reliz-frente-presa-rejon-en-cd-chihuahua/150514714",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-cerrada-castilla/venta-casa-en-reliz-frente-presa-rejon-en-cd-chihuahua/150514714",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "204m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Cerrada Castilla",
+          "postalCode": "624908--353",
+          "streetAddress": "-",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.608746813933617403336029383353888988494873046875",
+          "longitude": "-106.1344053016662627442201483063399791717529296875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 307m² · 4 Recámaras · 2 Estacionamientos",
+        "description": "Preventa de Casa en Condesa Rejon iiprecio: $6. 990, 000Cuando el proyecto haya finalizado, el precio será de $7, 300, 000. Terreno: 240 m²Construcción: 307 m²Planta baja: • Recámara con baño completo y vestidor• Sala• Comedor• Cocina integralPlanta alta: • Recámara principal con baño y amplio vestidor• 2 recámaras secundarias con vestidor• Baño completo cada una• Estancia familiar• OficinaExterior: • Patio ideal para convivenciaslas imágenes, características, colores, equipo, accesorios Y productos son de carácter informativo el contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna Y podrán cambiar sin previo aviso sin incurrir en ninguna obligación O responsabilidad.",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 4,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/preventa-de-casa-en-condesa-rejon-ii/149428159",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/preventa-de-casa-en-condesa-rejon-ii/149428159",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "307m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Diamante Reliz",
+          "postalCode": "MIRIAM31",
+          "streetAddress": "Preventa de Casa en Condesa Rejon II Recámara en Planta Baja",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.609703599999999568126440863125026226043701171875",
+          "longitude": "-106.1376283000000029232978704385459423065185546875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 284m² · 4 Recámaras",
+        "description": "¡Hermosa Casa en Venta en Altozano Venado! Precio: $6, 100, Ver datos mts 2 terreno284 mts 2 construcción ¡Vive en una de las zonas más exclusivas y mejores ubicadas! Esta increíble residencia combina estilo, amplitud y comodidad en cada espacio. 4 Recámaras• Recámara principal con baño completo y vestidor? • Recámaras secundarias con baño compartido y clósets amplios Lavandería en planta alta Estancia muy amplia en planta alta, ideal para zona de tv o sala familiar Planta Baja• Cocina moderna y muy bonita con excelente iluminación • Patio perfecto para reuniones y convivencias • Sala  Comedor con gran distribuciónEquipamiento incluido: • Boiler• Cisterna• Hidroneumático• Preparación para aire acondicionado• Estufa• Campana ¡Lista para habitar! Una oportunidad única en Altozano Venado.? Contáctame para más información o para agendar tu visita. Las imágenes, características, colores, equipo, accesorios y productos son de carácter informativo. El contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna y podrán cambiar sin previo aviso sin incurrir en ninguna obligación o responsabilidad. Comisión compartida únicamente a inmobilaria y personas que comprueben pertenecer al gremio inmobilario.",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 4,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-altozano/149428128",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-altozano/149428128",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "284m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "TOÑO124",
+          "streetAddress": "Paseo del Venado",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.629316200000001657599568716250360012054443359375",
+          "longitude": "-106.15196720000000141226337291300296783447265625"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 402m² · 3 Recámaras · 1 Estacionamiento",
+        "description": "Venta de casa en Vistas de San CharbelPrecio $17, 980, 000 con acabados, carpintería 402 m² de construcción409 m² de terrenoPlanta baja: SalaComedorCocinaRecamara  OficinaTerrazaAlbercaPlanta alta: 3 Recamaras (vestidor y baño completo) EstanciaLavanderíaVivienda nuevaLas imágenes, características, colores, equipo, accesorios y productos son de carácter informativo. El contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna y podrán cambiar sin previo aviso sin incurrir en ninguna obligación o responsabilidad. Comisión compartida únicamente a inmobilaria y personas que comprueben pertenecer al gremio inmobilario.",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/lomas-de-san-charbel/casa-lomas-de-san-charbel/149428139",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/lomas-de-san-charbel/casa-lomas-de-san-charbel/149428139",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "402m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Lomas de San Charbel",
+          "postalCode": "TOÑO133",
+          "streetAddress": "Venta de Casa en Vistas de San Chárbel",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.63454219999999850188032723963260650634765625",
+          "longitude": "-106.1272244000000029018337954767048358917236328125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 305m²",
+        "description": "Venta de casa en Bosques del Valle Planta Baja closet de visitas cocina integran patio sala area de comedor aire acondicionadocalefacciónlavanderiaPlanta Alta Recamara principal con vestidor y baño2 recamaras secundarias con baño y vestidor estanciaaire acondicionado calefaccionpatio amplioLas imágenes, características, colores, equipo, accesorios y productos son de carácter informativo El contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna y podrán cambiar sin previo aviso sin incurrir en ninguna obligación o responsabilidadVivienda nuevaComisión compartida únicamente a inmobilaria y personas que comprueben pertenecer al gremio inmobilario",
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-fraccionamiento-bosques-del-valle/149428154",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-fraccionamiento-bosques-del-valle/149428154",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "305m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosques del Valle",
+          "postalCode": "TOÑO83",
+          "streetAddress": "Bosques del Valle",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.656549200000000610089045949280261993408203125",
+          "longitude": "-106.1503201000000018439095583744347095489501953125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 187m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "Venta de Casa en Circuito MagentaCasa club con albercaPrecio: $4, 000, 000Terreno: 153 m²Construcción: 187 m²Planta baja: • Bar• Sala• Comedor• Lavanderia• Cocina IntegralPlanta alta: • Recámara principal con baño y amplio vestidor• 2 recámaras secundarias con closet• Baño completo• Estancia familiarequipo• 2 aires acondicionados• 1 Calefaccion• Hidroneumático• Boiler• Piedra granito via láctealas imágenes, características, colores, equipo, accesorios Y productos son de carácter informativo el contenido de la presente ficha es estrictamente informativo por lo que no constituye oferta alguna Y podrán cambiar sin previo aviso sin incurrir en ninguna obligación O responsabilidad.",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-bosques-boreales/149994776",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-bosques-boreales/149994776",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "187m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "TOÑO146",
+          "streetAddress": "Circuito Magenta al 2500",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.588218399999998808880263823084533214569091796875",
+          "longitude": "-106.155549199999995835241861641407012939453125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 185m² · 1 Recámara · 2 Estacionamientos",
+        "description": "*Planta Baja. *Sala. *Medio Baño. *Comedor. *Cocina Integral. *Lavanderia. *Area para entretenimiento. *Patio. *Planta Alta. *3 Recamaras una con ampliación. *Estancia. *2 Baños completos con closet. *Equipada con: *Equipo de aire y calefacción. *Dos minisplits en areas con ampliación. *Boiler. *Acceso a las areas comunes con alberca. Hector Leon. Ver datos Ver datos",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 1,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-senda-real/venta-casa-fracc-las-sendas-en-zona-reliz-chihuahua/150210841",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-senda-real/venta-casa-fracc-las-sendas-en-zona-reliz-chihuahua/150210841",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "185m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Senda Real",
+          "postalCode": "621665--353",
+          "streetAddress": "Calle Navarra 11402",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.60179529999999914480213192291557788848876953125",
+          "longitude": "-106.1266667000000012421878636814653873443603515625"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 313m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "Casa Totalmente Nueva en Venta en Fraccionamiento Bosque Real. Características principales. *Totalmente térmica con materiales de primera calidad Block Hebel (Farlic F20 Mortetermico) *Preparación para casa inteligente. *Recámaras: 3 amplias recámaras con excelente iluminación. *Baños: 3 y medio baños con acabados modernos. *Áreas sociales: Sala – comedor con diseño abierto y elegante. *Cocina integral en madera parota totalmente equipada (Parrilla, Refrigerador, lavavajillas, campana metálica, triturador de alimentos, isla con calentadora) *Estancia y cuarto de televisión ideales para la convivencia familiar. *Cuarto de lavado independiente (lavadora y secadora, Boiler alemán, sistema ablandador de agua, hidroneumático, gabinetes en madera) *Patio de servicio. *Cómoda escalera para subir al techo. *Alacena de gran capacidad (Oculta) *Cochera para 2 autos con acceso cómodo techadas. *2 terrazas con vistas agradables. *Alberca. ________________________________________. Detalles que marcan la diferencia. *Totalmente Nueva. *Preparación para Smart Home. *Ventanas con doble vidrio, que brindan aislamiento acústico y eficiencia energética. *Acabados de madera Madera parota en toda la carpintería que aportan calidez y distinción. *Aislamiento térmico de primera calidad (Farlic F20 y Mortotérmico), que garantiza confort en cualquier temporada. *Parques de recreo al frente y detrás de la casa, un entorno natural ideal para la convivencia familiar y el esparcimiento. Jorge González. Ver datos868",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-en-venta-en-fraccionamiento-bosque-real-en-chihuahua-chihuahua/150683487",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-en-venta-en-fraccionamiento-bosque-real-en-chihuahua-chihuahua/150683487",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "313m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosque Real",
+          "postalCode": "627215--353",
+          "streetAddress": "Ave. Francisco Villa 7500-408",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.66342749999999028887032181955873966217041015625",
+          "longitude": "-106.14929050000000643194653093814849853515625"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 260m² · 3 Recámaras",
+        "description": "* Primera Planta: * Sala comedor. * Estudio. * 12 baño. * Cocina con barra. * Lavandería. *Patio. *Segunda Planta: * Recámara principal con baño de regadera y tina aparte. * Closet vestidor. * 2 recámaras que comparten baño completo. * Estancia con balcón. *Incluye: * Dos Aires acondicionados uno para planta alta y otro para planta baja. *9 abanicos de techo. *Calefacción. *Hidro. *Boiler. *Estufa. *Refrigerador. *4 bancos para la barra de la cocina. *4 persianas. Cecilia Salas. Ver datos Ver datos",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-universidad-residencial/casa-en-venta/150551090",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-universidad-residencial/casa-en-venta/150551090",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "260m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Universidad Residencial",
+          "postalCode": "625296--353",
+          "streetAddress": "Universidad Iberoamericana 9743",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.699630899999998945304469089023768901824951171875",
+          "longitude": "-106.129263199999996913902577944099903106689453125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Terreno  Lote · 5m²",
+        "description": "*Terreno a dos cuadras del complejo Industrial ideal para bodegas o industria. *Superficie de 2, 500 m2. *Barda perimetral de block. *Instalacion eléctrica. *Tres accesos. Hector Leon. Ver datos Ver datos",
+        "url": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/venta-terreno-zona-norte-en-ciudad-chihuahua/150327646",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-terreno/chihuahua/venta-terreno-zona-norte-en-ciudad-chihuahua/150327646",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "5m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "622839--353",
+          "streetAddress": "Cultura Popular 124",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.71267746497434103503110236488282680511474609375",
+          "longitude": "-106.0958790460632172880650614388287067413330078125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 380m² · 3 Recámaras · 4 Estacionamientos",
+        "description": "*Casa en Venta. *Cuenta con: *Planta Baja. * Cochera para 4 autos. * Recibidor. * 12 Baño. * Estancia u Oficina. * Elevador y Escalera. * Sala. * Comedor. * Cocina con Cocina Integral, Horno Electrico y Lavavajillas. * Estancia. * Patio con Jardín. * Bodega para Herramientas. *Planta Alta. * Estancia. * Recamara Principal con Baño y Vestidor. * Dos Recamaras secundarias con closet y baño. * Lavandería. * 2 Aparatos de Aire. * 2 Mini Splith. * Abanicos en Recamaras y Estancia",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-en-venta-en-residencial-campestre-en-cd-chihuahua/149604380",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-en-venta-en-residencial-campestre-en-cd-chihuahua/149604380",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "380m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "615344--353",
+          "streetAddress": "Cerrada del Campestre de Chihuahua 122",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.673485899999999304554876289330422878265380859375",
+          "longitude": "-106.028372399999994968311511911451816558837890625"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 313m² · 4 Recámaras · 2 Estacionamientos",
+        "description": "*Hermosa Casa dos recamaras en planta baja. *Fraccionamiento privado. *Planta Baja: *Sala. *Comedor. *Estancia (Cuarto tv) *Cocina Integral con estufa. Refrigerador y microondas. *2 recámaras con baño. *Principal baño Vestidor. *Medio baño. *Cochera cerrada con techo ático para 2 autos, *Puerta Metallica eléctrica. Planta Alta: *2 recamaras. *1 baño. Equipada con: * Cisterna (5 mil litros) con Hidroneumático. *Ático Sobre la cochera con escalera retraible. * Gas Cilindro. * Boiler a Gas. *3 Minisplit (Frio  calor) *Varios parques en la Fraccionamiento. Joreg Gonzalez. Ver datos Ver datos",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 4,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/-casa-en-venta-sobre-francisco-villa-en-bosque-real-chihuahua-chihuahua/150728028",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/-casa-en-venta-sobre-francisco-villa-en-bosque-real-chihuahua-chihuahua/150728028",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "313m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosque Real",
+          "postalCode": "626871--353",
+          "streetAddress": "Francisco Villa 7500 435",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.663493800000001243688529939390718936920166015625",
+          "longitude": "-106.1514825999999942496287985704839229583740234375"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 160m² · 3 Recámaras · 1 Estacionamiento",
+        "description": "*Casa venta San Felipe una planta. *Excelente ubicación. *Sala comedor. *Cocina. *Lavanderia con cuarto de servicio. *3 Recamaras. *Estancia. *2 Baños. *Cochera. *Amplio Patio",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-venta-colonia-san-felipe-chihuahua/149614173",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/chihuahua/casa-venta-colonia-san-felipe-chihuahua/149614173",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "160m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "postalCode": "615476--353",
+          "streetAddress": "Laguna de Vallecillos 3520",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.655189799999998712110027554444968700408935546875",
+          "longitude": "-106.1014957999999950288838590495288372039794921875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 252m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "*casa en venta! *Excelente ubicación en Santa Rita! *Cuenta con: *Amplia cochera con portón eléctrico. *Recibidor. *Medio baño visitas. *Sala comedor con amplios espacios. *Cocina Integral con cubierta de granito equipada con estufa y campana. *Recámara con baño y vestidor. *En Planta alta: *Estancia. *Dos recámaras con baño y vestidor cada una. *Patio amplio con terraza y jardín. *Lavanderia y pequeña bodega. *Hermoso patio con jardín y terraza. *Haga su cita hoy! Alicia herrera",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/santa-rita/casa-en-venta-centrica-cd-chihuahua/149521801",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/santa-rita/casa-en-venta-centrica-cd-chihuahua/149521801",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "252m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Santa Rita",
+          "postalCode": "614452--353",
+          "streetAddress": "24 1278",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.625407599999999064266376080922782421112060546875",
+          "longitude": "-106.0779794000000038067810237407684326171875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 304m² · 4 Recámaras · 2 Estacionamientos",
+        "description": "Casa nueva amueblada O sin amueblar Fraccionamiento bosque real (valle escondido) Descripción: 250m2 de terreno304m2 de construcciónplanta baja: Espacio social abiertoEstudio u opción para recámaraBaño completoSala Cocina con barra de granito y encino. Incluye horno, parrilla, campana y microondas. ComedorEstancia social con mueble de madera en encino y granito que incluye su barra de café y espacio para bar. Terraza exterior con jardínBarra de granito y tarja. Acabado de lambrín Cochera para dos autosplanta alta: Recamara principal con walking closet, baño y terrazaDos recámaras secundarias con clóset, comparten su baño completoEstancia con mueble de madera de encino. Lavandería con tina de lavado y clóset de blancos características: Construida con block térmico Porcelanato de InterceramicFachada y terraza al frente con Carpintería de Teka (madera tropical) Placas de granito (baños y cocina) 8 paneles solares de máxima capacidad 2 aires y 2 calefacciones de última generación y minisplit en Recámara ppal. Ventanas de doble vidrioTragaluz y barandales de vidrio templadoIluminación Led (lámparas y candiles instalados) Cisterna 2, 800 ltHidroneumaticoprecio semi amueblada(descripción anterior) $7, 300, 000Totalmente amueblada +$500, 000",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 4,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-fraccionamiento-bosque-real/149428158",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosque-real/casa-fraccionamiento-bosque-real/149428158",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "304m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosque Real",
+          "postalCode": "TOÑO134",
+          "streetAddress": "Bosque Real 1",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.661803899999998890280039631761610507965087890625",
+          "longitude": "-106.14922780000000557265593670308589935302734375"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Terreno  Lote · 669m²",
+        "description": "Patio Logístico Industrial bardeado con tejaban y acceso a trailers al Sur ciudad, cerca del aeropuerto y salida Carrt. Cd. Aldama en Ejido Tabalaopa. * Estatus Legal: Escriturado. * Terreno: 2, 535 m2. * Bardas de 3. 40 m de altura. * Cuenta con portón para entrada de trailer. * Construcción en 2 plantas para oficinas en obra negra 57 m2. * Cuarto de herramientas 96 m2. * Tejabán 516 m2. * Excelente ubicación en esquina. Servicios: * Poste de luz a pie de terreno. * Agua de pozo. * Drenaje por fosa. Alicia Herrera Martínez",
+        "numberOfBathroomsTotal": 1,
+        "url": "https://www.vivanuncios.com.mx/a-venta-terreno/ejido-tabalaopa/patio-logistico-industrial-en-venta-al-sur-chihuahua-chihuahua/148007848",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-terreno/ejido-tabalaopa/patio-logistico-industrial-en-venta-al-sur-chihuahua-chihuahua/148007848",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "669m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Ejido Tabalaopa",
+          "postalCode": "597312--353",
+          "streetAddress": "21 S/N oficial S/N oficial",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.660282399999999825013219378888607025146484375",
+          "longitude": "-106.01846630000000004656612873077392578125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 72m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "Tipo de Propiedad: Casa Habitación. Tipo de Operación: Venta. Ubicación: Fraccionamiento Monteverde. Dirección: Llanura Ombú 2145. Estado de Conservación: Bueno. Año de Construcción: 2014. Propiedad en esquina. superficies. Terreno: 145. 60 m² Construcción: 72. 91 m² distribución. Planta Baja. *Sala. *Comedor. *Cocina con cocineta. *Medio baño. *Patio amplio terrado. *Cochera techada para 1 vehículo. *Cochera exterior para 2 vehículos. *Portón metálico. Planta Alta. *3 Recámaras. *1 Baño completo. equipamiento. *Cocineta. *Minisplit. *Portón. *Patio amplio. *Estacionamiento para varios vehículos",
+        "numberOfBathroomsTotal": 1,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-monteverde/llanura-ombu-2145-monteverde-ii-chihuahua-chihuahua/150027483",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-monteverde/llanura-ombu-2145-monteverde-ii-chihuahua-chihuahua/150027483",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "72m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Monteverde",
+          "postalCode": "618701--353",
+          "streetAddress": "-",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.5905139999999988731360645033419132232666015625",
+          "longitude": "-106.1658038000000061629179981537163257598876953125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 275m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "*Ubicación privilegiada en zona cantera. *Planta Baja: * Cochera techada para dos autos. * Recibidor. * Baño de visitas. * Sala. * Comedor. * Cocina equipada con parrilla, campana, barra de granito. * Lavandería. * Patio con jardin decorado y pérgola. *Planta Alta: * Estancia. * Dos recámaras secundarias con closet  vestidor. * Baño compartido para recamaras secundarias. * Recámara principal con baño, tina de hidromasaje, vestidor. Y balcón. *Equipo: * Cocina integral con barra de granito, bancos, campana, horno. * Iluminación led, luminarias, * Persianas. * Aire acondicionado y calefacción. * Ventaneria de doble vidrio. * Piso de porcelanato. * Escaleras con huella de encino. * Hidroneumatico. * Muebles para lavandería. * Luz 220. * Jardin decorado con pérgola, árboles y plantas. *Convierte tus sueños en realidad y no dejes pasar esta oportunidad, agenda hoy mismo tu cita! Tony Lira Ver datos Ver datos",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-en-venta-en-bosques-del-valle-chihuahua-chihuahua/149241975",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-del-valle/casa-en-venta-en-bosques-del-valle-chihuahua-chihuahua/149241975",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "275m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosques del Valle",
+          "postalCode": "611133--353",
+          "streetAddress": "-",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.656099000000001097987478715367615222930908203125",
+          "longitude": "-106.153585300000003144305082969367504119873046875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Apartment",
+        "name": "Departamento · 92m² · 2 Recámaras · 2 Estacionamientos",
+        "description": "*Amueblado y equipado listo para habitarse tipo Airbnb. *Superficie: Departamento 92. 75 m2 y Bodega 5. 61 m2. *Departamento de 2 habitaciones con Queen y dos camas individuales. *2 baños completos. *Comedor para 4 personas. *Cocina Integral con todos los equipos electrodomésticos. *Sala amueblada con tv. *Climatizado con equipo de aire acondicionado y calefacción. *2 cajones de estacionamiento exclusivos. *Acceso controlado. *Circuito cerrado. *Edificio cuenta con las siguientes amenidades: *Cinema. *Coworking. *Terraza para reuniones con asador. *Sport Bar. *Terraza para fiestas o reuniones. *Lobby",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 2,
+        "url": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-cerrada-castilla/venta-de-departamento-amueblado-nuevo-en-zona-reliz/150562009",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-departamento/fraccionamiento-cerrada-castilla/venta-de-departamento-amueblado-nuevo-en-zona-reliz/150562009",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "92m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Cerrada Castilla",
+          "postalCode": "625416--353",
+          "streetAddress": "Mariano Valenzuela 2904",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.60142929999999950041456031613051891326904296875",
+          "longitude": "-106.13267999999999346982804127037525177001953125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 166m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "*Venta Casa Fracc Bosques San Pedro vi Etapa. *3 Recamaras la principal con baño y amplio walking closet. *2 y 12 baños con cancel cristal templado. *Sala y Comedor. *Cocina Integral con despensa. *Area de lavado. *Patio con asador. *Cochera techada para dos carros. *Barandar cristal Templado. *Equipada con: *Cisterna con Hidroneumático. *AC Master cool. *Puertas exterior con herrería. *Patio con asador. *Cochera techada para dos carros. Hector Leon",
+        "numberOfBathroomsTotal": 2,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-de-san-pedro/venta-casa-en-bosques-de-san-pedro-chihuahua/150573183",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-bosques-de-san-pedro/venta-casa-en-bosques-de-san-pedro-chihuahua/150573183",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "166m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Fraccionamiento Bosques de San Pedro",
+          "postalCode": "625556--353",
+          "streetAddress": "-",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.72066399793698820985810016281902790069580078125",
+          "longitude": "-106.1542976883605859939052606932818889617919921875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "SingleFamilyResidence",
+        "name": "Casa · 331m² · 3 Recámaras · 2 Estacionamientos",
+        "description": "*Casa en Venta en El Campanario con ingreso independiente! * 2 plantas. * Vive y genera ingresos desde tu hogar. * Propiedad con departamento listo para rentarse. * Ideal para Airbnb o renta fija. * Espacio totalmente independiente. * La casa cuenta con: * Cuatro recámaras amplias. * Tres baños. * Cocina con cubierta de granito, equipada. * Sala comedor. * Medio baño. * Lavandería. *Estancia amplia. * Equipo: *3 aparatos de aire acondicionado. *Calefacción. * Excelente ubicación, cerca de Hospitales, Bancos y Centros comerciales. Alicia Herrera",
+        "numberOfBathroomsTotal": 3,
+        "numberOfBedrooms": 3,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa/campanario/casa-en-venta-en-el-campanario-chihuahua-chihuahua/150205615",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa/campanario/casa-en-venta-en-el-campanario-chihuahua-chihuahua/150205615",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "331m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Campanario",
+          "postalCode": "621443--353",
+          "streetAddress": "Mision de Baboyonaba 6127",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.642803027195459009135447558946907520294189453125",
+          "longitude": "-106.115969101852414269160362891852855682373046875"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Casa en condominio · 551m² · 5 Recámaras · 2 Estacionamientos",
+        "description": "Distribución: La casa cuenta con 2 niveles: En planta baja: -Recibidor. -Medio Baño. -Sala. -Comedor. -Desayunador. -Cocina. -Lavandería. -Recamara principal con baño y vestidor. -Recamara con baño (cuarto de servicio) -Cochera para dos vehículos. -Patio con jardín y asador. -Dos terrazas. En planta alta: -Estancia. -Estudio. -2 closets. -Recamara Secundaria con baño y vestidor. -2 recamaras secundarias con vestidor cada una y 1 baño compartido. caracteristicas: Cochera cubierta para dos vehículos. Pórtico. 2 Terrazas. Superficie de terreno: 639. 58m2. Superficie de construcción: 463. 96m2. Superficie de construcción de cochera, pórtico y terraza: 86. 08m2. equipada con: -4 aires acondicionados. -Boiler. -4 calefacciones. -Riego automático. -Asador. -Cocina integral con estufa, cubierta de cuarzo. -Pisos de mármol. -Carpintería de encino. -Ladrillo rojo con aislante. -Ventanearía de pella. forma de pago: Se aceptan pagos con recursos propios y créditos hipotecarios bancarios (la aprobación de los créditos está sujeto a las políticas de cada institución). Servicios de la zona: - Agua. - cfe. - Drenaje. - Internet de alta velocidad. - Servicios municipales. - Vialidades: Periferico de la Juventud, avenida Hacienda del Valle, avenida rio de jainero. - A 2 km. A la redonda: sam´s Club Chihuahua, Walmart, Plaza palmas, paseo central, holiday inn express&suites, best western y alsuper fresh market santa fe. Entorno: - Habitacional. Información profeco: Contrato de Adhesión de Intermediación para la compraventa de inmuebles. Registrado en la Procuraduría Federal del Consumidor (profeco) Bajo el número 1651 - 2020. Century 21 Robles & Herrera. Tel: Ver datos. Cel: Ver datos",
+        "numberOfBathroomsTotal": 4,
+        "numberOfBedrooms": 5,
+        "url": "https://www.vivanuncios.com.mx/a-venta-casa-en-condominio/arcadas/casa-en-venta-residencial-arcadas-chihuahua/148308913",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-casa-en-condominio/arcadas/casa-en-venta-residencial-arcadas-chihuahua/148308913",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "551m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Arcadas",
+          "postalCode": "600411--381",
+          "streetAddress": "CERRADA DE OVIEDO 2603",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.632673000000000484988049720413982868194580078125",
+          "longitude": "-106.1179465000000021746018319390714168548583984375"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SellAction",
+      "object": {
+        "type": "Accommodation",
+        "name": "Terreno  Lote · 8929m²",
+        "description": "Ubicación: Avenida Cristóbal Colón esquina con avenida Teófilo Borunda, frente al hospital general Dr. Salvador Zubirán — Zona Centro, Chihuahua, Chihuahua. Superficie de terreno: 8, 929 m² Superficie construida: 638 m² Precio de venta: $71, 250, 000 mxn. Descripción general: Terreno icónico de la ciudad de chihuahua, anteriormente conocido como jardín corona. Se ubica sobre dos de las avenidas más transitadas (Ave. Cristobal Colón y Ave. Teófilo Borunda) y con mayor visibilidad de la zona centro, ideal para proyectos comerciales, médicos o de servicios. Características principales: - Frente aproximado de 95 m sobre avenida colón. - Acceso también por avenida teófilo borunda. - Ubicación estratégica frente al hospital general. - Topografía plana y con servicios urbanos a pie de lote. - Cuenta con construcción existente de 638 m² (estructura y servicios básicos) - Vialidades principales y alto flujo vehicular y peatonal. Usos recomendados: - Torre médica o consultorios. - Desarrollo comercial mixto. - Corporativo o centro de oficinas. - Estacionamiento o uso temporal de renta de espacios. Ventajas competitivas: - Una de las últimas grandes superficies disponibles dentro del perímetro central. - Excelente conectividad y exposición. - Entorno consolidado con servicios, hospitales, dependencias gubernamentales y comercios. Condición del inmueble: - Construcciones existentes en estado regular, aptas para adecuación o demolición parcial. - Libre de ocupación. Documentación: - Propiedad privada. - Documentación lista para revisión y formalización",
+        "url": "https://www.vivanuncios.com.mx/a-venta-terreno/zona-centro/terreno-venta-teofilo-borunda-antes-jardin-corona-71-250-000-gl5/147861369",
+        "tourBookingPage": "https://www.vivanuncios.com.mx/a-venta-terreno/zona-centro/terreno-venta-teofilo-borunda-antes-jardin-corona-71-250-000-gl5/147861369",
+        "floorSize": {
+          "type": "QuantitativeValue",
+          "unitText": "8929m²",
+          "unitCode": "MKT"
+        },
+        "address": {
+          "type": "PostalAddress",
+          "addressLocality": "Zona Centro",
+          "streetAddress": "Avenida Cristóbal Colón 501",
+          "addressCountry": {
+            "type": "Country",
+            "name": "MX"
+          }
+        },
+        "geo": {
+          "type": "GeoCoordinates",
+          "latitude": "28.6490921999999983427187544293701648712158203125",
+          "longitude": "-106.071138799999999946521711535751819610595703125"
+        }
+      },
+      "participant": {
+        "type": "Organization",
+        "url": "https://www.vivanuncios.com.mx",
+        "name": "Vivanuncios"
+      },
+      "location": {
+        "type": "Place",
+        "name": "www.vivanuncios.com.mx"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 0,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://www.vivanuncios.com.mx/",
+            "name": "Vivanuncios"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://www.vivanuncios.com.mx/s-venta-inmuebles/v1c1097p1",
+            "name": "venta"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/v1c1097l1005p1",
+            "name": "Chihuahua"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p1",
+            "name": "Chihuahua"
+          }
+        }
+      ]
+    }
+  ]
+}
