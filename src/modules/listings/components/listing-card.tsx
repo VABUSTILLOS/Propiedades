@@ -275,11 +275,13 @@ function EditContactDialog({ listing }: { listing: PropertiesRow }) {
         if (next) reset();
       }}
     >
-      <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
-          Editar contacto
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button size="sm" variant="outline">
+            Editar contacto
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Editar contacto</DialogTitle>

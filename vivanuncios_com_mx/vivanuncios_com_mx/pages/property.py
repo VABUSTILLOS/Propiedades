@@ -30,6 +30,11 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
 
     @field
     def url(self) -> str | None:
+        match = re.search(
+            r'<link[^>]+rel="canonical"[^>]+href="([^"]+)"', self.response.text
+        )
+        if match:
+            return match.group(1)
         return str(self.response.url)
 
     @field
