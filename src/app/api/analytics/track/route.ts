@@ -67,22 +67,24 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ ok: true, data: { id: prev.id } });
   }
 
-  const { data, error } = await supabase
-    .from("flyer_analytics")
-    .insert({
-      flyer_id: flyerId,
-      visitor_session_id: visitorSessionId,
-      time_spent_seconds: timeSpentSeconds,
-      sections_viewed: toJson(sectionsViewed),
-    })
-    .select("id")
-    .single();
+  // Generate the id server-side so the beacon can report it back without
+  // needing to read the inserted row. Anonymous visitors have no SELECT
+  // policy on flyer_analytics, so `insert().select().single()` would fail
+  // RLS even though the INSERT itself is allowed.
+  const id = crypto.randomUUID();
+  const { error } = await supabase.from("flyer_analytics").insert({
+    id,
+    flyer_id: flyerId,
+    visitor_session_id: visitorSessionId,
+    time_spent_seconds: timeSpentSeconds,
+    sections_viewed: toJson(sectionsViewed),
+  });
 
   if (error) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });
   }
 
-  return Response.json({ ok: true, data: { id: data.id } });
+  return Response.json({ ok: true, data: { id } });
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

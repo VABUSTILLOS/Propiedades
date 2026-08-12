@@ -72,22 +72,22 @@ export async function recordFlyerAnalytics(
 
   const supabase = await createSupabaseServerClient();
 
-  const { data, error } = await supabase
-    .from("flyer_analytics")
-    .insert({
-      flyer_id: parsed.data.flyerId,
-      visitor_session_id: parsed.data.visitorSessionId,
-      time_spent_seconds: parsed.data.timeSpentSeconds,
-      sections_viewed: parsed.data.sectionsViewed,
-    })
-    .select("id")
-    .single();
+  // Generate the id server-side (no SELECT policy for anon on
+  // flyer_analytics, so `insert().select().single()` would fail RLS).
+  const id = crypto.randomUUID();
+  const { error } = await supabase.from("flyer_analytics").insert({
+    id,
+    flyer_id: parsed.data.flyerId,
+    visitor_session_id: parsed.data.visitorSessionId,
+    time_spent_seconds: parsed.data.timeSpentSeconds,
+    sections_viewed: parsed.data.sectionsViewed,
+  });
 
   if (error) {
     return fail(error.message);
   }
 
-  return ok({ id: data.id });
+  return ok({ id });
 }
 
 /**
@@ -151,22 +151,22 @@ export async function captureFlyerLead(
 
   const supabase = await createSupabaseServerClient();
 
-  const { data, error } = await supabase
-    .from("flyer_analytics")
-    .insert({
-      flyer_id: parsed.data.flyerId,
-      visitor_session_id: parsed.data.visitorSessionId,
-      lead_email: parsed.data.email ?? null,
-      lead_phone: parsed.data.phone ?? null,
-    })
-    .select("id")
-    .single();
+  // Generate the id server-side (no SELECT policy for anon on
+  // flyer_analytics, so `insert().select().single()` would fail RLS).
+  const id = crypto.randomUUID();
+  const { error } = await supabase.from("flyer_analytics").insert({
+    id,
+    flyer_id: parsed.data.flyerId,
+    visitor_session_id: parsed.data.visitorSessionId,
+    lead_email: parsed.data.email ?? null,
+    lead_phone: parsed.data.phone ?? null,
+  });
 
   if (error) {
     return fail(error.message);
   }
 
-  return ok({ id: data.id });
+  return ok({ id });
 }
 
 /**
