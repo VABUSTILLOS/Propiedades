@@ -4,14 +4,6 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
-import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
-import {
-  estimateEscrituracion,
-  estimatePredial,
-  formatMxn,
-  isFinanciable,
-} from "@/modules/lib/real-estate";
-import type { PropertyDealType } from "@/modules/lib/database.types";
 
 /**
  * Search result card used by the infinite list and the map-zone grid.
@@ -24,10 +16,8 @@ export function SearchResultCard({
   price,
   currency,
   type,
-  dealType,
   image,
   score,
-  hotScore,
 }: {
   title: string;
   slug: string;
@@ -35,14 +25,9 @@ export function SearchResultCard({
   price: number;
   currency: string;
   type: "sale" | "rent";
-  dealType: PropertyDealType;
   image: string | null;
   score: number | null;
-  hotScore: number | null;
 }) {
-  const showCosts = type === "sale" && price > 0;
-  const financiable = isFinanciable(dealType);
-
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={`/property/${slug}`} className="block">
@@ -82,26 +67,8 @@ export function SearchResultCard({
               {currency} · {type === "rent" ? "renta" : "venta"}
             </span>
           </p>
-          <HotnessGauge score={hotScore} />
         </div>
       </Link>
-
-      {showCosts && (
-        <div className="space-y-1 pt-3">
-          <p className="text-xs text-muted-foreground">
-            Predial est. {formatMxn(estimatePredial(price))}/año · Escrituración
-            est. {formatMxn(estimateEscrituracion(price))}
-          </p>
-          {financiable && (
-            <Link
-              href="/preapproval"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
-            >
-              Precalificate para un crédito
-            </Link>
-          )}
-        </div>
-      )}
     </div>
   );
 }

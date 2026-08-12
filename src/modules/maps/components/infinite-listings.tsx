@@ -100,11 +100,7 @@ export function InfiniteListings({
       <div className={gridClassName}>
         {items.map((item) =>
           card === "property" ? (
-            <PropertyCard
-              key={item.id}
-              listing={item}
-              hotScore={item.hotScore}
-            />
+            <PropertyCard key={item.id} listing={item} />
           ) : (
             <SearchResultCard
               key={item.id}
@@ -114,10 +110,8 @@ export function InfiniteListings({
               price={item.price}
               currency={item.currency}
               type={item.type}
-              dealType={item.deal_type}
               image={item.images?.[0] ?? null}
               score={item.property_score}
-              hotScore={item.hotScore}
             />
           ),
         )}

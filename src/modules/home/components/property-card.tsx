@@ -5,13 +5,6 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
-import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
-import {
-  estimateEscrituracion,
-  estimatePredial,
-  formatMxn,
-  isFinanciable,
-} from "@/modules/lib/real-estate";
 
 /**
  * Public property card for the homepage featured grid.
@@ -21,13 +14,10 @@ import {
 export function PropertyCard({
   listing,
   saved = false,
-  hotScore,
 }: {
   listing: PropertiesRow;
   /** Whether the current user already saved this property as a favorite. */
   saved?: boolean;
-  /** Opportunity score 0–100; renders the traffic-light gauge when present. */
-  hotScore?: number | null;
 }) {
   const price =
     listing.price > 0
@@ -38,9 +28,6 @@ export function PropertyCard({
   const isLand = listing.terreno_m2 > 0 && listing.construccion_m2 === 0;
 
   const typeLabel = isLand ? "Tierra" : listing.type === "rent" ? "Renta" : "Venta";
-
-  const showCosts = listing.type === "sale" && listing.price > 0;
-  const financiable = isFinanciable(listing.deal_type);
 
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
@@ -88,8 +75,6 @@ export function PropertyCard({
         </p>
         <p className="pt-1 text-lg font-bold">{price}</p>
 
-        {hotScore != null && <HotnessGauge score={hotScore} />}
-
         {(listing.recamaras != null ||
           listing.banos != null ||
           listing.construccion_m2 > 0 ||
@@ -125,22 +110,6 @@ export function PropertyCard({
       </div>
       </Link>
 
-      {showCosts && (
-        <div className="space-y-1 pt-3">
-          <p className="text-xs text-muted-foreground">
-            Predial est. {formatMxn(estimatePredial(listing.price))}/año ·
-            Escrituración est. {formatMxn(estimateEscrituracion(listing.price))}
-          </p>
-          {financiable && (
-            <Link
-              href="/preapproval"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
-            >
-              Precalificate para un crédito
-            </Link>
-          )}
-        </div>
-      )}
     </div>
   );
 }
