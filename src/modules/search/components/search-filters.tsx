@@ -14,6 +14,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryPills } from "@/modules/search/components/category-pills";
+import {
+  PriceRangeSlider,
+  RENT_PRICE_MAX,
+  SALE_PRICE_MAX,
+} from "@/modules/search/components/price-range-slider";
 import { parseCategoriesParam } from "@/modules/lib/schemas";
 import type { PropertyCategory } from "@/modules/lib/database.types";
 
@@ -111,6 +116,32 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     debounceRef.current = setTimeout(() => navigate(next), 400);
   };
 
+  // Rental listings are priced differently from for-sale ones, so the price
+  // slider adapts its ceiling (and granularity) to the active type.
+  const priceMax = type === "rent" ? RENT_PRICE_MAX : SALE_PRICE_MAX;
+  const priceStep = type === "rent" ? 5_000 : 100_000;
+
+  // Slider reflects the URL range; empty params mean "no limit" → extremes.
+  const priceRange: [number, number] = [
+    Math.min(Number(minPrice) || 0, priceMax),
+    Math.min(Number(maxPrice) || priceMax, priceMax),
+  ];
+
+  // During drag only the local state (and the live label) updates; the URL is
+  // updated once on commit so we don't spam server re-renders mid-gesture.
+  const handlePriceChange = (next: [number, number]) => {
+    const nextMin = next[0] > 0 ? String(next[0]) : "";
+    const nextMax = next[1] < priceMax ? String(next[1]) : "";
+    setMinPrice(nextMin);
+    setMaxPrice(nextMax);
+    stateRef.current = { ...stateRef.current, minPrice: nextMin, maxPrice: nextMax };
+  };
+
+  const handlePriceCommitted = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    navigate(stateRef.current);
+  };
+
   const reset = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setQuery("");
@@ -159,7 +190,18 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             onValueChange={(v) => {
               const next = v ?? "";
               setType(next);
-              changeImmediate({ type: next });
+              // Clamp any price filters that no longer fit the new listing type.
+              const max = next === "rent" ? RENT_PRICE_MAX : SALE_PRICE_MAX;
+              const curMin = Number(stateRef.current.minPrice) || 0;
+              const curMax = Number(stateRef.current.maxPrice) || 0;
+              const patch: Partial<SearchFilterState> = { type: next };
+              if (curMin > max || curMax > max) {
+                patch.minPrice = "";
+                patch.maxPrice = "";
+                setMinPrice("");
+                setMaxPrice("");
+              }
+              changeImmediate(patch);
             }}
           >
             <SelectTrigger id="search-type" className="rounded-full">
@@ -196,42 +238,6 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="search-min-price">Precio mín.</Label>
-          <Input
-            id="search-min-price"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={minPrice}
-            onChange={(e) => {
-              const next = e.target.value;
-              setMinPrice(next);
-              changeDebounced({ minPrice: next });
-            }}
-            placeholder="0"
-            className="rounded-full"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="search-max-price">Precio máx.</Label>
-          <Input
-            id="search-max-price"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={maxPrice}
-            onChange={(e) => {
-              const next = e.target.value;
-              setMaxPrice(next);
-              changeDebounced({ maxPrice: next });
-            }}
-            placeholder="10,000,000"
-            className="rounded-full"
-          />
-        </div>
-
-        <div className="space-y-2">
           <Label htmlFor="search-bedrooms">Recámaras</Label>
           <Select
             value={minBedrooms}
@@ -253,6 +259,21 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Precio</Label>
+        <PriceRangeSlider
+          min={0}
+          max={priceMax}
+          step={priceStep}
+          value={priceRange}
+          onChange={handlePriceChange}
+          onCommitted={handlePriceCommitted}
+        />
+        <p className="text-xs text-muted-foreground">
+          Arrastra los controles para ajustar el rango de precio.
+        </p>
       </div>
 
       <div className="space-y-2">

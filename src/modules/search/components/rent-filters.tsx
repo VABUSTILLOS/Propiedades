@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -14,6 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryPills } from "@/modules/search/components/category-pills";
+import {
+  PriceRangeSlider,
+  RENT_PRICE_MAX,
+} from "@/modules/search/components/price-range-slider";
 import { parseCategoriesParam } from "@/modules/lib/schemas";
 import type { PropertyCategory } from "@/modules/lib/database.types";
 
@@ -95,12 +98,27 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
     navigate(next);
   };
 
-  // Applies a filter change after a short pause (text/number inputs).
-  const changeDebounced = (patch: Partial<RentFiltersState>) => {
-    const next = { ...stateRef.current, ...patch };
-    stateRef.current = next;
+  const priceStep = 5_000;
+
+  // Slider reflects the URL range; empty params mean "no limit" → extremes.
+  const priceRange: [number, number] = [
+    Math.min(Number(minPrice) || 0, RENT_PRICE_MAX),
+    Math.min(Number(maxPrice) || RENT_PRICE_MAX, RENT_PRICE_MAX),
+  ];
+
+  // During drag only the local state (and the live label) updates; the URL is
+  // updated once on commit so we don't spam server re-renders mid-gesture.
+  const handlePriceChange = (next: [number, number]) => {
+    const nextMin = next[0] > 0 ? String(next[0]) : "";
+    const nextMax = next[1] < RENT_PRICE_MAX ? String(next[1]) : "";
+    setMinPrice(nextMin);
+    setMaxPrice(nextMax);
+    stateRef.current = { ...stateRef.current, minPrice: nextMin, maxPrice: nextMax };
+  };
+
+  const handlePriceCommitted = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => navigate(next), 400);
+    navigate(stateRef.current);
   };
 
   const reset = () => {
@@ -149,42 +167,6 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="rent-min-price">Precio mín.</Label>
-          <Input
-            id="rent-min-price"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={minPrice}
-            onChange={(e) => {
-              const next = e.target.value;
-              setMinPrice(next);
-              changeDebounced({ minPrice: next });
-            }}
-            placeholder="0"
-            className="rounded-full"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="rent-max-price">Precio máx.</Label>
-          <Input
-            id="rent-max-price"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={maxPrice}
-            onChange={(e) => {
-              const next = e.target.value;
-              setMaxPrice(next);
-              changeDebounced({ maxPrice: next });
-            }}
-            placeholder="100,000"
-            className="rounded-full"
-          />
-        </div>
-
-        <div className="space-y-2">
           <Label htmlFor="rent-bedrooms">Cuartos</Label>
           <Select
             value={minBedrooms}
@@ -205,6 +187,21 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Precio</Label>
+        <PriceRangeSlider
+          min={0}
+          max={RENT_PRICE_MAX}
+          step={priceStep}
+          value={priceRange}
+          onChange={handlePriceChange}
+          onCommitted={handlePriceCommitted}
+        />
+        <p className="text-xs text-muted-foreground">
+          Arrastra los controles para ajustar el rango de renta.
+        </p>
       </div>
 
       <div className="space-y-2">

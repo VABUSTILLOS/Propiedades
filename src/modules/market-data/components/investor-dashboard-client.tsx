@@ -20,6 +20,10 @@ import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { MapViewToggle, type MapView } from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
 import { CategoryPills } from "@/modules/search/components/category-pills";
+import {
+  PriceRangeSlider,
+  SALE_PRICE_MAX,
+} from "@/modules/search/components/price-range-slider";
 import type { PropertyMapMarker } from "@/modules/search/queries";
 import { parseCategoriesParam } from "@/modules/lib/schemas";
 import type { MapBounds } from "@/modules/lib/schemas";
@@ -132,6 +136,17 @@ export function InvestorDashboardClient({
   const [city, setCity] = useState("all");
   const [sortBy, setSortBy] = useState<SortKey>("newest");
 
+  // Price filter. The slider ceiling is the highest listed price (rounded up
+  // to a round number) so the range always spans the available inventory.
+  const priceCeiling = useMemo(() => {
+    const highest = items.reduce((max, i) => Math.max(max, i.price ?? 0), 0);
+    if (highest <= 0) return SALE_PRICE_MAX;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(highest)));
+    return Math.ceil(highest / magnitude) * magnitude;
+  }, [items]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(priceCeiling);
+
   const cities = useMemo(() => {
     const set = new Set(items.map((i) => i.city).filter(Boolean));
     return [...set].sort();
@@ -150,6 +165,8 @@ export function InvestorDashboardClient({
       if (landPerM2 > maxLandNum) return false;
       if (discount < minDiscountNum) return false;
       if (city !== "all" && item.city !== city) return false;
+      if (item.price < minPrice) return false;
+      if (item.price > maxPrice) return false;
       return true;
     });
 
@@ -185,7 +202,7 @@ export function InvestorDashboardClient({
           return 0;
       }
     });
-  }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy]);
+  }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy, minPrice, maxPrice]);
 
   // Pins for the map: one per filtered opportunity (all for-sale).
   const markers = useMemo(() => filtered.map(toMapMarker), [filtered]);
@@ -311,6 +328,20 @@ export function InvestorDashboardClient({
             </option>
           </select>
         </label>
+
+        <div className="w-full space-y-2 border-t pt-3">
+          <span className="block text-xs text-muted-foreground">Precio</span>
+          <PriceRangeSlider
+            min={0}
+            max={priceCeiling}
+            step={Math.max(1, Math.round(priceCeiling / 100))}
+            value={[minPrice, maxPrice]}
+            onChange={([lo, hi]) => {
+              setMinPrice(lo);
+              setMaxPrice(hi);
+            }}
+          />
+        </div>
 
         <div className="w-full space-y-2 border-t pt-3">
           <span className="block text-xs text-muted-foreground">
