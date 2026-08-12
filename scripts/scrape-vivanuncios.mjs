@@ -55,6 +55,7 @@ const pageCount = parseArg(args, "--pages", 3);
 const maxListings = parseArg(args, "--limit", 60);
 const dryRun = args.includes("--dry-run");
 const rematesMode = args.includes("--remates");
+const skipDetail = args.includes("--skip-detail");
 
 function parseArg(args, name, fallback) {
   const i = args.indexOf(name);
@@ -752,9 +753,10 @@ async function main() {
     console.log(`\n[${i + 1}/${toImport.length}] ${listing.title} (${listing.publishedLabel || "?"})`);
     console.log(`  ${listing.sourceUrl}`);
 
-    // Try detail page → DeepSeek extraction.
+    // Try detail page → DeepSeek extraction. With --skip-detail (remate detail
+    // pages are Cloudflare-blocked) skip the retry loop and use tile data.
     let extracted = null;
-    const markdown = await fetchDetail(listing);
+    const markdown = skipDetail ? null : await fetchDetail(listing);
     if (markdown) {
       // Page-2+ tiles have no "Publicado" label; the detail page always does.
       if (!listing.publishedLabel) {
