@@ -116,6 +116,42 @@ export async function getMlsListings(options?: {
 }
 
 /**
+ * Similar listings for the "Propiedades similares" section: same deal type
+ * (sale/rent), same property category, same city, and price within ±25% of
+ * the current listing. Ranked by colonia match first, then price closeness.
+ */
+export async function getSimilarListings(
+  listing: PropertiesRow,
+  limit = 3,
+): Promise<PropertiesRow[]> {
+  if (listing.price <= 0) return [];
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: rows } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("status", "active")
+    .eq("type", listing.type)
+    .eq("category", listing.category)
+    .eq("city", listing.city)
+    .neq("id", listing.id)
+    .gte("price", listing.price * 0.75)
+    .lte("price", listing.price * 1.25)
+    .limit(12)
+    .returns<PropertiesRow[]>();
+
+  const ranked = (rows ?? []).sort((a, b) => {
+    const aColonia = a.colonia === listing.colonia ? 0 : 1;
+    const bColonia = b.colonia === listing.colonia ? 0 : 1;
+    if (aColonia !== bColonia) return aColonia - bColonia;
+    return Math.abs(a.price - listing.price) - Math.abs(b.price - listing.price);
+  });
+
+  return ranked.slice(0, limit);
+}
+
+/**
  * Fetch up to 4 listings by ids for the side-by-side comparator.
  * Public read — RLS restricts to active listings.
  */

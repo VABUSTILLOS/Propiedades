@@ -29,6 +29,7 @@ import {
   toHotScore,
 } from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
+import { SimilarProperties } from "@/modules/listings/components/similar-properties";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
@@ -168,6 +169,8 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               discountPct={discountPct}
               initialMode={mode}
             />
+
+            <SimilarProperties listing={listing} />
           </section>
 
           <aside className="space-y-4">
