@@ -19,11 +19,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Propiedades — Real Estate Marketplace",
+    default: "Propiedades — Marketplace inmobiliario de México",
     template: "%s | Propiedades",
   },
   description:
-    "Two-sided real estate marketplace for buyers, investors, agents and FSBO owners.",
+    "Compra, renta, invierte y vende propiedades en México con valuaciones, tours, ofertas digitales y procesos transparentes.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
