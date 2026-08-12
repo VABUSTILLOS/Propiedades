@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 
 import { QueryProvider } from "@/modules/lib/react-query/provider";
 import { CommandPalette } from "@/modules/search/components/command-palette";
@@ -7,8 +7,8 @@ import { resolveTenant } from "@/modules/profiles/tenant";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
@@ -32,8 +32,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="es"
+      className={`${jakarta.variable} ${geistMono.variable} h-full antialiased`}
       style={
         {
           "--brand": brand.primary_color,

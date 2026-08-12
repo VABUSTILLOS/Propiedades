@@ -59,11 +59,11 @@ export function HowItWorksSection() {
           {BUYER_STEPS.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div key={step.title} className="relative rounded-xl border bg-card p-6">
-                <span className="absolute -top-3 left-6 rounded-full bg-[var(--brand)] px-3 py-0.5 text-xs font-semibold text-[var(--brand-foreground)]">
+              <div key={step.title} className="relative rounded-2xl border bg-card p-6">
+                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#C97B4A] to-[#8F3E22] px-3 py-0.5 text-xs font-semibold text-white shadow-sm">
                   Paso {index + 1}
                 </span>
-                <span className="mb-4 flex size-11 items-center justify-center rounded-lg bg-muted text-foreground">
+                <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-muted text-foreground">
                   <Icon className="size-5" />
                 </span>
                 <h3 className="font-semibold">{step.title}</h3>
@@ -84,7 +84,7 @@ export function HowItWorksSection() {
               const Icon = item.icon;
               return (
                 <div key={item.title} className="flex gap-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-background text-foreground">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border bg-background text-primary">
                     <Icon className="size-5" />
                   </span>
                   <div>

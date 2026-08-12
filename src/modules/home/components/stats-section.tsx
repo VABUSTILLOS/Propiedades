@@ -35,7 +35,7 @@ export function StatsSection({ stats }: { stats: HomepageStats }) {
 
   return (
     <section className="mx-auto w-full max-w-6xl px-6 py-12">
-      <div className="grid grid-cols-2 gap-6 rounded-2xl border bg-card px-6 py-8 text-center lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-6 rounded-3xl border bg-card px-6 py-8 text-center lg:grid-cols-4">
         {items.map((item) => {
           const Icon = item.icon;
           return (

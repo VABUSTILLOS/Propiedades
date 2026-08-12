@@ -10,12 +10,14 @@ import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
 import { searchParamsSchema } from "@/modules/lib/schemas";
-import { Card } from "@/components/ui/card";
+import { getCurrentUser } from "@/modules/auth/session";
+import { SiteHeader } from "@/modules/home/components/site-header";
+import { SiteFooter } from "@/modules/home/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "Search properties" };
+export const metadata: Metadata = { title: "Buscar propiedades" };
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +40,8 @@ export default async function SearchPage({ searchParams }: Props) {
     limit: 24,
   };
 
-  const [listings, cities] = await Promise.all([
+  const [user, listings, cities] = await Promise.all([
+    getCurrentUser(),
     // Natural-language queries go through semantic search when embeddings
     // are configured; otherwise it falls back to the keyword path.
     parsed.data?.query
@@ -52,82 +55,91 @@ export default async function SearchPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-10">
-      <div className="mb-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Search properties</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {listings.length} active listing{listings.length === 1 ? "" : "s"}
-              {hasFilters ? " matching your filters" : " available"}
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader user={user} />
+
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">
+                Buscar propiedades
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {listings.length} propiedad{listings.length === 1 ? "" : "es"}{" "}
+                activa{listings.length === 1 ? "" : "s"}
+                {hasFilters ? " con tus filtros" : " disponibles"}
+              </p>
+            </div>
+
+            <div className="inline-flex rounded-full border bg-muted/40 p-1">
+              <Link
+                href="/search"
+                className="inline-flex items-center gap-2 rounded-full bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm"
+              >
+                <Landmark className="size-4" />
+                Modo hogar
+              </Link>
+              <Link
+                href="/investor"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium",
+                  "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <Building2 className="size-4" />
+                Inversionista
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <SearchFiltersForm cities={cities} />
+        </div>
+
+        {listings.length === 0 ? (
+          <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
+            <p className="text-sm text-muted-foreground">
+              No hay propiedades que coincidan con tu búsqueda.
             </p>
           </div>
+        ) : (
+          <SearchResults
+            results={listings.map((listing) => ({
+              id: listing.id,
+              title: listing.title,
+              slug: listing.slug,
+              city: `${listing.colonia}, ${listing.city}`,
+              price: listing.price,
+              currency: listing.currency,
+              type: listing.type,
+              image: listing.images?.[0] ?? null,
+              score: listing.property_score,
+              lat: listing.lat,
+              lng: listing.lng,
+            }))}
+          >
+            <div className="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+              {listings.map((listing) => (
+                <SearchResultCard
+                  key={listing.id}
+                  title={listing.title}
+                  slug={listing.slug}
+                  city={`${listing.colonia}, ${listing.city}`}
+                  price={listing.price}
+                  currency={listing.currency}
+                  type={listing.type}
+                  image={listing.images?.[0] ?? null}
+                  score={listing.property_score}
+                />
+              ))}
+            </div>
+          </SearchResults>
+        )}
+      </main>
 
-          <div className="inline-flex rounded-lg border bg-muted/40 p-1">
-            <Link
-              href="/search"
-              className="inline-flex items-center gap-2 rounded-md bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm"
-            >
-              <Landmark className="size-4" />
-              Modo hogar
-            </Link>
-            <Link
-              href="/investor"
-              className={cn(
-                "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium",
-                "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Building2 className="size-4" />
-              Inversionista
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <SearchFiltersForm cities={cities} />
-      </div>
-
-      {listings.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            No properties match your search.
-          </p>
-        </div>
-      ) : (
-        <SearchResults
-          results={listings.map((listing) => ({
-            id: listing.id,
-            title: listing.title,
-            slug: listing.slug,
-            city: `${listing.colonia}, ${listing.city}`,
-            price: listing.price,
-            currency: listing.currency,
-            type: listing.type,
-            image: listing.images?.[0] ?? null,
-            score: listing.property_score,
-            lat: listing.lat,
-            lng: listing.lng,
-          }))}
-        >
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {listings.map((listing) => (
-              <SearchResultCard
-                key={listing.id}
-                title={listing.title}
-                slug={listing.slug}
-                city={`${listing.colonia}, ${listing.city}`}
-                price={listing.price}
-                currency={listing.currency}
-                type={listing.type}
-                image={listing.images?.[0] ?? null}
-                score={listing.property_score}
-              />
-            ))}
-          </div>
-        </SearchResults>
-      )}
+      <SiteFooter />
     </div>
   );
 }
@@ -152,40 +164,44 @@ function SearchResultCard({
   score: number | null;
 }) {
   return (
-    <Card className="overflow-hidden">
-      {image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={image}
-          alt={title}
-          className="aspect-[4/3] w-full object-cover"
-        />
-      ) : (
-        <div className="flex aspect-[4/3] w-full items-center justify-center bg-muted text-xs text-muted-foreground">
-          No photo
-        </div>
-      )}
+    <Link href={`/property/${slug}`} className="group block">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={image}
+            alt={title}
+            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center bg-muted text-xs text-muted-foreground">
+            Sin foto
+          </div>
+        )}
+        <Badge className="absolute left-3 top-3 rounded-full shadow-sm">
+          {type === "rent" ? "Renta" : "Venta"}
+        </Badge>
+      </div>
 
-      <div className="space-y-2 p-4">
+      <div className="space-y-1.5 pt-3">
         <div className="flex items-start justify-between gap-2">
-          <Link
-            href={`/property/${slug}`}
-            className="font-semibold leading-snug hover:underline"
-          >
+          <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
             {title}
-          </Link>
+          </h3>
           {score != null && (
-            <Badge variant="outline">score {score.toFixed(1)}</Badge>
+            <Badge variant="outline" className="shrink-0 rounded-full">
+              score {score.toFixed(1)}
+            </Badge>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">{city}</p>
-        <p className="text-sm font-semibold">
+        <p className="line-clamp-1 text-sm text-muted-foreground">{city}</p>
+        <p className="font-bold">
           ${price.toLocaleString()}{" "}
-          <span className="font-normal text-muted-foreground">
-            {currency} · {type === "rent" ? "rent" : "sale"}
+          <span className="text-sm font-normal text-muted-foreground">
+            {currency} · {type === "rent" ? "renta" : "venta"}
           </span>
         </p>
       </div>
-    </Card>
+    </Link>
   );
 }

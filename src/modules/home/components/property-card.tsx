@@ -17,9 +17,9 @@ export function PropertyCard({ listing }: { listing: PropertiesRow }) {
   return (
     <Link
       href={`/property/${listing.slug}`}
-      className="group overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-lg"
+      className="group block"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {listing.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -32,12 +32,12 @@ export function PropertyCard({ listing }: { listing: PropertiesRow }) {
             Sin foto
           </div>
         )}
-        <Badge className="absolute left-3 top-3">
+        <Badge className="absolute left-3 top-3 rounded-full shadow-sm">
           {listing.type === "rent" ? "Renta" : "Venta"}
         </Badge>
       </div>
 
-      <div className="space-y-1.5 p-4">
+      <div className="space-y-1.5 pt-3">
         <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
           {listing.title}
         </h3>

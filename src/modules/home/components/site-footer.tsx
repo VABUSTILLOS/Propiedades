@@ -35,13 +35,13 @@ const FOOTER_COLUMNS = [
  */
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-muted/40">
+    <footer className="border-t border-border/70 bg-muted/40">
       <div className="mx-auto w-full max-w-6xl px-6 py-12">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-[var(--brand)] text-[var(--brand-foreground)]">
-                <Building2 className="size-4" />
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#C97B4A] to-[#8F3E22] text-white shadow-sm">
+                <Building2 className="size-[18px]" />
               </span>
               <span className="text-lg font-bold tracking-tight">
                 Propiedades
@@ -61,7 +61,7 @@ export function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
                       {link.label}
                     </Link>
@@ -72,8 +72,11 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-10 border-t pt-6 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Propiedades. Hecho en México.
+        <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-border/70 pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center">
+          <span>© {new Date().getFullYear()} Propiedades. Hecho en México.</span>
+          <span className="text-xs">
+            Compra · Renta · Invierte · Vende
+          </span>
         </div>
       </div>
     </footer>

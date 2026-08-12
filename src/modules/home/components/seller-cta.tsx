@@ -36,13 +36,15 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
   const ctaLabel = user ? "Publicar mi propiedad" : "Publicar gratis";
 
   return (
-    <section className="bg-[var(--brand)] text-[var(--brand-foreground)]">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#C97B4A] via-[#B3562E] to-[#7C3A1E] text-white">
+      <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-white/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-20 size-96 rounded-full bg-[#2A1508]/25 blur-3xl" />
+      <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center">
         <div>
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Publica tu propiedad en minutos
           </h2>
-          <p className="mt-2 max-w-lg text-white/70">
+          <p className="mt-2 max-w-lg text-white/75">
             Para dueños directos y agentes. Sin comisiones ocultas: tú defines
             el precio, las condiciones y el método de pago.
           </p>
@@ -51,7 +53,8 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
               href={ctaHref}
               className={buttonVariants({
                 size: "lg",
-                className: "bg-white text-[var(--brand)] hover:bg-white/90",
+                className:
+                  "bg-white text-[#B3562E] shadow-sm hover:bg-white/90",
               })}
             >
               {ctaLabel}
@@ -62,7 +65,7 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
                 size: "lg",
                 variant: "outline",
                 className:
-                  "border-white/30 text-[var(--brand-foreground)] hover:bg-white/10 hover:text-[var(--brand-foreground)]",
+                  "border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white",
               })}
             >
               Ver propiedades
@@ -76,9 +79,9 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
             return (
               <li
                 key={point.title}
-                className="rounded-xl bg-white/10 p-4 backdrop-blur-sm"
+                className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm"
               >
-                <span className="mb-2 flex size-9 items-center justify-center rounded-lg bg-white/15">
+                <span className="mb-2 flex size-9 items-center justify-center rounded-xl bg-white/15">
                   <Icon className="size-4" />
                 </span>
                 <p className="font-semibold">{point.title}</p>

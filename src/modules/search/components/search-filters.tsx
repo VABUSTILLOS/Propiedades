@@ -52,36 +52,37 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   };
 
   return (
-    <div className="space-y-4 rounded-lg border bg-card p-4">
+    <div className="space-y-5 rounded-3xl border bg-card p-5 shadow-sm">
       <div className="space-y-2">
-        <Label htmlFor="search-query">Search</Label>
+        <Label htmlFor="search-query">Buscar</Label>
         <Input
           id="search-query"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Title, description, colonia, city…"
+          placeholder="Título, descripción, colonia, ciudad…"
+          className="rounded-full"
         />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-2">
-          <Label htmlFor="search-type">Type</Label>
+          <Label htmlFor="search-type">Tipo</Label>
           <Select value={type} onValueChange={(v) => setType(v ?? "")}>
-            <SelectTrigger id="search-type">
-              <SelectValue placeholder="Any" />
+            <SelectTrigger id="search-type" className="rounded-full">
+              <SelectValue placeholder="Cualquiera" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sale">For sale</SelectItem>
-              <SelectItem value="rent">For rent</SelectItem>
+              <SelectItem value="sale">En venta</SelectItem>
+              <SelectItem value="rent">En renta</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="search-city">City</Label>
+          <Label htmlFor="search-city">Ciudad</Label>
           <Select value={city} onValueChange={(v) => setCity(v ?? "")}>
-            <SelectTrigger id="search-city">
-              <SelectValue placeholder="Any" />
+            <SelectTrigger id="search-city" className="rounded-full">
+              <SelectValue placeholder="Cualquiera" />
             </SelectTrigger>
             <SelectContent>
               {cities.map((c) => (
@@ -94,7 +95,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="search-min-price">Min price</Label>
+          <Label htmlFor="search-min-price">Precio mín.</Label>
           <Input
             id="search-min-price"
             type="number"
@@ -103,11 +104,12 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
             placeholder="0"
+            className="rounded-full"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="search-max-price">Max price</Label>
+          <Label htmlFor="search-max-price">Precio máx.</Label>
           <Input
             id="search-max-price"
             type="number"
@@ -115,7 +117,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             min="0"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="10000000"
+            placeholder="10,000,000"
+            className="rounded-full"
           />
         </div>
       </div>
@@ -123,26 +126,26 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Label htmlFor="search-sort" className="shrink-0">
-            Sort
+            Ordenar
           </Label>
           <Select value={sortBy} onValueChange={(v) => setSortBy(v ?? "newest")}>
-            <SelectTrigger id="search-sort">
+            <SelectTrigger id="search-sort" className="rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="price_asc">Price (low → high)</SelectItem>
-              <SelectItem value="price_desc">Price (high → low)</SelectItem>
-              <SelectItem value="score">Top score</SelectItem>
+              <SelectItem value="newest">Más recientes</SelectItem>
+              <SelectItem value="price_asc">Precio (menor → mayor)</SelectItem>
+              <SelectItem value="price_desc">Precio (mayor → menor)</SelectItem>
+              <SelectItem value="score">Mejor score</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="flex items-center gap-2">
           <Button variant="ghost" onClick={reset}>
-            Reset
+            Limpiar
           </Button>
-          <Button onClick={apply}>Apply filters</Button>
+          <Button onClick={apply}>Aplicar filtros</Button>
         </div>
       </div>
     </div>

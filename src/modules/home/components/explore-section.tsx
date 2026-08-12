@@ -56,9 +56,9 @@ export function ExploreSection({ cities }: { cities: CityStat[] }) {
             <Link
               key={option.href}
               href={option.href}
-              className="group rounded-xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
-              <span className="mb-4 flex size-11 items-center justify-center rounded-lg bg-[var(--brand)] text-[var(--brand-foreground)]">
+              <span className="mb-4 flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#C97B4A] to-[#8F3E22] text-white shadow-sm">
                 <Icon className="size-5" />
               </span>
               <h3 className="font-semibold group-hover:underline">
@@ -83,7 +83,7 @@ export function ExploreSection({ cities }: { cities: CityStat[] }) {
               <Link
                 key={city.name}
                 href={`/search?city=${encodeURIComponent(city.name)}`}
-                className="rounded-full border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--brand)] hover:text-foreground"
+                className="rounded-full border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-primary hover:text-foreground"
               >
                 {city.name}
                 <span className="ml-1.5 text-muted-foreground">

@@ -35,13 +35,15 @@ export default async function HomePage() {
 
       <main className="flex-1">
         {/* Hero + búsqueda */}
-        <section className="relative overflow-hidden bg-[var(--brand)] text-[var(--brand-foreground)]">
-          <div className="absolute inset-0 bg-[radial-gradient(1100px_420px_at_50%_-12%,rgba(255,255,255,0.16),transparent)]" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#C97B4A] via-[#B3562E] to-[#7C3A1E] text-white">
+          <div className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-white/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-40 -right-20 size-[28rem] rounded-full bg-[#2A1508]/25 blur-3xl" />
+          <div className="pointer-events-none absolute right-1/3 top-0 size-52 rounded-full bg-[#E8A17F]/25 blur-2xl" />
           <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-6 py-20 text-center sm:py-28">
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Encuentra tu próxima propiedad en México
             </h1>
-            <p className="mt-4 max-w-2xl text-lg text-white/70">
+            <p className="mt-4 max-w-2xl text-lg text-white/75">
               Casas, departamentos, terrenos e inversiones. Compara $/m², agenda
               tours y cierra con ofertas digitales — todo en un solo lugar.
             </p>
@@ -56,7 +58,7 @@ export default async function HomePage() {
                   <Link
                     key={city.name}
                     href={`/search?city=${encodeURIComponent(city.name)}`}
-                    className="rounded-full border border-white/25 px-3 py-1 font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                    className="rounded-full border border-white/30 bg-white/10 px-4 py-1.5 font-medium text-white/90 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white"
                   >
                     {city.name}
                   </Link>
@@ -70,7 +72,7 @@ export default async function HomePage() {
                 </Link>
               )}
               <span className="hidden text-white/40 sm:inline">·</span>
-              <span className="text-white/60">
+              <span className="text-white/65">
                 Sin comisiones ocultas · Tours por WhatsApp · Ofertas 24/7
               </span>
             </div>
