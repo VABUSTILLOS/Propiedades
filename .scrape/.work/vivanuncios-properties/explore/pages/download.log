@@ -2070,3 +2070,71 @@
 2026-08-12 09:42:33,239 [scrapy-playwright] DEBUG: [Context=default] Response: <204 https://analytics.google.com/g/collect?v=2&tid=G-C4HWQQM571&gtm=45je68a1v9103994736z8858857621za20gzb858857621zd858857621&_p=1786549346666&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAGQC&are=1&cid=2116925861.1786549348&frm=0&pscdl=noapi&rcb=14&sr=1280x720&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=macOS&uapv=26.6.0&uaw=0&ul=en-us&gaf=2&_s=2&tag_exp=115616985~115938465~115938468~118897920~118897930~119367802~119367810~119527020~119896803~120385423&sid=1786549348&sct=1&seg=1&dl=https%3A%2F%2Fwww.vivanuncios.com.mx%2Fs-venta-inmuebles%2Fchihuahua-chih%2Fv1c1097l10163p1&dt=3%2C864%20Propiedades%20e%20inmuebles%20en%20venta%20-%20Chihuahua%2C%20Chihuahua%20-%20Vivanuncios&en=page_view&ep.is_logged=No&ep.content_group=Listado&ep.operation_type=Venta&ep.property_type=NA&ep.province=Chihuahua&ep.city=Chihuahua&ep.top5_house_id=&ep.zona=NA&ep.zonaValor=NA&ep.subZona=NA&ep.terminoUbicacion=Chihuahua&ep.aviso_duplicado=No&ep.variant_id=NA&ep.flow_type=Avisos%20Quintoandar%20-%20No&ep.status=Thin%20content%20OFF%20-%20M%C3%A1s%20de%2020%20resultados&ep.subproperty_type=NA&ep.posting_type=Avisos%205A%20-%20NO%20NA&ep.selection=%22NA%22&epn.cantidadUbicaciones=30&epn.selection_value=0&ep.item_id=3%2C864&ep.content_type=NA&epn.posting_list=1&ep.view_type=Listado&ep.pill_active=Si&ep.fb_event=false&ep.quick_filter=OFF&ep.in_listing=OFF&_et=2&tfd=6832>
 2026-08-12 09:42:34,260 [scrapy-playwright] DEBUG: [Context=default] Request: <GET https://www.vivanuncios.com.mx/tracking/g/collect?v=2&tid=G-3W0YTSRCK7&gtm=45je68a1v9235587196z8858857621za20gzb858857621zd858857621&_p=1786549346666&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1000470001&_eu=AAAAAGQ&_fplc=0&are=1&cid=2116925861.1786549348&ec_mode=c&frm=0&pscdl=noapi&rcb=19&sr=1280x720&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=macOS&uapv=26.6.0&uaw=0&ul=en-us&ur=MX-CHH&sst.etld=google.com.mx&sst.tft=1786549346666&sst.lpc=212333075&sst.navt=n&sst.ude=0&sst.sw_exp=1&gaf=2&_s=5&tag_exp=115616986~115938465~115938469~118897920~118897930~119367802~119367810~119527019~119793974~119896802&sid=1786549348&sct=1&seg=1&dl=https%3A%2F%2Fwww.vivanuncios.com.mx%2Fs-venta-inmuebles%2Fchihuahua-chih%2Fv1c1097l10163p1&dt=3%2C864%20Propiedades%20e%20inmuebles%20en%20venta%20-%20Chihuahua%2C%20Chihuahua%20-%20Vivanuncios&_tu=BA&en=select_content&gap.sstd=1&ep.fb_event=true&evnid=1786549347879.385512.176&ep.fb_id=888643211192359&ep.x-fb-ck-fbp=fb.3.1786549347863.3446775697&ep.google_ads_id=11200569259&ep.criteo_user_email=&ep.ecommerce_event=false&ep.isDesarrollo=false&ep.ga4_event=true&ep.content_group=Listado&ep.content_type=Modal%20login%20rapido%20Google&ep.item_id=Cerrar%20modal&_et=5677&ep.user_data._tag_mode=AUTO&ep.user_data.email_address=&ep.user_data.phone_number=&ep.user_data.address.first_name=&ep.user_data.address._tag_metadata.first_name.mode=c&tfd=7921&richsstsse> (resource type: fetch, referrer: https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p1)
 2026-08-12 09:42:34,293 [scrapy-playwright] DEBUG: [Context=default] Response: <403 https://www.vivanuncios.com.mx/tracking/g/collect?v=2&tid=G-3W0YTSRCK7&gtm=45je68a1v9235587196z8858857621za20gzb858857621zd858857621&_p=1786549346666&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1000470001&_eu=AAAAAGQ&_fplc=0&are=1&cid=2116925861.1786549348&ec_mode=c&frm=0&pscdl=noapi&rcb=19&sr=1280x720&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=macOS&uapv=26.6.0&uaw=0&ul=en-us&ur=MX-CHH&sst.etld=google.com.mx&sst.tft=1786549346666&sst.lpc=212333075&sst.navt=n&sst.ude=0&sst.sw_exp=1&gaf=2&_s=5&tag_exp=115616986~115938465~115938469~118897920~118897930~119367802~119367810~119527019~119793974~119896802&sid=1786549348&sct=1&seg=1&dl=https%3A%2F%2Fwww.vivanuncios.com.mx%2Fs-venta-inmuebles%2Fchihuahua-chih%2Fv1c1097l10163p1&dt=3%2C864%20Propiedades%20e%20inmuebles%20en%20venta%20-%20Chihuahua%2C%20Chihuahua%20-%20Vivanuncios&_tu=BA&en=select_content&gap.sstd=1&ep.fb_event=true&evnid=1786549347879.385512.176&ep.fb_id=888643211192359&ep.x-fb-ck-fbp=fb.3.1786549347863.3446775697&ep.google_ads_id=11200569259&ep.criteo_user_email=&ep.ecommerce_event=false&ep.isDesarrollo=false&ep.ga4_event=true&ep.content_group=Listado&ep.content_type=Modal%20login%20rapido%20Google&ep.item_id=Cerrar%20modal&_et=5677&ep.user_data._tag_mode=AUTO&ep.user_data.email_address=&ep.user_data.phone_number=&ep.user_data.address.first_name=&ep.user_data.address._tag_metadata.first_name.mode=c&tfd=7921&richsstsse>
+2026-08-12 09:42:39,258 [scrapy-playwright] DEBUG: [Context=default] Request: <POST https://analytics.google.com/g/collect?v=2&tid=G-C4HWQQM571&gtm=45je68a1v9103994736z8858857621za20gzb858857621zd858857621&_p=1786549346666&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAGQC&are=1&cid=2116925861.1786549348&frm=0&pscdl=noapi&rcb=14&sr=1280x720&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=macOS&uapv=26.6.0&uaw=0&ul=en-us&gaf=2&_s=3&tag_exp=115616985~115938465~115938468~118897920~118897930~119367802~119367810~119527020~119896803~120385423&sid=1786549348&sct=1&seg=1&dl=https%3A%2F%2Fwww.vivanuncios.com.mx%2Fs-venta-inmuebles%2Fchihuahua-chih%2Fv1c1097l10163p1&dt=3%2C864%20Propiedades%20e%20inmuebles%20en%20venta%20-%20Chihuahua%2C%20Chihuahua%20-%20Vivanuncios&en=select_content&ep.is_logged=No&ep.content_group=Listado&ep.content_type=Modal%20login%20rapido%20Google&ep.item_id=Cerrar%20modal&_et=6088&tfd=12919> (resource type: fetch, referrer: https://www.vivanuncios.com.mx/)
+2026-08-12 09:42:39,324 [scrapy-playwright] DEBUG: [Context=default] Response: <204 https://analytics.google.com/g/collect?v=2&tid=G-C4HWQQM571&gtm=45je68a1v9103994736z8858857621za20gzb858857621zd858857621&_p=1786549346666&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAGQC&are=1&cid=2116925861.1786549348&frm=0&pscdl=noapi&rcb=14&sr=1280x720&uaa=arm&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=macOS&uapv=26.6.0&uaw=0&ul=en-us&gaf=2&_s=3&tag_exp=115616985~115938465~115938468~118897920~118897930~119367802~119367810~119527020~119896803~120385423&sid=1786549348&sct=1&seg=1&dl=https%3A%2F%2Fwww.vivanuncios.com.mx%2Fs-venta-inmuebles%2Fchihuahua-chih%2Fv1c1097l10163p1&dt=3%2C864%20Propiedades%20e%20inmuebles%20en%20venta%20-%20Chihuahua%2C%20Chihuahua%20-%20Vivanuncios&en=select_content&ep.is_logged=No&ep.content_group=Listado&ep.content_type=Modal%20login%20rapido%20Google&ep.item_id=Cerrar%20modal&_et=6088&tfd=12919>
+2026-08-12 09:42:43,829 [scrapy.core.engine] INFO: Closing spider (finished)
+2026-08-12 09:42:43,830 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 2256,
+ 'downloader/request_count': 6,
+ 'downloader/request_method_count/GET': 6,
+ 'downloader/response_bytes': 2369244,
+ 'downloader/response_count': 6,
+ 'downloader/response_status_count/200': 3,
+ 'downloader/response_status_count/403': 3,
+ 'elapsed_time_seconds': 18.20463166688569,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2026, 8, 12, 15, 42, 43, 829458, tzinfo=datetime.timezone.utc),
+ 'httpcompression/response_bytes': 18008,
+ 'httpcompression/response_count': 3,
+ 'items_per_minute': 0.0,
+ 'log_count/INFO': 13,
+ 'memusage/max': 83476480,
+ 'memusage/startup': 83476480,
+ 'playwright/browser_count': 2,
+ 'playwright/context_count': 2,
+ 'playwright/context_count/max_concurrent': 1,
+ 'playwright/context_count/persistent/False': 2,
+ 'playwright/context_count/remote/False': 2,
+ 'playwright/page_count': 3,
+ 'playwright/page_count/max_concurrent': 3,
+ 'playwright/request_count': 517,
+ 'playwright/request_count/method/GET': 479,
+ 'playwright/request_count/method/POST': 38,
+ 'playwright/request_count/navigation': 25,
+ 'playwright/request_count/resource_type/document': 25,
+ 'playwright/request_count/resource_type/fetch': 52,
+ 'playwright/request_count/resource_type/font': 12,
+ 'playwright/request_count/resource_type/image': 131,
+ 'playwright/request_count/resource_type/other': 3,
+ 'playwright/request_count/resource_type/ping': 3,
+ 'playwright/request_count/resource_type/script': 236,
+ 'playwright/request_count/resource_type/stylesheet': 29,
+ 'playwright/request_count/resource_type/xhr': 26,
+ 'playwright/response_count': 517,
+ 'playwright/response_count/method/GET': 479,
+ 'playwright/response_count/method/POST': 38,
+ 'playwright/response_count/resource_type/document': 25,
+ 'playwright/response_count/resource_type/fetch': 52,
+ 'playwright/response_count/resource_type/font': 12,
+ 'playwright/response_count/resource_type/image': 131,
+ 'playwright/response_count/resource_type/other': 3,
+ 'playwright/response_count/resource_type/ping': 3,
+ 'playwright/response_count/resource_type/script': 236,
+ 'playwright/response_count/resource_type/stylesheet': 29,
+ 'playwright/response_count/resource_type/xhr': 26,
+ 'response_received_count': 6,
+ 'responses_per_minute': 20.0,
+ 'scheduler/dequeued': 6,
+ 'scheduler/dequeued/memory': 6,
+ 'scheduler/enqueued': 6,
+ 'scheduler/enqueued/memory': 6,
+ 'start_time': datetime.datetime(2026, 8, 12, 15, 42, 25, 624938, tzinfo=datetime.timezone.utc)}
+2026-08-12 09:42:43,830 [scrapy.core.engine] INFO: Spider closed (finished)
+2026-08-12 09:42:43,830 [scrapy-playwright] INFO: Closing download handler
+2026-08-12 09:42:43,834 [scrapy-playwright] DEBUG: Browser context closed: 'default' (persistent=False, remote=False)
+2026-08-12 09:42:43,834 [scrapy-playwright] INFO: Closing browser
+2026-08-12 09:42:43,839 [scrapy-playwright] DEBUG: Browser disconnected
+2026-08-12 09:42:43,853 [scrapy-playwright] INFO: Closing download handler
+2026-08-12 09:42:43,855 [scrapy-playwright] DEBUG: Browser context closed: 'default' (persistent=False, remote=False)
+2026-08-12 09:42:43,855 [scrapy-playwright] INFO: Closing browser
+2026-08-12 09:42:43,857 [scrapy-playwright] DEBUG: Browser disconnected
