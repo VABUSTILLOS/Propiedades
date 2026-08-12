@@ -2,10 +2,10 @@
   "price": "MN 3,250,000",
   "listing_id_vivanuncios": "150452392",
   "number_of_bedrooms": 4,
-  "location": "Casa EN Venta  DE UNA Planta EN Colonia Centro,  Ciudad Jimenez Centro, Jim\u00e9nez",
+  "location": "Casa EN Venta  DE UNA Planta EN Colonia Centro,  Ciudad Jimenez Centro, Jiménez",
   "property_image": "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x532/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
   "title": "Casas en venta - 528m2 - 4 recamaras - Ciudad Jimenez Centro",
-  "days_published": "Publicado hace 37 d\u00edas",
+  "days_published": "Publicado hace 37 días",
   "contact_phone": "52 6144663753",
   "floor_size_m2": 528,
   "agency_name": "ABBA Promotores Inmobiliarios",
@@ -14,5 +14,22 @@
     "email_form",
     "whatsapp_button",
     "phone_button"
+  ],
+  "images": [
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795335.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795327.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795337.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795329.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795334.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795344.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795333.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795343.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795341.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795342.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795340.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795332.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795331.jpg?rapc=bXZhX2ltYWdl",
+    "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795328.jpg?rapc=bXZhX2ltYWdl"
   ]
 }

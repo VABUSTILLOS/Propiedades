@@ -123,7 +123,11 @@ export function PropertiesMap({
     };
   }, [google]);
 
-  // Fit to the URL bounds (or marker bounds) when they arrive.
+  // Fit to the URL bounds when they appear. Without a bounds filter the map
+  // keeps its default Chihuahua city view: markers only get fitted when they
+  // form a focused cluster (e.g. a filtered search in a single area). If pins
+  // span the whole catalog — Chihuahua plus outlying cities like Juárez —
+  // fitting them would zoom the map way out, losing the default city center.
   useEffect(() => {
     const map = mapRef.current;
     if (!google || !map) return;
@@ -142,8 +146,15 @@ export function PropertiesMap({
     if (markers.length > 0) {
       const b = new google.maps.LatLngBounds();
       markers.forEach((m) => b.extend({ lat: m.lat, lng: m.lng }));
-      map.fitBounds(b);
-      lastEmittedRef.current = null;
+      const ne = b.getNorthEast();
+      const sw = b.getSouthWest();
+      const spread =
+        Math.abs(ne.lat() - sw.lat()) + Math.abs(ne.lng() - sw.lng());
+      // Chihuahua city alone spans ~0.4° total; the whole catalog ~4.5°.
+      if (spread <= 1) {
+        map.fitBounds(b);
+        lastEmittedRef.current = null;
+      }
     }
   }, [google, markers, initialBounds]);
 

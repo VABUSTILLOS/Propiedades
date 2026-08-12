@@ -77,7 +77,20 @@
         "type": "string",
         "description": "URL de la foto principal del anuncio",
         "source": "discovered",
-        "examples": ["https://img.vivanuncios.com.mx/mx/property/..."]
+        "examples": ["https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x532/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"]
+      },
+      "images": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Todas las fotos de la galería del anuncio (una URL por foto, máxima resolución disponible, en el orden de la galería)",
+        "source": "discovered",
+        "examples": [
+          [
+            "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+            "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795335.jpg?rapc=bXZhX2ltYWdl",
+            "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795327.jpg?rapc=bXZhX2ltYWdl"
+          ]
+        ]
       }
     }
   }

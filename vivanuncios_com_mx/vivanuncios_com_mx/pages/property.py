@@ -1,3 +1,4 @@
+import json
 import re
 from functools import cached_property
 
@@ -138,3 +139,46 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
     @field
     def property_image(self) -> str | None:
         return self.css('meta[property="og:image"]::attr(content)').get()
+
+    @field
+    def images(self) -> list[str] | None:
+        """Todas las fotos de la galería del anuncio, en orden.
+
+        El HTML embebe un objeto JS con la clave ``'pictures'`` conteniendo el
+        array completo de fotos. Cada entrada expone la misma foto en varios
+        tamaños (``url1200x1200``, ``url730x532``, ``url360x266``, ...). Se
+        toma la mayor resolución disponible y se deduplica por hash de foto.
+        """
+        match = re.search(r"'pictures'\s*:\s*(\[.*?\])", self.response.text, re.DOTALL)
+        if not match:
+            return None
+        raw_array = match.group(1)
+        entries = re.findall(r"\{[^{}]*multimediaTypeId[^{}]*\}", raw_array)
+        if not entries:
+            return None
+        preferred = (
+            "url1200x1200",
+            "url730x532",
+            "url720x532",
+            "url360x266",
+            "url215x159",
+            "url100x75",
+        )
+        photos: list[tuple[int, str, str]] = []  # (order, url, photo_hash)
+        seen_hashes: set[str] = set()
+        for raw in entries:
+            try:
+                entry = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            url = next((entry[k] for k in preferred if entry.get(k)), None)
+            if not url:
+                continue
+            hash_match = re.search(r"/(\d+)\.jpg(?:\?|$)", url)
+            photo_hash = hash_match.group(1) if hash_match else url
+            if photo_hash in seen_hashes:
+                continue
+            seen_hashes.add(photo_hash)
+            photos.append((entry.get("order", 0), url, photo_hash))
+        photos.sort(key=lambda p: p[0])
+        return [url for _, url, _ in photos] or None

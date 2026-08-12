@@ -22,3 +22,4 @@ class PropertyItem:
     floor_size_m2: int | None = None
     days_published: str | None = None
     property_image: str | None = None
+    images: list[str] | None = None
