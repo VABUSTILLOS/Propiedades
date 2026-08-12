@@ -99,8 +99,17 @@ class PropertyDetailSpider(scrapy.Spider):
                     "playwright_page_goto_kwargs": {
                         "wait_until": "domcontentloaded",
                     },
+                    # Wait for the real page content (telephone JSON-LD) instead
+                    # of networkidle: the Cloudflare Turnstile challenge keeps
+                    # the network busy, so networkidle never resolves, while
+                    # waiting for the telephone marker lets the challenge
+                    # auto-resolve (a few seconds) and confirms we got the page.
                     "playwright_page_methods": [
-                        PageMethod("wait_for_timeout", 3000),
+                        PageMethod(
+                            "wait_for_function",
+                            "() => [...document.querySelectorAll('script[type=\"application/ld+json\"]')].some(s => (s.textContent || '').includes('telephone'))",
+                            timeout=45_000,
+                        ),
                     ],
                 },
                 dont_filter=True,

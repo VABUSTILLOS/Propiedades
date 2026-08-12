@@ -108,6 +108,28 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               images={listing.images ?? []}
               title={listing.title}
             />
+            {listing.source_url && (
+              <p className="text-sm text-muted-foreground">
+                Fotos obtenidas de{" "}
+                <a
+                  href={listing.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary hover:underline"
+                >
+                  Vivanuncios
+                </a>{" "}
+                · Ver{" "}
+                <a
+                  href={listing.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary hover:underline"
+                >
+                  anuncio original
+                </a>
+              </p>
+            )}
 
             <PropertyViewToggle
               property={listing}
