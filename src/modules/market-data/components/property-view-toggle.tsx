@@ -14,7 +14,6 @@ import type { jsPDF } from "jspdf";
 import type {
   MarketBenchmarksRow,
   PropertiesRow,
-  PropertyCategory,
 } from "@/modules/lib/database.types";
 import {
   estimateMantenimiento,
@@ -179,6 +178,8 @@ function InvestorView({
       ? Math.round(benchmark.avg_price_m2_land)
       : null;
 
+  const posibleRenta = calcularPosibleRenta(property);
+
   return (
     <div className="space-y-6">
       <InvestmentDealPanel
@@ -199,16 +200,7 @@ function InvestorView({
           />
           <FinancialRow
             label="Posible Renta"
-            value={`$${Math.round(calcularPosibleRenta(property)).toLocaleString()}/mes`}
-          />
-          <FinancialRow
-            label="Predial estimado (anual)"
-            value={formatMxn(estimatePredial(property.price))}
-          />
-          <FinancialRow
-            label="Mantenimiento anual estimado"
-            value={formatMxn(estimateMantenimiento(property.price))}
-            hint="1% del valor de la propiedad"
+            value={`$${Math.round(posibleRenta).toLocaleString()}/mes`}
           />
           <FinancialRow
             label="Precio por m² construido"
@@ -254,7 +246,7 @@ function InvestorView({
               />
               <FinancialRow
                 label="Mantenimiento anual estimado"
-                value={formatMxn(estimateMantenimiento(property.price))}
+                value={formatMxn(estimateMantenimiento(posibleRenta))}
               />
             </>
           )}
@@ -360,23 +352,6 @@ function InvestmentDealPanel({
       </dl>
     </div>
   );
-}
-
-/**
- * Estimates a monthly rent based on the listing price and property category.
- *
- * Comercial categories (local/bodega) use a fixed 0.85% monthly rate; other
- * categories use a rate that steps down as the price grows.
- */
-function estimateMonthlyRent(price: number, category: PropertyCategory) {
-  if (category === "local" || category === "bodega") {
-    return price * 0.0085;
-  }
-  if (price <= 1_000_000) return price * 0.008;
-  if (price <= 1_500_000) return price * 0.009;
-  if (price <= 2_500_000) return price * 0.0075;
-  if (price <= 3_500_000) return price * 0.007;
-  return price * 0.006;
 }
 
 type DealKpi = { label: string; value: string; hint?: string };
@@ -628,10 +603,7 @@ async function downloadFichaPdf({
     property.precio_m2_terreno ??
     (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
 
-  const posibleRenta = estimateMonthlyRent(
-    property.price,
-    property.category,
-  );
+  const posibleRenta = calcularPosibleRenta(property);
 
   const benchmarkConst =
     benchmark?.avg_price_m2_const != null
@@ -684,7 +656,7 @@ async function downloadFichaPdf({
           },
           {
             label: "Mantenimiento anual estimado",
-            value: formatMxn(estimateMantenimiento(property.price)),
+            value: formatMxn(estimateMantenimiento(posibleRenta)),
           },
         ]
       : []),
