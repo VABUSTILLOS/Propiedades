@@ -132,43 +132,38 @@ export async function runChatSearch(
 
   // Zero-result relaxation: drop the least specific filters one at a time so a
   // too-narrow keyword or city still surfaces *something* instead of an empty
-  // answer. The note tells the user what was relaxed.
+  // answer. Drops accumulate (query → city → price → size) so the last tier
+  // searches the broadest set. The note tells the user what was relaxed.
   let relaxedNote: string | undefined;
   if (rows.length === 0) {
     const relaxed = { ...filters };
-    if (relaxed.query != null) {
-      delete relaxed.query;
+    const dropSteps: Array<{ name: string; drop: (f: ChatFilters) => void }> = [
+      {
+        name: `búsqueda ("${filters.query}")`,
+        drop: (f) => { delete f.query; },
+      },
+      {
+        name: "ciudad",
+        drop: (f) => { delete f.city; },
+      },
+      {
+        name: "precio",
+        drop: (f) => { delete f.minPrice; delete f.maxPrice; },
+      },
+      {
+        name: "tamaño o recámaras",
+        drop: (f) => { delete f.minM2; delete f.maxM2; delete f.minBedrooms; },
+      },
+    ];
+    for (const step of dropSteps) {
+      const before = JSON.stringify(relaxed);
+      step.drop(relaxed);
+      if (JSON.stringify(relaxed) === before) continue; // nothing to drop
       rows = await search(relaxed);
       if (rows.length > 0) {
-        relaxedNote = `Mostrando resultados sin filtro de búsqueda ("${filters.query}").`;
+        relaxedNote = `Mostrando resultados sin filtro de ${step.name}.`;
+        break;
       }
-    }
-  }
-  if (rows.length === 0 && filters.city != null) {
-    const relaxed = { ...filters };
-    delete relaxed.city;
-    rows = await search(relaxed);
-    if (rows.length > 0) {
-      relaxedNote = `Mostrando resultados sin filtro de ciudad.`;
-    }
-  }
-  if (rows.length === 0 && (filters.minPrice != null || filters.maxPrice != null)) {
-    const relaxed = { ...filters };
-    delete relaxed.minPrice;
-    delete relaxed.maxPrice;
-    rows = await search(relaxed);
-    if (rows.length > 0) {
-      relaxedNote = `Mostrando resultados sin filtro de precio.`;
-    }
-  }
-  if (rows.length === 0 && (filters.minM2 != null || filters.maxM2 != null || filters.minBedrooms != null)) {
-    const relaxed = { ...filters };
-    delete relaxed.minM2;
-    delete relaxed.maxM2;
-    delete relaxed.minBedrooms;
-    rows = await search(relaxed);
-    if (rows.length > 0) {
-      relaxedNote = `Mostrando resultados sin filtro de tamaño o recámaras.`;
     }
   }
 
