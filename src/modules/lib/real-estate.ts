@@ -4,6 +4,8 @@ import type { PropertyDealType } from "@/modules/lib/database.types";
 export const PREDIAL_RATE = 0.00265;
 /** Estimated notary / closing (escrituración) costs as a fraction of sale price. */
 export const ESCRITURACION_RATE = 0.08;
+/** Estimated annual maintenance (mantenimiento) as a fraction of sale price. */
+export const MANTENIMIENTO_RATE = 0.01;
 
 export function estimatePredial(price: number): number {
   return Math.round(price * PREDIAL_RATE);
@@ -11,6 +13,10 @@ export function estimatePredial(price: number): number {
 
 export function estimateEscrituracion(price: number): number {
   return Math.round(price * ESCRITURACION_RATE);
+}
+
+export function estimateMantenimiento(price: number): number {
+  return Math.round(price * MANTENIMIENTO_RATE);
 }
 
 /**
