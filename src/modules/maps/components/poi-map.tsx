@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Bus, MapPin, School } from "lucide-react";
 
-import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps, type GoogleMaps } from "@/modules/maps/hooks";
+import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps } from "@/modules/maps/hooks";
+import { createMap, createMarker, type MapMarkerHandle } from "@/modules/maps/markers";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -21,26 +22,23 @@ const MAX_MARKERS_PER_TYPE = 8;
 export function POIMap({ lat, lng, className }: Props): React.JSX.Element {
   const google = useGoogleMaps();
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const markersRef = useRef<Array<InstanceType<GoogleMaps["maps"]["Marker"]>>>([]);
+  const markersRef = useRef<MapMarkerHandle[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (!google || !mapRef.current) return;
 
     const center = { lat, lng };
-    const map = new google.maps.Map(mapRef.current, {
-      center,
-      zoom: 15,
-    });
+    const map = createMap(google, mapRef.current, { center, zoom: 15 });
 
-    const propertyMarker = new google.maps.Marker({
+    const propertyMarker = createMarker(google, {
       map,
       position: center,
       title: "Propiedad",
-      animation: google.maps.Animation.DROP,
+      color: "#dc2626",
     });
 
-    const localMarkers: Array<InstanceType<GoogleMaps["maps"]["Marker"]>> = [propertyMarker];
+    const localMarkers: MapMarkerHandle[] = [propertyMarker];
     const service = new google.maps.places.PlacesService(mapRef.current);
 
     const addPoiMarkers = (
@@ -49,11 +47,11 @@ export function POIMap({ lat, lng, className }: Props): React.JSX.Element {
     ) => {
       (results ?? []).slice(0, MAX_MARKERS_PER_TYPE).forEach((place) => {
         if (!place.geometry) return;
-        const marker = new google.maps.Marker({
+        const marker = createMarker(google, {
           map,
           position: place.geometry.location,
           title: place.name ?? "",
-          icon: { url: iconUrl },
+          iconUrl,
         });
         localMarkers.push(marker);
       });

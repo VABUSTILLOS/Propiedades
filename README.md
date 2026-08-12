@@ -59,7 +59,25 @@ npx -y supabase db push --yes
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | `https://<ref>.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | publishable anon key from project settings |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | production URL (tenant apex + password-reset redirect) |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | optional | client-side Maps key (maps, Places, geocoding) |
+| `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` | optional | Map ID enabling AdvancedMarkerElement (see below) |
 | `SUPABASE_SERVICE_ROLE_KEY` | optional | only used by `requireEnv("server")` (currently unused) |
+
+### Google Maps Map ID (advanced markers)
+
+The app loads the Maps JS API on the `beta` channel with the modern Marker library
+(`libraries=maps,marker,places`). To enable **AdvancedMarkerElement**
+(`<gmp-advanced-marker>` / PinElement pins):
+
+1. In [Google Cloud Console](https://console.cloud.google.com) → **APIs & Services**,
+   enable the *Maps JavaScript API* and *Places API*.
+2. Go to **Maps Management → Create Map ID**, pick a Map style (e.g. *JavaScript*),
+   and copy the generated Map ID (e.g. `a1b2c3d4e5f6a1b2c3d4e5f6`).
+3. Set `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` in `.env.local` (and Vercel).
+
+When the Map ID is set, pins render via the modern marker API; without it the
+module automatically falls back to the legacy `google.maps.Marker` API so the
+app keeps working either way.
 
 ### Supabase auth config
 

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { useGoogleMaps } from "@/modules/maps/hooks";
-import { GOOGLE_MAPS_AVAILABLE } from "@/modules/maps/hooks";
+import { useGoogleMaps, GOOGLE_MAPS_AVAILABLE } from "@/modules/maps/hooks";
+import { createMap, createMarker } from "@/modules/maps/markers";
 
 export type MapMarker = {
   id: string;
@@ -23,17 +23,20 @@ export function ListingsMap({ markers }: { markers: MapMarker[] }) {
 
   useEffect(() => {
     if (!google || !ref.current) return;
-    const map = new google.maps.Map(ref.current, {
+    const map = createMap(google, ref.current, {
       center: { lat: 19.4326, lng: -99.1332 },
       zoom: 10,
     });
-    markers.forEach((m) => {
-      new google.maps.Marker({
+    const handles = markers.map((m) =>
+      createMarker(google, {
         map,
         position: { lat: m.lat, lng: m.lng },
         title: m.title,
-      });
-    });
+      }),
+    );
+    return () => {
+      handles.forEach((handle) => handle.setMap(null));
+    };
   }, [google, markers]);
 
   if (!GOOGLE_MAPS_AVAILABLE) {

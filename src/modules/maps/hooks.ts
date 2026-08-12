@@ -7,6 +7,9 @@ export type GoogleMaps = typeof google;
 
 /**
  * Loads the Google Maps JS API lazily (client-only).
+ * Uses the 2026 "beta" channel with the modern Marker library
+ * (`maps,marker`) so AdvancedMarkerElement + gmp-map web components work,
+ * plus `places` for the Places autocomplete / POI features.
  * Returns null when no NEXT_PUBLIC_GOOGLE_MAPS_API_KEY is configured,
  * so the app degrades gracefully without the key.
  */
@@ -31,13 +34,18 @@ function loadMapsApi(): Promise<GoogleMaps | null> {
       return;
     }
 
+    // Web components (gmp-map / gmp-advanced-marker) require the `callback`
+    // param; console.debug is the no-op the official docs recommend.
+    const callbackName = "__gmapsBootstrap";
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
       apiKey,
-    )}&libraries=places&loading=async`;
+    )}&v=beta&libraries=maps,marker,places&loading=async&callback=${callbackName}`;
     script.async = true;
     script.defer = true;
-    script.addEventListener("load", () => resolve(window.google ?? null));
+    window.__gmapsBootstrap = () => {
+      resolve(window.google ?? null);
+    };
     script.addEventListener("error", () => resolve(null));
     document.head.appendChild(script);
   });
@@ -167,4 +175,12 @@ export async function resolvePlace(
 
 export const GOOGLE_MAPS_AVAILABLE = Boolean(
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+);
+
+/** Map ID used by the 2026 Marker library (required for advanced markers). */
+export const GOOGLE_MAPS_MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ?? "";
+
+/** True when both the API key and a Map ID are configured. */
+export const GOOGLE_MAPS_ADVANCED = Boolean(
+  GOOGLE_MAPS_AVAILABLE && GOOGLE_MAPS_MAP_ID,
 );

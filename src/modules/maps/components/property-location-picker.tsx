@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps, type GoogleMaps } from "@/modules/maps/hooks";
+import { createMap, createMarker, toLatLng, type MapMarkerHandle } from "@/modules/maps/markers";
 import { cn } from "@/lib/utils";
 
 export type LocationResult = {
@@ -38,7 +39,7 @@ export function PropertyLocationPicker({
   const google = useGoogleMaps();
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<InstanceType<GoogleMaps["maps"]["Map"]> | null>(null);
-  const markerRef = useRef<InstanceType<GoogleMaps["maps"]["Marker"]> | null>(null);
+  const markerRef = useRef<MapMarkerHandle | null>(null);
   const listenersRef = useRef<Array<{ remove: () => void }>>([]);
   const lastEmitRef = useRef<LocationResult | null>(null);
   const debounceRef = useRef<number | null>(null);
@@ -59,16 +60,13 @@ export function PropertyLocationPicker({
         ? { lat: initialLat, lng: initialLng }
         : DEFAULT_CENTER;
 
-    const map = new google.maps.Map(mapRef.current, {
-      center,
-      zoom: 15,
-    });
-    const marker = new google.maps.Marker({
+    const map = createMap(google, mapRef.current, { center, zoom: 15 });
+    const marker = createMarker(google, {
       map,
       position: center,
       draggable: true,
       title: "Arrastra para ubicar",
-      animation: google.maps.Animation.DROP,
+      color: "#dc2626",
     });
 
     mapInstanceRef.current = map;
@@ -131,9 +129,9 @@ export function PropertyLocationPicker({
       },
     );
 
-    const dragListener = google.maps.event.addListener(marker, "dragend", () => {
+    const dragListener = marker.addListener("dragend", () => {
       const position = marker.getPosition();
-      if (position) emitCurrentPosition(position);
+      if (position) emitCurrentPosition(toLatLng(google, position));
     });
 
     listenersRef.current = [clickListener, dragListener];

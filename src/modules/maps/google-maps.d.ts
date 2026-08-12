@@ -29,6 +29,8 @@ declare global {
       mapTypeId?: string;
       disableDefaultUI?: boolean;
       gestureHandling?: string;
+      /** Required for AdvancedMarkerElement (2026 Marker library). */
+      mapId?: string;
     }
 
     class Map {
@@ -127,6 +129,39 @@ declare global {
     }
   }
 
+  namespace google.maps.marker {
+    interface AdvancedMarkerElementOptions {
+      map?: google.maps.Map;
+      position?: google.maps.LatLng | google.maps.LatLngLiteral;
+      title?: string;
+      draggable?: boolean;
+      content?: HTMLElement | string;
+      zIndex?: number;
+    }
+
+    class AdvancedMarkerElement {
+      constructor(options?: AdvancedMarkerElementOptions);
+      map: google.maps.Map | null;
+      position: google.maps.LatLng | google.maps.LatLngLiteral | null;
+      title?: string;
+      draggable?: boolean;
+      addEventListener(type: string, listener: (event: { stop?: () => void }) => void): void;
+      removeEventListener(type: string, listener: (event: { stop?: () => void }) => void): void;
+    }
+
+    interface PinElementOptions {
+      background?: string;
+      borderColor?: string;
+      glyphColor?: string;
+      scale?: number;
+    }
+
+    class PinElement {
+      constructor(options?: PinElementOptions);
+      element: HTMLElement;
+    }
+  }
+
   namespace google.maps.places {
     type Prediction = {
       place_id: string;
@@ -187,5 +222,7 @@ declare global {
 
   interface Window {
     google?: typeof google;
+    /** No-op bootstrap callback required by the Maps JS beta loader. */
+    __gmapsBootstrap?: () => void;
   }
 }
