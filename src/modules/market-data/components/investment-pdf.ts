@@ -79,7 +79,7 @@ export async function generateInvestmentPdf({
     y,
     "Mantenimiento anual estimado",
     formatMxn(estimateMantenimiento(calcularPosibleRenta(property))),
-    "1% del valor de la propiedad",
+    "1.5× de la renta mensual estimada",
   );
   y = drawRow(doc, y, "Escrituración estimada", formatMxn(estimateEscrituracion(property.price)));
   y = drawRow(doc, y, "Precio por m² construido", `$${Math.round(precioM2Const).toLocaleString("es-MX")} / m²`,
