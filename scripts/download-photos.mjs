@@ -137,16 +137,24 @@ async function main() {
       continue;
     }
     if (alreadyLocal) {
-      // Already migrated to local hosting — just ensure provenance is backfilled.
-      const missing = images.map((url, i) => (sources[i] ? null : url)).filter(Boolean);
-      if (missing.length === 0) {
+      // Already migrated to local hosting — if provenance is missing we can no
+      // longer recover the original remote URL from the stored data, so flag it
+      // for manual review instead of writing a fabricated source.
+      const missing = images.filter((url, i) => !sources[i]).length;
+      if (missing === 0) {
         skipped++;
         continue;
       }
-      if (!dryRun) {
-        await patchRow(row.id, { image_sources: images });
-        console.log(`  ✓ ${row.id.slice(0, 8)} provenance backfilled (${missing.length} missing)`);
-      }
+      failures.push({
+        id: row.id,
+        title: row.title,
+        failed: missing,
+        of: images.length,
+        reason: "already local but image_sources missing original URLs — manual review required",
+      });
+      console.error(
+        `  ! ${row.id.slice(0, 8)} already local with ${missing} missing provenance entries (manual review)`,
+      );
       done++;
       continue;
     }

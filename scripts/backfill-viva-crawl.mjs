@@ -51,10 +51,13 @@ const items = fs
 
 console.log(`Items: ${items.length} crawled`);
 
-/** Normalize an MX phone to digits-only ("52 6144663753" → "526144663753"). */
+/** Normalize an MX phone to local 10 digits ("52 6144663753" → "6144663753"). */
 function normPhone(p) {
   if (!p) return null;
-  const digits = p.replace(/\D+/g, "");
+  let digits = p.replace(/\D+/g, "");
+  if (digits.length === 12 && digits.startsWith("52")) {
+    digits = digits.slice(2); // strip MX country code → 10 local digits
+  }
   if (digits.length < 10) return null; // masked like "+52 6" → too short
   return digits;
 }

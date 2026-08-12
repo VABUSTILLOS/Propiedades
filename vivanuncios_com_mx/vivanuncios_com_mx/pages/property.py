@@ -20,8 +20,20 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
 
     @cached_property
     def _jsonld(self) -> dict:
+        # Vivanuncios marks listings as House, Apartment, Condominium, etc.
+        # Prefer any residential @type that carries contact data.
+        residential = {
+            "House",
+            "Apartment",
+            "Condominium",
+            "CondominiumUnit",
+            "Townhouse",
+            "Residence",
+            "SingleFamilyResidence",
+            "MultiFamilyResidence",
+        }
         for entry in self._metadata.get("json-ld", []):
-            if entry.get("@type") == "House":
+            if entry.get("@type") in residential:
                 return entry
         return {}
 
@@ -55,7 +67,18 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
 
     @field
     def contact_phone(self) -> str | None:
-        return self._jsonld.get("telephone")
+        tel = self._jsonld.get("telephone")
+        if tel:
+            return tel
+        # Fallback: the `publisher` JS object, which after the
+        # #getPublisherData click carries the full `whatsApp` number
+        # (e.g. whatsApp: '52 6141975482'). JSON-LD `telephone` is absent
+        # for these publishers even though the number is exposed.
+        script_text = " ".join(self.css("script::text").getall())
+        match = re.search(r"'whatsApp'\s*:\s*'([^']+)'", script_text)
+        if match:
+            return match.group(1)
+        return None
 
     @field
     def agency_name(self) -> str | None:
@@ -64,7 +87,16 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
         ).get()
         if name:
             return name.strip()
+        # The page embeds a `publisher` JS object with the agency name
+        # (e.g. const publisher = {"publisherId":"...","name":"GL Bienes Raíces",...}).
         script_text = " ".join(self.css("script::text").getall())
+        match = re.search(
+            r'publisher\s*=\s*\{[^{}]*?"name"\s*:\s*"([^"]+)"', script_text
+        )
+        if match:
+            return match.group(1)
+        # Generic fallback: the Organization JSON-LD (may be the portal itself,
+        # e.g. "Vivanuncios") — only use as a last resort.
         match = re.search(r'"name"\s*:\s*"([^"]+)"', script_text)
         if match:
             return match.group(1)

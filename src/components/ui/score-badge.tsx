@@ -14,7 +14,7 @@ export function ScoreBadge({
   /** White pill with fixed dark text — for overlays on top of photos. */
   solid?: boolean;
 }) {
-  if (score == null) return null;
+  if (score == null || score <= 0) return null;
 
   const tone = solid
     ? "bg-white text-neutral-900 shadow-sm"

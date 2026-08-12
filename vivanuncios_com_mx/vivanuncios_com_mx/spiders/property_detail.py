@@ -13,8 +13,6 @@ from vivanuncios_com_mx.pages.property import PropertyPage
 
 PROPERTY_URLS_PATH = "vivanuncios_com_mx/property_urls.json"
 
-print("### module imported", flush=True)
-
 # Browser context kwargs for each fresh per-request context. Cloudflare
 # rate-limits repeated renders within the SAME context (first render=200,
 # subsequent=403). Creating one fresh context per request restores the
@@ -67,7 +65,6 @@ class PropertyDetailSpider(scrapy.Spider):
     }
 
     def __init__(self, urls_file=PROPERTY_URLS_PATH, *args, **kwargs):
-        print(f"### spider __init__ called, urls_file={urls_file}", flush=True)
         super().__init__(*args, **kwargs)
         self.urls_file = urls_file
 
@@ -76,7 +73,6 @@ class PropertyDetailSpider(scrapy.Spider):
 
         Scrapy 2.13+ entry point (replaces start_requests).
         """
-        print(f"### start called, urls_file={self.urls_file}", flush=True)
         self.logger.info("start called, urls_file=%s", self.urls_file)
         with open(self.urls_file) as f:
             records = json.load(f)
@@ -99,17 +95,29 @@ class PropertyDetailSpider(scrapy.Spider):
                     "playwright_page_goto_kwargs": {
                         "wait_until": "domcontentloaded",
                     },
-                    # Wait for the real page content (telephone JSON-LD) instead
-                    # of networkidle: the Cloudflare Turnstile challenge keeps
-                    # the network busy, so networkidle never resolves, while
-                    # waiting for the telephone marker lets the challenge
-                    # auto-resolve (a few seconds) and confirms we got the page.
+                    # Wait for the real page content instead of networkidle:
+                    # the Cloudflare Turnstile challenge keeps the network
+                    # busy, so networkidle never resolves, while waiting for a
+                    # real-content marker lets the challenge auto-resolve (a
+                    # few seconds). `postingId` appears on every real listing
+                    # page (even ones without a telephone in JSON-LD, e.g.
+                    # bodega/terreno ads); the telephone check is a fallback
+                    # for pages that vary their markup.
                     "playwright_page_methods": [
                         PageMethod(
                             "wait_for_function",
-                            "() => [...document.querySelectorAll('script[type=\"application/ld+json\"]')].some(s => (s.textContent || '').includes('telephone'))",
+                            "() => (document.body.innerHTML || '').includes('postingId') || [...document.querySelectorAll('script[type=\"application/ld+json\"]')].some(s => (s.textContent || '').includes('telephone'))",
                             timeout=45_000,
                         ),
+                        # Click the "Ver datos de contacto" button if present.
+                        # Some publishers hide the full phone behind it and only
+                        # hydrate `whatsApp` into the `publisher` JS object after
+                        # the click (JSON-LD `telephone` stays absent).
+                        PageMethod(
+                            "evaluate",
+                            "() => { const b = document.querySelector('#getPublisherData'); if (b) { b.click(); return true; } return false; }",
+                        ),
+                        PageMethod("wait_for_timeout", 3_500),
                     ],
                 },
                 dont_filter=True,
