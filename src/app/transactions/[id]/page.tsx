@@ -21,7 +21,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export const metadata: Metadata = { title: "Transaction" };
+export const metadata: Metadata = { title: "Transacción" };
 
 export default async function TransactionDetailPage({ params }: Props) {
   const { id } = await params;
@@ -59,19 +59,19 @@ export default async function TransactionDetailPage({ params }: Props) {
       <div className="mb-8">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight">
-            Transaction details
+            Detalles de la transacción
           </h1>
           <Badge>{TRANSACTION_LABELS[transaction.state]}</Badge>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          Started {new Date(transaction.created_at).toLocaleDateString()}
+          Iniciada {new Date(transaction.created_at).toLocaleDateString()}
         </p>
         {property && (
           <Link
             href={`/property/${property.slug}`}
             className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
           >
-            View listing
+            Ver listado
           </Link>
         )}
       </div>
@@ -84,7 +84,7 @@ export default async function TransactionDetailPage({ params }: Props) {
       <div className="mt-6 space-y-6">
         <section>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Messages
+            Mensajes
           </h2>
           <MessageThread
             transactionId={transaction.id}
@@ -97,7 +97,7 @@ export default async function TransactionDetailPage({ params }: Props) {
         {property && (
           <section>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Tour scheduling
+              Agenda de visitas
             </h2>
             <TourSlots
               propertyId={property.id}
@@ -111,7 +111,7 @@ export default async function TransactionDetailPage({ params }: Props) {
 
         <section>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Offers
+            Ofertas
           </h2>
           <BidsPanel
             propertyId={transaction.property_id}
@@ -125,7 +125,7 @@ export default async function TransactionDetailPage({ params }: Props) {
         {transaction.state === "closed" && otherPartyId && (
           <section>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Review
+              Reseña
             </h2>
             <ReviewForm
               transactionId={transaction.id}

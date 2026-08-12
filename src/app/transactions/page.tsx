@@ -8,7 +8,7 @@ import { TRANSACTION_LABELS } from "@/modules/transactions/state-machine";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const metadata: Metadata = { title: "Transactions" };
+export const metadata: Metadata = { title: "Transacciones" };
 
 export default async function TransactionsPage() {
   const user = await getCurrentUser();
@@ -30,16 +30,17 @@ export default async function TransactionsPage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Transacciones</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Inquiries, tours, offers and escrow — all in one place.
+          Consultas, visitas, ofertas y depósito en garantía — todo en un solo
+          lugar.
         </p>
       </div>
 
       {transactions.length === 0 ? (
         <div className="rounded-lg border border-dashed px-6 py-16 text-center">
           <p className="text-sm text-muted-foreground">
-            You have no transactions yet. Inquire on a property to get started.
+            Aún no tienes transacciones. Pregunta por una propiedad para empezar.
           </p>
         </div>
       ) : (
@@ -52,10 +53,10 @@ export default async function TransactionsPage() {
                   <CardContent className="flex items-center justify-between gap-4">
                     <div>
                       <p className="font-medium">
-                        {isBuyer ? "Your inquiry" : "Inbound inquiry"}
+                        {isBuyer ? "Tu consulta" : "Consulta entrante"}
                       </p>
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        Started {new Date(tx.created_at).toLocaleDateString()}
+                        Iniciada {new Date(tx.created_at).toLocaleDateString()}
                       </p>
                     </div>
                     <Badge

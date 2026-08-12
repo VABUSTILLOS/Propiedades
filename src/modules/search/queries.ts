@@ -1,11 +1,19 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
-import type { PropertiesRow } from "@/modules/lib/database.types";
+import type {
+  PropertiesRow,
+  PropertyCategory,
+  PropertyDealType,
+} from "@/modules/lib/database.types";
 
 export type SearchFilters = {
   query?: string;
   type?: "sale" | "rent";
+  category?: PropertyCategory;
+  /** Match any of these categories (e.g. local + bodega for "comercial"). */
+  categories?: PropertyCategory[];
+  dealType?: PropertyDealType;
   minPrice?: number;
   maxPrice?: number;
   city?: string;
@@ -24,6 +32,7 @@ export type SearchFilters = {
  */
 type FilterableQuery<Q> = {
   eq(column: string, value: unknown): Q;
+  in(column: string, values: unknown[]): Q;
   gt(column: string, value: unknown): Q;
   gte(column: string, value: unknown): Q;
   lte(column: string, value: unknown): Q;
@@ -42,6 +51,15 @@ function applyFilters<Q extends FilterableQuery<Q>>(
 
   if (filters.type) {
     q = q.eq("type", filters.type);
+  }
+  if (filters.category) {
+    q = q.eq("category", filters.category);
+  }
+  if (filters.categories?.length) {
+    q = q.in("category", filters.categories);
+  }
+  if (filters.dealType) {
+    q = q.eq("deal_type", filters.dealType);
   }
   if (filters.isLand) {
     q = q.gt("terreno_m2", 0).eq("construccion_m2", 0);

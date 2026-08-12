@@ -8,18 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import type { BidsRow } from "@/modules/lib/database.types";
 
 const BID_STATUS_LABELS: Record<string, string> = {
-  pending: "Pending",
-  accepted: "Accepted",
-  rejected: "Rejected",
-  countered: "Countered",
+  pending: "Pendiente",
+  accepted: "Aceptada",
+  rejected: "Rechazada",
+  countered: "Contraofertada",
 };
 
 const PAYMENT_LABELS: Record<string, string> = {
-  cash: "Cash",
+  cash: "Efectivo",
   infonavit: "Infonavit",
   fonacot: "Fonacot",
-  bank_loan: "Bank loan",
-  mixed: "Mixed",
+  bank_loan: "Crédito bancario",
+  mixed: "Mixto",
 };
 
 type Props = {
@@ -73,7 +73,7 @@ export function BidsPanel({
 
   return (
     <div className="rounded-lg border bg-card p-4">
-      <h3 className="font-semibold">Offers</h3>
+      <h3 className="font-semibold">Ofertas</h3>
 
       {error && (
         <p className="mt-2 text-sm text-destructive" role="alert">
@@ -83,7 +83,7 @@ export function BidsPanel({
 
       {bids.length === 0 ? (
         <p className="mt-3 text-sm text-muted-foreground">
-          No offers on this property yet.
+          Aún no hay ofertas en esta propiedad.
         </p>
       ) : (
         <ul className="mt-3 space-y-2">
@@ -98,7 +98,7 @@ export function BidsPanel({
                   {bid.counter_offer_price != null && (
                     <span className="text-muted-foreground">
                       {" "}
-                      (counter ${bid.counter_offer_price.toLocaleString()})
+                      (contraoferta ${bid.counter_offer_price.toLocaleString()})
                     </span>
                   )}
                 </span>
@@ -108,14 +108,14 @@ export function BidsPanel({
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
                 {PAYMENT_LABELS[bid.payment_method] ?? bid.payment_method} ·{" "}
-                {bid.buyer_id === currentUserId ? "you" : "buyer"}
+                {bid.buyer_id === currentUserId ? "tú" : "comprador"}
               </p>
 
               {isOwner && bid.status === "pending" && (
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <input
                     type="number"
-                    placeholder="Counter price"
+                    placeholder="Precio de contraoferta"
                     value={counterPrice[bid.id] ?? ""}
                     onChange={(e) =>
                       setCounterPrice((prev) => ({
@@ -130,7 +130,7 @@ export function BidsPanel({
                     disabled={isPending}
                     onClick={() => respond(bid.id, "countered")}
                   >
-                    Counter
+                    Contraofertar
                   </Button>
                   <Button
                     size="sm"
@@ -138,7 +138,7 @@ export function BidsPanel({
                     disabled={isPending}
                     onClick={() => respond(bid.id, "accepted")}
                   >
-                    Accept
+                    Aceptar
                   </Button>
                   <Button
                     size="sm"
@@ -146,7 +146,7 @@ export function BidsPanel({
                     disabled={isPending}
                     onClick={() => respond(bid.id, "rejected")}
                   >
-                    Reject
+                    Rechazar
                   </Button>
                 </div>
               )}
@@ -158,7 +158,7 @@ export function BidsPanel({
       {!isOwner && (
         <div className="mt-4 flex flex-wrap items-end gap-2 border-t pt-3">
           <label className="space-y-1 text-xs text-muted-foreground">
-            Offer price (MXN)
+            Precio de la oferta (MXN)
             <input
               type="number"
               value={price}
@@ -167,17 +167,17 @@ export function BidsPanel({
             />
           </label>
           <label className="space-y-1 text-xs text-muted-foreground">
-            Payment method
+            Método de pago
             <select
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="block rounded-md border bg-background px-2 py-1 text-sm text-foreground"
             >
-              <option value="cash">Cash</option>
+              <option value="cash">Efectivo</option>
               <option value="infonavit">Infonavit</option>
               <option value="fonacot">Fonacot</option>
-              <option value="bank_loan">Bank loan</option>
-              <option value="mixed">Mixed</option>
+              <option value="bank_loan">Crédito bancario</option>
+              <option value="mixed">Mixto</option>
             </select>
           </label>
           <Button
@@ -185,7 +185,7 @@ export function BidsPanel({
             disabled={isPending || !price}
             onClick={submitBid}
           >
-            Submit offer
+            Enviar oferta
           </Button>
         </div>
       )}

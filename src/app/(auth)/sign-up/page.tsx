@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { SignUpForm } from "@/modules/auth/components/sign-up-form";
 
-export const metadata: Metadata = { title: "Sign up" };
+export const metadata: Metadata = { title: "Crear cuenta" };
 
 export default function SignUpPage() {
   return (
@@ -12,9 +12,9 @@ export default function SignUpPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Create your account</h1>
+        <h1 className="text-lg font-semibold">Crea tu cuenta</h1>
         <p className="text-sm text-muted-foreground">
-          Buy, invest, list, or sell — your way.
+          Compra, invierte, publica o vende — a tu manera.
         </p>
       </div>
       <SignUpForm />

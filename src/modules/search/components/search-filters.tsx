@@ -24,6 +24,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
 
   const [query, setQuery] = useState(searchParams.get("query") ?? "");
   const [type, setType] = useState(searchParams.get("type") ?? "");
+  const [category, setCategory] = useState(searchParams.get("category") ?? "");
   const [city, setCity] = useState(searchParams.get("city") ?? "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") ?? "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
@@ -33,6 +34,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     const params = new URLSearchParams();
     if (query.trim()) params.set("query", query.trim());
     if (type) params.set("type", type);
+    if (category) params.set("category", category);
     if (city) params.set("city", city);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
@@ -44,6 +46,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   const reset = () => {
     setQuery("");
     setType("");
+    setCategory("");
     setCity("");
     setMinPrice("");
     setMaxPrice("");
@@ -74,6 +77,22 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             <SelectContent>
               <SelectItem value="sale">En venta</SelectItem>
               <SelectItem value="rent">En renta</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="search-category">Categoría</Label>
+          <Select value={category} onValueChange={(v) => setCategory(v ?? "")}>
+            <SelectTrigger id="search-category" className="rounded-full">
+              <SelectValue placeholder="Cualquiera" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="casa">Casa</SelectItem>
+              <SelectItem value="departamento">Departamento</SelectItem>
+              <SelectItem value="local">Local</SelectItem>
+              <SelectItem value="bodega">Bodega</SelectItem>
+              <SelectItem value="terreno">Terreno</SelectItem>
             </SelectContent>
           </Select>
         </div>

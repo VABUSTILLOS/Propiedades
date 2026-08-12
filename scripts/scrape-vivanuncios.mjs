@@ -36,9 +36,12 @@ const GOOGLE_MAPS_KEY =
 // Demo agent that owns imported listings (bypasses RLS via service role).
 const OWNER_ID = "80a2428b-4d50-435d-8ce1-b1a9eba61176";
 
-// Base search URL. Pagination swaps p1 → p2 → p3… in the path.
+// Base search URLs. Vivanuncios ignores pagination when `sort=more_recent` is
+// present (p2/p3 return page 1), so page 1 keeps the sort and pages 2+ drop it.
 const SEARCH_URL_TEMPLATE =
   "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p{PAGE}?pt=1,101,12&sort=more_recent";
+const SEARCH_URL_TEMPLATE_NO_SORT =
+  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p{PAGE}?pt=1,101,12";
 
 // CLI args
 const args = process.argv.slice(2);
@@ -284,7 +287,7 @@ async function chatCompletion({ system, user, jsonMode = false }) {
 }
 
 const EXTRACT_SYSTEM =
-  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")}';
+  'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{"title": string (short listing title, Spanish), "price": number (integer MXN sale price, 0 if unknown), "currency": "MXN", "terreno_m2": number (land area m2, 0 if unknown), "construccion_m2": number (built area m2, 0 if unknown), "description": string (2-4 sentence Spanish description), "address_text": string (street + number if present), "colonia": string, "city": string, "images": array of absolute https image URLs (max 20; ONLY actual photos of the property, typically from img10.naventcdn.com/avisos/ — never logos, icons or navigation images), "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica"), "category": one of "casa" | "departamento" | "local" | "bodega" | "terreno", "deal_type": one of "venta_directa" | "remate_bancario" | "flipping" | "traspaso". Classify from the title/description keywords: remate, adjudicación, banco → remate_bancario; traspaso, ceder → traspaso; reparar, remodelar, flipping → flipping; local/oficina → local; bodega/nave → bodega; terreno/lote → terreno. Default "venta_directa"/"casa". "institucion_bancaria": string or null (bank name for remates), "fecha_remate": string YYYY-MM-DD or null, "costo_reparacion_estimado": number MXN or null (flipping), "valor_post_reparacion_estimado": number MXN or null (flipping ARV), "condiciones_traspaso": string or null}';
 
 /** Ask DeepSeek to extract structured data from a detail page markdown. */
 async function extractFromDetail(markdown, fallbackTitle) {
@@ -299,6 +302,16 @@ async function extractFromDetail(markdown, fallbackTitle) {
   try {
     const parsed = JSON.parse((fenced && fenced[1]) ?? content);
     if (typeof parsed !== "object" || parsed === null) return null;
+    const category =
+      ["casa", "departamento", "local", "bodega", "terreno"].includes(parsed.category)
+        ? parsed.category
+        : "casa";
+    const dealType =
+      ["venta_directa", "remate_bancario", "flipping", "traspaso"].includes(
+        parsed.deal_type,
+      )
+        ? parsed.deal_type
+        : "venta_directa";
     return {
       title: typeof parsed.title === "string" ? parsed.title : fallbackTitle,
       price: Number(parsed.price) || 0,
@@ -323,6 +336,28 @@ async function extractFromDetail(markdown, fallbackTitle) {
       bento_highlights: Array.isArray(parsed.bento_highlights)
         ? parsed.bento_highlights.filter((h) => typeof h === "string")
         : [],
+      category,
+      deal_type: dealType,
+      institucion_bancaria:
+        typeof parsed.institucion_bancaria === "string"
+          ? parsed.institucion_bancaria
+          : null,
+      fecha_remate:
+        typeof parsed.fecha_remate === "string" ? parsed.fecha_remate : null,
+      costo_reparacion_estimado:
+        parsed.costo_reparacion_estimado != null &&
+        !Number.isNaN(Number(parsed.costo_reparacion_estimado))
+          ? Number(parsed.costo_reparacion_estimado)
+          : null,
+      valor_post_reparacion_estimado:
+        parsed.valor_post_reparacion_estimado != null &&
+        !Number.isNaN(Number(parsed.valor_post_reparacion_estimado))
+          ? Number(parsed.valor_post_reparacion_estimado)
+          : null,
+      condiciones_traspaso:
+        typeof parsed.condiciones_traspaso === "string"
+          ? parsed.condiciones_traspaso
+          : null,
     };
   } catch {
     return null;
@@ -446,6 +481,47 @@ function createdFromPublished(daysAgo) {
   return d.toISOString();
 }
 
+/* ------------------------------------------------------------------ *
+ *  Investment classification (keyword heuristic fallback)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Classify a listing into category + deal_type by keyword heuristics.
+ * Used as a fallback when the LLM extraction doesn't return the fields.
+ */
+function classifyListing(title, description) {
+  const haystack = `${title} ${description ?? ""}`.toLowerCase();
+
+  let category = "casa";
+  if (/\b(terreno|predio|lote|solar|parcela)\b/.test(haystack)) {
+    category = "terreno";
+  } else if (/\b(bodega|nave)\b/.test(haystack)) {
+    category = "bodega";
+  } else if (/\b(local|oficina|nave industrial)\b/.test(haystack)) {
+    category = "local";
+  } else if (/\b(depto|departamento)\b/.test(haystack)) {
+    category = "departamento";
+  }
+
+  let dealType = "venta_directa";
+  if (/\b(remate|adjudicaci[oó]n|ejecuci[oó]n hipotecaria|banco|bancario)\b/.test(haystack)) {
+    dealType = "remate_bancario";
+  } else if (/\b(traspaso|ceder|c[eé]dula)\b/.test(haystack)) {
+    dealType = "traspaso";
+  } else if (/\b(flipping|reparar|remodelar|reconstruir|para arreglar|proyecto de inversi[oó]n)\b/.test(haystack)) {
+    dealType = "flipping";
+  }
+
+  return { category, dealType };
+}
+
+/** Extract an MXN amount (e.g. "$250,000" or "250000") or null. */
+function extractAmount(text) {
+  if (!text) return null;
+  const match = text.replace(/\$/g, "").replace(/,/g, "").match(/\d+/);
+  return match ? Number(match[0]) || null : null;
+}
+
 async function insertProperty(listing, extracted, geocoded) {
   if (await existsBySourceUrl(listing.sourceUrl)) {
     console.log(`  skip (ya existe): ${listing.sourceUrl}`);
@@ -461,12 +537,30 @@ async function insertProperty(listing, extracted, geocoded) {
   const construccion_m2 = extracted?.construccion_m2 || listing.construccion_m2;
   const description = extracted?.description || listing.description || "";
 
+  // Classify the listing; LLM extraction wins, keyword heuristic is the fallback.
+  const heuristic = classifyListing(title, description);
+  const category = extracted?.category || heuristic.category;
+  const dealType = extracted?.deal_type || heuristic.dealType;
+  const costoReparacion =
+    extracted?.costo_reparacion_estimado ??
+    (dealType === "flipping" ? extractAmount(description) : null);
+  const valorPostReparacion =
+    extracted?.valor_post_reparacion_estimado ??
+    (dealType === "flipping" ? extractAmount(extracted?.description) : null);
+
   const row = {
     owner_id: OWNER_ID,
     title,
     slug,
     description,
     type: "sale",
+    category,
+    deal_type: dealType,
+    costo_reparacion_estimado: costoReparacion,
+    valor_post_reparacion_estimado: valorPostReparacion,
+    institucion_bancaria: extracted?.institucion_bancaria ?? null,
+    fecha_remate: extracted?.fecha_remate ?? null,
+    condiciones_traspaso: extracted?.condiciones_traspaso ?? null,
     status: "active",
     current_wizard_step: 4,
     price,
@@ -513,7 +607,8 @@ async function main() {
   const seen = new Set();
 
   for (let page = 1; page <= pageCount; page++) {
-    const url = SEARCH_URL_TEMPLATE.replace("{PAGE}", page);
+    const template = page === 1 ? SEARCH_URL_TEMPLATE : SEARCH_URL_TEMPLATE_NO_SORT;
+    const url = template.replace("{PAGE}", page);
     console.log(`\n=== Página ${page} ===`);
     try {
       const html = await jinaFetch(url, { format: "html", retries: 4, waitSelector: ".tileV2" });

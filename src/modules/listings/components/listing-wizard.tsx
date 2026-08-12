@@ -20,21 +20,29 @@ import { cn } from "@/lib/utils";
 type WizardStep = 1 | 2 | 3 | 4;
 
 const STEPS: { step: WizardStep; label: string }[] = [
-  { step: 1, label: "Basics" },
-  { step: 2, label: "Pricing" },
-  { step: 3, label: "Location" },
-  { step: 4, label: "Media" },
+  { step: 1, label: "Información básica" },
+  { step: 2, label: "Precio" },
+  { step: 3, label: "Ubicación" },
+  { step: 4, label: "Multimedia" },
 ];
 
 type WizardField = keyof WizardData;
 type WizardData = {
   title: string;
   type: "sale" | "rent";
+  category: string;
+  dealType: string;
   description: string;
   price: string;
   currency: string;
   terreno_m2: string;
   construccion_m2: string;
+  // Investment-specific fields (shown conditionally by deal type).
+  costo_reparacion_estimado: string;
+  valor_post_reparacion_estimado: string;
+  institucion_bancaria: string;
+  fecha_remate: string;
+  condiciones_traspaso: string;
   address: string;
   colonia: string;
   city: string;
@@ -50,11 +58,18 @@ type WizardData = {
 const initialData: WizardData = {
   title: "",
   type: "sale",
+  category: "casa",
+  dealType: "venta_directa",
   description: "",
   price: "",
   currency: "MXN",
   terreno_m2: "",
   construccion_m2: "",
+  costo_reparacion_estimado: "",
+  valor_post_reparacion_estimado: "",
+  institucion_bancaria: "",
+  fecha_remate: "",
+  condiciones_traspaso: "",
   address: "",
   colonia: "",
   city: "",
@@ -89,6 +104,8 @@ export function ListingWizard() {
       const form = new FormData();
       form.set("title", data.title);
       form.set("type", data.type);
+      form.set("category", data.category);
+      form.set("deal_type", data.dealType);
       if (data.description.trim()) form.set("description", data.description.trim());
 
       const res = await createDraft(undefined, form);
@@ -110,6 +127,23 @@ export function ListingWizard() {
         currency: data.currency,
         terreno_m2: Number(data.terreno_m2),
         construccion_m2: Number(data.construccion_m2),
+        costo_reparacion_estimado:
+          data.costo_reparacion_estimado.trim() === ""
+            ? null
+            : Number(data.costo_reparacion_estimado),
+        valor_post_reparacion_estimado:
+          data.valor_post_reparacion_estimado.trim() === ""
+            ? null
+            : Number(data.valor_post_reparacion_estimado),
+        institucion_bancaria:
+          data.institucion_bancaria.trim() === ""
+            ? null
+            : data.institucion_bancaria.trim(),
+        fecha_remate: data.fecha_remate.trim() === "" ? null : data.fecha_remate.trim(),
+        condiciones_traspaso:
+          data.condiciones_traspaso.trim() === ""
+            ? null
+            : data.condiciones_traspaso.trim(),
       },
       3: {
         address: data.address,
@@ -188,7 +222,7 @@ export function ListingWizard() {
               variant="ghost"
               onClick={() => setStep((step - 1) as WizardStep)}
             >
-              Back
+              Atrás
             </Button>
           ) : (
             <span />
@@ -196,10 +230,10 @@ export function ListingWizard() {
 
           <Button type="submit">
             {step === 4
-              ? "Finish"
+              ? "Terminar"
               : step === 1
-                ? "Create draft"
-                : "Save & continue"}
+                ? "Crear borrador"
+                : "Guardar y continuar"}
           </Button>
         </div>
       </form>
@@ -217,7 +251,7 @@ function StepBasics({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">Título</Label>
         <Input
           id="title"
           name="title"
@@ -229,20 +263,59 @@ function StepBasics({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Listing type</Label>
+        <Label htmlFor="type">Tipo de listado</Label>
         <Select value={value.type} onValueChange={(v) => onChange("type", v ?? "sale")}>
           <SelectTrigger id="type">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="sale">For sale</SelectItem>
-            <SelectItem value="rent">For rent</SelectItem>
+            <SelectItem value="sale">En venta</SelectItem>
+            <SelectItem value="rent">En renta</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="category">Categoría</Label>
+          <Select
+            value={value.category}
+            onValueChange={(v) => onChange("category", v ?? "casa")}
+          >
+            <SelectTrigger id="category">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="casa">Casa</SelectItem>
+              <SelectItem value="departamento">Departamento</SelectItem>
+              <SelectItem value="local">Local</SelectItem>
+              <SelectItem value="bodega">Bodega</SelectItem>
+              <SelectItem value="terreno">Terreno</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="dealType">Tipo de operación</Label>
+          <Select
+            value={value.dealType}
+            onValueChange={(v) => onChange("dealType", v ?? "venta_directa")}
+          >
+            <SelectTrigger id="dealType">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="venta_directa">Venta directa</SelectItem>
+              <SelectItem value="remate_bancario">Remate bancario</SelectItem>
+              <SelectItem value="flipping">Flipping (reparar)</SelectItem>
+              <SelectItem value="traspaso">Traspaso inmobiliario</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Descripción</Label>
         <Textarea
           id="description"
           name="description"
@@ -310,6 +383,90 @@ function StepPricing({
           required
         />
       </div>
+
+      {value.dealType === "flipping" && (
+        <div className="grid gap-4 rounded-md border border-amber-200 bg-amber-50/50 p-4 sm:grid-cols-2">
+          <p className="text-xs font-semibold text-amber-800 sm:col-span-2">
+            Flipping — presupuesto de reparación
+          </p>
+          <div className="space-y-2">
+            <Label htmlFor="costo_reparacion_estimado">
+              Costo de reparación (MXN)
+            </Label>
+            <Input
+              id="costo_reparacion_estimado"
+              name="costo_reparacion_estimado"
+              type="number"
+              inputMode="numeric"
+              min="0"
+              value={value.costo_reparacion_estimado}
+              onChange={(e) =>
+                onChange("costo_reparacion_estimado", e.target.value)
+              }
+              placeholder="250000"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="valor_post_reparacion_estimado">
+              Valor post-reparación (ARV) (MXN)
+            </Label>
+            <Input
+              id="valor_post_reparacion_estimado"
+              name="valor_post_reparacion_estimado"
+              type="number"
+              inputMode="numeric"
+              min="0"
+              value={value.valor_post_reparacion_estimado}
+              onChange={(e) =>
+                onChange("valor_post_reparacion_estimado", e.target.value)
+              }
+              placeholder="4500000"
+            />
+          </div>
+        </div>
+      )}
+
+      {value.dealType === "remate_bancario" && (
+        <div className="grid gap-4 rounded-md border border-emerald-200 bg-emerald-50/50 p-4 sm:grid-cols-2">
+          <p className="text-xs font-semibold text-emerald-800 sm:col-span-2">
+            Remate bancario — detalles de la subasta
+          </p>
+          <div className="space-y-2">
+            <Label htmlFor="institucion_bancaria">Institución bancaria</Label>
+            <Input
+              id="institucion_bancaria"
+              name="institucion_bancaria"
+              value={value.institucion_bancaria}
+              onChange={(e) => onChange("institucion_bancaria", e.target.value)}
+              placeholder="Ej. BBVA, Banorte…"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="fecha_remate">Fecha de remate</Label>
+            <Input
+              id="fecha_remate"
+              name="fecha_remate"
+              type="date"
+              value={value.fecha_remate}
+              onChange={(e) => onChange("fecha_remate", e.target.value)}
+            />
+          </div>
+        </div>
+      )}
+
+      {value.dealType === "traspaso" && (
+        <div className="space-y-2 rounded-md border border-sky-200 bg-sky-50/50 p-4">
+          <Label htmlFor="condiciones_traspaso">Condiciones del traspaso</Label>
+          <Textarea
+            id="condiciones_traspaso"
+            name="condiciones_traspaso"
+            value={value.condiciones_traspaso}
+            onChange={(e) => onChange("condiciones_traspaso", e.target.value)}
+            placeholder="Ej. Traspaso de contrato de arrendamiento con 18 meses vigentes, fianza de 2 meses…"
+            rows={3}
+          />
+        </div>
+      )}
     </div>
   );
 }

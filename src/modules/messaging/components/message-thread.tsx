@@ -86,7 +86,7 @@ export function MessageThread({
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No messages yet — start the conversation.
+            No hay mensajes todavía — inicia la conversación.
           </p>
         )}
 
@@ -148,12 +148,12 @@ export function MessageThread({
                 void submit();
               }
             }}
-            placeholder="Type a message…"
+            placeholder="Escribe un mensaje…"
             rows={2}
             disabled={sending}
           />
           <Button onClick={() => void submit()} disabled={sending || !content.trim()}>
-            Send
+            Enviar
           </Button>
         </div>
       </div>

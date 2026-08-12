@@ -33,44 +33,44 @@ export function MarketPanel({ property, benchmark }: Props) {
   return (
     <div className="space-y-4">
       <div className="rounded-lg border bg-card p-4">
-        <h3 className="font-semibold">Market benchmark</h3>
+        <h3 className="font-semibold">Referencia de mercado</h3>
         {benchmark ? (
           <dl className="mt-3 space-y-2 text-sm">
-            <Row label="City" value={benchmark.city} />
+            <Row label="Ciudad" value={benchmark.city} />
             <Row label="Colonia" value={benchmark.colonia} />
             <Row
-              label="Avg $/m² const"
+              label="Promedio $/m² construido"
               value={`$${benchmark.avg_price_m2_const.toLocaleString()}`}
             />
             <Row
-              label="Avg $/m² land"
+              label="Promedio $/m² terreno"
               value={`$${benchmark.avg_price_m2_land.toLocaleString()}`}
             />
             <Row
-              label="Growth / yr"
+              label="Crecimiento / año"
               value={`${(benchmark.historical_growth_rate ?? 0).toFixed(2)}%`}
             />
             <Row
-              label="Your listing $/m²"
+              label="Tu listado $/m²"
               value={`$${Math.round(constPerM2).toLocaleString()}`}
             />
           </dl>
         ) : (
           <p className="mt-2 text-sm text-muted-foreground">
-            No benchmark data for {property.colonia} yet.
+            Aún no hay datos de referencia para {property.colonia}.
           </p>
         )}
       </div>
 
       <div className="rounded-lg border bg-card p-4">
-        <h3 className="font-semibold">Payment estimate (PITI-ish)</h3>
+        <h3 className="font-semibold">Estimación de pago (aprox. PITI)</h3>
         <p className="mt-1 text-xs text-muted-foreground">
-          Mortgage payment, property tax & HOA estimate.
+          Estimación de hipoteca, predial y mantenimiento (HOA).
         </p>
 
         <div className="mt-3 space-y-2">
           <label className="block text-xs text-muted-foreground">
-            Down payment: {(downPaymentPct * 100).toFixed(0)}%
+            Enganche: {(downPaymentPct * 100).toFixed(0)}%
             <input
               type="range"
               min={5}
@@ -93,7 +93,7 @@ export function MarketPanel({ property, benchmark }: Props) {
             />
           </label>
           <label className="block text-xs text-muted-foreground">
-            Term: {term} years
+            Plazo: {term} años
             <input
               type="range"
               min={5}
@@ -107,17 +107,17 @@ export function MarketPanel({ property, benchmark }: Props) {
 
         <p className="mt-4 text-2xl font-bold">
           ${Math.round(monthlyPayment).toLocaleString()}
-          <span className="text-sm font-normal text-muted-foreground"> / mo</span>
+          <span className="text-sm font-normal text-muted-foreground"> / mes</span>
         </p>
         {(property.predial_anual ?? 0) > 0 && (
           <p className="mt-1 text-xs text-muted-foreground">
             + ~${Math.round((property.predial_anual ?? 0) / 12).toLocaleString()}{" "}
-            / mo predial
+            / mes predial
           </p>
         )}
         {(property.hoa_fee ?? 0) > 0 && (
           <p className="text-xs text-muted-foreground">
-            + ${property.hoa_fee?.toLocaleString()} / mo HOA
+            + ${property.hoa_fee?.toLocaleString()} / mes HOA
           </p>
         )}
       </div>

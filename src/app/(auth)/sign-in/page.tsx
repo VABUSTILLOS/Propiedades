@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 import { SignInForm } from "@/modules/auth/components/sign-in-form";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = { title: "Iniciar sesión" };
 
 export default function SignInPage() {
   return (
@@ -13,12 +13,12 @@ export default function SignInPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Welcome back</h1>
+        <h1 className="text-lg font-semibold">Hola de nuevo</h1>
         <p className="text-sm text-muted-foreground">
-          Sign in to manage your listings and inquiries.
+          Inicia sesión para administrar tus listados y consultas.
         </p>
       </div>
-      <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Loading…</div>}>
+      <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Cargando…</div>}>
         <SignInForm />
       </Suspense>
     </div>

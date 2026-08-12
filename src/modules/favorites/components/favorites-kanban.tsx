@@ -42,7 +42,7 @@ type Props = {
 };
 
 const COLUMNS: { id: TierColumn; label: string; dot: string }[] = [
-  { id: "top_choice", label: "#1 Top Choice", dot: "bg-emerald-500" },
+  { id: "top_choice", label: "#1 Primera opción", dot: "bg-emerald-500" },
   { id: "plan_b", label: "Plan B", dot: "bg-amber-500" },
   { id: "discarded", label: "Descartadas", dot: "bg-rose-500" },
 ];
@@ -385,7 +385,7 @@ function FavoriteCardBody({
       <button
         type="button"
         className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
-        aria-label={`Reorder ${property?.title ?? "favorite"}`}
+        aria-label={`Reordenar ${property?.title ?? "favorito"}`}
         {...dragHandleProps}
       >
         <GripVertical className="size-4" />
@@ -415,7 +415,7 @@ function FavoriteCardBody({
           </>
         ) : (
           <span className="text-sm text-muted-foreground">
-            Property no longer available
+            Propiedad ya no disponible
           </span>
         )}
       </div>
@@ -431,7 +431,7 @@ function FavoriteCardBody({
               size="icon-sm"
               variant="ghost"
               disabled={disabled || !property}
-              aria-label={`Add ${property?.title ?? "property"} to a list`}
+              aria-label={`Agregar ${property?.title ?? "la propiedad"} a una lista`}
             >
               <ListPlus className="size-4" />
             </Button>
@@ -445,7 +445,7 @@ function FavoriteCardBody({
           variant="ghost"
           disabled={disabled}
           onClick={() => onRemove(favorite.id)}
-          aria-label="Remove favorite"
+          aria-label="Quitar de favoritos"
         >
           <Trash2 className="size-4" />
         </Button>

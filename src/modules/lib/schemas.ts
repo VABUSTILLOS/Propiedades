@@ -4,6 +4,8 @@ import type {
   BidStatus,
   ListingType,
   PaymentMethod,
+  PropertyCategory,
+  PropertyDealType,
   PropertyStatus,
   TransactionState,
   UserRole,
@@ -46,6 +48,21 @@ export const userRoleSchema = z.enum([
 ]) satisfies z.ZodType<UserRole>;
 
 export const listingTypeSchema = z.enum(["sale", "rent"]) satisfies z.ZodType<ListingType>;
+
+export const propertyCategorySchema = z.enum([
+  "casa",
+  "departamento",
+  "local",
+  "bodega",
+  "terreno",
+]) satisfies z.ZodType<PropertyCategory>;
+
+export const propertyDealTypeSchema = z.enum([
+  "venta_directa",
+  "remate_bancario",
+  "flipping",
+  "traspaso",
+]) satisfies z.ZodType<PropertyDealType>;
 
 export const propertyStatusSchema = z.enum([
   "draft",
@@ -91,6 +108,8 @@ export const paginationSchema = z.object({
 export const searchParamsSchema = paginationSchema.extend({
   query: z.string().trim().max(200).optional(),
   type: listingTypeSchema.optional(),
+  category: propertyCategorySchema.optional(),
+  dealType: propertyDealTypeSchema.optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
   city: z.string().trim().max(100).optional(),
@@ -121,6 +140,25 @@ export const listadosParamsSchema = paginationSchema.extend({
   sortBy: z.enum(["price_asc", "price_desc", "newest", "score"]).default("newest"),
 });
 export type ListadosParams = z.infer<typeof listadosParamsSchema>;
+
+// --- Investor dashboard (opportunity tabs) -------------------------------------
+export const investorTabSchema = z.enum([
+  "todos",
+  "remate",
+  "flipping",
+  "traspaso",
+  "comercial",
+  "terreno",
+]);
+export type InvestorTab = z.infer<typeof investorTabSchema>;
+
+/**
+ * URL params for /investor. `tab` drives the opportunity dashboard tabs.
+ */
+export const investorParamsSchema = paginationSchema.extend({
+  tab: investorTabSchema.default("todos"),
+});
+export type InvestorParams = z.infer<typeof investorParamsSchema>;
 
 // --- Auth ---------------------------------------------------------------------
 export const emailSchema = z.string().trim().email();
@@ -171,6 +209,8 @@ export const profileSchema = z.object({
 export const propertyWizardStep1Schema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters").max(200),
   type: listingTypeSchema,
+  category: propertyCategorySchema.default("casa"),
+  deal_type: propertyDealTypeSchema.default("venta_directa"),
   description: z.string().max(5000).optional(),
 });
 
@@ -179,6 +219,12 @@ export const propertyWizardStep2Schema = z.object({
   currency: z.string().length(3).default("MXN"),
   terreno_m2: areaM2Schema,
   construccion_m2: areaM2Schema,
+  // Investment financial fields (set per deal_type; optional for direct sales).
+  costo_reparacion_estimado: mxnSchema.nullable().optional(),
+  valor_post_reparacion_estimado: mxnSchema.nullable().optional(),
+  institucion_bancaria: z.string().trim().max(120).nullable().optional(),
+  fecha_remate: z.string().date().nullable().optional(),
+  condiciones_traspaso: z.string().trim().max(2000).nullable().optional(),
 });
 
 export const propertyWizardStep3Schema = z.object({

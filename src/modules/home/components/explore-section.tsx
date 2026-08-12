@@ -9,7 +9,7 @@ const EXPLORE_OPTIONS = [
     href: "/search?type=sale",
     icon: Home,
     title: "Comprar",
-    description: "Casas, departamentos y terrenos en venta, con valuación y $/m².",
+    description: "Casas y departamentos entre particulares, con valuación y $/m².",
   },
   {
     href: "/search?type=rent",
@@ -21,7 +21,7 @@ const EXPLORE_OPTIONS = [
     href: "/investor",
     icon: TrendingUp,
     title: "Invertir",
-    description: "Cap rate, descuento sobre avalúo y comparativa contra la colonia.",
+    description: "Remates bancarios, flipping, traspasos, locales, bodegas y terrenos con cap rate y descuento sobre avalúo.",
   },
 ];
 

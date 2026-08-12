@@ -24,7 +24,7 @@ export function UpdatePasswordForm() {
   const [statusMessage, setStatusMessage] = useState<string | null>(() =>
     code
       ? null
-      : "Missing reset token. Request a new password reset link.",
+      : "Falta el token de restablecimiento. Solicita un nuevo enlace para restablecer tu contraseña.",
   );
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -43,7 +43,7 @@ export function UpdatePasswordForm() {
           setStatus("error");
           setStatusMessage(
             exchangeError.message ??
-              "The reset link is invalid or expired. Request a new one.",
+              "El enlace de restablecimiento no es válido o caducó. Solicita uno nuevo.",
           );
           return;
         }
@@ -57,11 +57,11 @@ export function UpdatePasswordForm() {
 
       const parsed = passwordSchema.safeParse(password);
       if (!parsed.success) {
-        setError(parsed.error.issues[0]?.message ?? "Invalid password");
+        setError(parsed.error.issues[0]?.message ?? "Contraseña no válida");
         return;
       }
       if (password !== confirm) {
-        setError("Passwords do not match.");
+        setError("Las contraseñas no coinciden.");
         return;
       }
 
@@ -84,7 +84,7 @@ export function UpdatePasswordForm() {
   if (status === "exchanging") {
     return (
       <p className="py-8 text-center text-sm text-muted-foreground">
-        Verifying reset link…
+        Verificando enlace de restablecimiento…
       </p>
     );
   }
@@ -99,7 +99,7 @@ export function UpdatePasswordForm() {
           href="/sign-in"
           className={buttonVariants({ className: "w-full" })}
         >
-          Back to sign in
+          Volver a iniciar sesión
         </a>
       </div>
     );
@@ -117,28 +117,28 @@ export function UpdatePasswordForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="password">New password</Label>
+        <Label htmlFor="password">Nueva contraseña</Label>
         <Input
           id="password"
           name="password"
           type="password"
           autoComplete="new-password"
           required
-          placeholder="At least 8 characters"
+          placeholder="Al menos 8 caracteres"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="confirm">Confirm new password</Label>
+        <Label htmlFor="confirm">Confirmar nueva contraseña</Label>
         <Input
           id="confirm"
           name="confirm"
           type="password"
           autoComplete="new-password"
           required
-          placeholder="Repeat your password"
+          placeholder="Repite tu contraseña"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />
@@ -150,7 +150,7 @@ export function UpdatePasswordForm() {
         disabled={isPending || !password || !confirm}
         onClick={submit}
       >
-        {isPending ? "Updating…" : "Update password"}
+        {isPending ? "Actualizando…" : "Actualizar contraseña"}
       </Button>
     </form>
   );

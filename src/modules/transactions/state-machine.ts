@@ -38,14 +38,14 @@ export function canTransition(
 }
 
 export const TRANSACTION_LABELS: Record<TransactionState, string> = {
-  inquired: "Inquired",
-  tour_pending: "Tour pending",
-  tour_confirmed: "Tour confirmed",
-  offer_pending: "Offer pending",
-  offer_accepted: "Offer accepted",
-  in_escrow: "In escrow",
-  closed: "Closed",
-  canceled: "Canceled",
+  inquired: "Consultado",
+  tour_pending: "Visita pendiente",
+  tour_confirmed: "Visita confirmada",
+  offer_pending: "Oferta pendiente",
+  offer_accepted: "Oferta aceptada",
+  in_escrow: "En depósito en garantía",
+  closed: "Cerrada",
+  canceled: "Cancelada",
 };
 
 /**

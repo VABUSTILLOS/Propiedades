@@ -32,7 +32,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listing = await getListingBySlug(slug);
-  return { title: listing?.title ?? "Property" };
+  return { title: listing?.title ?? "Propiedad" };
 }
 
 export default async function PropertyDetailPage({ params, searchParams }: Props) {

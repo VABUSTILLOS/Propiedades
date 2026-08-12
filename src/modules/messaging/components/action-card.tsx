@@ -18,14 +18,14 @@ type Props = {
 };
 
 const CARD_TITLES: Record<string, string> = {
-  tour_request: "Tour request",
-  tour_accepted: "Tour confirmed",
-  offer_submitted: "Offer submitted",
-  offer_accepted: "Offer accepted",
-  escrow_started: "Escrow started",
-  deal_closed: "Deal closed",
-  canceled: "Transaction canceled",
-  status_change: "Status changed",
+  tour_request: "Solicitud de visita",
+  tour_accepted: "Visita confirmada",
+  offer_submitted: "Oferta enviada",
+  offer_accepted: "Oferta aceptada",
+  escrow_started: "Depósito en garantía iniciado",
+  deal_closed: "Trato cerrado",
+  canceled: "Transacción cancelada",
+  status_change: "Estado cambiado",
 };
 
 const mxn = (value: number) =>
@@ -52,7 +52,7 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
     startTransition(async () => {
       setError(null);
       const res = await run();
-      if (!res.ok) setError(res.error ?? "Action failed.");
+      if (!res.ok) setError(res.error ?? "La acción falló.");
     });
 
   const acceptTour =
@@ -95,7 +95,7 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
     <Card className="w-full max-w-md border-primary/30">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold">
-          {CARD_TITLES[type] ?? "Action"}
+          {CARD_TITLES[type] ?? "Acción"}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
@@ -109,14 +109,16 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
           <p className="text-muted-foreground">
             {tour.start_time
               ? new Date(tour.start_time).toLocaleString("es-MX")
-              : "A tour was requested."}
+              : "Se solicitó una visita."}
           </p>
         )}
         {(offer || offerInfo) && (
           <div className="space-y-1 text-muted-foreground">
-            {displayedPrice != null && <p>Offered price: {mxn(displayedPrice)}</p>}
+            {displayedPrice != null && (
+              <p>Precio ofrecido: {mxn(displayedPrice)}</p>
+            )}
             {offerInfo?.counter_offer_price != null && (
-              <p>Counter-offer: {mxn(offerInfo.counter_offer_price)}</p>
+              <p>Contraoferta: {mxn(offerInfo.counter_offer_price)}</p>
             )}
           </div>
         )}
@@ -131,7 +133,7 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
           <div className="flex gap-2 pt-1">
             {acceptTour && (
               <Button size="sm" disabled={isPending} onClick={() => acceptTour()}>
-                Accept tour
+                Aceptar visita
               </Button>
             )}
             {acceptOffer && (
@@ -140,7 +142,7 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
                 disabled={isPending}
                 onClick={() => acceptOffer()}
               >
-                Accept offer
+                Aceptar oferta
               </Button>
             )}
             {rejectOffer && (
@@ -150,7 +152,7 @@ export function ActionCard({ message, transactionId, viewerIsOwner }: Props) {
                 disabled={isPending}
                 onClick={() => rejectOffer()}
               >
-                Reject
+                Rechazar
               </Button>
             )}
           </div>

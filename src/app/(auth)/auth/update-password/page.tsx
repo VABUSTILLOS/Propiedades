@@ -5,8 +5,8 @@ import Link from "next/link";
 import { UpdatePasswordForm } from "@/modules/auth/components/update-password-form";
 
 export const metadata: Metadata = {
-  title: "Set a new password",
-  description: "Choose a new password for your account.",
+  title: "Establece una nueva contraseña",
+  description: "Elige una nueva contraseña para tu cuenta.",
 };
 
 export default function UpdatePasswordPage() {
@@ -16,15 +16,15 @@ export default function UpdatePasswordPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Set a new password</h1>
+        <h1 className="text-lg font-semibold">Establece una nueva contraseña</h1>
         <p className="text-sm text-muted-foreground">
-          Choose a new password for your account.
+          Elige una nueva contraseña para tu cuenta.
         </p>
       </div>
       <Suspense
         fallback={
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Verifying reset link…
+            Verificando enlace de restablecimiento…
           </p>
         }
       >

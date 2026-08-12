@@ -16,6 +16,13 @@ export type ExtractedProperty = {
   title: string;
   price: number;
   currency: string;
+  category: "casa" | "departamento" | "local" | "bodega" | "terreno";
+  deal_type: "venta_directa" | "remate_bancario" | "flipping" | "traspaso";
+  costo_reparacion_estimado: number | null;
+  valor_post_reparacion_estimado: number | null;
+  institucion_bancaria: string | null;
+  fecha_remate: string | null;
+  condiciones_traspaso: string | null;
   terreno_m2: number;
   construccion_m2: number;
   description: string;
@@ -150,7 +157,7 @@ export async function extractPropertyFromMarkdown(
     temperature: 0.1,
     maxTokens: 1500,
     system:
-      'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer MXN sale price, 0 if unknown),\n  "currency": "MXN",\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
+      'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer MXN sale price, 0 if unknown),\n  "currency": "MXN",\n  "category": one of "casa","departamento","local","bodega","terreno" (property kind; infer from title/description),\n  "deal_type": one of "venta_directa","remate_bancario","flipping","traspaso" (default "venta_directa"; use "remate_bancario" for bank foreclosures/subastas/judicial, "flipping" for fixer-upper/reparar/renovar, "traspaso" for contract transfers/traspasos; "casa" if unclear),\n  "costo_reparacion_estimado": number|null (MXN, expected repair budget for flipping, else null),\n  "valor_post_reparacion_estimado": number|null (MXN, after-repair value / ARV for flipping, else null),\n  "institucion_bancaria": string|null (bank or institution for remate_bancario, else null),\n  "fecha_remate": string|null (auction date YYYY-MM-DD for remate_bancario, else null),\n  "condiciones_traspaso": string|null (transfer terms for traspaso, else null),\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
     user: `Extract the listing data from this page content:\n\n${markdown.slice(0, 18000)}`,
   });
   const content = result?.content;
@@ -175,10 +182,30 @@ export async function extractPropertyFromMarkdown(
     ? raw.bento_highlights.filter((item): item is string => typeof item === "string")
     : [];
 
+  const categoryRaw = toStringOrEmpty(raw.category).toLowerCase();
+  const dealTypeRaw = toStringOrEmpty(raw.deal_type).toLowerCase();
+  const categories = ["casa", "departamento", "local", "bodega", "terreno"];
+  const dealTypes = ["venta_directa", "remate_bancario", "flipping", "traspaso"];
+
   return {
     title: toStringOrEmpty(raw.title),
     price: toNumber(raw.price),
     currency: toStringOrEmpty(raw.currency) || "MXN",
+    category: (categories.includes(categoryRaw)
+      ? categoryRaw
+      : "casa") as ExtractedProperty["category"],
+    deal_type: (dealTypes.includes(dealTypeRaw)
+      ? dealTypeRaw
+      : "venta_directa") as ExtractedProperty["deal_type"],
+    costo_reparacion_estimado:
+      raw.costo_reparacion_estimado == null ? null : toNumber(raw.costo_reparacion_estimado),
+    valor_post_reparacion_estimado:
+      raw.valor_post_reparacion_estimado == null
+        ? null
+        : toNumber(raw.valor_post_reparacion_estimado),
+    institucion_bancaria: toStringOrEmpty(raw.institucion_bancaria) || null,
+    fecha_remate: toStringOrEmpty(raw.fecha_remate) || null,
+    condiciones_traspaso: toStringOrEmpty(raw.condiciones_traspaso) || null,
     terreno_m2: toNumber(raw.terreno_m2),
     construccion_m2: toNumber(raw.construccion_m2),
     description: toStringOrEmpty(raw.description),
@@ -307,6 +334,13 @@ async function buildDraft(
     title: extracted.title || "Propiedad importada",
     price: extracted.price,
     currency: extracted.currency || "MXN",
+    category: extracted.category,
+    deal_type: extracted.deal_type,
+    costo_reparacion_estimado: extracted.costo_reparacion_estimado,
+    valor_post_reparacion_estimado: extracted.valor_post_reparacion_estimado,
+    institucion_bancaria: extracted.institucion_bancaria,
+    fecha_remate: extracted.fecha_remate,
+    condiciones_traspaso: extracted.condiciones_traspaso,
     terreno_m2: extracted.terreno_m2,
     construccion_m2: extracted.construccion_m2,
     description: extracted.description,

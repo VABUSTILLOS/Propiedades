@@ -121,10 +121,11 @@ export function FavoritesList({
       {favorites.length === 0 && (
         <div className="rounded-lg border border-dashed px-6 py-16 text-center">
           <p className="text-sm text-muted-foreground">
-            No favorites yet. Browse the search page and rank what you like.
+            No hay favoritos todavía. Explora la página de búsqueda y clasifica
+            lo que te gusta.
           </p>
           <Link href="/search" className={buttonVariants({ className: "mt-4" })}>
-            Find properties
+            Encontrar propiedades
           </Link>
         </div>
       )}
@@ -174,7 +175,7 @@ function SortableRow({
       <button
         type="button"
         className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
-        aria-label={`Reorder ${property?.title ?? "favorite"}`}
+        aria-label={`Reordenar ${property?.title ?? "favorito"}`}
         {...attributes}
         {...listeners}
       >
@@ -196,7 +197,7 @@ function SortableRow({
           </>
         ) : (
           <span className="text-sm text-muted-foreground">
-            Property no longer available
+            Propiedad ya no disponible
           </span>
         )}
         {favorite.private_notes && (
@@ -216,7 +217,7 @@ function SortableRow({
             size="icon-sm"
             variant="ghost"
             disabled={disabled || !property}
-            aria-label={`Add ${property?.title ?? "property"} to a list`}
+            aria-label={`Agregar ${property?.title ?? "la propiedad"} a una lista`}
           >
             <ListPlus className="size-4" />
           </Button>
@@ -228,7 +229,7 @@ function SortableRow({
         variant="ghost"
         disabled={disabled}
         onClick={() => onRemove(favorite.id)}
-        aria-label="Remove favorite"
+        aria-label="Quitar de favoritos"
       >
         <Trash2 className="size-4" />
       </Button>

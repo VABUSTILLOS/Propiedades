@@ -33,6 +33,11 @@ export default async function SearchPage({ searchParams }: Props) {
   const filters: SearchFilters = {
     query: parsed.data?.query,
     type: parsed.data?.type,
+    category: parsed.data?.category,
+    // Comprar focuses on person-to-person home sales; default to direct
+    // sales and exclude investment vehicles (remates, flips, traspasos)
+    // unless the user explicitly asks for one.
+    dealType: parsed.data?.dealType ?? "venta_directa",
     minPrice: parsed.data?.minPrice,
     maxPrice: parsed.data?.maxPrice,
     city: parsed.data?.city,

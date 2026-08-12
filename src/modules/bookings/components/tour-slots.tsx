@@ -51,7 +51,7 @@ export function TourSlots({
         setError(res.error);
         return;
       }
-      setMessage("Slot added.");
+      setMessage("Espacio agregado.");
       setDate("");
       setStartTime("");
       setEndTime("");
@@ -66,12 +66,12 @@ export function TourSlots({
         setError(res.error);
         return;
       }
-      setMessage("Tour booked.");
+      setMessage("Visita reservada.");
     });
 
   return (
     <div className="rounded-lg border bg-card p-4">
-      <h3 className="font-semibold">Schedule a tour</h3>
+      <h3 className="font-semibold">Agendar una visita</h3>
 
       {error && (
         <p className="mt-2 text-sm text-destructive" role="alert">
@@ -87,7 +87,7 @@ export function TourSlots({
       {isOwner && (
         <div className="mt-3 flex flex-wrap items-end gap-2">
           <label className="space-y-1 text-xs text-muted-foreground">
-            Date
+            Fecha
             <input
               type="date"
               value={date}
@@ -96,7 +96,7 @@ export function TourSlots({
             />
           </label>
           <label className="space-y-1 text-xs text-muted-foreground">
-            Start
+            Inicio
             <input
               type="time"
               value={startTime}
@@ -105,7 +105,7 @@ export function TourSlots({
             />
           </label>
           <label className="space-y-1 text-xs text-muted-foreground">
-            End
+            Fin
             <input
               type="time"
               value={endTime}
@@ -118,14 +118,14 @@ export function TourSlots({
             disabled={isPending || !date || !startTime || !endTime}
             onClick={addSlot}
           >
-            Add slot
+            Agregar espacio
           </Button>
         </div>
       )}
 
       {slots.length === 0 ? (
         <p className="mt-3 text-sm text-muted-foreground">
-          No available tour slots yet.
+          Aún no hay espacios disponibles para visitas.
         </p>
       ) : (
         <ul className="mt-3 space-y-2">
@@ -144,11 +144,11 @@ export function TourSlots({
                   disabled={isPending}
                   onClick={() => book(slot.id)}
                 >
-                  Book
+                  Reservar
                 </Button>
               )}
               {isOwner && (
-                <Badge variant="outline">Available</Badge>
+                <Badge variant="outline">Disponible</Badge>
               )}
             </li>
           ))}

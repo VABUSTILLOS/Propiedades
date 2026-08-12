@@ -195,6 +195,8 @@ function InvestorView({
 
   return (
     <div className="space-y-6">
+      <InvestmentDealPanel property={property} />
+
       <div className="rounded-lg border bg-card p-5">
         <div className="flex items-center gap-2">
           <Building2 className="size-4 text-muted-foreground" />
@@ -277,6 +279,149 @@ function InvestorView({
   );
 }
 
+/**
+ * Deal-type specific investment panel: shows the KPI block that matches
+ * the listing's deal_type (remate / flipping / traspaso / comercial-terreno).
+ */
+function InvestmentDealPanel({ property }: { property: PropertiesRow }) {
+  const dealType = property.deal_type ?? "venta_directa";
+  const category = property.category ?? "casa";
+
+  const isRemate = dealType === "remate_bancario";
+  const isFlipping = dealType === "flipping";
+  const isTraspaso = dealType === "traspaso";
+  const isComercialTerreno = ["local", "bodega", "terreno"].includes(category);
+
+  const dealLabel =
+    dealType === "remate_bancario"
+      ? "Remate bancario"
+      : dealType === "flipping"
+        ? "Flipping"
+        : dealType === "traspaso"
+          ? "Traspaso"
+          : "Venta directa";
+
+  const dealTone =
+    dealType === "remate_bancario"
+      ? "bg-emerald-500/10 text-emerald-700"
+      : dealType === "flipping"
+        ? "bg-amber-500/10 text-amber-700"
+        : dealType === "traspaso"
+          ? "bg-sky-500/10 text-sky-700"
+          : "bg-muted text-muted-foreground";
+
+  return (
+    <div className="rounded-lg border bg-card p-5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Building2 className="size-4 text-muted-foreground" />
+          <h3 className="font-semibold">Ficha de inversión</h3>
+        </div>
+        <Badge className={cn("text-xs", dealTone)}>{dealLabel}</Badge>
+      </div>
+
+      <dl className="mt-4 space-y-3 text-sm">
+        {isRemate && (
+          <>
+            {property.institucion_bancaria && (
+              <FinancialRow
+                label="Institución bancaria"
+                value={property.institucion_bancaria}
+              />
+            )}
+            {property.fecha_remate && (
+              <FinancialRow
+                label="Fecha del remate"
+                value={new Date(property.fecha_remate).toLocaleDateString("es-MX")}
+              />
+            )}
+            {property.porcentaje_descuento_avaluo != null && (
+              <FinancialRow
+                label="Descuento vs avalúo"
+                value={`${(property.porcentaje_descuento_avaluo * 100).toFixed(1)}%`}
+              />
+            )}
+          </>
+        )}
+
+        {isFlipping && (
+          <>
+            {property.costo_reparacion_estimado != null && (
+              <FinancialRow
+                label="Costo estimado de reparación"
+                value={`$${property.costo_reparacion_estimado.toLocaleString()} MXN`}
+              />
+            )}
+            {property.valor_post_reparacion_estimado != null && (
+              <FinancialRow
+                label="Valor post-reparación (ARV)"
+                value={`$${property.valor_post_reparacion_estimado.toLocaleString()} MXN`}
+              />
+            )}
+            {property.costo_reparacion_estimado != null &&
+              property.valor_post_reparacion_estimado != null && (
+                <FinancialRow
+                  label="Utilidad proyectada"
+                  value={`$${Math.max(
+                    0,
+                    property.valor_post_reparacion_estimado -
+                      property.price -
+                      property.costo_reparacion_estimado,
+                  ).toLocaleString()} MXN`}
+                  hint="ARV − precio de compra − costo de reparación"
+                />
+              )}
+          </>
+        )}
+
+        {isTraspaso && (
+          <>
+            <FinancialRow
+              label="Condiciones del traspaso"
+              value={
+                property.condiciones_traspaso || "Sin condiciones registradas"
+              }
+            />
+            <FinancialRow
+              label="Precio de traspaso"
+              value={`$${property.price.toLocaleString()} ${property.currency}`}
+            />
+          </>
+        )}
+
+        {!isRemate && !isFlipping && !isTraspaso && (
+          <>
+            {property.cap_rate_projected != null && (
+              <FinancialRow
+                label="Cap rate proyectado"
+                value={`${(property.cap_rate_projected * 100).toFixed(2)}%`}
+              />
+            )}
+            {property.estimated_monthly_rent != null && (
+              <FinancialRow
+                label="Renta mensual estimada"
+                value={`$${property.estimated_monthly_rent.toLocaleString()}/mes`}
+              />
+            )}
+            {isComercialTerreno && (
+              <FinancialRow
+                label="Clase de activo"
+                value={
+                  category === "terreno"
+                    ? "Terreno / suelo"
+                    : category === "bodega"
+                      ? "Bodega / industrial"
+                      : "Local comercial"
+                }
+              />
+            )}
+          </>
+        )}
+      </dl>
+    </div>
+  );
+}
+
 function FinancialRow({
   label,
   value,
@@ -285,9 +430,7 @@ function FinancialRow({
   label: string;
   value: React.ReactNode;
   hint?: string;
-}) {
-  return (
-    <div className="flex items-start justify-between gap-4">
+}) {  return (    <div className="flex items-start justify-between gap-4">
       <div>
         <dt className="text-muted-foreground">{label}</dt>
         {hint && <p className="mt-0.5 text-xs text-muted-foreground/70">{hint}</p>}

@@ -43,7 +43,7 @@ export function InquireButton({ propertyId, propertySlug }: Props) {
         </p>
       )}
       <Button className="w-full" disabled={isPending} onClick={inquire}>
-        {isPending ? "Starting…" : "Inquire about this property"}
+        {isPending ? "Iniciando…" : "Consultar sobre esta propiedad"}
       </Button>
     </div>
   );

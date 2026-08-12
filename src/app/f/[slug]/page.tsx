@@ -12,7 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const flyer = await getFlyerBySlug(slug);
-  return { title: flyer?.custom_title ?? "Property flyer" };
+  return { title: flyer?.custom_title ?? "Flyer de propiedad" };
 }
 
 export default async function FlyerPage({ params }: Props) {

@@ -19,10 +19,10 @@ import {
 const initialState: ActionResult = { ok: true, data: undefined };
 
 const ROLES = [
-  { value: "buyer", label: "Buyer" },
-  { value: "investor", label: "Investor" },
-  { value: "agent", label: "Agent / Real estate professional" },
-  { value: "owner_fsbo", label: "Owner (FSBO)" },
+  { value: "buyer", label: "Comprador" },
+  { value: "investor", label: "Inversionista" },
+  { value: "agent", label: "Agente / Profesional inmobiliario" },
+  { value: "owner_fsbo", label: "Dueño (FSBO)" },
 ] as const;
 
 export function SignUpForm() {
@@ -40,39 +40,39 @@ export function SignUpForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="fullName">Full name</Label>
-        <Input id="fullName" name="fullName" required placeholder="Jane Doe" />
+        <Label htmlFor="fullName">Nombre completo</Label>
+        <Input id="fullName" name="fullName" required placeholder="María García" />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           required
-          placeholder="you@example.com"
+          placeholder="tu@ejemplo.com"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <Input
           id="password"
           name="password"
           type="password"
           autoComplete="new-password"
           required
-          placeholder="At least 8 characters"
+          placeholder="Al menos 8 caracteres"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>I am a…</Label>
+        <Label>Soy…</Label>
         <Select name="role" defaultValue="buyer">
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a role" />
+            <SelectValue placeholder="Selecciona un rol" />
           </SelectTrigger>
           <SelectContent>
             {ROLES.map((role) => (
@@ -85,13 +85,13 @@ export function SignUpForm() {
       </div>
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Creating account…" : "Create account"}
+        {pending ? "Creando cuenta…" : "Crear cuenta"}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
+        ¿Ya tienes una cuenta?{" "}
         <Link href="/sign-in" className="font-medium underline underline-offset-4">
-          Sign in
+          Inicia sesión
         </Link>
       </p>
     </form>

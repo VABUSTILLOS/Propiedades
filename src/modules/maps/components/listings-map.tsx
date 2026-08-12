@@ -42,7 +42,7 @@ export function ListingsMap({ markers }: { markers: MapMarker[] }) {
   if (!GOOGLE_MAPS_AVAILABLE) {
     return (
       <div className="flex h-64 items-center justify-center rounded-lg border border-dashed bg-muted/40 px-6 text-center text-sm text-muted-foreground">
-        Map view requires a NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
+        La vista de mapa requiere una clave NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
       </div>
     );
   }
@@ -51,7 +51,7 @@ export function ListingsMap({ markers }: { markers: MapMarker[] }) {
     <div
       ref={ref}
       className="h-64 w-full rounded-lg border"
-      aria-label="Property map"
+      aria-label="Mapa de propiedades"
     />
   );
 }

@@ -24,18 +24,18 @@ const BUYER_STEPS = [
 const INVESTOR_ROW = [
   {
     icon: Calculator,
-    title: "Valuación automática",
-    description: "Avalúo estimado y descuento sobre precio en cada propiedad.",
+    title: "Remates bancarios",
+    description: "Instituciones, fechas de subasta y % de descuento sobre avalúo.",
   },
   {
     icon: Target,
-    title: "$/m² vs colonia",
-    description: "Compara contra benchmarks del mercado y detecta oportunidades.",
+    title: "Flipping y traspasos",
+    description: "Costo de reparación, valor post-reparación y condiciones del traspaso.",
   },
   {
     icon: Gauge,
-    title: "Cap rate proyectado",
-    description: "Renta mensual estimada y rendimiento por propiedad.",
+    title: "Locales, bodegas y terrenos",
+    description: "Cap rate proyectado, renta estimada y $/m² vs la colonia.",
   },
 ];
 

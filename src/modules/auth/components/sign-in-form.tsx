@@ -29,19 +29,19 @@ export function SignInForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           required
-          placeholder="you@example.com"
+          placeholder="tu@ejemplo.com"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <Input
           id="password"
           name="password"
@@ -55,13 +55,13 @@ export function SignInForm() {
       <input type="hidden" name="next" value={next} />
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Signing in…" : "Sign in"}
+        {pending ? "Iniciando sesión…" : "Iniciar sesión"}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
+        ¿No tienes cuenta?{" "}
         <Link href="/sign-up" className="font-medium underline underline-offset-4">
-          Sign up
+          Regístrate
         </Link>
       </p>
     </form>

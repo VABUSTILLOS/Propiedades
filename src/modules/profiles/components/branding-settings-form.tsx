@@ -36,9 +36,10 @@ export function BrandingSettingsForm({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Agency branding</CardTitle>
+          <CardTitle>Imagen de marca de agencia</CardTitle>
           <CardDescription>
-            Only agents and admins can configure tenant branding.
+            Solo los agentes y administradores pueden configurar la marca del
+            portal.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -58,15 +59,15 @@ export function BrandingSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Agency branding</CardTitle>
+        <CardTitle>Imagen de marca de agencia</CardTitle>
         <CardDescription>
-          Claim a subdomain (e.g. <code>agencia</code> → agencia.tuportal.com)
-          and set your brand colors.
+          Reclama un subdominio (p. ej. <code>agencia</code> →
+          agencia.tuportal.com) y define los colores de tu marca.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="subdomain">Subdomain</Label>
+          <Label htmlFor="subdomain">Subdominio</Label>
           <div className="flex items-center gap-2">
             <Input
               id="subdomain"
@@ -82,7 +83,7 @@ export function BrandingSettingsForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="company_name">Company name</Label>
+          <Label htmlFor="company_name">Nombre de la empresa</Label>
           <Input
             id="company_name"
             value={branding.company_name}
@@ -95,7 +96,7 @@ export function BrandingSettingsForm({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="primary_color">Primary color</Label>
+            <Label htmlFor="primary_color">Color principal</Label>
             <div className="flex items-center gap-2">
               <Input
                 id="primary_color"
@@ -129,7 +130,7 @@ export function BrandingSettingsForm({
         )}
 
         <Button onClick={save} disabled={isPending}>
-          {isPending ? "Saving…" : "Save branding"}
+          {isPending ? "Guardando…" : "Guardar marca"}
         </Button>
       </CardContent>
     </Card>

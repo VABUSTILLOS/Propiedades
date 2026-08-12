@@ -4,6 +4,8 @@ import {
   latSchema,
   lngSchema,
   mxnSchema,
+  propertyCategorySchema,
+  propertyDealTypeSchema,
 } from "@/modules/lib/schemas";
 
 /** POST /api/properties/import-universal body. */
@@ -26,6 +28,13 @@ export const importedPropertyDraftSchema = z.object({
   title: z.string().trim().min(3).max(200),
   price: mxnSchema,
   currency: z.string().length(3).default("MXN"),
+  category: propertyCategorySchema.default("casa"),
+  deal_type: propertyDealTypeSchema.default("venta_directa"),
+  costo_reparacion_estimado: mxnSchema.nullable().default(null),
+  valor_post_reparacion_estimado: mxnSchema.nullable().default(null),
+  institucion_bancaria: z.string().trim().max(120).nullable().default(null),
+  fecha_remate: z.string().date().nullable().default(null),
+  condiciones_traspaso: z.string().trim().max(2000).nullable().default(null),
   terreno_m2: areaM2Schema,
   construccion_m2: areaM2Schema,
   description: z.string().max(5000).default(""),

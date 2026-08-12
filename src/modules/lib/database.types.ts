@@ -6,6 +6,17 @@
 
 export type UserRole = "buyer" | "investor" | "agent" | "owner_fsbo" | "admin";
 export type ListingType = "sale" | "rent";
+export type PropertyCategory =
+  | "casa"
+  | "departamento"
+  | "local"
+  | "bodega"
+  | "terreno";
+export type PropertyDealType =
+  | "venta_directa"
+  | "remate_bancario"
+  | "flipping"
+  | "traspaso";
 export type PropertyStatus =
   | "draft"
   | "pending_approval"
@@ -68,6 +79,13 @@ export type PropertiesRow = {
   type: ListingType;
   status: PropertyStatus;
   current_wizard_step: number | null;
+  category: PropertyCategory;
+  deal_type: PropertyDealType;
+  costo_reparacion_estimado: number | null;
+  valor_post_reparacion_estimado: number | null;
+  institucion_bancaria: string | null;
+  fecha_remate: string | null;
+  condiciones_traspaso: string | null;
   price: number;
   currency: string;
   terreno_m2: number;

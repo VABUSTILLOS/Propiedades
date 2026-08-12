@@ -14,7 +14,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export const metadata: Metadata = { title: "Flyer analytics" };
+export const metadata: Metadata = { title: "Analítica de flyer" };
 
 export default async function FlyerAnalyticsPage({ params }: Props) {
   const { id } = await params;
@@ -52,7 +52,7 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
             {flyer.custom_title ?? "Flyer"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {property?.title ?? "Property"} ·{" "}
+            {property?.title ?? "Propiedad"} ·{" "}
             <Link href={`/f/${flyer.slug}`} className="text-primary hover:underline">
               /f/{flyer.slug}
             </Link>
@@ -61,10 +61,10 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        <Stat label="Views" value={analytics.length} />
-        <Stat label="Leads captured" value={totalLeads} />
+        <Stat label="Vistas" value={analytics.length} />
+        <Stat label="Leads capturados" value={totalLeads} />
         <Stat
-          label="Avg engagement (s)"
+          label="Interacción promedio (s)"
           value={
             analytics.length > 0
               ? Math.round(
@@ -82,13 +82,13 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent engagement</CardTitle>
+          <CardTitle>Interacciones recientes</CardTitle>
         </CardHeader>
         <CardContent>
           {analytics.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No visits recorded yet. Share the flyer link to start collecting
-              leads.
+              Aún no hay visitas registradas. Comparte el enlace del flyer para
+              empezar a capturar leads.
             </p>
           ) : (
             <ul className="divide-y">
@@ -96,7 +96,7 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
                 <li key={event.id} className="flex justify-between gap-3 py-2 text-sm">
                   <div>
                     <p className="font-medium">
-                      {event.lead_email ?? event.lead_phone ?? "Anonymous visit"}
+                      {event.lead_email ?? event.lead_phone ?? "Visita anónima"}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {new Date(event.opened_at).toLocaleString()}
