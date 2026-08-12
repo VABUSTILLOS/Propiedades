@@ -11,12 +11,12 @@ export function estimatePredial(price: number): number {
   return Math.round(price * PREDIAL_RATE);
 }
 
-export function estimateEscrituracion(price: number): number {
-  return Math.round(price * ESCRITURACION_RATE);
-}
-
 export function estimateMantenimiento(price: number): number {
   return Math.round(price * MANTENIMIENTO_RATE);
+}
+
+export function estimateEscrituracion(price: number): number {
+  return Math.round(price * ESCRITURACION_RATE);
 }
 
 /**

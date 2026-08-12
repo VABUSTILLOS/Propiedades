@@ -24,6 +24,12 @@ import {
 import { MarketPanel } from "@/modules/market-data/components/market-panel";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  estimateMantenimiento,
+  estimatePredial,
+  formatMxn,
+} from "@/modules/lib/real-estate";
+import { DownloadInvestmentPdfButton } from "@/modules/market-data/components/download-investment-pdf-button";
 
 type Props = {
   property: PropertiesRow;
@@ -132,6 +138,25 @@ function ResidentialView({
   );
 }
 
+/**
+ * Estimated monthly rent potential based on the listing price and category.
+ * Local/bodega properties use a flat 0.85% rate; everything else uses
+ * a tiered rate that decreases as price increases.
+ */
+function calcularPosibleRenta(property: PropertiesRow): number {
+  const price = property.price;
+  const category = property.category;
+
+  if (category === "local" || category === "bodega") {
+    return price * 0.0085;
+  }
+  if (price <= 1_000_000) return price * 0.008;
+  if (price <= 1_500_000) return price * 0.009;
+  if (price <= 2_500_000) return price * 0.0075;
+  if (price <= 3_500_000) return price * 0.007;
+  return price * 0.006;
+}
+
 function InvestorView({
   property,
   benchmark,
@@ -149,11 +174,6 @@ function InvestorView({
   const precioM2Terreno =
     property.precio_m2_terreno ??
     (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
-
-  const posibleRenta = estimateMonthlyRent(
-    property.price,
-    property.category,
-  );
 
   const benchmarkConst =
     benchmark?.avg_price_m2_const != null
@@ -184,7 +204,16 @@ function InvestorView({
           />
           <FinancialRow
             label="Posible Renta"
-            value={`$${posibleRenta.toLocaleString()}/mes`}
+            value={`$${Math.round(calcularPosibleRenta(property)).toLocaleString()}/mes`}
+          />
+          <FinancialRow
+            label="Predial estimado (anual)"
+            value={formatMxn(estimatePredial(property.price))}
+          />
+          <FinancialRow
+            label="Mantenimiento anual estimado"
+            value={formatMxn(estimateMantenimiento(property.price))}
+            hint="1% del valor de la propiedad"
           />
           <FinancialRow
             label="Precio por m² construido"
@@ -316,6 +345,13 @@ function InvestmentDealPanel({
           <Badge className={cn("text-xs", dealTone)}>{dealLabel}</Badge>
         </div>
       </div>
+
+      <DownloadInvestmentPdfButton
+        property={property}
+        benchmark={benchmark}
+        discountPct={discountPct}
+        className="mt-3 w-full"
+      />
 
       <dl className="mt-4 space-y-3 text-sm">
         {kpis.map((kpi) => (
