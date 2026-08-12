@@ -1,0 +1,12 @@
+{
+  "url": "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/v1c1097l1005p2?sort=most_lowered_price",
+  "captured_at": "2026-08-12T15:42:26.369564+00:00",
+  "page_type": "list",
+  "discovered_from": {
+    "page": "start-1",
+    "url": "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/v1c1097l1005p1"
+  },
+  "errors": {
+    "http": "Ignoring non-200 response"
+  }
+}
