@@ -24,6 +24,7 @@ interface SearchFilterState {
   city: string;
   minPrice: string;
   maxPrice: string;
+  minBedrooms: string;
   sortBy: string;
 }
 
@@ -48,6 +49,9 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   const [city, setCity] = useState(searchParams.get("city") ?? "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") ?? "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
+  const [minBedrooms, setMinBedrooms] = useState(
+    searchParams.get("minBedrooms") ?? "",
+  );
   const [sortBy, setSortBy] = useState(searchParams.get("sortBy") ?? "newest");
 
   // Mirror of the current filter state used to build URLs even before React
@@ -59,6 +63,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     city,
     minPrice,
     maxPrice,
+    minBedrooms,
     sortBy,
   });
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -79,6 +84,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     if (next.city) params.set("city", next.city);
     if (next.minPrice) params.set("minPrice", next.minPrice);
     if (next.maxPrice) params.set("maxPrice", next.maxPrice);
+    if (next.minBedrooms) params.set("minBedrooms", next.minBedrooms);
     if (next.sortBy && next.sortBy !== "newest") params.set("sortBy", next.sortBy);
     return params;
   };
@@ -113,6 +119,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     setCity("");
     setMinPrice("");
     setMaxPrice("");
+    setMinBedrooms("");
     setSortBy("newest");
     stateRef.current = {
       query: "",
@@ -121,6 +128,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
       city: "",
       minPrice: "",
       maxPrice: "",
+      minBedrooms: "",
       sortBy: "newest",
     };
     router.replace("/search", { scroll: false });
@@ -221,6 +229,29 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             placeholder="10,000,000"
             className="rounded-full"
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="search-bedrooms">Recámaras</Label>
+          <Select
+            value={minBedrooms}
+            onValueChange={(v) => {
+              const next = v ?? "";
+              setMinBedrooms(next);
+              changeImmediate({ minBedrooms: next });
+            }}
+          >
+            <SelectTrigger id="search-bedrooms" className="rounded-full">
+              <SelectValue placeholder="Cualquiera" />
+            </SelectTrigger>
+            <SelectContent>
+              {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <SelectItem key={n} value={String(n)}>
+                  {n === 7 ? "7 o más" : `${n}+`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
