@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyFavorites } from "@/modules/favorites/queries";
+import { getMyLists, getListContainmentByProperty } from "@/modules/favorites/lists-queries";
 import { FavoritesView } from "@/modules/favorites/components/favorites-view";
 import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-panel";
 import { getChatMessages } from "@/modules/co-shopping/queries";
@@ -27,6 +28,11 @@ export default async function FavoritesPage() {
   }
 
   const favorites = await getMyFavorites(user.id);
+  const lists = await getMyLists(user.id);
+  const containingByProperty = await getListContainmentByProperty(
+    user.id,
+    favorites.map((f) => f.property_id),
+  );
 
   const initialChat = Object.fromEntries(
     await Promise.all(
@@ -56,7 +62,11 @@ export default async function FavoritesPage() {
         )}
       </div>
 
-      <FavoritesView favorites={favorites} />
+      <FavoritesView
+        favorites={favorites}
+        lists={lists}
+        containingByProperty={containingByProperty}
+      />
 
       <div className="mt-8">
         <CoShoppingPanel favorites={favorites} initialChat={initialChat} />

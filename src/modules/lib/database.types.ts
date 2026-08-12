@@ -236,6 +236,23 @@ export type BuyerFavoritesRow = {
   updated_at: string;
 }
 
+export type FavoriteListsRow = {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type FavoriteListItemsRow = {
+  id: string;
+  list_id: string;
+  favorite_id: string;
+  position: number;
+  created_at: string;
+}
+
 export type BidsRow = {
   id: string;
   transaction_id: string | null;
@@ -264,6 +281,8 @@ export type Database = {
       digital_flyers: { Row: DigitalFlyersRow; Insert: Insertable<DigitalFlyersRow>; Update: Partial<DigitalFlyersRow>; Relationships: [] };
       flyer_analytics: { Row: FlyerAnalyticsRow; Insert: Insertable<FlyerAnalyticsRow>; Update: Partial<FlyerAnalyticsRow>; Relationships: [] };
       buyer_favorites: { Row: BuyerFavoritesRow; Insert: Insertable<BuyerFavoritesRow>; Update: Partial<BuyerFavoritesRow>; Relationships: [] };
+      favorite_lists: { Row: FavoriteListsRow; Insert: Insertable<FavoriteListsRow>; Update: Partial<FavoriteListsRow>; Relationships: [] };
+      favorite_list_items: { Row: FavoriteListItemsRow; Insert: Insertable<FavoriteListItemsRow>; Update: Partial<FavoriteListItemsRow>; Relationships: [] };
       bids: { Row: BidsRow; Insert: Insertable<BidsRow>; Update: Partial<BidsRow>; Relationships: [] };
       property_local_surveys: { Row: PropertyLocalSurveysRow; Insert: Insertable<PropertyLocalSurveysRow>; Update: Partial<PropertyLocalSurveysRow>; Relationships: [] };
       co_shopping_chat: { Row: CoShoppingChatRow; Insert: Insertable<CoShoppingChatRow>; Update: Partial<CoShoppingChatRow>; Relationships: [] };

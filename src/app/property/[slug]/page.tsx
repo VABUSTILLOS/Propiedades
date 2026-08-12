@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowDownRight, ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowUpRight, ListPlus } from "lucide-react";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
 import { isFavoriteSaved } from "@/modules/favorites/queries";
+import { getMyLists, getListsContainingProperty } from "@/modules/favorites/lists-queries";
 import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
+import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
+import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
 import {
   getBenchmark,
   getColoniaDiscount,
@@ -15,6 +18,7 @@ import { InquireButton } from "@/modules/transactions/components/inquire-button"
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { SiteHeader } from "@/modules/home/components/site-header";
@@ -45,6 +49,10 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const user = await getCurrentUser();
   const canInquire = user?.id !== listing.owner_id;
   const isSaved = user ? await isFavoriteSaved(user.id, listing.id) : false;
+  const lists = user ? await getMyLists(user.id) : [];
+  const containingListIds = user
+    ? await getListsContainingProperty(user.id, listing.id)
+    : [];
 
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
@@ -106,6 +114,32 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               propertyId={listing.id}
               propertySlug={slug}
               initialSaved={isSaved}
+            />
+
+            <AddToListDialog
+              propertyId={listing.id}
+              propertySlug={slug}
+              lists={lists}
+              containingListIds={containingListIds}
+              className={buttonVariants({
+                variant: "outline",
+                className: "w-full",
+              })}
+            >
+              <ListPlus className="size-4" />
+              Añadir a lista
+            </AddToListDialog>
+
+            <ShareWhatsAppButton
+              property={{
+                title: listing.title,
+                colonia: listing.colonia,
+                city: listing.city,
+                price: listing.price,
+                currency: listing.currency,
+                slug: listing.slug,
+              }}
+              className="w-full"
             />
 
             <Card className="sticky top-24 rounded-2xl shadow-sm">

@@ -4,19 +4,24 @@ import { useState } from "react";
 
 import { FavoritesList } from "@/modules/favorites/components/favorites-list";
 import { FavoritesKanban } from "@/modules/favorites/components/favorites-kanban";
+import { ListsView } from "@/modules/favorites/components/lists-view";
 import { cn } from "@/lib/utils";
 import type { FavoriteWithProperty } from "@/modules/favorites/queries";
+import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
 
 type Props = {
   favorites: FavoriteWithProperty[];
+  lists: FavoriteListWithMeta[];
+  containingByProperty: Record<string, string[]>;
 };
 
-type ViewMode = "list" | "kanban";
+type ViewMode = "list" | "kanban" | "lists";
 
 /**
- * Toggle between the ranked list view and the CRM tier Kanban board.
+ * Toggle between the ranked list view, the CRM tier Kanban board, and the
+ * custom favorites lists.
  */
-export function FavoritesView({ favorites }: Props) {
+export function FavoritesView({ favorites, lists, containingByProperty }: Props) {
   const [mode, setMode] = useState<ViewMode>("list");
 
   return (
@@ -46,12 +51,34 @@ export function FavoritesView({ favorites }: Props) {
         >
           Kanban
         </button>
+        <button
+          type="button"
+          onClick={() => setMode("lists")}
+          className={cn(
+            "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+            mode === "lists"
+              ? "bg-background shadow-sm"
+              : "text-muted-foreground hover:text-foreground",
+          )}
+        >
+          Listas
+        </button>
       </div>
 
       {mode === "list" ? (
-        <FavoritesList initialFavorites={favorites} />
+        <FavoritesList
+          initialFavorites={favorites}
+          lists={lists}
+          containingByProperty={containingByProperty}
+        />
+      ) : mode === "kanban" ? (
+        <FavoritesKanban
+          initialFavorites={favorites}
+          lists={lists}
+          containingByProperty={containingByProperty}
+        />
       ) : (
-        <FavoritesKanban initialFavorites={favorites} />
+        <ListsView lists={lists} />
       )}
     </div>
   );

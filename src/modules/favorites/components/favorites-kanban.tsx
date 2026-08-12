@@ -19,22 +19,26 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { GripVertical, Trash2 } from "lucide-react";
+import { GripVertical, ListPlus, Trash2 } from "lucide-react";
 
 import {
   removeFavorite,
   reorderFavoritesInColumn,
   setTierColumn,
 } from "@/modules/favorites/actions";
+import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { TierColumn } from "@/modules/lib/schemas";
 import type { FavoriteWithProperty } from "@/modules/favorites/queries";
+import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
 
 type Props = {
   initialFavorites: FavoriteWithProperty[];
+  lists: FavoriteListWithMeta[];
+  containingByProperty: Record<string, string[]>;
 };
 
 const COLUMNS: { id: TierColumn; label: string; dot: string }[] = [
@@ -69,7 +73,11 @@ function partition(
  * 3-column CRM Kanban board for favorites: #1 Top Choice / Plan B / Descartadas.
  * Cards can be dragged within a column (reorder) or across columns (re-tier).
  */
-export function FavoritesKanban({ initialFavorites }: Props): React.JSX.Element {
+export function FavoritesKanban({
+  initialFavorites,
+  lists,
+  containingByProperty,
+}: Props): React.JSX.Element {
   const [columns, setColumns] = useState<Record<TierColumn, FavoriteWithProperty[]>>(
     () => partition(initialFavorites),
   );
@@ -218,6 +226,8 @@ export function FavoritesKanban({ initialFavorites }: Props): React.JSX.Element 
               favorites={columns[col.id]}
               disabled={isPending}
               onRemove={remove}
+              lists={lists}
+              containingByProperty={containingByProperty}
             />
           ))}
         </div>
@@ -239,6 +249,8 @@ function KanbanColumn({
   favorites,
   disabled,
   onRemove,
+  lists,
+  containingByProperty,
 }: {
   id: TierColumn;
   label: string;
@@ -246,6 +258,8 @@ function KanbanColumn({
   favorites: FavoriteWithProperty[];
   disabled: boolean;
   onRemove: (id: string) => void;
+  lists: FavoriteListWithMeta[];
+  containingByProperty: Record<string, string[]>;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id, data: { column: id } });
 
@@ -277,6 +291,12 @@ function KanbanColumn({
               column={id}
               disabled={disabled}
               onRemove={onRemove}
+              lists={lists}
+              containingListIds={
+                favorite.property
+                  ? (containingByProperty[favorite.property.id] ?? [])
+                  : []
+              }
             />
           ))}
         </div>
@@ -298,11 +318,15 @@ function SortableCard({
   column,
   disabled,
   onRemove,
+  lists,
+  containingListIds,
 }: {
   favorite: FavoriteWithProperty;
   column: TierColumn;
   disabled: boolean;
   onRemove: (id: string) => void;
+  lists: FavoriteListWithMeta[];
+  containingListIds: string[];
 }) {
   const {
     attributes,
@@ -324,6 +348,8 @@ function SortableCard({
         dragHandleProps={{ ...attributes, ...listeners }}
         disabled={disabled}
         onRemove={onRemove}
+        lists={lists}
+        containingListIds={containingListIds}
       />
     </div>
   );
@@ -334,12 +360,16 @@ function FavoriteCardBody({
   dragHandleProps,
   disabled,
   onRemove,
+  lists,
+  containingListIds,
   isOverlay,
 }: {
   favorite: FavoriteWithProperty;
   dragHandleProps?: Record<string, unknown>;
   disabled?: boolean;
   onRemove?: (id: string) => void;
+  lists?: FavoriteListWithMeta[];
+  containingListIds?: string[];
   isOverlay?: boolean;
 }) {
   const property = favorite.property;
@@ -389,6 +419,25 @@ function FavoriteCardBody({
           </span>
         )}
       </div>
+
+      {lists && onRemove && (
+        <AddToListDialog
+          propertyId={property?.id ?? ""}
+          lists={lists}
+          initiallyContaining={containingListIds ?? []}
+          trigger={
+            <Button
+              type="button"
+              size="icon-sm"
+              variant="ghost"
+              disabled={disabled || !property}
+              aria-label={`Add ${property?.title ?? "property"} to a list`}
+            >
+              <ListPlus className="size-4" />
+            </Button>
+          }
+        />
+      )}
 
       {onRemove && (
         <Button

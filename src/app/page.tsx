@@ -9,7 +9,7 @@ import {
   getSavedPropertyIds,
   getTopRatedListings,
 } from "@/modules/home/queries";
-import { HeroSearch } from "@/modules/home/components/hero-search";
+import { ChatWidget } from "@/modules/chat/components/chat-widget";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { PropertyCard } from "@/modules/home/components/property-card";
@@ -34,7 +34,6 @@ export default async function HomePage() {
     getTopRatedListings(6),
   ]);
 
-  const cityNames = stats.cities.map((city) => city.name);
   const topCities = stats.cities.slice(0, 3);
   const savedIds = await getSavedPropertyIds(user?.id ?? null);
 
@@ -83,7 +82,7 @@ export default async function HomePage() {
             </p>
 
             <div className="mt-8 w-full max-w-3xl">
-              <HeroSearch cities={cityNames} />
+              <ChatWidget />
             </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">

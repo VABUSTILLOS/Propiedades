@@ -19,23 +19,31 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { GripVertical, Trash2 } from "lucide-react";
+import { GripVertical, ListPlus, Trash2 } from "lucide-react";
 
 import { reorderFavorites, removeFavorite } from "@/modules/favorites/actions";
+import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { FavoriteWithProperty } from "@/modules/favorites/queries";
+import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
 
 type Props = {
   initialFavorites: FavoriteWithProperty[];
+  lists: FavoriteListWithMeta[];
+  containingByProperty: Record<string, string[]>;
 };
 
 /**
  * Drag-to-rank tier list backed by React Query-style optimistic reorder.
  * Persists the full ordering via reorderFavorites on drag end.
  */
-export function FavoritesList({ initialFavorites }: Props) {
+export function FavoritesList({
+  initialFavorites,
+  lists,
+  containingByProperty,
+}: Props) {
   const [favorites, setFavorites] = useState(initialFavorites);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +106,12 @@ export function FavoritesList({ initialFavorites }: Props) {
                 rank={index + 1}
                 disabled={isPending}
                 onRemove={remove}
+                lists={lists}
+                containingListIds={
+                  favorite.property
+                    ? (containingByProperty[favorite.property.id] ?? [])
+                    : []
+                }
               />
             ))}
           </ul>
@@ -123,12 +137,16 @@ function SortableRow({
   rank,
   disabled,
   onRemove,
+  lists,
+  containingListIds,
 }: {
   favorite: FavoriteWithProperty;
   rank: number;
   disabled: boolean;
   onRemove: (id: string) => void;
-}) {
+  lists: FavoriteListWithMeta[];
+  containingListIds: string[];
+ }) {
   const {
     attributes,
     listeners,
@@ -187,6 +205,23 @@ function SortableRow({
           </p>
         )}
       </div>
+
+      <AddToListDialog
+        propertyId={property?.id ?? ""}
+        lists={lists}
+        initiallyContaining={containingListIds}
+        trigger={
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="ghost"
+            disabled={disabled || !property}
+            aria-label={`Add ${property?.title ?? "property"} to a list`}
+          >
+            <ListPlus className="size-4" />
+          </Button>
+        }
+      />
 
       <Button
         size="icon-sm"

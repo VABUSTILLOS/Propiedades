@@ -360,6 +360,38 @@ export const favoriteKanbanReorderSchema = z.object({
   orderedIds: z.array(uuidSchema).min(1),
 });
 
+// --- Favorites: custom lists ---------------------------------------------------
+export const favoriteListCreateSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "El nombre de la lista es requerido")
+    .max(80, "El nombre no puede exceder 80 caracteres"),
+  description: z
+    .string()
+    .trim()
+    .max(500, "La descripción no puede exceder 500 caracteres")
+    .optional(),
+});
+
+export const favoriteListUpdateSchema = favoriteListCreateSchema.extend({
+  listId: uuidSchema,
+});
+
+/**
+ * Add a property to one or more lists. Also ensures the property is saved
+ * as a favorite (lists are linked to favorites).
+ */
+export const favoriteListAddSchema = z.object({
+  propertyId: uuidSchema,
+  listIds: z.array(uuidSchema).max(100),
+});
+
+export const favoriteListRemoveItemSchema = z.object({
+  listId: uuidSchema,
+  favoriteId: uuidSchema,
+});
+
 // --- Bids ----------------------------------------------------------------------------
 export const bidCreateSchema = z.object({
   propertyId: uuidSchema,
