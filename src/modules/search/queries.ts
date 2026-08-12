@@ -10,6 +10,7 @@ import type {
   PropertyCategory,
   PropertyDealType,
 } from "@/modules/lib/database.types";
+import type { MapBounds } from "@/modules/lib/schemas";
 
 /** Max rows fetched for the in-memory "hot" sort before slicing to the limit. */
 export const HOT_FETCH_CAP = 300;
@@ -31,6 +32,25 @@ export type SearchFilters = {
   limit?: number;
   /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
   isLand?: boolean;
+  /** Restrict to a map viewport. Rows without coordinates are excluded. */
+  bounds?: MapBounds;
+  /** Row offset for paginated fetches (infinite scroll). */
+  offset?: number;
+};
+
+/** Lightweight pin payload for the interactive city map. */
+export type PropertyMapMarker = {
+  id: string;
+  title: string;
+  slug: string;
+  city: string | null;
+  colonia: string | null;
+  price: number;
+  currency: string;
+  type: "sale" | "rent";
+  images: string[] | null;
+  lat: number;
+  lng: number;
 };
 
 /** Minimal chainable interface shared by every Supabase query builder.
@@ -94,6 +114,13 @@ function applyFilters<Q extends FilterableQuery<Q>>(
       `title.ilike.%${filters.query}%,description.ilike.%${filters.query}%,colonia.ilike.%${filters.query}%,city.ilike.%${filters.query}%`,
     );
   }
+  if (filters.bounds) {
+    q = q
+      .gte("lat", filters.bounds.minLat)
+      .lte("lat", filters.bounds.maxLat)
+      .gte("lng", filters.bounds.minLng)
+      .lte("lng", filters.bounds.maxLng);
+  }
 
   return q;
 }
@@ -105,10 +132,19 @@ function applyFilters<Q extends FilterableQuery<Q>>(
 export async function searchListings(
   filters: SearchFilters,
 ): Promise<PropertiesRow[]> {
+  const { rows } = await selectListingsPage(filters);
+  return rows;
+}
+
+/** Page select with exact count, honoring bounds + `offset`/`range`. */
+async function selectListingsPage(filters: SearchFilters): Promise<{
+  rows: PropertiesRow[];
+  total: number;
+}> {
   const supabase = await createSupabaseServerClient();
 
   let query = applyFilters(
-    supabase.from("properties").select("*"),
+    supabase.from("properties").select("*", { count: "exact" }),
     filters,
   );
 
@@ -126,11 +162,13 @@ export async function searchListings(
       query = query.order("created_at", { ascending: false });
   }
 
-  const { data: rows } = await query
-    .limit(filters.limit ?? 24)
+  const offset = filters.offset ?? 0;
+  const limit = filters.limit ?? 24;
+  const { data: rows, count } = await query
+    .range(offset, offset + limit - 1)
     .returns<PropertiesRow[]>();
 
-  return rows ?? [];
+  return { rows: rows ?? [], total: count ?? 0 };
 }
 
 export type ListingWithHot = PropertiesRow & { hotScore: number | null };
@@ -153,35 +191,58 @@ export async function enrichWithHot(
 }
 
 /**
- * Listing search that also carries a `hotScore` (opportunity 0–100).
+ * Paginated listing search that also carries a `hotScore` (opportunity 0–100)
+ * and the exact match count. This is the endpoint backing both the page
+ * render and `GET /api/search` for infinite scroll.
  *
  * `sortBy: "hot"` is applied in memory: it fetches up to `HOT_FETCH_CAP`
  * rows (filters applied in SQL), computes the hotness score per row, sorts
- * descending (null scores last) and slices to the requested limit.
+ * descending (null scores last) and slices to the requested page window.
  *
  * Every other sort keeps SQL ordering and just enriches the page rows so the
  * gauge renders on each card.
  */
-export async function searchListingsWithHot(
-  filters: SearchFilters,
-): Promise<ListingWithHot[]> {
-  const supabase = await createSupabaseServerClient();
-
+export async function searchListingsPage(filters: SearchFilters): Promise<{
+  items: ListingWithHot[];
+  total: number;
+}> {
   if (filters.sortBy === "hot") {
-    const base = applyFilters(supabase.from("properties").select("*"), filters);
+    const supabase = await createSupabaseServerClient();
 
-    const { data: rows } = await base
+    const base = applyFilters(
+      supabase.from("properties").select("*", { count: "exact" }),
+      filters,
+    );
+
+    const { data: rows, count } = await base
       .order("created_at", { ascending: false })
       .limit(HOT_FETCH_CAP)
       .returns<PropertiesRow[]>();
 
     const enriched = await enrichWithHot(rows ?? []);
     enriched.sort((a, b) => (b.hotScore ?? -1) - (a.hotScore ?? -1));
-    return enriched.slice(0, filters.limit ?? 24);
+
+    const offset = filters.offset ?? 0;
+    const limit = filters.limit ?? 24;
+    return {
+      items: enriched.slice(offset, offset + limit),
+      total: count ?? 0,
+    };
   }
 
-  const rows = await searchListings(filters);
-  return enrichWithHot(rows);
+  const { rows, total } = await selectListingsPage(filters);
+  return { items: await enrichWithHot(rows), total };
+}
+
+/**
+ * Listing search that also carries a `hotScore` (opportunity 0–100).
+ * Thin wrapper over `searchListingsPage` for the first page.
+ */
+export async function searchListingsWithHot(
+  filters: SearchFilters,
+): Promise<ListingWithHot[]> {
+  const { items } = await searchListingsPage(filters);
+  return items;
 }
 
 /**
@@ -216,4 +277,35 @@ export async function getSearchableCities(): Promise<string[]> {
 
   const cities = [...new Set((rows ?? []).map((r) => r.city).filter(Boolean))];
   return cities.sort();
+}
+
+/**
+ * Lightweight pins for the city map: only the columns the markers need, all
+ * matching filters applied (bounds included). Capped at 500 so a wide viewport
+ * over a large catalog stays fast.
+ */
+export async function getListingMarkers(
+  filters: Omit<SearchFilters, "limit" | "sortBy">,
+): Promise<PropertyMapMarker[]> {
+  const supabase = await createSupabaseServerClient();
+
+  const query = applyFilters(
+    supabase
+      .from("properties")
+      .select("id,title,slug,city,colonia,price,currency,type,images,lat,lng"),
+    filters,
+  );
+
+  const { data: rows } = await query
+    .order("created_at", { ascending: false })
+    .limit(500)
+    .returns<
+      Array<
+        Omit<PropertyMapMarker, "lat" | "lng"> & { lat: number | null; lng: number | null }
+      >
+    >();
+
+  return (rows ?? [])
+    .filter((r) => r.lat != null && r.lng != null)
+    .map((r) => ({ ...r, lat: r.lat as number, lng: r.lng as number }));
 }

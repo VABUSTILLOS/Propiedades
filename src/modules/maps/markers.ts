@@ -16,6 +16,8 @@ export type MapMarkerHandle = {
     eventName: string,
     handler: (event?: { stop?: () => void }) => void,
   ): { remove: () => void };
+  /** The raw marker instance, for tools that need it (e.g. MarkerClusterer). */
+  getMarker(): google.maps.Marker | google.maps.marker.AdvancedMarkerElement;
 };
 
 type MarkerOptions = {
@@ -27,6 +29,10 @@ type MarkerOptions = {
   color?: string;
   /** Icon URL fallback used when advanced markers are unavailable. */
   iconUrl?: string;
+  /** Custom marker DOM (advanced markers only) — e.g. price pills. */
+  content?: HTMLElement;
+  /** Text label fallback used when advanced markers are unavailable. */
+  label?: string;
 };
 
 /**
@@ -60,26 +66,29 @@ export function createMarker(
   google: GoogleMaps,
   options: MarkerOptions,
 ): MapMarkerHandle {
-  const { map, position, title, draggable, color, iconUrl } = options;
+  const { map, position, title, draggable, color, iconUrl, content, label } =
+    options;
 
   if (
     GOOGLE_MAPS_ADVANCED &&
     typeof google.maps.marker?.AdvancedMarkerElement === "function"
   ) {
-    let content: HTMLElement | string | undefined;
-    if (color) {
+    let pinContent: HTMLElement | string | undefined;
+    if (content) {
+      pinContent = content;
+    } else if (color) {
       const pin = new google.maps.marker.PinElement({
         background: color,
         glyphColor: "#ffffff",
       });
-      content = pin.element;
+      pinContent = pin.element;
     }
     const marker = new google.maps.marker.AdvancedMarkerElement({
       map,
       position,
       title,
       draggable,
-      content,
+      content: pinContent,
     });
     return {
       setPosition: (pos) => {
@@ -95,6 +104,7 @@ export function createMarker(
           remove: () => marker.removeEventListener(eventName, handler),
         };
       },
+      getMarker: () => marker,
     };
   }
 
@@ -104,6 +114,7 @@ export function createMarker(
     title,
     draggable,
     ...(iconUrl ? { icon: { url: iconUrl } } : {}),
+    ...(label ? { label: { text: label, color: "#ffffff", fontWeight: "700" as const, fontSize: "12px" } } : {}),
   });
   return {
     setPosition: (pos) => {
@@ -115,6 +126,7 @@ export function createMarker(
     },
     addListener: (eventName, handler) =>
       google.maps.event.addListener(marker, eventName, handler),
+    getMarker: () => marker,
   };
 }
 
