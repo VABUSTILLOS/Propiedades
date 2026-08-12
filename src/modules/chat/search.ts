@@ -3,7 +3,7 @@ import "server-only";
 import { chatCompletion } from "@/modules/ai/server";
 import { embeddingsConfigured, searchSemantic } from "@/modules/ai/embeddings";
 import { extractFilters } from "@/modules/chat/extract";
-import { interpretQuery } from "@/modules/chat/interpret";
+import { findKnownCity, interpretQuery, normalizeCityName, priorityKeyword } from "@/modules/chat/interpret";
 import type { ChatFilters, ChatResult, ChatResponse } from "@/modules/chat/types";
 import { searchListings } from "@/modules/search/queries";
 import type { PropertiesRow } from "@/modules/lib/database.types";
@@ -35,6 +35,10 @@ type TemplateContext = {
   city?: string;
   maxPrice?: number;
   query?: string;
+  /** Known city (no inventory) that the user asked about. */
+  knownCity?: string;
+  /** Cities that DO have inventory, for the honest no-inventory reply. */
+  cities?: string[];
   /** Human-readable note appended when some filters were dropped to find results. */
   relaxedNote?: string;
 };
@@ -46,7 +50,15 @@ function buildTemplateReply(ctx: TemplateContext): string {
   const keyword = ctx.query ? ` que coincidan con "${ctx.query}"` : "";
 
   if (ctx.count === 0) {
-    return `No encontré ${what}${where}${budget}${keyword}. Prueba ajustar el precio o la ubicación, o pide "ver alternativas".`;
+    if (ctx.knownCity) {
+      const coverage = ctx.cities?.length
+        ? ` Hoy publico propiedades en ${ctx.cities.join(", ")}.`
+        : "";
+      const rentHint = ctx.type === "rent" ? " No tengo rentas en el catálogo por ahora, solo venta." : "";
+      return `No tengo inventario aún en ${ctx.knownCity}.${coverage}${rentHint} Prueba ajustar la ciudad o pide "ver alternativas".`;
+    }
+    const rentHint = ctx.type === "rent" ? " No tengo rentas en el catálogo por ahora, solo venta." : "";
+    return `No encontré ${what}${where}${budget}${keyword}.${rentHint} Prueba ajustar el precio o la ubicación, o pide "ver alternativas".`;
   }
   const noun = ctx.count === 1 ? "resultado" : "resultados";
   const note = ctx.relaxedNote ? ` ${ctx.relaxedNote}` : "";
@@ -79,6 +91,15 @@ function toChatResult(row: PropertiesRow, relaxed?: boolean): ChatResult {
 export async function interpretMessage(message: string, cities: string[]): Promise<ChatFilters> {
   const llmFilters = await extractFilters(message, cities);
   if (llmFilters && Object.keys(llmFilters).length > 0) {
+    // The LLM often omits `query` even for category words ("casas", "terreno"),
+    // which lets unrelated listings (land, warehouses) leak into the results.
+    // Merge the regex-derived high-value keyword so "casas" still excludes
+    // terrain and vice versa. The regex keyword is only a *priority* keyword,
+    // so a refinement like "y más baratas" never overrides a previous query.
+    if (!llmFilters.query) {
+      const keyword = priorityKeyword(message);
+      if (keyword) llmFilters.query = keyword;
+    }
     return llmFilters;
   }
   return interpretQuery(message, cities);
@@ -89,13 +110,32 @@ export function mergeFilters(previous: ChatFilters | undefined, next: ChatFilter
   return { ...previous, ...next };
 }
 
-/** Natural-language reply. Prefers the LLM; falls back to a clean template. */
+/** Natural-language reply. Prefers the LLM; falls back to a clean template.
+ * When filters were relaxed, the template is used directly: it is the only
+ * variant guaranteed not to re-assert a dropped filter (e.g. claiming "casas"
+ * after the keyword was removed). */
 async function buildReply(
   count: number,
   filters: ChatFilters,
   userMessage: string,
   relaxedNote?: string,
+  knownCity?: string,
+  cities?: string[],
 ): Promise<string> {
+  const template = () =>
+    buildTemplateReply({
+      count,
+      type: filters.type,
+      city: filters.city,
+      maxPrice: filters.maxPrice,
+      query: filters.query,
+      knownCity,
+      cities,
+      relaxedNote,
+    });
+
+  if (relaxedNote) return template();
+
   const result = await chatCompletion({
     temperature: 0.5,
     maxTokens: 120,
@@ -103,6 +143,9 @@ async function buildReply(
       "You are a friendly Mexican real-estate assistant. Reply in Spanish, 1–2 short sentences, " +
       "no markdown, no emoji. State how many listings you found and the filters applied. " +
       "If none were found, suggest adjusting price or location. " +
+      (knownCity
+        ? `The user asked about ${knownCity}, where we have no inventory yet. Say so honestly and list the cities where we DO have inventory (${cities?.join(", ") ?? "none"}). Never show listings from other cities as if they were in ${knownCity}.`
+        : "") +
       (relaxedNote ? `Note: ${relaxedNote}` : ""),
     user:
       `User said: "${userMessage}"\n` +
@@ -112,14 +155,7 @@ async function buildReply(
 
   const content = result?.content?.trim();
   if (content && content.length <= 300) return content;
-  return buildTemplateReply({
-    count,
-    type: filters.type,
-    city: filters.city,
-    maxPrice: filters.maxPrice,
-    query: filters.query,
-    relaxedNote,
-  });
+  return template();
 }
 
 /** True when the property satisfies the structured chat filters (semantic
@@ -171,6 +207,19 @@ async function fuseSemanticMatches(
  *   "alternativas", labelling every relaxed result. `type` (sale/rent) is
  *   never dropped so we never present sale listings as rent and vice versa.
  */
+/** True when the message is a bare "ver alternativas" command (no search
+ * terms of its own). In that case we must NOT interpret it as a search for
+ * the word "alternativa" — we keep the previous turn's filters and just run
+ * them in alternatives mode. */
+export function isAlternativesCommand(message: string): boolean {
+  const text = message.trim().toLowerCase();
+  if (!/(?:ver|mu[eé]strame|dame|quiero)\s+alternativas?\b|alternativas?\s*$/i.test(text)) {
+    return false;
+  }
+  // No city, price, type or category intent in the same message.
+  return !/(en\s+[a-záéíóúñü]{3,}|menor|menos|mayor|más|de\s+\$\d|\d[\d.,]*\s*m[²2]|\b(renta|venta|terreno|lote|casa|departamento|bodega)\b)/i.test(text);
+}
+
 export async function runChatSearch(
   message: string,
   cities: string[],
@@ -178,8 +227,45 @@ export async function runChatSearch(
   options: { mode?: "strict" | "alternatives" } = {},
 ): Promise<ChatResponse> {
   const mode = options.mode ?? "strict";
-  const extracted = await interpretMessage(message, cities);
+  const extracted = isAlternativesCommand(message)
+    ? {}
+    : await interpretMessage(message, cities);
   const filters = mergeFilters(previousFilters, extracted);
+
+  // A known city must never resolve to listings in other cities. When the user
+  // names a known city, override any stale city from a previous turn: pin the
+  // catalog spelling when that city IS in the catalog, otherwise clear the
+  // city filters entirely and (in strict mode) answer honestly that there is
+  // no inventory there yet.
+  const mentionedCity = findKnownCity(message);
+  let knownCityNoInventory: string | undefined;
+  if (mentionedCity) {
+    const catalogCity = normalizeCityName(mentionedCity, cities);
+    if (catalogCity) {
+      filters.city = catalogCity;
+    } else {
+      knownCityNoInventory = mentionedCity;
+      // Keep the named city in the filters for the alternatives ladder so the
+      // "ciudad" step is a real drop (and reported). In strict mode we clear
+      // it before answering honestly, since we never search by it.
+      if (mode === "strict") {
+        delete filters.city;
+        delete filters.colonia;
+      } else {
+        filters.city = mentionedCity;
+      }
+    }
+  } else if (
+    mode === "alternatives" &&
+    filters.city &&
+    !normalizeCityName(filters.city, cities)
+  ) {
+    // A "ver alternativas" follow-up carries the city from the previous turn
+    // (saved in chat state) but names no city itself. If that city is a known
+    // place with no catalog inventory, treat it like a named known city so the
+    // ladder relaxes the CITY first (keeping the user's keyword, e.g. "casas").
+    knownCityNoInventory = filters.city;
+  }
 
   const search = (f: ChatFilters) =>
     searchListings({
@@ -188,8 +274,28 @@ export async function runChatSearch(
       sortBy: "newest",
     });
 
+  // Strict mode + known city without inventory: answer honestly, never relax
+  // the city (or anything else) to fill the screen with unrelated listings.
+  if (knownCityNoInventory && mode === "strict") {
+    const reply = await buildReply(0, filters, message, undefined, knownCityNoInventory, cities);
+    // Retain the named city in the returned filters so a follow-up
+    // "ver alternativas" can relax *that* city (the search itself never used
+    // it; the honest reply already explains the situation).
+    filters.city = mentionedCity;
+    return {
+      reply,
+      results: [],
+      filters,
+      matched: false,
+    };
+  }
+
   let rows = await search(filters);
   let relaxed: ChatResponse["relaxed"];
+  // Filters that actually produced the results. In strict mode this equals
+  // `filters`; after relaxing, it reflects the drops so the reply text never
+  // claims the results match a filter that was dropped.
+  let appliedFilters = filters;
 
   // In strict mode we never relax filters silently: an empty result is an
   // honest answer, not a licence to show unrelated properties.
@@ -198,24 +304,46 @@ export async function runChatSearch(
     // or city still surfaces *something* — but every result is labelled so
     // the user knows what was relaxed. type is deliberately excluded.
     const relaxedFilters = { ...filters };
-    const dropSteps: Array<{ name: string; drop: (f: ChatFilters) => void }> = [
-      {
-        name: `búsqueda ("${filters.query}")`,
-        drop: (f) => { delete f.query; },
-      },
-      {
-        name: "ciudad",
-        drop: (f) => { delete f.city; delete f.colonia; },
-      },
-      {
-        name: "precio",
-        drop: (f) => { delete f.minPrice; delete f.maxPrice; },
-      },
-      {
-        name: "tamaño o recámaras",
-        drop: (f) => { delete f.minM2; delete f.maxM2; delete f.minBedrooms; },
-      },
-    ];
+    // When the user named a known city with no inventory, the city is the
+    // obvious thing to relax first ("show me casas elsewhere"), not the
+    // keyword. Otherwise drop least-specific filters first.
+    const dropSteps: Array<{ name: string; drop: (f: ChatFilters) => void }> = knownCityNoInventory
+      ? [
+          {
+            name: "ciudad",
+            drop: (f) => { delete f.city; delete f.colonia; },
+          },
+          {
+            name: `búsqueda ("${filters.query}")`,
+            drop: (f) => { delete f.query; },
+          },
+          {
+            name: "precio",
+            drop: (f) => { delete f.minPrice; delete f.maxPrice; },
+          },
+          {
+            name: "tamaño o recámaras",
+            drop: (f) => { delete f.minM2; delete f.maxM2; delete f.minBedrooms; },
+          },
+        ]
+      : [
+          {
+            name: `búsqueda ("${filters.query}")`,
+            drop: (f) => { delete f.query; },
+          },
+          {
+            name: "ciudad",
+            drop: (f) => { delete f.city; delete f.colonia; },
+          },
+          {
+            name: "precio",
+            drop: (f) => { delete f.minPrice; delete f.maxPrice; },
+          },
+          {
+            name: "tamaño o recámaras",
+            drop: (f) => { delete f.minM2; delete f.maxM2; delete f.minBedrooms; },
+          },
+        ];
     const dropped: string[] = [];
     for (const step of dropSteps) {
       const before = JSON.stringify(relaxedFilters);
@@ -226,10 +354,11 @@ export async function runChatSearch(
       if (rows.length > 0) break;
     }
     if (rows.length > 0) {
-      relaxed = {
-        dropped,
-        note: `Mostrando alternativas sin filtro de ${dropped.join(" y ")}.`,
-      };
+      appliedFilters = relaxedFilters;
+      const note = knownCityNoInventory
+        ? `No tenemos inventario en ${knownCityNoInventory}; mostrando alternativas en otras ciudades.`
+        : `Mostrando alternativas sin filtro de ${dropped.join(" y ")}.`;
+      relaxed = { dropped, note };
     }
   }
 
@@ -237,12 +366,14 @@ export async function runChatSearch(
   // configured, rank the query vector against all active listings and fill
   // the remaining slots with matches that also pass the structured filters.
   // Without a GEMINI_API_KEY this is a no-op and the pipeline stays keyword-only.
-  if (filters.query) {
-    rows = await fuseSemanticMatches(rows, filters, filters.query);
+  // Skipped when relaxation dropped the query: re-adding keyword-ranked rows
+  // would silently restore the very filter the user asked to remove.
+  if (appliedFilters.query && !relaxed?.dropped.some((d) => d.startsWith("búsqueda"))) {
+    rows = await fuseSemanticMatches(rows, appliedFilters, appliedFilters.query);
   }
 
   const relaxedNote = relaxed?.note;
-  const reply = await buildReply(rows.length, filters, message, relaxedNote);
+  const reply = await buildReply(rows.length, appliedFilters, message, relaxedNote, knownCityNoInventory, cities);
 
   return {
     reply,

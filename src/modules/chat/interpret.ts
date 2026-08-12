@@ -161,6 +161,72 @@ export function normalizeCityName(raw: string, cities: string[]): string | undef
   return undefined;
 }
 
+/**
+ * Major Mexican cities we recognise even when there is no inventory for them
+ * yet. Folded (lowercase, accent-free) so "León" / "leon" both match. When a
+ * user names one of these we answer honestly ("no hay inventario en X") instead
+ * of silently ignoring the city and showing unrelated listings.
+ */
+const KNOWN_CITIES: Array<[RegExp, string]> = [
+  [/\b(?:cdmx|ciudad\s+de\s+mexico|mexico\s+city|distrito\s+federal)\b/, "Ciudad de México"],
+  [/\b(?:cd\.?\s+juarez|ciudad\s+juarez)\b/, "Ciudad Juárez"],
+  [/\b(?:gdl|zapopan|guadalajara)\b/, "Guadalajara"],
+  [/\b(?:mty|monterrey|san\s+pedro\s+garza\s+garcia|apodaca|guadalupe)\b/, "Monterrey"],
+  [/\bpuebla\b/, "Puebla"],
+  [/\btijuana\b/, "Tijuana"],
+  [/\ble[oó]n\b/, "León"],
+  [/\bquer[eé]taro\b/, "Querétaro"],
+  [/\bcanc[uú]n\b/, "Cancún"],
+  [/\bm[eé]rida\b/, "Mérida"],
+  [/\bmorelia\b/, "Morelia"],
+  [/\btoluca\b/, "Toluca"],
+  [/\bsaltillo\b/, "Saltillo"],
+  [/\btorre[oó]n\b/, "Torreón"],
+  [/\bdurango\b/, "Durango"],
+  [/\bhermosillo\b/, "Hermosillo"],
+  [/\bculiac[aá]n\b/, "Culiacán"],
+  [/\bmazatl[aá]n\b/, "Mazatlán"],
+  [/\baguascalientes\b/, "Aguascalientes"],
+  [/\bsan\s+luis\s+potos[íi]\b/, "San Luis Potosí"],
+  [/\bveracruz\b/, "Veracruz"],
+  [/\bxalapa\b/, "Xalapa"],
+  [/\bvillahermosa\b/, "Villahermosa"],
+  [/\boaxaca\b/, "Oaxaca"],
+  [/\bacapulco\b/, "Acapulco"],
+  [/\bcuernavaca\b/, "Cuernavaca"],
+  [/\btampico\b/, "Tampico"],
+  [/\bzacatecas\b/, "Zacatecas"],
+  [/\bcampeche\b/, "Campeche"],
+  [/\bmexicali\b/, "Mexicali"],
+  [/\bensenada\b/, "Ensenada"],
+  [/\bpuerto\s+vallarta\b/, "Puerto Vallarta"],
+  [/\bmanzanillo\b/, "Manzanillo"],
+  [/\birapuato\b/, "Irapuato"],
+  [/\bcelaya\b/, "Celaya"],
+  [/\bpachuca\b/, "Pachuca"],
+  [/\btapachula\b/, "Tapachula"],
+  [/\bplaya\s+del\s+carmen\b/, "Playa del Carmen"],
+  [/\bchihuahua\b/, "Chihuahua"],
+  [/\bcuauht[eé]moc\b/, "Cuauhtémoc"],
+  [/\bdelicias\b/, "Delicias"],
+  [/\bhidalgo\s+del\s+parral\b|\bparral\b/, "Hidalgo del Parral"],
+  [/\bnuevo\s+casas\s+grandes\b/, "Nuevo Casas Grandes"],
+  [/\bflores\s+magn[oó]n\b/, "Flores Magón"],
+];
+
+/**
+ * Return the canonical display name of a known Mexican city mentioned in the
+ * message, or undefined when none matches. Runs on the folded text so accents
+ * and casing are handled.
+ */
+export function findKnownCity(message: string): string | undefined {
+  const text = foldText(message);
+  for (const [pattern, canonical] of KNOWN_CITIES) {
+    if (pattern.test(text)) return canonical;
+  }
+  return undefined;
+}
+
 // Stopwords never become part of the keyword query.
 const STOPWORDS = new Set([
   "de", "en", "para", "por", "con", "que", "y", "o", "a", "el", "la", "los",
@@ -232,6 +298,23 @@ function extractKeyword(text: string): string | undefined {
   // Fall back to the longest meaningful token, singularized.
   const fallback = tokens.sort((a, b) => b.length - a.length)[0];
   return fallback ? stemKeyword(fallback) : undefined;
+}
+
+/**
+ * Return the high-value keyword present in the message (e.g. "casa",
+ * "terreno", "alberca"), or undefined. Used to merge the regex-derived
+ * keyword into LLM extractions that omit `query`, so a "casas" request still
+ * excludes unrelated categories (land, warehouses) when the LLM is silent.
+ */
+export function priorityKeyword(message: string): string | undefined {
+  const tokens = message
+    .toLowerCase()
+    .split(/[^a-záéíóúñü0-9]+/i)
+    .filter((t) => !isStopword(t));
+  for (const keyword of KEYWORD_PRIORITY) {
+    if (tokens.some((t) => t.startsWith(keyword))) return keyword;
+  }
+  return undefined;
 }
 
 /**

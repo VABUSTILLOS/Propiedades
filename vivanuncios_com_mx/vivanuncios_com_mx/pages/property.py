@@ -161,6 +161,89 @@ class PropertyPage(BrowserPage, Returns[PropertyItem]):
         except (TypeError, ValueError):
             return None
 
+    @cached_property
+    def _icon_features(self) -> dict[str, int]:
+        """Parsea la lista ``ul#section-icon-features-property``.
+
+        Cada ``<li class="icon-feature">`` contiene un ícono, un valor numérico
+        y una etiqueta (p. ej. ``528 m² lote``, ``359 m² constr.``, ``4 baños``,
+        ``2 estac.``, ``4 rec.``, ``1 medio baño``, ``42 años``). Se devuelve un
+        dict normalizado con los totales por campo.
+        """
+        result: dict[str, int] = {
+            "terreno_m2": 0,
+            "construccion_m2": 0,
+            "banos": 0,
+            "estacionamientos": 0,
+            "recamaras": 0,
+            "antiguedad": 0,
+        }
+        for li in self.css("ul#section-icon-features-property li.icon-feature"):
+            text = " ".join(li.css("*::text").getall())
+            text = re.sub(r"\s+", " ", text).strip()
+            # Formato esperado: "<numero> <etiqueta>" (o "m² lote"/"m² constr.").
+            value_match = re.match(r"(\d+)", text)
+            if not value_match:
+                continue
+            value = int(value_match.group(1))
+            lower = text.lower()
+            if "m² lote" in lower or "terreno" in lower or "m2 lote" in lower:
+                result["terreno_m2"] = max(result["terreno_m2"], value)
+            elif "m² constr" in lower or "m2 constr" in lower or "construid" in lower:
+                result["construccion_m2"] = max(result["construccion_m2"], value)
+            elif "medio baño" in lower or "medio bano" in lower:
+                # Un medio baño cuenta como 1 baño.
+                result["banos"] += 1
+            elif "baño" in lower or "bano" in lower:
+                result["banos"] += value
+            elif "estac" in lower:
+                result["estacionamientos"] = max(result["estacionamientos"], value)
+            elif "rec." in lower or "recamara" in lower:
+                result["recamaras"] = max(result["recamaras"], value)
+            elif "años" in lower or "anos" in lower:
+                result["antiguedad"] = max(result["antiguedad"], value)
+        return result
+
+    @field
+    def recamaras(self) -> int | None:
+        """Recámaras desde la lista de iconos de características.
+
+        ``number_of_bedrooms`` (JSON-LD) cubre ~80/105 anuncios; los iconos
+        (``4 rec.``) cubren los restantes.
+        """
+        value = self._icon_features.get("recamaras")
+        if value:
+            return value
+        return self.number_of_bedrooms
+
+    @field
+    def banos(self) -> int | None:
+        value = self._icon_features.get("banos")
+        return value or None
+
+    @field
+    def terreno_m2(self) -> int | None:
+        value = self._icon_features.get("terreno_m2")
+        if value:
+            return value
+        # Fallback: JSON-LD floorSize suele ser la superficie del terreno.
+        return self.floor_size_m2
+
+    @field
+    def construccion_m2(self) -> int | None:
+        value = self._icon_features.get("construccion_m2")
+        return value or None
+
+    @field
+    def estacionamientos(self) -> int | None:
+        value = self._icon_features.get("estacionamientos")
+        return value or None
+
+    @field
+    def antiguedad(self) -> int | None:
+        value = self._icon_features.get("antiguedad")
+        return value or None
+
     @field
     def days_published(self) -> str | None:
         text = self.css(

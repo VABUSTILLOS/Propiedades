@@ -95,15 +95,24 @@ function pluralize(word: string): string {
   return word + "s";
 }
 
+/** Build the singular stem of a Spanish keyword (reverse of pluralize). */
+function singularize(word: string): string {
+  const lower = word.toLowerCase();
+  if (lower.endsWith("ces")) return lower.slice(0, -3) + "z";
+  if (lower.endsWith("es")) return lower.slice(0, -2);
+  if (lower.endsWith("s")) return lower.slice(0, -1);
+  return lower;
+}
+
 /**
  * Keyword variants to search: the stem itself, its plural, and the same forms
  * with accents folded both ways. Titles mix spellings ("2 recamaras" vs
  * "2 recámaras"), so a single ilike can miss rows that a sibling matches.
  */
 function keywordVariants(query: string): string[] {
-  const singular = query.toLowerCase();
+  const singular = singularize(query.toLowerCase());
   const plural = pluralize(singular);
-  const variants = new Set<string>([singular, plural]);
+  const variants = new Set<string>([singular, plural, query.toLowerCase()]);
   for (const v of [singular, plural]) {
     const folded = v.replace(/[áéíóúüñÁÉÍÓÚÜÑ]/g, foldAccent);
     if (folded !== v) variants.add(folded);
@@ -113,17 +122,17 @@ function keywordVariants(query: string): string[] {
 
 /** OR-ed ilike predicate over the searchable columns, one per variant. */
 function buildQueryOrClause(query: string): string {
-  // Text columns searched directly; JSONB feature arrays (amenidades,
-  // puntos_fuertes_bento) are cast to text so "alberca", "roof garden",
-  // "frente a la playa" etc. match inside the stored arrays.
+  // Text columns searched directly. Note: PostgREST logic trees do NOT
+  // support `::text` casts (PGRST100 parse error), so the JSONB feature
+  // arrays (amenidades, puntos_fuertes_bento) cannot be OR-ed in here.
+  // Those arrays are populated by semantic embeddings (GEMINI_API_KEY) and
+  // matched via the `query` semantic path, not this ILIKE fallback.
   const columns = [
     "title",
     "description",
     "colonia",
     "city",
     "address",
-    "amenidades::text",
-    "puntos_fuertes_bento::text",
   ];
   const parts: string[] = [];
   for (const column of columns) {

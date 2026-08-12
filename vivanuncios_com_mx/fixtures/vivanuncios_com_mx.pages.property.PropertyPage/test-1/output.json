@@ -31,5 +31,11 @@
     "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795332.jpg?rapc=bXZhX2ltYWdl",
     "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795331.jpg?rapc=bXZhX2ltYWdl",
     "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/1200x1200/1615795328.jpg?rapc=bXZhX2ltYWdl"
-  ]
+  ],
+  "terreno_m2": 528,
+  "construccion_m2": 359,
+  "banos": 5,
+  "estacionamientos": 2,
+  "recamaras": 4,
+  "antiguedad": 42
 }

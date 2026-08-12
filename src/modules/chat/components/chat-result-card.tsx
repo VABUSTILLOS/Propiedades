@@ -37,6 +37,11 @@ export function ChatResultCard({ result }: { result: ChatResult }) {
           <Badge className="absolute left-1.5 top-1.5 rounded-full text-[0.65rem] shadow-sm">
             {typeLabel}
           </Badge>
+          {result.relaxed && (
+            <Badge className="absolute right-1.5 top-1.5 rounded-full bg-amber-500 text-[0.65rem] text-white shadow-sm hover:bg-amber-500">
+              Alternativa
+            </Badge>
+          )}
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col">

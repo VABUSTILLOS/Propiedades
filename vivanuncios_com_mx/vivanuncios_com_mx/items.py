@@ -20,6 +20,12 @@ class PropertyItem:
     location: str | None = None
     number_of_bedrooms: int | None = None
     floor_size_m2: int | None = None
+    recamaras: int | None = None
+    banos: int | None = None
+    terreno_m2: int | None = None
+    construccion_m2: int | None = None
+    estacionamientos: int | None = None
+    antiguedad: int | None = None
     days_published: str | None = None
     property_image: str | None = None
     images: list[str] | None = None
