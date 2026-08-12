@@ -1,5 +1,24 @@
 import type { ChatFilters, ChatResult } from "@/modules/chat/types";
 
+/** Business WhatsApp number in international format (no "+"), per product spec. */
+export const WHATSAPP_CONTACT_NUMBER = "526141047021";
+
+/**
+ * Builds a `wa.me` link to the business WhatsApp with a pre-filled message
+ * asking about a specific property.
+ */
+export function buildWhatsAppInquiryLink(property: {
+  title: string;
+  colonia?: string | null;
+  city?: string | null;
+}): string {
+  const location = [property.colonia, property.city].filter(Boolean).join(", ");
+  const message = `Hola, me interesa la propiedad "${property.title}"${
+    location ? ` en ${location}` : ""
+  }. ¿Sigue disponible?`;
+  return `https://wa.me/${WHATSAPP_CONTACT_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
 /**
  * Builds a prefabricated WhatsApp share URL for a property.
  * Message format (per product spec):
@@ -109,7 +128,11 @@ const MAX_CONSOLIDATED_PROPERTIES = 20;
  * The list is capped so the resulting URL stays within WhatsApp's practical
  * limits; extra properties are summarized with a link back to /favorites.
  */
-export function buildWhatsAppConsolidatedShareLink(
+/**
+ * Builds the consolidated results message body (shared by the generic share
+ * link and the server-side direct send in /api/chat/send-whatsapp).
+ */
+export function buildConsolidatedMessage(
   properties: ShareProperty[],
   siteUrl: string,
 ): string {
@@ -133,5 +156,25 @@ export function buildWhatsAppConsolidatedShareLink(
     message += `\n\n… y ${hidden} ${hidden === 1 ? "propiedad más" : "propiedades más"} en ${siteUrl}/favorites`;
   }
 
+  return message;
+}
+
+export function buildWhatsAppConsolidatedShareLink(
+  properties: ShareProperty[],
+  siteUrl: string,
+): string {
+  const message = buildConsolidatedMessage(properties, siteUrl);
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Builds a wa.me link to the human advisor so a visitor (site or WhatsApp bot)
+ * can escalate to a real person at any moment.
+ */
+export function buildAdvisorLink(advisorPhone: string): string {
+  const phone = advisorPhone.replace(/\D/g, "");
+  const text = encodeURIComponent(
+    "Hola 👋 vengo del buscador de Propiedades y quiero que un asesor me atienda.",
+  );
+  return `https://wa.me/${phone}?text=${text}`;
 }

@@ -266,13 +266,9 @@ export function whatsappOutboundConfigured(): boolean {
   );
 }
 
-/**
- * Send a text message to a WhatsApp user via the Cloud API.
- * Returns the sent message id, or null on failure / missing config.
- */
-export async function sendWhatsAppText(
+async function postWhatsAppMessage(
   to: string,
-  text: string,
+  payload: Record<string, unknown>,
 ): Promise<string | null> {
   if (!whatsappOutboundConfigured()) return null;
 
@@ -289,8 +285,7 @@ export async function sendWhatsAppText(
           messaging_product: "whatsapp",
           recipient_type: "individual",
           to,
-          type: "text",
-          text: { body: text.slice(0, 1024) },
+          ...payload,
         }),
       },
     );
@@ -301,4 +296,46 @@ export async function sendWhatsAppText(
   } catch {
     return null;
   }
+}
+
+/**
+ * Send a text message to a WhatsApp user via the Cloud API.
+ * Returns the sent message id, or null on failure / missing config.
+ */
+export async function sendWhatsAppText(
+  to: string,
+  text: string,
+): Promise<string | null> {
+  return postWhatsAppMessage(to, {
+    type: "text",
+    text: { body: text.slice(0, 1024) },
+  });
+}
+
+/**
+ * Send an approved message template via the Cloud API. Required for the first
+ * contact to a number outside the 24h customer-service window — Meta rejects
+ * free-form text there. `bodyParams` fill the template's body variables in
+ * order. Returns the sent message id, or null on failure / missing config.
+ */
+export async function sendWhatsAppTemplate(
+  to: string,
+  templateName: string,
+  bodyParams: string[],
+  languageCode = "es_MX",
+): Promise<string | null> {
+  if (!templateName) return null;
+  return postWhatsAppMessage(to, {
+    type: "template",
+    template: {
+      name: templateName,
+      language: { code: languageCode },
+      components: [
+        {
+          type: "body",
+          parameters: bodyParams.map((text) => ({ type: "text", text })),
+        },
+      ],
+    },
+  });
 }

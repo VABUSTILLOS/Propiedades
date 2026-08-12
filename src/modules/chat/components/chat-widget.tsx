@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Loader2, Send } from "lucide-react";
 
 import { ChatResultCard } from "@/modules/chat/components/chat-result-card";
-import { useSiteUrl } from "@/modules/chat/components/use-site-url";
-import { WhatsAppIcon } from "@/modules/chat/components/share-whatsapp-button";
-import { buildWhatsAppHandoffLink } from "@/modules/chat/share";
+import { ChatActionsBar } from "@/modules/chat/components/chat-actions-bar";
 import type { ChatFilters, ChatResponse, ChatTurn } from "@/modules/chat/types";
 
 const SUGGESTIONS = [
@@ -93,22 +91,7 @@ export function ChatWidget() {
 
   const showSuggestions = turns.length === 0;
 
-  const siteUrl = useSiteUrl();
-  const businessPhone =
-    process.env.NEXT_PUBLIC_WHATSAPP_BUSINESS_PHONE_NUMBER ?? "";
-  const lastUserMessage =
-    turns.filter((t) => t.role === "user").at(-1)?.content ?? "";
   const results = turns.flatMap((t) => t.results ?? []);
-  const handoffHref =
-    businessPhone && lastUserMessage
-      ? buildWhatsAppHandoffLink({
-          lastMessage: lastUserMessage,
-          results,
-          filters,
-          siteUrl,
-          businessPhone,
-        })
-      : null;
 
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-white/20 bg-white/95 text-left shadow-2xl backdrop-blur-md">
@@ -221,21 +204,8 @@ export function ChatWidget() {
         </button>
       </form>
 
-      {/* Mandar resultados por WhatsApp */}
-      {handoffHref && (
-        <div className="border-t border-border/60 px-3 py-2">
-          <a
-            href={handoffHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Manda tus resultados a tu WhatsApp"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-3 py-2 text-sm font-medium text-[#128C7E] transition-colors hover:bg-[#25D366]/20"
-          >
-            <WhatsAppIcon className="size-4" />
-            Manda tus resultados a tu WhatsApp
-          </a>
-        </div>
-      )}
+      {/* Acciones de WhatsApp: compartir, enviar a mi número, asesor humano */}
+      <ChatActionsBar results={results} filters={filters} />
     </div>
   );
 }

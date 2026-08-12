@@ -30,6 +30,11 @@ export const env = {
   whatsappPhoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID ?? "",
   whatsappGraphToken: process.env.WHATSAPP_ACCESS_TOKEN ?? "",
   whatsappAppSecret: process.env.WHATSAPP_APP_SECRET ?? "",
+  whatsappAdvisorPhone:
+    process.env.NEXT_PUBLIC_WHATSAPP_ADVISOR_PHONE ??
+    process.env.WHATSAPP_ADVISOR_PHONE ??
+    "",
+  whatsappResultsTemplateName: process.env.WHATSAPP_RESULTS_TEMPLATE_NAME ?? "",
 } as const;
 
 export function requireEnv(scope: "client" | "server" = "client"): void {

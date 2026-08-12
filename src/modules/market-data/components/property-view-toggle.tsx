@@ -139,12 +139,12 @@ function ResidentialView({
 }
 
 /**
- * Estimated monthly rent potential based on the listing price and category.
- * Local/bodega properties use a flat 0.85% rate; everything else uses
- * a tiered rate that decreases as price increases.
+ * Estimated monthly rent potential based on 85% of the listing price and the
+ * property category. Local/bodega properties use a flat 0.85% rate; everything
+ * else uses a tiered rate that decreases as the price increases.
  */
 function calcularPosibleRenta(property: PropertiesRow): number {
-  const price = property.price;
+  const price = property.price * 0.85;
   const category = property.category;
 
   if (category === "local" || category === "bodega") {

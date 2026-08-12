@@ -22,6 +22,7 @@ import { getMyLists, getListsContainingProperty } from "@/modules/favorites/list
 import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
 import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
 import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
+import { WhatsAppInquiryButton } from "@/modules/chat/components/whatsapp-inquiry-button";
 import {
   getBenchmark,
   getColoniaDiscount,
@@ -170,6 +171,13 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
           </section>
 
           <aside className="space-y-4">
+            <WhatsAppInquiryButton
+              title={listing.title}
+              colonia={listing.colonia}
+              city={listing.city}
+              className="w-full px-4 py-3"
+            />
+
             {canInquire && (
               <Card className="rounded-2xl">
                 <CardContent className="pt-6">

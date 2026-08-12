@@ -7,6 +7,7 @@ import { runChatSearch } from "@/modules/chat/search";
 import type { ChatFilters, ChatResult } from "@/modules/chat/types";
 import { getSearchableCities } from "@/modules/search/queries";
 import { env } from "@/modules/lib/env";
+import { buildAdvisorLink } from "@/modules/chat/share";
 import { sendWhatsAppText } from "@/modules/whatsapp/server";
 
 /**
@@ -71,6 +72,18 @@ async function getChatState(waId: string): Promise<ChatFilters | undefined> {
   } catch {
     return undefined;
   }
+}
+
+/**
+ * Seed (or update) the per-contact filters from outside the webhook — e.g.
+ * after /api/chat/send-whatsapp delivers the site results to a visitor's
+ * WhatsApp, so the bot continues that conversation with the same context.
+ */
+export async function seedWhatsAppChatState(
+  waId: string,
+  filters: ChatFilters,
+): Promise<void> {
+  return saveChatState(waId, filters);
 }
 
 async function saveChatState(waId: string, filters: ChatFilters): Promise<void> {
@@ -138,13 +151,20 @@ function buildHelpMenu(): string {
     '• "departamento en Condesa, 2 recámaras"\n' +
     '• "terrenos de 500 m2 en Mérida"\n' +
     '• "lo más barato en renta"\n\n' +
-    "¿En qué te ayudo? 😊"
+    'Escribe "asesor" en cualquier momento si prefieres que te atienda una ' +
+    "persona.\n\n¿En qué te ayudo? 😊"
   );
 }
 
 function buildAdvisorMessage(): string {
+  const advisorLink = env.whatsappAdvisorPhone
+    ? buildAdvisorLink(env.whatsappAdvisorPhone)
+    : "";
   return (
-    "¡Recibido! 👋 Un asesor te atenderá en breve para agendar tu visita. " +
+    "¡Recibido! 👋 " +
+    (advisorLink
+      ? `Toca aquí y te atiendo personalmente en mi WhatsApp:\n${advisorLink}\n\n`
+      : "Un asesor te atenderá en breve. ") +
     "Mientras tanto, dime qué tipo de propiedad buscas y te muestro " +
     "opciones disponibles aquí mismo."
   );
@@ -170,6 +190,9 @@ function hasBookingIntent(body: string): boolean {
     "contactar",
     "hablar con alguien",
     "agente",
+    "humano",
+    "persona",
+    "dueño",
   ];
   return keywords.some((k) => normalized.includes(k));
 }
