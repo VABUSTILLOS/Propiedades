@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { ListPlus, Loader2 } from "lucide-react";
-import { useState, useTransition, type ReactNode } from "react";
+import {
+  useState,
+  useTransition,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 
 import { addPropertyToLists, createList } from "@/modules/favorites/lists-actions";
 import { Button } from "@/components/ui/button";
@@ -27,7 +32,7 @@ type Props = {
   /** Ids of lists that already contain this property. */
   containingListIds: string[];
   /** Custom trigger element (e.g. an icon button in a row). */
-  trigger?: ReactNode;
+  trigger?: ReactElement;
   /** Trigger content (default button when no `trigger` is given). */
   children?: ReactNode;
   className?: string;
@@ -114,13 +119,17 @@ export function AddToListDialog({
 
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <button type="button" className={className}>
-            {children}
-          </button>
-        )}
-      </DialogTrigger>
+      {trigger ? (
+        <DialogTrigger render={trigger} />
+      ) : (
+        <DialogTrigger
+          render={
+            <button type="button" className={className}>
+              {children}
+            </button>
+          }
+        />
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Añadir a lista</DialogTitle>

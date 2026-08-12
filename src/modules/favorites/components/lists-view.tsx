@@ -97,7 +97,7 @@ export function ListsView({ lists }: Props) {
         <div className="rounded-lg border border-dashed px-6 py-16 text-center">
           <p className="text-sm text-muted-foreground">
             Crea listas para organizar tus propiedades favoritas — por ejemplo
-            "Casas en Cancún" o "Para rentar".
+            &ldquo;Casas en Cancún&rdquo; o &ldquo;Para rentar&rdquo;.
           </p>
         </div>
       ) : (

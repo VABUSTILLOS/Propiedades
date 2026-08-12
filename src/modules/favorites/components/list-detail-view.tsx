@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 
 import { removeFromList } from "@/modules/favorites/lists-actions";
