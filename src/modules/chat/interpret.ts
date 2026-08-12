@@ -128,21 +128,34 @@ function findCity(text: string, cities: string[]): string | undefined {
   return undefined;
 }
 
+/** Fold Spanish accents to ASCII so "juarez" matches catalog "Juárez". */
+function foldText(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[áäà]/g, "a")
+    .replace(/[éëè]/g, "e")
+    .replace(/[íïì]/g, "i")
+    .replace(/[óöò]/g, "o")
+    .replace(/[úüù]/g, "u")
+    .replace(/ñ/g, "n");
+}
+
 /**
  * Map a city string to a known searchable city name. Handles case
- * differences and common aliases like "Ciudad Juárez" / "Cd. Juárez".
- * Returns undefined when the city is not in the catalog.
+ * differences, accents ("juarez" → "Juárez") and common aliases like
+ * "Ciudad Juárez" / "Cd. Juárez". Returns undefined when the city is not in
+ * the catalog.
  */
 export function normalizeCityName(raw: string, cities: string[]): string | undefined {
   if (!raw) return undefined;
-  const normalized = raw.trim().toLowerCase();
-  const canonical = cities.find((c) => c.toLowerCase() === normalized);
-  if (canonical) return canonical;
+  const normalized = foldText(raw.trim());
+  const exact = cities.find((c) => foldText(c) === normalized);
+  if (exact) return exact;
 
   // Alias: strip a leading "ciudad" / "cd." prefix and retry.
   const stripped = normalized.replace(/^(?:ciudad|cd\.?)\s+/i, "").trim();
   if (stripped && stripped !== normalized) {
-    const alias = cities.find((c) => c.toLowerCase() === stripped);
+    const alias = cities.find((c) => foldText(c) === stripped);
     if (alias) return alias;
   }
   return undefined;
@@ -209,12 +222,16 @@ function extractKeyword(text: string): string | undefined {
     .filter((t) => !isStopword(t));
 
   // Prefer high-value keywords regardless of token order in the sentence.
-  // A prefix match also catches plural/simple inflections ("locales" → "local").
+  // A prefix match also catches plural/simple inflections ("casas" → "casa").
+  // Priority keywords are already the searchable base form ("recamaras" is
+  // kept plural because "Recámaras" appears verbatim in titles), so return
+  // them unchanged — accent/plural variants are expanded in the query layer.
   for (const keyword of KEYWORD_PRIORITY) {
-    if (tokens.some((t) => t.startsWith(keyword))) return stemKeyword(keyword);
+    if (tokens.some((t) => t.startsWith(keyword))) return keyword;
   }
-  // Fall back to the longest meaningful token.
-  return tokens.sort((a, b) => b.length - a.length)[0];
+  // Fall back to the longest meaningful token, singularized.
+  const fallback = tokens.sort((a, b) => b.length - a.length)[0];
+  return fallback ? stemKeyword(fallback) : undefined;
 }
 
 /**
@@ -226,7 +243,17 @@ export function interpretQuery(query: string, cities: string[]): ChatFilters {
   const filters: ChatFilters = {};
 
   const city = findCity(text, cities);
-  if (city) filters.city = city;
+  if (!city) {
+    // "ciudad juárez" / "cd. juárez" style text won't match the raw catalog
+    // name "Juárez" via exact \b matching, so strip the prefix and retry.
+    const aliasMatch = text.match(/(?:^|\s)(?:ciudad|cd\.?)\s+([a-záéíóúñü]+)/i);
+    if (aliasMatch) {
+      const aliasCity = normalizeCityName(aliasMatch[0], cities);
+      if (aliasCity) filters.city = aliasCity;
+    }
+  } else {
+    filters.city = city;
+  }
 
   const prices = findPriceExpressions(text);
   const { minPrice, maxPrice } = classifyPrices(text, prices);
@@ -241,6 +268,23 @@ export function interpretQuery(query: string, cities: string[]): ChatFilters {
 
   if (/\b(terrenos?|lotes?)\b/.test(text)) {
     filters.isLand = true;
+  }
+
+  // Square metres → minM2. "terrenos de 500 m²" means "at least 500 m²".
+  // The trailing \b must accept the superscript "²" (a non-word char) at end.
+  const m2Match = text.match(/(\d[\d.,]*)\s*(?:m\s*2|m²|m\s*cuadrados?|metros?\s+cuadrados?)(?:\b|$)/i);
+  const m2Raw = m2Match?.[1];
+  if (m2Raw != null) {
+    const value = parseAmountToken(m2Raw);
+    if (value != null && value > 0) filters.minM2 = value;
+  }
+
+  // Bedrooms → minBedrooms. "3 recamaras" means "at least 3 bedrooms".
+  const bedroomMatch = text.match(/(\d+)\s+(?:recamaras?|recámaras?|habitaciones?|cuartos?)\b/i);
+  const bedroomRaw = bedroomMatch?.[1];
+  if (bedroomRaw != null) {
+    const value = Number(bedroomRaw.replace(/\D/g, ""));
+    if (Number.isFinite(value) && value > 0) filters.minBedrooms = value;
   }
 
   const keyword = extractKeyword(text);

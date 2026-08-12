@@ -68,6 +68,63 @@ type FilterableQuery<Q> = {
   or(query: string): Q;
 };
 
+/** Escape LIKE wildcards so user keywords are matched literally. */
+function escapeLike(value: string): string {
+  return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+}
+
+/** Apply simple Spanish accent-fold to a single character. */
+function foldAccent(ch: string): string {
+  switch (ch) {
+    case "á": case "Á": return "a";
+    case "é": case "É": return "e";
+    case "í": case "Í": return "i";
+    case "ó": case "Ó": return "o";
+    case "ú": case "Ú": return "u";
+    case "ü": case "Ü": return "u";
+    case "ñ": case "Ñ": return "n";
+    default: return ch;
+  }
+}
+
+/** Build the plural of a Spanish keyword (best-effort, covers our nouns). */
+function pluralize(word: string): string {
+  const lower = word.toLowerCase();
+  if (lower.endsWith("es") || lower.endsWith("s")) return word;
+  if (/(z)$/.test(lower)) return word.slice(0, -1) + "ces";
+  return word + "s";
+}
+
+/**
+ * Keyword variants to search: the stem itself, its plural, and the same forms
+ * with accents folded both ways. Titles mix spellings ("2 recamaras" vs
+ * "2 recámaras"), so a single ilike can miss rows that a sibling matches.
+ */
+function keywordVariants(query: string): string[] {
+  const singular = query.toLowerCase();
+  const plural = pluralize(singular);
+  const variants = new Set<string>([singular, plural]);
+  for (const v of [singular, plural]) {
+    const folded = v.replace(/[áéíóúüñÁÉÍÓÚÜÑ]/g, foldAccent);
+    if (folded !== v) variants.add(folded);
+  }
+  return [...variants];
+}
+
+/** OR-ed ilike predicate over title/description/colonia/city, one per variant. */
+function buildQueryOrClause(query: string): string {
+  const columns = ["title", "description", "colonia", "city"];
+  const parts: string[] = [];
+  for (const column of columns) {
+    for (const variant of keywordVariants(query)) {
+      parts.push(`${column}.ilike.%${escapeLike(variant)}%`);
+      if (parts.length >= 48) break;
+    }
+    if (parts.length >= 48) break;
+  }
+  return parts.join(",");
+}
+
 /**
  * Applies the shared filter predicates onto a base `properties` query.
  * Extracted so searchListings and countActiveListings stay in sync.
@@ -91,7 +148,10 @@ function applyFilters<Q extends FilterableQuery<Q>>(
     q = q.eq("deal_type", filters.dealType);
   }
   if (filters.isLand) {
-    q = q.gt("terreno_m2", 0).eq("construccion_m2", 0);
+    // "Terrenos" are identified by category, not by the m² columns: the scraper
+    // fills terreno_m2 and construccion_m2 with the same value, so the old
+    // terreno_m2>0 AND construccion_m2=0 test could never match anything.
+    q = q.eq("category", "terreno");
   }
   if (filters.city) {
     q = q.eq("city", filters.city);
@@ -105,19 +165,19 @@ function applyFilters<Q extends FilterableQuery<Q>>(
   if (filters.maxPrice != null) {
     q = q.lte("price", filters.maxPrice);
   }
+  // Land listings report size via terreno_m2; buildings via construccion_m2.
+  const m2Column = filters.isLand || filters.category === "terreno" ? "terreno_m2" : "construccion_m2";
   if (filters.minM2 != null) {
-    q = q.gte("construccion_m2", filters.minM2);
+    q = q.gte(m2Column, filters.minM2);
   }
   if (filters.maxM2 != null) {
-    q = q.lte("construccion_m2", filters.maxM2);
+    q = q.lte(m2Column, filters.maxM2);
   }
   if (filters.minBedrooms != null) {
     q = q.gte("recamaras", filters.minBedrooms);
   }
   if (filters.query) {
-    q = q.or(
-      `title.ilike.%${filters.query}%,description.ilike.%${filters.query}%,colonia.ilike.%${filters.query}%,city.ilike.%${filters.query}%`,
-    );
+    q = q.or(buildQueryOrClause(filters.query));
   }
   if (filters.bounds) {
     q = q

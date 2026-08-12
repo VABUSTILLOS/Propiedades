@@ -8,7 +8,7 @@ import type { ChatFilters, ChatResponse, ChatTurn } from "@/modules/chat/types";
 
 const SUGGESTIONS = [
   "Casas en Chihuahua de 2,000,000 MXN",
-  "Departamentos en renta en Ciudad Juárez",
+  "Departamentos en Chihuahua",
   "Terrenos de 500 m²",
   "Casas con alberca por menos de 5 millones",
 ];
