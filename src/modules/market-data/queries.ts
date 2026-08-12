@@ -1,7 +1,61 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
-import type { MarketBenchmarksRow } from "@/modules/lib/database.types";
+import type {
+  MarketBenchmarksRow,
+  PropertiesRow,
+} from "@/modules/lib/database.types";
+
+/**
+ * Reference price per m² (MXN) above which a property is considered "not
+ * cheap" and stops earning m² component points. Tunable.
+ */
+export const HOT_M2_REF = 50_000;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+/**
+ * Composite opportunity score 0–100 (balanced 50/50):
+ *  - discountPct: % savings vs the colonia benchmark (higher = hotter).
+ *  - m2: cost per constructed m² (cheaper = hotter), normalized against
+ *    `HOT_M2_REF`.
+ * Returns null when neither input is available. When only one input is
+ * available it counts with full weight.
+ */
+export function computeHotScore(input: {
+  discountPct: number | null;
+  m2: number | null;
+}): number | null {
+  const { discountPct, m2 } = input;
+
+  const discountComponent =
+    discountPct == null ? null : clamp(discountPct, 0, 100);
+
+  const m2Component =
+    m2 == null || m2 <= 0
+      ? null
+      : clamp((100 * (HOT_M2_REF - m2)) / HOT_M2_REF, 0, 100);
+
+  if (discountComponent == null && m2Component == null) return null;
+  if (discountComponent == null) return Math.round(m2Component!);
+  if (m2Component == null) return Math.round(discountComponent);
+
+  return Math.round(0.5 * discountComponent + 0.5 * m2Component);
+}
+
+/**
+ * Derive the hotness score for a property row using the stored per-m²
+ * columns (construido, falling back to terreno for land listings).
+ */
+export function toHotScore(
+  discountPct: number | null,
+  row: Pick<PropertiesRow, "precio_m2_const" | "precio_m2_terreno">,
+): number | null {
+  const m2 = row.precio_m2_const ?? row.precio_m2_terreno;
+  return computeHotScore({ discountPct, m2 });
+}
 
 /**
  * Market benchmark for a city + colonia (public read — RLS allows SELECT).

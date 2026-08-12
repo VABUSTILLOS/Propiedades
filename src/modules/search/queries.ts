@@ -1,11 +1,18 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
+import {
+  getColoniaDiscount,
+  toHotScore,
+} from "@/modules/market-data/queries";
 import type {
   PropertiesRow,
   PropertyCategory,
   PropertyDealType,
 } from "@/modules/lib/database.types";
+
+/** Max rows fetched for the in-memory "hot" sort before slicing to the limit. */
+export const HOT_FETCH_CAP = 300;
 
 export type SearchFilters = {
   query?: string;
@@ -20,7 +27,7 @@ export type SearchFilters = {
   colonia?: string;
   minM2?: number;
   maxM2?: number;
-  sortBy?: "price_asc" | "price_desc" | "newest" | "score";
+  sortBy?: "price_asc" | "price_desc" | "newest" | "score" | "hot";
   limit?: number;
   /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
   isLand?: boolean;
@@ -124,6 +131,57 @@ export async function searchListings(
     .returns<PropertiesRow[]>();
 
   return rows ?? [];
+}
+
+export type ListingWithHot = PropertiesRow & { hotScore: number | null };
+
+/**
+ * Computes the hotness score for each row (N+1 benchmark + colonia-discount
+ * reads, same pattern as /investor). Sorted naturally; hotScore is attached
+ * for the traffic-light gauge.
+ */
+export async function enrichWithHot(
+  rows: PropertiesRow[],
+): Promise<ListingWithHot[]> {
+  const scores = await Promise.all(
+    rows.map(async (row) => {
+      const discountPct = await getColoniaDiscount(row.id);
+      return toHotScore(discountPct, row);
+    }),
+  );
+  return rows.map((row, i) => ({ ...row, hotScore: scores[i] ?? null }));
+}
+
+/**
+ * Listing search that also carries a `hotScore` (opportunity 0–100).
+ *
+ * `sortBy: "hot"` is applied in memory: it fetches up to `HOT_FETCH_CAP`
+ * rows (filters applied in SQL), computes the hotness score per row, sorts
+ * descending (null scores last) and slices to the requested limit.
+ *
+ * Every other sort keeps SQL ordering and just enriches the page rows so the
+ * gauge renders on each card.
+ */
+export async function searchListingsWithHot(
+  filters: SearchFilters,
+): Promise<ListingWithHot[]> {
+  const supabase = await createSupabaseServerClient();
+
+  if (filters.sortBy === "hot") {
+    const base = applyFilters(supabase.from("properties").select("*"), filters);
+
+    const { data: rows } = await base
+      .order("created_at", { ascending: false })
+      .limit(HOT_FETCH_CAP)
+      .returns<PropertiesRow[]>();
+
+    const enriched = await enrichWithHot(rows ?? []);
+    enriched.sort((a, b) => (b.hotScore ?? -1) - (a.hotScore ?? -1));
+    return enriched.slice(0, filters.limit ?? 24);
+  }
+
+  const rows = await searchListings(filters);
+  return enrichWithHot(rows);
 }
 
 /**

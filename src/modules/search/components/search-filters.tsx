@@ -153,6 +153,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="newest">Más recientes</SelectItem>
+              <SelectItem value="hot">Más hot (oportunidad)</SelectItem>
               <SelectItem value="price_asc">Precio (menor → mayor)</SelectItem>
               <SelectItem value="price_desc">Precio (mayor → menor)</SelectItem>
               <SelectItem value="score">Mejor score</SelectItem>

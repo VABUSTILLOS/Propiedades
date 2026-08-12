@@ -3,12 +3,14 @@ import Link from "next/link";
 
 import {
   getSearchableCities,
-  searchListings,
+  searchListingsWithHot,
+  enrichWithHot,
   type SearchFilters,
 } from "@/modules/search/queries";
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { searchParamsSchema } from "@/modules/lib/schemas";
 import { getCurrentUser } from "@/modules/auth/session";
 import { SiteHeader } from "@/modules/home/components/site-header";
@@ -51,8 +53,8 @@ export default async function SearchPage({ searchParams }: Props) {
     // Natural-language queries go through semantic search when embeddings
     // are configured; otherwise it falls back to the keyword path.
     parsed.data?.query
-      ? searchSemantic(parsed.data.query, 24)
-      : searchListings(filters),
+      ? searchSemantic(parsed.data.query, 24).then(enrichWithHot)
+      : searchListingsWithHot(filters),
     getSearchableCities(),
   ]);
 
@@ -139,6 +141,7 @@ export default async function SearchPage({ searchParams }: Props) {
                   type={listing.type}
                   image={listing.images?.[0] ?? null}
                   score={listing.property_score}
+                  hotScore={listing.hotScore}
                 />
               ))}
             </div>
@@ -160,6 +163,7 @@ function SearchResultCard({
   type,
   image,
   score,
+  hotScore,
 }: {
   title: string;
   slug: string;
@@ -169,6 +173,7 @@ function SearchResultCard({
   type: "sale" | "rent";
   image: string | null;
   score: number | null;
+  hotScore: number | null;
 }) {
   return (
     <Link
@@ -211,6 +216,7 @@ function SearchResultCard({
             {currency} · {type === "rent" ? "renta" : "venta"}
           </span>
         </p>
+        <HotnessGauge score={hotScore} />
       </div>
     </Link>
   );

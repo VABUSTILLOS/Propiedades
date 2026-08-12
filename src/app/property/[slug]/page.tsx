@@ -13,9 +13,11 @@ import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-bu
 import {
   getBenchmark,
   getColoniaDiscount,
+  toHotScore,
 } from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -56,6 +58,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
 
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
+  const hotScore = toHotScore(discountPct, listing);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -184,6 +187,38 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                   <p className="text-sm text-muted-foreground">
                     ~${listing.precio_m2_terreno.toLocaleString()} / m² terreno
                   </p>
+                )}
+
+                {hotScore != null && (
+                  <div className="mt-4 rounded-xl border bg-card p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-semibold">Oportunidad</p>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {hotScore}/100
+                      </span>
+                    </div>
+                    <HotnessGauge score={hotScore} />
+                    <dl className="mt-3 space-y-1 border-t pt-2 text-xs text-muted-foreground">
+                      <div className="flex justify-between">
+                        <dt>Ahorro vs. colonia (50%)</dt>
+                        <dd className="font-medium text-foreground">
+                          {discountPct != null
+                            ? `${discountPct.toFixed(1)}%`
+                            : "Sin dato"}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt>$/m² construido (50%)</dt>
+                        <dd className="font-medium text-foreground">
+                          {listing.precio_m2_const != null
+                            ? `$${listing.precio_m2_const.toLocaleString()}`
+                            : listing.precio_m2_terreno != null
+                              ? `$${listing.precio_m2_terreno.toLocaleString()}`
+                              : "Sin dato"}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
                 )}
               </CardContent>
             </Card>

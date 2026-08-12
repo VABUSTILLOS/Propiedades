@@ -105,6 +105,55 @@ export const paginationSchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
 });
 
+/**
+ * Map viewport bounds serialized as `minLat,minLng,maxLat,maxLng` (same
+ * corner order as balilistings.com `bounds=` param). The two corners may
+ * arrive in any order; `parseBoundsString` normalizes them.
+ */
+export const boundsSchema = z
+  .string()
+  .regex(
+    /^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$/,
+    "bounds debe tener formato minLat,minLng,maxLat,maxLng",
+  );
+
+/** `mapSearch=true/false` drives whether the map mode is active. */
+export const mapSearchSchema = z.enum(["true", "false"]).default("false");
+
+export type MapBounds = {
+  minLat: number;
+  minLng: number;
+  maxLat: number;
+  maxLng: number;
+};
+
+/**
+ * Parses a `minLat,minLng,maxLat,maxLng` bounds string into a normalized
+ * `MapBounds` (corners sorted so min ≤ max). Returns null when malformed or
+ * out of range, so callers can silently fall back to unfiltered results.
+ */
+export function parseBoundsString(s: string): MapBounds | null {
+  const parts = s.split(",").map(Number);
+  if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n))) return null;
+  const [lat1, lng1, lat2, lng2] = parts;
+  const minLat = Math.min(lat1, lat2);
+  const maxLat = Math.max(lat1, lat2);
+  const minLng = Math.min(lng1, lng2);
+  const maxLng = Math.max(lng1, lng2);
+  if (minLat < -90 || maxLat > 90 || minLng < -180 || maxLng > 180) return null;
+  return { minLat, minLng, maxLat, maxLng };
+}
+
+/** Stringifies a MapBounds back to the `minLat,minLng,maxLat,maxLng` URL form. */
+export function boundsToString(bounds: MapBounds): string {
+  return [
+    bounds.minLat,
+    bounds.minLng,
+    bounds.maxLat,
+    bounds.maxLng,
+  ].map((n) => n.toFixed(6)).join(",");
+}
+
 export const searchParamsSchema = paginationSchema.extend({
   query: z.string().trim().max(200).optional(),
   type: listingTypeSchema.optional(),
@@ -116,8 +165,25 @@ export const searchParamsSchema = paginationSchema.extend({
   colonia: z.string().trim().max(100).optional(),
   minM2: z.coerce.number().min(0).optional(),
   maxM2: z.coerce.number().min(0).optional(),
-  sortBy: z.enum(["price_asc", "price_desc", "newest", "score"]).default("newest"),
+  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot"]).default("newest"),
+  bounds: boundsSchema.optional(),
+  mapSearch: mapSearchSchema,
 });
+
+/**
+ * Query params for the paginated `/api/search` and `/api/search/markers`
+ * routes: `offset`/`limit` instead of `page`/`pageSize`, plus the
+ * listados/investor extras (`isLand`, CSV `categories`) surfaced to the API.
+ */
+export const apiSearchParamsSchema = searchParamsSchema
+  .omit({ page: true, pageSize: true })
+  .extend({
+    offset: z.coerce.number().int().min(0).default(0),
+    limit: z.coerce.number().int().min(1).max(100).default(24),
+    isLand: z.enum(["true", "false"]).optional(),
+    categories: z.string().optional(),
+  });
+export type ApiSearchParams = z.infer<typeof apiSearchParamsSchema>;
 
 // --- Listados (portal page with tabs) ----------------------------------------------
 export const listadosTabSchema = z.enum(["todos", "venta", "renta", "tierra"]);
@@ -137,7 +203,9 @@ export const listadosParamsSchema = paginationSchema.extend({
   colonia: z.string().trim().max(100).optional(),
   minM2: z.coerce.number().min(0).optional(),
   maxM2: z.coerce.number().min(0).optional(),
-  sortBy: z.enum(["price_asc", "price_desc", "newest", "score"]).default("newest"),
+  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot"]).default("newest"),
+  bounds: boundsSchema.optional(),
+  mapSearch: mapSearchSchema,
 });
 export type ListadosParams = z.infer<typeof listadosParamsSchema>;
 
@@ -157,6 +225,8 @@ export type InvestorTab = z.infer<typeof investorTabSchema>;
  */
 export const investorParamsSchema = paginationSchema.extend({
   tab: investorTabSchema.default("todos"),
+  bounds: boundsSchema.optional(),
+  mapSearch: mapSearchSchema,
 });
 export type InvestorParams = z.infer<typeof investorParamsSchema>;
 

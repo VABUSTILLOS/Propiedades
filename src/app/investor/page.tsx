@@ -5,7 +5,7 @@ import {
   searchListings,
   type SearchFilters,
 } from "@/modules/search/queries";
-import { getBenchmark, getColoniaDiscount } from "@/modules/market-data/queries";
+import { getBenchmark, getColoniaDiscount, toHotScore } from "@/modules/market-data/queries";
 import { InvestorDashboardClient } from "@/modules/market-data/components/investor-dashboard-client";
 import { investorParamsSchema, type InvestorTab } from "@/modules/lib/schemas";
 import type {
@@ -36,6 +36,7 @@ export type InvestorItem = {
   discountAvaluo: number | null;
   benchmarkConst: number | null;
   benchmarkLand: number | null;
+  hotScore: number | null;
   image: string | null;
   // Investment-specific financial fields.
   costoReparacion: number | null;
@@ -164,6 +165,7 @@ function toInvestorItem(
       benchmark?.avg_price_m2_land != null
         ? Math.round(benchmark.avg_price_m2_land)
         : null,
+    hotScore: toHotScore(discountPct, p),
     image: p.images?.[0] ?? null,
     costoReparacion: p.costo_reparacion_estimado,
     valorPostReparacion: p.valor_post_reparacion_estimado,

@@ -16,6 +16,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { cn } from "@/lib/utils";
 import type { InvestorItem } from "@/app/investor/page";
 import type { InvestorTab } from "@/modules/lib/schemas";
@@ -53,6 +54,7 @@ export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
   const [maxM2Land, setMaxM2Land] = useState("");
   const [minDiscount, setMinDiscount] = useState("");
   const [city, setCity] = useState("all");
+  const [sortBy, setSortBy] = useState<"newest" | "hot">("newest");
 
   const cities = useMemo(() => {
     const set = new Set(items.map((i) => i.city).filter(Boolean));
@@ -63,20 +65,24 @@ export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
   const maxLandNum = Number(maxM2Land) || Infinity;
   const minDiscountNum = Number(minDiscount) || 0;
 
-  const filtered = useMemo(
-    () =>
-      items.filter((item) => {
-        const constPerM2 = item.precio_m2_const ?? 0;
-        const landPerM2 = item.precio_m2_terreno ?? 0;
-        const discount = item.discountPct ?? 0;
-        if (constPerM2 > maxConstNum) return false;
-        if (landPerM2 > maxLandNum) return false;
-        if (discount < minDiscountNum) return false;
-        if (city !== "all" && item.city !== city) return false;
-        return true;
-      }),
-    [items, maxConstNum, maxLandNum, minDiscountNum, city],
-  );
+  const filtered = useMemo(() => {
+    const matches = items.filter((item) => {
+      const constPerM2 = item.precio_m2_const ?? 0;
+      const landPerM2 = item.precio_m2_terreno ?? 0;
+      const discount = item.discountPct ?? 0;
+      if (constPerM2 > maxConstNum) return false;
+      if (landPerM2 > maxLandNum) return false;
+      if (discount < minDiscountNum) return false;
+      if (city !== "all" && item.city !== city) return false;
+      return true;
+    });
+
+    if (sortBy === "hot") {
+      // Hotness is pre-computed per item; null scores sink to the bottom.
+      return [...matches].sort((a, b) => (b.hotScore ?? -1) - (a.hotScore ?? -1));
+    }
+    return matches;
+  }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy]);
 
   const selectTab = (value: InvestorTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -150,6 +156,17 @@ export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
                 {c}
               </option>
             ))}
+          </select>
+        </label>
+        <label className="block text-xs text-muted-foreground">
+          Ordenar
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as "newest" | "hot")}
+            className="mt-1 block rounded-md border bg-background px-2 py-1 text-sm"
+          >
+            <option value="newest">Más recientes</option>
+            <option value="hot">Más hot (oportunidad)</option>
           </select>
         </label>
       </div>
@@ -262,6 +279,8 @@ function InvestorCard({ item }: { item: InvestorItem }) {
             {item.currency}
           </span>
         </p>
+
+        <HotnessGauge score={item.hotScore} />
 
         <InvestmentKpis item={item} />
 

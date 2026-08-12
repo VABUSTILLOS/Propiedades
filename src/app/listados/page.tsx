@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import {
   countActiveListings,
-  searchListings,
+  searchListingsWithHot,
   type SearchFilters,
 } from "@/modules/search/queries";
 import { listadosParamsSchema, type ListadosTab } from "@/modules/lib/schemas";
@@ -60,7 +60,7 @@ export default async function ListadosPage({ searchParams }: Props) {
 
   const [user, listings, counts] = await Promise.all([
     getCurrentUser(),
-    searchListings(filters),
+    searchListingsWithHot(filters),
     Promise.all([
       countActiveListings(tabToFilters.todos),
       countActiveListings(tabToFilters.venta),
@@ -99,7 +99,11 @@ export default async function ListadosPage({ searchParams }: Props) {
         ) : (
           <div className="mt-8 grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
             {listings.map((listing) => (
-              <PropertyCard key={listing.id} listing={listing} />
+              <PropertyCard
+                key={listing.id}
+                listing={listing}
+                hotScore={listing.hotScore}
+              />
             ))}
           </div>
         )}

@@ -481,6 +481,30 @@ function createdFromPublished(daysAgo) {
   return d.toISOString();
 }
 
+/**
+ * Extract relative published days from detail markdown. Page-2+ tiles lack the
+ * "Publicado" label, but detail pages always show it ("Publicado hace 58 días").
+ * Returns days ago (number) or null when unknown.
+ */
+function daysFromDetailMarkdown(md) {
+  if (!md) return null;
+  const rel = md.match(/Publicado\s+(hoy|desde ayer|hace\s+\d+\s+(?:días?|horas?|minutos?))/i);
+  if (rel) {
+    const label = rel[0].replace(/^Publicado\s+/i, "").toLowerCase();
+    if (label === "hoy") return 0;
+    if (label === "desde ayer") return 1;
+    const n = label.match(/hace\s+(\d+)\s+(días?|horas?|minutos?)/i);
+    if (n) {
+      const count = parseInt(n[1], 10);
+      const unit = n[2].toLowerCase();
+      if (unit.startsWith("día")) return count;
+      if (unit.startsWith("hora")) return Math.max(0, Math.round(count / 24));
+      return 0;
+    }
+  }
+  return null;
+}
+
 /* ------------------------------------------------------------------ *
  *  Investment classification (keyword heuristic fallback)
  * ------------------------------------------------------------------ */
@@ -649,6 +673,15 @@ async function main() {
     let extracted = null;
     const markdown = await fetchDetail(listing);
     if (markdown) {
+      // Page-2+ tiles have no "Publicado" label; the detail page always does.
+      if (!listing.publishedLabel) {
+        const days = daysFromDetailMarkdown(markdown);
+        if (days !== null) {
+          listing.publishedDays = days;
+          listing.publishedLabel = `hace ${days} días`;
+          console.log(`  fecha del detalle: ${listing.publishedLabel}`);
+        }
+      }
       extracted = await extractFromDetail(markdown, listing.title);
       if (extracted) {
         console.log(

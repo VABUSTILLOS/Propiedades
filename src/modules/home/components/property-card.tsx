@@ -5,6 +5,7 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 
 /**
  * Public property card for the homepage featured grid.
@@ -14,10 +15,13 @@ import { CardFavoriteButton } from "@/modules/home/components/card-favorite-butt
 export function PropertyCard({
   listing,
   saved = false,
+  hotScore,
 }: {
   listing: PropertiesRow;
   /** Whether the current user already saved this property as a favorite. */
   saved?: boolean;
+  /** Opportunity score 0–100; renders the traffic-light gauge when present. */
+  hotScore?: number | null;
 }) {
   const price =
     listing.price > 0
@@ -76,6 +80,8 @@ export function PropertyCard({
           </span>
         </p>
         <p className="pt-1 text-lg font-bold">{price}</p>
+
+        {hotScore != null && <HotnessGauge score={hotScore} />}
 
         {(listing.recamaras != null ||
           listing.banos != null ||
