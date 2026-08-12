@@ -16,6 +16,7 @@ import type {
   PropertiesRow,
 } from "@/modules/lib/database.types";
 import {
+  calcularPosibleRenta,
   estimateMantenimiento,
   estimatePredial,
   formatMxn,
@@ -130,25 +131,6 @@ function ResidentialView({
       </details>
     </div>
   );
-}
-
-/**
- * Estimated monthly rent potential based on 85% of the listing price and the
- * property category. Local/bodega properties use a flat 0.85% rate; everything
- * else uses a tiered rate that decreases as the price increases.
- */
-function calcularPosibleRenta(property: PropertiesRow): number {
-  const price = property.price * 0.85;
-  const category = property.category;
-
-  if (category === "local" || category === "bodega") {
-    return price * 0.0085;
-  }
-  if (price <= 1_000_000) return price * 0.008;
-  if (price <= 1_500_000) return price * 0.009;
-  if (price <= 2_500_000) return price * 0.0075;
-  if (price <= 3_500_000) return price * 0.007;
-  return price * 0.006;
 }
 
 function InvestorView({

@@ -6,6 +6,7 @@ import type {
 } from "@/modules/lib/database.types";
 import { buildWhatsAppInquiryLink } from "@/modules/chat/share";
 import {
+  calcularPosibleRenta,
   estimateEscrituracion,
   estimateMantenimiento,
   estimatePredial,
@@ -77,7 +78,7 @@ export async function generateInvestmentPdf({
     doc,
     y,
     "Mantenimiento anual estimado",
-    formatMxn(estimateMantenimiento(property.price)),
+    formatMxn(estimateMantenimiento(calcularPosibleRenta(property))),
     "1% del valor de la propiedad",
   );
   y = drawRow(doc, y, "Escrituración estimada", formatMxn(estimateEscrituracion(property.price)));
@@ -373,7 +374,7 @@ function arcToCubics(
   const vy = (y1p - cyp) / ry;
   const ux = (-x1p - cxp) / rx;
   const uy = (-y1p - cyp) / ry;
-  let theta1 = angle(1, 0, vx, vy);
+  const theta1 = angle(1, 0, vx, vy);
   let deltaTheta = angle(vx, vy, ux, uy);
   if (!sweep && deltaTheta > 0) deltaTheta -= 2 * Math.PI;
   if (sweep && deltaTheta < 0) deltaTheta += 2 * Math.PI;
