@@ -339,10 +339,26 @@ export const propertyWizardStep4Schema = z.object({
   video_url: z.string().url().nullable().optional(),
 });
 
+/** Who is reachable for a listing: real-estate agency, broker/agency, or private seller. */
+export const propertyContactTypeSchema = z.enum([
+  "inmobiliaria",
+  "agencia",
+  "particular",
+]);
+
+export const propertyWizardStep5Schema = z.object({
+  contact_name: z.string().trim().max(200).nullable().optional(),
+  contact_type: propertyContactTypeSchema.nullable().optional(),
+  contact_phone: z.string().trim().max(50).nullable().optional(),
+  contact_whatsapp: z.string().trim().max(50).nullable().optional(),
+  contact_email: z.string().trim().email().max(200).nullable().optional(),
+});
+
 export const propertyCreateSchema = propertyWizardStep1Schema
   .merge(propertyWizardStep2Schema)
   .merge(propertyWizardStep3Schema)
-  .merge(propertyWizardStep4Schema);
+  .merge(propertyWizardStep4Schema)
+  .merge(propertyWizardStep5Schema);
 
 export const propertyPublishSchema = z.object({
   status: propertyStatusSchema,

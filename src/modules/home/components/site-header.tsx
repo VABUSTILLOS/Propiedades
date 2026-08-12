@@ -7,7 +7,6 @@ import type { AuthUser } from "@/modules/auth/session";
 const NAV_LINKS = [
   { href: "/rentas", label: "Rentar" },
   { href: "/search", label: "Comprar" },
-  { href: "/rentas", label: "Rentas" },
   { href: "/investor", label: "Invertir" },
   { href: "/fsbo", label: "Vender" },
   { href: "/listados", label: "Listados" },

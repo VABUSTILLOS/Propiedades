@@ -14,12 +14,13 @@ import {
   propertyWizardStep2Schema,
   propertyWizardStep3Schema,
   propertyWizardStep4Schema,
+  propertyWizardStep5Schema,
 } from "@/modules/lib/schemas";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
 import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
-type WizardStep = 1 | 2 | 3 | 4;
+type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 /**
  * Create a new draft listing from the wizard's first step.
@@ -90,6 +91,7 @@ export async function saveWizardStep(
     2: propertyWizardStep2Schema,
     3: propertyWizardStep3Schema,
     4: propertyWizardStep4Schema,
+    5: propertyWizardStep5Schema,
   };
 
   const parsed = parseInput(schemaMap[step], input);
@@ -109,7 +111,7 @@ export async function saveWizardStep(
     return fail("No eres dueño de este listado.");
   }
 
-  const nextStep = (Math.min(step + 1, 4) as WizardStep);
+  const nextStep = (Math.min(step + 1, 5) as WizardStep);
   const { error } = await supabase
     .from("properties")
     .update({
@@ -222,6 +224,47 @@ export async function updateListingCategory(
   const { error } = await supabase
     .from("properties")
     .update({ category: parsed.data })
+    .eq("id", listingId);
+
+  if (error) {
+    return fail(error.message);
+  }
+
+  revalidatePath("/my-listings");
+  revalidatePath("/property/[slug]");
+  return ok({ id: listingId });
+}
+
+/**
+ * Update the contact data (agent WhatsApp, phone, email…) of an existing
+ * listing. Only the property owner can mutate (enforced server-side + RLS).
+ */
+export async function updateListingContact(
+  listingId: string,
+  input: Record<string, unknown>,
+): Promise<ActionResult<{ id: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const parsed = parseInput(propertyWizardStep5Schema, input);
+  if (!parsed.success) {
+    return fail(parsed.error, parsed.fieldErrors);
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: existing } = await supabase
+    .from("properties")
+    .select("owner_id")
+    .eq("id", listingId)
+    .limit(1);
+  if (existing?.[0]?.owner_id !== user.id) {
+    return fail("No eres dueño de este listado.");
+  }
+
+  const { error } = await supabase
+    .from("properties")
+    .update(parsed.data as Record<string, unknown>)
     .eq("id", listingId);
 
   if (error) {
