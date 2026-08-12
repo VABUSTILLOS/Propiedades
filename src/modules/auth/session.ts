@@ -76,7 +76,7 @@ export async function requireUser(): Promise<AuthUser> {
 export async function requireUserOrThrow(): Promise<AuthUser> {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("Authentication required");
+    throw new Error("Se requiere autenticación");
   }
   return user;
 }

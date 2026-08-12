@@ -26,7 +26,7 @@ export async function updateBranding(input: {
   const subdomain = input.subdomain?.trim().toLowerCase();
   if (subdomain) {
     if (!/^[a-z0-9-]{2,63}$/.test(subdomain)) {
-      return fail("Subdomain must be 2–63 lowercase letters, digits, or dashes.");
+      return fail("El subdominio debe tener de 2 a 63 letras minúsculas, dígitos o guiones.");
     }
   }
 

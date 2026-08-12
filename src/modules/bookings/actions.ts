@@ -37,7 +37,7 @@ export async function createSlot(
   const start = new Date(parsed.data.startTime);
   const end = new Date(parsed.data.endTime);
   if (start >= end) {
-    return fail("Slot end must be after its start.");
+    return fail("El fin del horario debe ser después de su inicio.");
   }
 
   // Conflict check: any overlapping slot on the same property blocks creation.

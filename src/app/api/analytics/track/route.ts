@@ -13,11 +13,11 @@ export async function POST(req: Request): Promise<Response> {
   try {
     body = await req.json();
   } catch {
-    return Response.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
+    return Response.json({ ok: false, error: "Cuerpo JSON no válido." }, { status: 400 });
   }
 
   if (!isRecord(body)) {
-    return Response.json({ ok: false, error: "Body must be a JSON object." }, { status: 400 });
+    return Response.json({ ok: false, error: "El cuerpo debe ser un objeto JSON." }, { status: 400 });
   }
 
   const flyerId = typeof body.flyerId === "string" ? body.flyerId : "";

@@ -29,14 +29,14 @@ export function requireEnv(scope: "client" | "server" = "client"): void {
   if (scope === "client") {
     if (!env.supabaseUrl || !env.supabaseAnonKey) {
       throw new Error(
-        "Missing Supabase env vars. Copy .env.example to .env.local and fill in NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        "Faltan variables de entorno de Supabase. Copia .env.example a .env.local y completa NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY.",
       );
     }
     return;
   }
   if (!env.supabaseServiceRoleKey) {
     throw new Error(
-      "Missing SUPABASE_SERVICE_ROLE_KEY. It is required for server-side privileged operations.",
+      "Falta SUPABASE_SERVICE_ROLE_KEY. Es necesaria para operaciones privilegiadas del servidor.",
     );
   }
 }

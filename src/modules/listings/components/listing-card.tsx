@@ -21,12 +21,12 @@ import {
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
 const STATUS_LABELS: Record<PropertiesRow["status"], string> = {
-  draft: "Draft",
-  pending_approval: "Pending approval",
-  active: "Active",
-  reserved: "Reserved",
-  sold: "Sold",
-  archived: "Archived",
+  draft: "Borrador",
+  pending_approval: "Pendiente de aprobación",
+  active: "Activo",
+  reserved: "Reservado",
+  sold: "Vendido",
+  archived: "Archivado",
 };
 
 const STATUS_VARIANTS: Record<

@@ -182,7 +182,7 @@ export async function shareWhiteLabel(
 
   const sourceSlug = typeof input.slug === "string" ? input.slug.trim() : "";
   if (!sourceSlug) {
-    return fail("slug is required.");
+    return fail("Se requiere el slug.");
   }
 
   const supabase = await createSupabaseServerClient();

@@ -66,6 +66,6 @@ export function formatZodError(error: ZodError): {
     fieldErrors[key] = fieldErrors[key] ?? [];
     fieldErrors[key].push(issue.message);
   }
-  const firstMessage = error.issues[0]?.message ?? "Invalid input";
+  const firstMessage = error.issues[0]?.message ?? "Entrada no válida";
   return { error: firstMessage, fieldErrors };
 }

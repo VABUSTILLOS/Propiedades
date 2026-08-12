@@ -74,7 +74,7 @@ export async function createTransaction(
   await supabase.from("messages").insert({
     transaction_id: data.id,
     sender_id: user.id,
-    content: "Inquiry started.",
+    content: "Se inició la consulta.",
     is_system_event: true,
     action_payload: null,
   });

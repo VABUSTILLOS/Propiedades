@@ -39,7 +39,7 @@ export async function POST(req: Request): Promise<Response> {
   const signature = req.headers.get("x-hub-signature-256");
   if (!verifyWebhookSignature(rawBody, signature)) {
     return Response.json(
-      { ok: false, error: "Invalid signature." },
+      { ok: false, error: "Firma no válida." },
       { status: 403 },
     );
   }
@@ -48,11 +48,11 @@ export async function POST(req: Request): Promise<Response> {
   try {
     const raw: unknown = JSON.parse(rawBody);
     if (!isRecord(raw)) {
-      return Response.json({ ok: false, error: "Body must be a JSON object." }, { status: 400 });
+      return Response.json({ ok: false, error: "El cuerpo debe ser un objeto JSON." }, { status: 400 });
     }
     payload = raw as WhatsAppWebhookPayload;
   } catch {
-    return Response.json({ ok: false, error: "Invalid JSON body." }, { status: 400 });
+    return Response.json({ ok: false, error: "Cuerpo JSON no válido." }, { status: 400 });
   }
 
   // Only handle WhatsApp business account notifications; other objects
