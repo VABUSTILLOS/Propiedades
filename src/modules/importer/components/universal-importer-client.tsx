@@ -168,6 +168,10 @@ export function UniversalImporterClient() {
         lng: location?.lng ?? draft.lng,
       });
       if (!res.ok) {
+        if (res.code === "AUTH_REQUIRED") {
+          router.push("/sign-up?next=/import");
+          return;
+        }
         setSaveError(res.error);
         return;
       }

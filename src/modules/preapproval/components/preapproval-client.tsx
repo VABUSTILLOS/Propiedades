@@ -26,6 +26,7 @@ type Result = {
   bank_preapproved: boolean;
   bank_name: string | null;
   monthly_payment_estimate: number;
+  persisted: boolean;
   matches: Array<{
     id: string;
     slug: string;
@@ -140,6 +141,18 @@ export function PreapprovalClient({ saved }: Props) {
       {result && (
         <Card>
           <CardContent className="space-y-4 pt-6">
+            {!result.persisted && (
+              <p className="rounded-md border border-dashed bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                Este resultado es una vista previa.{" "}
+                <Link
+                  href="/sign-up?next=/preapproval"
+                  className="font-medium text-primary hover:underline"
+                >
+                  Crea una cuenta para guardar tu preaprobación
+                </Link>{" "}
+                y consultarla después.
+              </p>
+            )}
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-lg border bg-card p-4">
                 <p className="text-xs text-muted-foreground">Crédito máximo</p>

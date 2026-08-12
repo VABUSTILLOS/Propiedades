@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarClock, Gavel, MessageCircle } from "lucide-react";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 import { getSearchableCities } from "@/modules/search/queries";
 import { getMyListings } from "@/modules/listings/queries";
@@ -14,11 +14,11 @@ export const metadata: Metadata = { title: "Módulo FSBO" };
 export const dynamic = "force-dynamic";
 
 export default async function FsboPage() {
-  const user = await requireUser();
-  const profile = await getProfileByUserId(user.id);
+  const user = await getCurrentUser();
+  const profile = user ? await getProfileByUserId(user.id) : null;
   const [cities, listings] = await Promise.all([
     getSearchableCities(),
-    getMyListings(user.id),
+    user ? getMyListings(user.id) : Promise.resolve([]),
   ]);
   const waNumber = profile?.phone?.replace(/\D/g, "") ?? "";
 

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getTransactionById } from "@/modules/transactions/queries";
 import { getListingById } from "@/modules/listings/queries";
 import { getTransactionMessages } from "@/modules/messaging/queries";
@@ -24,7 +25,19 @@ export const metadata: Metadata = { title: "Transaction" };
 
 export default async function TransactionDetailPage({ params }: Props) {
   const { id } = await params;
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-4xl px-6 py-10">
+        <GuestGate
+          title="Detalle de transacción"
+          description="Mensajes, agenda de visitas, ofertas y reseñas de cada transacción. Inicia sesión para ver los detalles."
+          next="/transactions"
+        />
+      </div>
+    );
+  }
 
   const transaction = await getTransactionById(id, user.id);
   if (!transaction) notFound();

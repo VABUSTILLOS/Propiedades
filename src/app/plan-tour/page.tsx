@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { getMyFavorites } from "@/modules/favorites/queries";
 import { env } from "@/modules/lib/env";
 import { TourPlannerClient } from "@/modules/tour/components/tour-planner-client";
@@ -15,8 +16,8 @@ export const dynamic = "force-dynamic";
  * ordering list when no server key is configured.
  */
 export default async function PlanTourPage() {
-  const user = await requireUser();
-  const favorites = await getMyFavorites(user.id);
+  const user = await getCurrentUser();
+  const favorites = user ? await getMyFavorites(user.id) : [];
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-10">
@@ -27,6 +28,18 @@ export default async function PlanTourPage() {
           favoritos.
         </p>
       </div>
+
+      {!user && (
+        <p className="mt-4 rounded-md border bg-card px-3 py-2 text-sm text-muted-foreground">
+          Puedes probar el planificador, pero tus favoritos no se cargarán.{" "}
+          <Link
+            href="/sign-up?next=/plan-tour"
+            className="font-medium text-primary hover:underline"
+          >
+            Inicia sesión para cargar tus favoritos
+          </Link>
+        </p>
+      )}
 
       <TourPlannerClient
         favorites={favorites}

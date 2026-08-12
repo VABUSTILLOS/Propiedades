@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { z } from "zod";
 
-import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
+import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import {
   propertyCreateSchema,
   propertyWizardStep1Schema,
@@ -28,7 +28,8 @@ export async function createDraft(
   _prevState: ActionResult<{ id: string }> | undefined,
   formData: FormData,
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(
     propertyWizardStep1Schema,
     Object.fromEntries(formData.entries()),
@@ -78,7 +79,8 @@ export async function saveWizardStep(
   step: WizardStep,
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
 
   const schemaMap: Record<WizardStep, z.ZodTypeAny> = {
     1: propertyWizardStep1Schema,
@@ -128,7 +130,8 @@ export async function setListingStatus(
   listingId: string,
   status: "active" | "archived",
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const supabase = await createSupabaseServerClient();
 
   const { data: existing } = await supabase
@@ -190,7 +193,8 @@ export async function setListingStatus(
  * Hard-delete a draft (soft-archive is preferred for live listings).
  */
 export async function deleteListing(listingId: string): Promise<ActionResult<undefined>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const supabase = await createSupabaseServerClient();
 
   const { data: existing } = await supabase
@@ -218,7 +222,8 @@ export async function deleteListing(listingId: string): Promise<ActionResult<und
 export async function createImportedDraft(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string; slug: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(importedPropertyDraftSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);

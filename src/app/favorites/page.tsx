@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyFavorites } from "@/modules/favorites/queries";
 import { FavoritesView } from "@/modules/favorites/components/favorites-view";
 import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-panel";
@@ -11,7 +12,20 @@ import { buttonVariants } from "@/components/ui/button";
 export const metadata: Metadata = { title: "Favorites" };
 
 export default async function FavoritesPage() {
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-3xl px-6 py-10">
+        <GuestGate
+          title="Guarda tus propiedades favoritas"
+          description="Arrastra para ordenar tu shortlist o clasifícala en el Kanban (Top Choice / Plan B / Descartadas). Crea una cuenta para guardar tus favoritos."
+          next="/favorites"
+        />
+      </div>
+    );
+  }
+
   const favorites = await getMyFavorites(user.id);
 
   const initialChat = Object.fromEntries(

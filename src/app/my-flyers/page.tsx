@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyFlyers } from "@/modules/flyers/queries";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = { title: "My flyers" };
 
 export default async function MyFlyersPage() {
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-4xl px-6 py-10">
+        <GuestGate
+          title="Crea flyers digitales para tus listados"
+          description="Páginas compartibles con métricas de visitas y captación de leads. Crea una cuenta para generar y medir tus flyers."
+          next="/my-flyers"
+        />
+      </div>
+    );
+  }
+
   const flyers = await getMyFlyers(user.id);
 
   return (

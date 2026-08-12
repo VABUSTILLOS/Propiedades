@@ -24,3 +24,22 @@ export async function getMyFavorites(
 
   return rows ?? [];
 }
+
+/**
+ * Whether a specific property is already in the user's favorites.
+ */
+export async function isFavoriteSaved(
+  userId: string,
+  propertyId: string,
+): Promise<boolean> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data } = await supabase
+    .from("buyer_favorites")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("property_id", propertyId)
+    .limit(1);
+
+  return Boolean(data?.[0]);
+}

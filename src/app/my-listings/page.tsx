@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyListings } from "@/modules/listings/queries";
 import { ListingCard } from "@/modules/listings/components/listing-card";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,7 +10,20 @@ import { buttonVariants } from "@/components/ui/button";
 export const metadata: Metadata = { title: "My listings" };
 
 export default async function MyListingsPage() {
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-6xl px-6 py-10">
+        <GuestGate
+          title="Tus listados en un solo lugar"
+          description="Crea, edita y publica propiedades con el asistente guiado. Crea una cuenta para guardar y administrar tus listados."
+          next="/my-listings"
+        />
+      </div>
+    );
+  }
+
   const listings = await getMyListings(user.id);
 
   return (

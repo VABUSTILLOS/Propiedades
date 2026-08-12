@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { BadgePercent, CheckCircle2, Sparkles } from "lucide-react";
 
 import { createDraft, saveWizardStep, setListingStatus } from "@/modules/listings/actions";
@@ -50,6 +51,7 @@ const initialData: WizardData = {
  * the listing directly on save (no draft step).
  */
 export function FsboWizard({ cities }: { cities: string[] }) {
+  const router = useRouter();
   const [data, setData] = useState<WizardData>(initialData);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{ id: string; slug: string } | null>(null);
@@ -99,6 +101,10 @@ export function FsboWizard({ cities }: { cities: string[] }) {
 
       const draft = await createDraft(undefined, form);
       if (!draft.ok) {
+        if (draft.code === "AUTH_REQUIRED") {
+          router.push("/sign-up?next=/fsbo");
+          return;
+        }
         setError(draft.error);
         return;
       }
@@ -140,6 +146,10 @@ export function FsboWizard({ cities }: { cities: string[] }) {
       for (const [step, payload] of steps) {
         const res = await saveWizardStep(id, step, payload);
         if (!res.ok) {
+          if (res.code === "AUTH_REQUIRED") {
+            router.push("/sign-up?next=/fsbo");
+            return;
+          }
           setError(res.error);
           return;
         }
@@ -147,6 +157,10 @@ export function FsboWizard({ cities }: { cities: string[] }) {
 
       const pub = await setListingStatus(id, "active");
       if (!pub.ok) {
+        if (pub.code === "AUTH_REQUIRED") {
+          router.push("/sign-up?next=/fsbo");
+          return;
+        }
         setError(pub.error);
         return;
       }

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyTransactions } from "@/modules/transactions/queries";
 import { TRANSACTION_LABELS } from "@/modules/transactions/state-machine";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,20 @@ import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = { title: "Transactions" };
 
 export default async function TransactionsPage() {
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-4xl px-6 py-10">
+        <GuestGate
+          title="Da seguimiento a tus transacciones"
+          description="Visitas, ofertas, mensajes y cierre — todo en un solo lugar. Crea una cuenta para iniciar y dar seguimiento a tus transacciones."
+          next="/transactions"
+        />
+      </div>
+    );
+  }
+
   const transactions = await getMyTransactions(user.id);
 
   return (

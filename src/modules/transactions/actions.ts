@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
-import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
+import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { transactionCreateSchema, transactionTransitionSchema } from "@/modules/lib/schemas";
 import { canTransition } from "@/modules/transactions/state-machine";
 import type { TransactionState } from "@/modules/lib/database.types";
@@ -17,7 +17,8 @@ import type { TransactionState } from "@/modules/lib/database.types";
 export async function createTransaction(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(transactionCreateSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);
@@ -90,7 +91,8 @@ export async function createTransaction(
 export async function transitionTransaction(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(transactionTransitionSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);

@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { buttonVariants } from "@/components/ui/button";
 import { UniversalImporterClient } from "@/modules/importer/components/universal-importer-client";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-6xl px-6 py-10">
+        <GuestGate
+          title="Tu panel de control"
+          description="Desde aquí gestionas tus listados, favoritos, transacciones y más. Crea una cuenta para guardar tu progreso y volver a encontrarlo."
+          next="/dashboard"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-10">

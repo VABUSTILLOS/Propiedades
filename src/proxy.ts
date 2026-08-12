@@ -3,18 +3,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseMiddlewareClient } from "@/modules/lib/supabase/middleware";
 
 /**
- * Route prefixes that require an authenticated session.
+ * Guest mode: every route renders for anonymous visitors. Pages and server
+ * actions gate persistence themselves (favorites, publishing, imports…),
+ * redirecting to /sign-up only when the visitor tries to save.
  */
-const PROTECTED_PREFIXES = [
-  "/dashboard",
-  "/listings/new",
-  "/my-listings",
-  "/my-flyers",
-  "/transactions",
-  "/messaging",
-  "/favorites",
-  "/settings",
-];
+const PROTECTED_PREFIXES: string[] = [];
 
 export async function proxy(request: NextRequest) {
   const { supabase, response } =

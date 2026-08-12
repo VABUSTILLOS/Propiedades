@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
-import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
+import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import {
   favoriteKanbanReorderSchema,
   favoriteReorderSchema,
@@ -19,7 +19,8 @@ import {
 export async function upsertFavorite(
   input: Record<string, unknown>,
 ): Promise<ActionResult<{ id: string }>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(favoriteUpsertSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);
@@ -78,7 +79,8 @@ export async function upsertFavorite(
 export async function reorderFavorites(
   input: Record<string, unknown>,
 ): Promise<ActionResult<undefined>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(favoriteReorderSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);
@@ -120,7 +122,8 @@ export async function reorderFavorites(
 export async function removeFavorite(
   favoriteId: string,
 ): Promise<ActionResult<undefined>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase
@@ -143,7 +146,8 @@ export async function removeFavorite(
 export async function setTierColumn(
   input: Record<string, unknown>,
 ): Promise<ActionResult<undefined>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(favoriteSetTierSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);
@@ -179,7 +183,8 @@ export async function setTierColumn(
 export async function reorderFavoritesInColumn(
   input: Record<string, unknown>,
 ): Promise<ActionResult<undefined>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
   const parsed = parseInput(favoriteKanbanReorderSchema, input);
   if (!parsed.success) {
     return fail(parsed.error, parsed.fieldErrors);

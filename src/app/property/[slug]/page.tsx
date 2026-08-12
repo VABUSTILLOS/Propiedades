@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
+import { isFavoriteSaved } from "@/modules/favorites/queries";
+import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
 import {
   getBenchmark,
   getColoniaDiscount,
@@ -35,7 +37,8 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const mode = raw.mode === "investor" ? "inversionista" : "residencia";
 
   const user = await getCurrentUser();
-  const canInquire = Boolean(user && user.id !== listing.owner_id);
+  const canInquire = user?.id !== listing.owner_id;
+  const isSaved = user ? await isFavoriteSaved(user.id, listing.id) : false;
 
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
@@ -68,10 +71,16 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
           {canInquire && (
             <Card>
               <CardContent className="pt-6">
-                <InquireButton propertyId={listing.id} />
+                <InquireButton propertyId={listing.id} propertySlug={slug} />
               </CardContent>
             </Card>
           )}
+
+          <SaveFavoriteButton
+            propertyId={listing.id}
+            propertySlug={slug}
+            initialSaved={isSaved}
+          />
 
           <Card>
             <CardHeader>

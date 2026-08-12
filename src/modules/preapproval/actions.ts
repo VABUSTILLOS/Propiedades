@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUser, requireUserOrThrow } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { preapprovalDataSchema } from "@/modules/lib/schemas";
@@ -15,6 +15,8 @@ export type PreapprovalResult = {
   bank_preapproved: boolean;
   bank_name: string | null;
   monthly_payment_estimate: number;
+  /** false when the guest visitor got a result but it was not persisted. */
+  persisted: boolean;
   matches: Array<{
     id: string;
     slug: string;
@@ -39,7 +41,7 @@ const DOWN_PAYMENT_PCT = 0.2;
 export async function submitPreapproval(
   input: Record<string, unknown>,
 ): Promise<ActionResult<PreapprovalResult>> {
-  const user = await requireUserOrThrow();
+  const user = await getCurrentUser();
   const parsed = parseInput(preapprovalDataSchema, input);
   if (!parsed.success) return fail(parsed.error, parsed.fieldErrors);
 
@@ -59,23 +61,28 @@ export async function submitPreapproval(
       ? 0
       : (maxCredit * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -n));
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      preapproval_data: {
-        infonavit_nss: data.infonavit_nss,
-        max_credit: maxCredit,
-        bank_preapproved: data.bank_preapproved,
-        bank_name: data.bank_name,
-        calculated_at: new Date().toISOString(),
-      } satisfies Json,
-    })
-    .eq("id", user.id);
+  // Guests can run the calculator (demo) but only logged-in users persist.
+  let persisted = false;
+  if (user) {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        preapproval_data: {
+          infonavit_nss: data.infonavit_nss,
+          max_credit: maxCredit,
+          bank_preapproved: data.bank_preapproved,
+          bank_name: data.bank_name,
+          calculated_at: new Date().toISOString(),
+        } satisfies Json,
+      })
+      .eq("id", user.id);
 
-  if (error) return fail(error.message);
+    if (error) return fail(error.message);
 
-  revalidatePath("/preapproval");
+    persisted = true;
+    revalidatePath("/preapproval");
+  }
 
   // Smart matching: active listings the buyer can afford (price <= budget).
   const budget = maxCredit / (1 - DOWN_PAYMENT_PCT);
@@ -109,12 +116,14 @@ export async function submitPreapproval(
     bank_preapproved: data.bank_preapproved,
     bank_name: data.bank_name,
     monthly_payment_estimate: Math.round(monthlyPaymentEstimate),
+    persisted,
     matches,
   });
 }
 
 /**
  * Load the caller's saved preapproval for display on the preapproval page.
+ * Returns the empty shape for guests instead of redirecting.
  */
 export async function getMyPreapproval(): Promise<{
   infonavit_nss: string | null;
@@ -123,7 +132,17 @@ export async function getMyPreapproval(): Promise<{
   bank_name: string | null;
   calculated_at: string | null;
 }> {
-  const user = await requireUser();
+  const empty = {
+    infonavit_nss: null,
+    max_credit: 0,
+    bank_preapproved: false,
+    bank_name: null,
+    calculated_at: null,
+  } as const;
+
+  const user = await getCurrentUser();
+  if (!user) return empty;
+
   const supabase = await createSupabaseServerClient();
 
   const { data } = await supabase
@@ -135,13 +154,7 @@ export async function getMyPreapproval(): Promise<{
 
   const raw = data?.[0]?.preapproval_data;
   if (!raw || typeof raw !== "object") {
-    return {
-      infonavit_nss: null,
-      max_credit: 0,
-      bank_preapproved: false,
-      bank_name: null,
-      calculated_at: null,
-    };
+    return empty;
   }
 
   const obj = raw as Record<string, unknown>;

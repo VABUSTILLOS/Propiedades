@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { requireUser } from "@/modules/auth/session";
 import { UniversalImporterClient } from "@/modules/importer/components/universal-importer-client";
 
 export const metadata: Metadata = { title: "Importar con IA" };
@@ -8,7 +7,6 @@ export const metadata: Metadata = { title: "Importar con IA" };
 export const dynamic = "force-dynamic";
 
 export default async function ImportPage() {
-  await requireUser();
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-10">

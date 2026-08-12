@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getFlyerAnalytics, getMyFlyerById } from "@/modules/flyers/queries";
 import { FlyerEngagementPanel } from "@/modules/flyers/components/flyer-engagement-panel";
 import { WhiteLabelShareButton } from "@/modules/flyers/components/white-label-share-button";
@@ -17,7 +18,19 @@ export const metadata: Metadata = { title: "Flyer analytics" };
 
 export default async function FlyerAnalyticsPage({ params }: Props) {
   const { id } = await params;
-  const user = await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-4xl px-6 py-10">
+        <GuestGate
+          title="Analiza el rendimiento de tus flyers"
+          description="Visitas, leads capturados y tiempo de interacción de cada flyer. Crea una cuenta para ver tus métricas."
+          next="/my-flyers"
+        />
+      </div>
+    );
+  }
 
   const flyer = await getMyFlyerById(id, user.id);
   if (!flyer) notFound();

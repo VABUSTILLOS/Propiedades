@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { requireRole } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getAgentDirectory } from "@/modules/profiles/queries";
 import { getMlsListings } from "@/modules/listings/queries";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +13,21 @@ export const dynamic = "force-dynamic";
 
 export default async function MlsNetworkPage() {
   // MLS listings are private to the agent network per RLS.
-  await requireRole(["agent", "admin"]);
+  const user = await getCurrentUser();
+  const isAgent = user?.role === "agent" || user?.role === "admin";
+
+  if (!isAgent) {
+    return (
+      <div className="mx-auto w-full max-w-6xl px-6 py-10">
+        <GuestGate
+          title="Red MLS · Solo agentes"
+          description="La bolsa privada de propiedades con desglose transparente de comisiones está reservada para agentes y administradores registrados."
+          next="/mls"
+          actionLabel="Crear cuenta de agente"
+        />
+      </div>
+    );
+  }
 
   const [agents, listings] = await Promise.all([
     getAgentDirectory(),

@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
 
-import { requireUser } from "@/modules/auth/session";
+import { getCurrentUser } from "@/modules/auth/session";
+import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { ListingWizard } from "@/modules/listings/components/listing-wizard";
 
 export const metadata: Metadata = { title: "List a property" };
 
 export default async function NewListingPage() {
-  await requireUser();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return (
+      <div className="mx-auto w-full max-w-6xl px-6 py-10">
+        <GuestGate
+          title="Publica una propiedad"
+          description="El asistente guiado te acompaña paso a paso para crear y publicar tu listado. Crea una cuenta para guardar tu borrador."
+          next="/listings/new"
+          actionLabel="Crear cuenta y publicar"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-10">

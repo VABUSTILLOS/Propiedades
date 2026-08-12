@@ -6,7 +6,12 @@ import { type ZodSchema, type ZodError } from "zod";
  */
 export type ActionResult<TData = undefined> =
   | { ok: true; data: TData }
-  | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
+  | {
+      ok: false;
+      error: string;
+      code?: string;
+      fieldErrors?: Record<string, string[]>;
+    };
 
 export function ok<TData>(data: TData): ActionResult<TData> {
   return { ok: true, data };
@@ -15,8 +20,22 @@ export function ok<TData>(data: TData): ActionResult<TData> {
 export function fail(
   error: string,
   fieldErrors?: Record<string, string[]>,
+  code?: string,
 ): ActionResult<never> {
-  return { ok: false, error, fieldErrors };
+  return { ok: false, error, fieldErrors, code };
+}
+
+/**
+ * Sent when a mutation needs an authenticated user. Client components use
+ * `code === "AUTH_REQUIRED"` to redirect to /sign-up instead of rendering a
+ * raw error.
+ */
+export function failAuth(): ActionResult<never> {
+  return {
+    ok: false,
+    code: "AUTH_REQUIRED",
+    error: "Debes iniciar sesión para continuar.",
+  };
 }
 
 /**
