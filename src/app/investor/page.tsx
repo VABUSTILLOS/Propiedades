@@ -7,7 +7,12 @@ import {
 } from "@/modules/search/queries";
 import { getBenchmark, getColoniaDiscount, toHotScore } from "@/modules/market-data/queries";
 import { InvestorDashboardClient } from "@/modules/market-data/components/investor-dashboard-client";
-import { investorParamsSchema, type InvestorTab } from "@/modules/lib/schemas";
+import {
+  investorParamsSchema,
+  parseBoundsString,
+  type InvestorTab,
+  type MapBounds,
+} from "@/modules/lib/schemas";
 import type {
   PropertiesRow,
   MarketBenchmarksRow,
@@ -38,6 +43,8 @@ export type InvestorItem = {
   benchmarkLand: number | null;
   hotScore: number | null;
   image: string | null;
+  lat: number;
+  lng: number;
   // Investment-specific financial fields.
   costoReparacion: number | null;
   valorPostReparacion: number | null;
@@ -65,6 +72,10 @@ export default async function InvestorPage({ searchParams }: Props) {
   const raw = await searchParams;
   const parsed = investorParamsSchema.safeParse(raw);
   const activeTab: InvestorTab = parsed.data?.tab ?? "todos";
+  const bounds: MapBounds | null = parsed.data?.bounds
+    ? (parseBoundsString(parsed.data.bounds) ?? null)
+    : null;
+  const mapSearch = parsed.data?.mapSearch === "true";
 
   const baseFilters: Omit<SearchFilters, "limit" | "sortBy"> = {};
 
@@ -131,6 +142,8 @@ export default async function InvestorPage({ searchParams }: Props) {
         items={items}
         activeTab={activeTab}
         counts={countByTab}
+        initialView={mapSearch ? "map" : "list"}
+        initialBounds={bounds}
       />
     </div>
   );
@@ -167,6 +180,8 @@ function toInvestorItem(
         : null,
     hotScore: toHotScore(discountPct, p),
     image: p.images?.[0] ?? null,
+    lat: p.lat,
+    lng: p.lng,
     costoReparacion: p.costo_reparacion_estimado,
     valorPostReparacion: p.valor_post_reparacion_estimado,
     institucionBancaria: p.institucion_bancaria,

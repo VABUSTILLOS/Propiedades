@@ -135,7 +135,7 @@ export type MapBounds = {
 export function parseBoundsString(s: string): MapBounds | null {
   const parts = s.split(",").map(Number);
   if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n))) return null;
-  const [lat1, lng1, lat2, lng2] = parts;
+  const [lat1, lng1, lat2, lng2] = parts as [number, number, number, number];
   const minLat = Math.min(lat1, lat2);
   const maxLat = Math.max(lat1, lat2);
   const minLng = Math.min(lng1, lng2);

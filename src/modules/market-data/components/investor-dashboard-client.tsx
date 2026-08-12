@@ -17,6 +17,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
+import { MapViewToggle, type MapView } from "@/modules/maps/components/map-view-toggle";
+import { PropertiesMap } from "@/modules/maps/components/properties-map";
+import type { PropertyMapMarker } from "@/modules/search/queries";
+import type { MapBounds } from "@/modules/lib/schemas";
 import {
   estimateEscrituracion,
   estimatePredial,
@@ -29,6 +33,59 @@ import type { InvestorTab } from "@/modules/lib/schemas";
 import type { PropertyDealType } from "@/modules/lib/database.types";
 
 const DEAL_THRESHOLD_PCT = 25;
+
+/** Sort options available on the investor dashboard. */
+type SortKey =
+  | "newest"
+  | "hot"
+  | "price-asc"
+  | "price-desc"
+  | "m2-const-asc"
+  | "m2-const-desc"
+  | "m2-land-asc"
+  | "m2-land-desc"
+  | "avaluo-discount";
+
+/** Comparators that always sink null/unknown values to the bottom. */
+function compareAsc(a: number | null, b: number | null): number {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return a - b;
+}
+
+function compareDesc(a: number | null, b: number | null): number {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return b - a;
+}
+
+/** Investor opportunities are all for-sale listings (deal_type, no rent). */
+function toMapMarker(item: InvestorItem): PropertyMapMarker {
+  return {
+    id: item.id,
+    title: item.title,
+    slug: item.slug,
+    city: item.city,
+    colonia: item.colonia,
+    price: item.price,
+    currency: item.currency,
+    type: "sale",
+    images: item.image ? [item.image] : null,
+    lat: item.lat,
+    lng: item.lng,
+  };
+}
+
+function inBounds(bounds: MapBounds, item: InvestorItem): boolean {
+  return (
+    item.lat >= bounds.minLat &&
+    item.lat <= bounds.maxLat &&
+    item.lng >= bounds.minLng &&
+    item.lng <= bounds.maxLng
+  );
+}
 
 const TAB_DEFS: {
   value: InvestorTab;
@@ -47,20 +104,32 @@ type Props = {
   items: InvestorItem[];
   activeTab: InvestorTab;
   counts: Record<InvestorTab, number>;
+  initialView?: MapView;
+  initialBounds?: MapBounds | null;
 };
 
 /**
  * Investor dashboard: opportunity tabs driven by URL deal_type/category
- * filters, with per-category financial KPIs on each card.
+ * filters, with per-category financial KPIs on each card, plus an
+ * Airbnb-style List ⇄ Mapa toggle. The map is fed by the client-side
+ * filtered items (no extra API calls) and its zone pill filters the grid.
  */
-export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
+export function InvestorDashboardClient({
+  items,
+  activeTab,
+  counts,
+  initialView = "list",
+  initialBounds = null,
+}: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [view, setView] = useState<MapView>(initialView);
+  const [bounds, setBounds] = useState<MapBounds | null>(initialBounds);
   const [maxM2Const, setMaxM2Const] = useState("");
   const [maxM2Land, setMaxM2Land] = useState("");
   const [minDiscount, setMinDiscount] = useState("");
   const [city, setCity] = useState("all");
-  const [sortBy, setSortBy] = useState<"newest" | "hot">("newest");
+  const [sortBy, setSortBy] = useState<SortKey>("newest");
 
   const cities = useMemo(() => {
     const set = new Set(items.map((i) => i.city).filter(Boolean));
@@ -89,6 +158,15 @@ export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
     }
     return matches;
   }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy]);
+
+  // Pins for the map: one per filtered opportunity (all for-sale).
+  const markers = useMemo(() => filtered.map(toMapMarker), [filtered]);
+
+  // When a zone is active, the grid under the map honors it client-side.
+  const zoneFiltered = useMemo(
+    () => (bounds ? filtered.filter((item) => inBounds(bounds, item)) : filtered),
+    [filtered, bounds],
+  );
 
   const selectTab = (value: InvestorTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -177,20 +255,66 @@ export function InvestorDashboardClient({ items, activeTab, counts }: Props) {
         </label>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.length === 0 ? (
-          <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2 lg:col-span-3">
-            <p className="text-sm text-muted-foreground">
-              No hay oportunidades que coincidan con esta vista.
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Prueba otra pestaña o ajusta los filtros de $/m², descuento o ciudad.
-            </p>
-          </div>
-        ) : (
-          filtered.map((item) => <InvestorCard key={item.id} item={item} />)
-        )}
+      <div className="flex items-center justify-end">
+        <MapViewToggle view={view} onChange={setView} count={filtered.length} />
       </div>
+
+      {view === "map" ? (
+        <div className="space-y-6">
+          <PropertiesMap
+            markers={markers}
+            initialBounds={bounds}
+            activeBounds={bounds}
+            onApplyBounds={setBounds}
+            onResetBounds={() => setBounds(null)}
+            heightClass="h-[60vh]"
+          />
+
+          <div>
+            <h2 className="text-lg font-semibold">
+              {zoneFiltered.length === 0
+                ? "Ninguna oportunidad en esta zona"
+                : `${zoneFiltered.length} ${
+                    zoneFiltered.length === 1 ? "oportunidad" : "oportunidades"
+                  } en esta zona`}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {bounds
+                ? "El mapa ajusta la cuadrícula a la zona visible."
+                : "Mueve o acerca el mapa para filtrar por zona."}
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {zoneFiltered.length === 0 ? (
+                <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2 lg:col-span-3">
+                  <p className="text-sm text-muted-foreground">
+                    No hay oportunidades en esta zona. Restablece la zona o prueba
+                    otra pestaña.
+                  </p>
+                </div>
+              ) : (
+                zoneFiltered.map((item) => (
+                  <InvestorCard key={item.id} item={item} />
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.length === 0 ? (
+            <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2 lg:col-span-3">
+              <p className="text-sm text-muted-foreground">
+                No hay oportunidades que coincidan con esta vista.
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Prueba otra pestaña o ajusta los filtros de $/m², descuento o ciudad.
+              </p>
+            </div>
+          ) : (
+            filtered.map((item) => <InvestorCard key={item.id} item={item} />)
+          )}
+        </div>
+      )}
     </div>
   );
 }

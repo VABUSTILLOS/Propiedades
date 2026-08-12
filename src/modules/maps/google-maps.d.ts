@@ -18,9 +18,15 @@ declare global {
       toJSON(): LatLngLiteral;
     }
 
-    interface LatLngBounds {
+    class LatLngBounds {
+      constructor(
+        sw?: LatLng | LatLngLiteral | null,
+        ne?: LatLng | LatLngLiteral | null,
+      );
       extend(point: LatLng | LatLngLiteral): LatLngBounds;
       getCenter(): LatLng;
+      getNorthEast(): LatLng;
+      getSouthWest(): LatLng;
     }
 
     interface MapOptions {
@@ -38,6 +44,7 @@ declare global {
       setCenter(center: LatLng | LatLngLiteral): void;
       setZoom(zoom: number): void;
       fitBounds(bounds: LatLngBounds): void;
+      getBounds(): LatLngBounds | null;
     }
 
     class Size {

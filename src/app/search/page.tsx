@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
+  enrichWithHot,
   getSearchableCities,
   searchListingsPage,
   type SearchFilters,
@@ -113,8 +114,8 @@ export default async function SearchPage({ searchParams }: Props) {
                 Buscar propiedades
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {listings.length} propiedad{listings.length === 1 ? "" : "es"}{" "}
-                activa{listings.length === 1 ? "" : "s"}
+                {total} propiedad{total === 1 ? "" : "es"}{" "}
+                activa{total === 1 ? "" : "s"}
                 {hasFilters ? " con tus filtros" : " disponibles"}
               </p>
             </div>
@@ -146,7 +147,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <SearchFiltersForm cities={cities} />
         </div>
 
-        {listings.length === 0 ? (
+        {total === 0 ? (
           <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
             <p className="text-sm text-muted-foreground">
               No hay propiedades que coincidan con tu búsqueda.
@@ -154,38 +155,29 @@ export default async function SearchPage({ searchParams }: Props) {
           </div>
         ) : (
           <SearchResults
-            results={listings.map((listing) => ({
-              id: listing.id,
-              title: listing.title,
-              slug: listing.slug,
-              city: `${listing.colonia}, ${listing.city}`,
-              price: listing.price,
-              currency: listing.currency,
-              type: listing.type,
-              image: listing.images?.[0] ?? null,
-              score: listing.property_score,
-              lat: listing.lat,
-              lng: listing.lng,
-            }))}
-          >
-            <div className="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-              {listings.map((listing) => (
-                <SearchResultCard
-                  key={listing.id}
-                  title={listing.title}
-                  slug={listing.slug}
-                  city={`${listing.colonia}, ${listing.city}`}
-                  price={listing.price}
-                  currency={listing.currency}
-                  type={listing.type}
-                  dealType={listing.deal_type}
-                  image={listing.images?.[0] ?? null}
-                  score={listing.property_score}
-                  hotScore={listing.hotScore}
-                />
-              ))}
-            </div>
-          </SearchResults>
+            key={filtersQueryString}
+            initialItems={listings}
+            initialTotal={total}
+            filtersQueryString={filtersQueryString}
+            mapSearch={mapSearch}
+            initialBounds={bounds}
+            gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
+            renderCard={(listing) => (
+              <SearchResultCard
+                key={listing.id}
+                title={listing.title}
+                slug={listing.slug}
+                city={`${listing.colonia}, ${listing.city}`}
+                price={listing.price}
+                currency={listing.currency}
+                type={listing.type}
+                dealType={listing.deal_type}
+                image={listing.images?.[0] ?? null}
+                score={listing.property_score}
+                hotScore={listing.hotScore}
+              />
+            )}
+          />
         )}
       </main>
 

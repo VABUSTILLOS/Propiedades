@@ -79,8 +79,6 @@ export function PropertiesMap({
     count: number;
   } | null>(null);
 
-  markersRef.current = markers;
-
   const selected = markers.find((m) => m.id === selectedId) ?? null;
 
   // Create the map once and listen for pan/zoom idle.
@@ -154,6 +152,8 @@ export function PropertiesMap({
     const map = mapRef.current;
     if (!google || !map) return;
 
+    markersRef.current = markers;
+
     clustererRef.current?.clearMarkers();
     handlesRef.current.forEach((handle) => handle.setMap(null));
     handlesRef.current.clear();
@@ -196,7 +196,7 @@ export function PropertiesMap({
         markers: handles.map((h) => h.getMarker()),
         map,
         onClusterClick: (_event: google.maps.MapMouseEvent, cluster: Cluster) => {
-          map.fitBounds(cluster.getBounds());
+          if (cluster.bounds) map.fitBounds(cluster.bounds);
         },
       });
     }
@@ -205,8 +205,6 @@ export function PropertiesMap({
       clustererRef.current?.clearMarkers();
       clustererRef.current = null;
       handles.forEach((handle) => handle.setMap(null));
-      handlesRef.current.clear();
-      pillElsRef.current.clear();
     };
   }, [google, markers]);
 

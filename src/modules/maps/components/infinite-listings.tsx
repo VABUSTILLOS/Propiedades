@@ -41,17 +41,10 @@ export function InfiniteListings({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const offsetRef = useRef(initialItems.length);
 
-  // Reset when the server re-renders with different filters/bounds.
-  useEffect(() => {
-    setItems(initialItems);
-    setTotal(initialTotal);
-    offsetRef.current = initialItems.length;
-    setError(null);
-  }, [initialItems, initialTotal]);
-
-  const hasMore = offsetRef.current < total;
+  // The parent remounts this component with a `key` derived from the current
+  // filters/bounds, so state always starts from the latest server render.
+  const hasMore = items.length < total;
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -59,21 +52,20 @@ export function InfiniteListings({
     setError(null);
     try {
       const qs = filtersQueryString
-        ? `${filtersQueryString}&offset=${offsetRef.current}&limit=${pageSize}`
-        : `offset=${offsetRef.current}&limit=${pageSize}`;
+        ? `${filtersQueryString}&offset=${items.length}&limit=${pageSize}`
+        : `offset=${items.length}&limit=${pageSize}`;
       const res = await fetch(`/api/search?${qs}`, { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudieron cargar más propiedades.");
       const data = (await res.json()) as ApiResponse;
       const next = data.items ?? [];
       setItems((prev) => [...prev, ...next]);
-      offsetRef.current += next.length;
       if (typeof data.total === "number") setTotal(data.total);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error al cargar más propiedades.");
     } finally {
       setLoading(false);
     }
-  }, [filtersQueryString, loading, hasMore, pageSize]);
+  }, [filtersQueryString, loading, hasMore, pageSize, items.length]);
 
   useEffect(() => {
     const el = sentinelRef.current;

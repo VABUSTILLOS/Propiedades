@@ -2,15 +2,22 @@ import type { Metadata } from "next";
 
 import {
   countActiveListings,
-  searchListingsWithHot,
+  searchListingsPage,
   type SearchFilters,
 } from "@/modules/search/queries";
-import { listadosParamsSchema, type ListadosTab } from "@/modules/lib/schemas";
+import {
+  listadosParamsSchema,
+  parseBoundsString,
+  type ListadosTab,
+  type MapBounds,
+} from "@/modules/lib/schemas";
 import { getCurrentUser } from "@/modules/auth/session";
+import { toQueryString } from "@/modules/search/query-string";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { ListadosTabs } from "@/modules/listados/components/listados-tabs";
+import { SearchResults } from "@/modules/maps/components/search-results";
 
 export const metadata: Metadata = { title: "Listados de propiedades" };
 
@@ -32,6 +39,10 @@ export default async function ListadosPage({ searchParams }: Props) {
   const parsed = listadosParamsSchema.safeParse(raw);
   const params = parsed.data;
 
+  const bounds: MapBounds | null = params?.bounds
+    ? (parseBoundsString(params.bounds) ?? null)
+    : null;
+
   const baseFilters: Omit<SearchFilters, "limit" | "sortBy"> = {
     query: params?.query,
     minPrice: params?.minPrice,
@@ -40,6 +51,7 @@ export default async function ListadosPage({ searchParams }: Props) {
     colonia: params?.colonia,
     minM2: params?.minM2,
     maxM2: params?.maxM2,
+    bounds: bounds ?? undefined,
   };
 
   // Each tab maps to its own query profile; shared refinements (query,
@@ -58,9 +70,9 @@ export default async function ListadosPage({ searchParams }: Props) {
     limit: 24,
   };
 
-  const [user, listings, counts] = await Promise.all([
+  const [user, pageResult, counts] = await Promise.all([
     getCurrentUser(),
-    searchListingsWithHot(filters),
+    searchListingsPage(filters),
     Promise.all([
       countActiveListings(tabToFilters.todos),
       countActiveListings(tabToFilters.venta),
@@ -69,12 +81,30 @@ export default async function ListadosPage({ searchParams }: Props) {
     ]),
   ]);
 
+  const { items: listings, total } = pageResult;
+
   const countByTab: Record<ListadosTab, number> = {
     todos: counts[0],
     venta: counts[1],
     renta: counts[2],
     tierra: counts[3],
   };
+
+  const filtersQueryString = toQueryString({
+    query: params?.query,
+    minPrice: params?.minPrice,
+    maxPrice: params?.maxPrice,
+    city: params?.city,
+    colonia: params?.colonia,
+    minM2: params?.minM2,
+    maxM2: params?.maxM2,
+    sortBy: params?.sortBy,
+    bounds: params?.bounds,
+    type: activeTab === "venta" ? "sale" : activeTab === "renta" ? "rent" : undefined,
+    isLand: activeTab === "tierra" ? "true" : undefined,
+  });
+
+  const mapSearch = params?.mapSearch === "true";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -84,27 +114,37 @@ export default async function ListadosPage({ searchParams }: Props) {
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">Listados</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {listings.length} {TAB_LABELS[activeTab]} en el catálogo
+            {total} {TAB_LABELS[activeTab]} en el catálogo
           </p>
         </div>
 
         <ListadosTabs activeTab={activeTab} counts={countByTab} />
 
-        {listings.length === 0 ? (
+        {total === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed px-6 py-16 text-center">
             <p className="text-sm text-muted-foreground">
               No hay propiedades que coincidan con esta vista.
             </p>
           </div>
         ) : (
-          <div className="mt-8 grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {listings.map((listing) => (
-              <PropertyCard
-                key={listing.id}
-                listing={listing}
-                hotScore={listing.hotScore}
-              />
-            ))}
+          <div className="mt-8">
+            <SearchResults
+              key={filtersQueryString}
+              basePath="/listados"
+              initialItems={listings}
+              initialTotal={total}
+              filtersQueryString={filtersQueryString}
+              mapSearch={mapSearch}
+              initialBounds={bounds}
+              gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
+              renderCard={(listing) => (
+                <PropertyCard
+                  key={listing.id}
+                  listing={listing}
+                  hotScore={listing.hotScore}
+                />
+              )}
+            />
           </div>
         )}
       </main>
