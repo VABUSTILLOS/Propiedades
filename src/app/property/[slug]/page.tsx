@@ -17,6 +17,7 @@ import {
 } from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
+import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
@@ -101,13 +102,25 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-          <section>
+          <section className="space-y-8">
             <PropertyViewToggle
               property={listing}
               benchmark={benchmark}
               discountPct={discountPct}
               initialMode={mode}
             />
+
+            <div>
+              <h2 className="mb-3 text-lg font-semibold">Ubicación</h2>
+              <PropertyLocationMap
+                lat={listing.lat}
+                lng={listing.lng}
+                title={listing.title}
+                price={listing.price}
+                type={listing.type}
+                address={listing.address}
+              />
+            </div>
           </section>
 
           <aside className="space-y-4">
