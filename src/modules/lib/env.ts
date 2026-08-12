@@ -18,6 +18,13 @@ export const env = {
   googleMapsServerKey:
     process.env.GOOGLE_MAPS_SERVER_KEY ?? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  geminiApiKey: process.env.GEMINI_API_KEY ?? "",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "",
+  whatsappBusinessPhoneNumber:
+    process.env.NEXT_PUBLIC_WHATSAPP_BUSINESS_PHONE_NUMBER ??
+    process.env.WHATSAPP_BUSINESS_PHONE_NUMBER ??
+    "",
+  whatsappChatEnabled: process.env.WHATSAPP_CHAT_ENABLED === "true",
   whatsappWebhookUrl: process.env.WHATSAPP_WEBHOOK_URL ?? "",
   whatsappVerifyToken: process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ?? "",
   whatsappPhoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID ?? "",

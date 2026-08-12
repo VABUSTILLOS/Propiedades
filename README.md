@@ -103,6 +103,44 @@ Demo credentials (seeded via SQL — verified working):
 
 Password reset is supported: the email links to `/auth/update-password` (PKCE flow, public route) where the user exchanges the code and sets a new password.
 
+## Chatbot + WhatsApp
+
+### Modelos gratuitos (sin OpenAI)
+
+- **Chat**: el chatbot del sitio y el bot de WhatsApp interpretan las búsquedas con
+  **DeepSeek** (`deepseek-chat`) como proveedor principal y **kie.ai (Gemini 2.5 Flash)**
+  como respaldo. Ambos son gratuitos; nada requiere `OPENAI_API_KEY` para chat.
+- **Embeddings semánticos**: se generan con **Gemini `text-embedding-004`** (768 dims) usando
+  una key gratuita de Google AI Studio (`GEMINI_API_KEY`). La búsqueda híbrida fusiona los
+  resultados por palabras clave con los semánticos. Sin `GEMINI_API_KEY` el sistema sigue
+  funcionando solo con palabras clave.
+- Si agregaste propiedades antes de la migración 019, regenera los embeddings con
+  `npm run backfill-embeddings`.
+
+### Bot de WhatsApp (continuar la búsqueda en WhatsApp)
+
+- **Webhook** (`/api/whatsapp/webhook`): con `WHATSAPP_CHAT_ENABLED=true` y credenciales de
+  salida (`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`), cada mensaje entrante se
+  responde con el **mismo motor** que el chatbot del sitio: interpreta la búsqueda, busca en
+  `properties`, relaja filtros si no hay resultados y devuelve hasta 4 propiedades con su
+  enlace `{siteUrl}/property/{slug}`.
+- **Contexto por contacto**: los filtros se guardan en `whatsapp_chat_state` (migración 020),
+  así que "y más baratas" continúa la búsqueda anterior. Los estados viejos (>7 días) se
+  limpian automáticamente.
+- **Saludos y citas**: saludos → menú breve; intenciones de visita/agendar → aviso de que un
+  asesor atenderá (comportamiento previo). Todo en texto plano; aplica la ventana de 24h de la
+  Cloud API (las búsquedas son iniciadas por el usuario, así que la ventana se mantiene abierta).
+- Con el bot desactivado, se conserva el auto-reply simple para intenciones de visita.
+
+### Botón "Continuar en WhatsApp" en el chat web
+
+- Requiere `NEXT_PUBLIC_WHATSAPP_BUSINESS_PHONE_NUMBER` (número internacional, ej.
+  `5215512345678`). Con él, el widget del chat muestra un botón que abre `wa.me` con un
+  resumen: último mensaje, filtros aplicados y los resultados encontrados — así el visitante
+  lleva la búsqueda "a la mano" a WhatsApp.
+- Nota: la transcripción de voz en `supabase/functions/import-property-ai` usa OpenAI (solo
+  voz, fuera de alcance); el resto del sistema es 100 % gratuito.
+
 ## Deploy on Vercel
 
 ```bash

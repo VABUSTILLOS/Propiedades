@@ -1,6 +1,7 @@
 import "server-only";
 
 import { chatCompletion } from "@/modules/ai/server";
+import { embeddingsConfigured, searchSemantic } from "@/modules/ai/embeddings";
 import { extractFilters } from "@/modules/chat/extract";
 import { interpretQuery } from "@/modules/chat/interpret";
 import type { ChatFilters, ChatResult, ChatResponse } from "@/modules/chat/types";
@@ -112,6 +113,48 @@ async function buildReply(
   });
 }
 
+/** True when the property satisfies the structured chat filters (semantic
+ * hits are ranked by similarity only, so filters must be re-applied here). */
+function passesChatFilters(row: PropertiesRow, f: ChatFilters): boolean {
+  if (f.type && row.type !== f.type) return false;
+  if (f.city && row.city !== f.city) return false;
+  if (f.colonia && row.colonia !== f.colonia) return false;
+  if (f.isLand && row.category !== "terreno") return false;
+  if (f.minPrice != null && row.price < f.minPrice) return false;
+  if (f.maxPrice != null && row.price > f.maxPrice) return false;
+  if (f.minBedrooms != null && (row.recamaras ?? 0) < f.minBedrooms) return false;
+  const m2 = f.isLand ? row.terreno_m2 : row.construccion_m2;
+  if (f.minM2 != null && m2 < f.minM2) return false;
+  if (f.maxM2 != null && m2 > f.maxM2) return false;
+  return true;
+}
+
+/** Fuse Gemini semantic matches into the keyword results (deduped, capped).
+ * Keyword hits (which already respect filters) stay first; semantic hits fill
+ * the remaining slots when they also pass the filters. */
+async function fuseSemanticMatches(
+  rows: PropertiesRow[],
+  filters: ChatFilters,
+  query: string,
+): Promise<PropertiesRow[]> {
+  if (!filters.query || !embeddingsConfigured()) return rows;
+  if (rows.length >= CHAT_RESULT_LIMIT) return rows;
+
+  const semantic = await searchSemantic(query, 12);
+  if (semantic.length === 0) return rows;
+
+  const seen = new Set(rows.map((r) => r.id));
+  const merged = [...rows];
+  for (const row of semantic) {
+    if (merged.length >= CHAT_RESULT_LIMIT) break;
+    if (seen.has(row.id)) continue;
+    if (!passesChatFilters(row, filters)) continue;
+    seen.add(row.id);
+    merged.push(row);
+  }
+  return merged;
+}
+
 /** Run the full search pipeline for a chat message. */
 export async function runChatSearch(
   message: string,
@@ -165,6 +208,14 @@ export async function runChatSearch(
         break;
       }
     }
+  }
+
+  // Semantic fusion: when the user typed a keyword and Gemini embeddings are
+  // configured, rank the query vector against all active listings and fill
+  // the remaining slots with matches that also pass the structured filters.
+  // Without a GEMINI_API_KEY this is a no-op and the pipeline stays keyword-only.
+  if (filters.query) {
+    rows = await fuseSemanticMatches(rows, filters, filters.query);
   }
 
   const reply = await buildReply(rows.length, filters, message, relaxedNote);

@@ -1,4 +1,4 @@
-import type { ChatResult } from "@/modules/chat/types";
+import type { ChatFilters, ChatResult } from "@/modules/chat/types";
 
 /**
  * Builds a prefabricated WhatsApp share URL for a property.
@@ -20,7 +20,77 @@ export function buildWhatsAppShareLink(
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
 }
 
-/** Minimal property shape needed to render a line in a consolidated share. */
+const MAX_HANDOFF_PROPERTIES = 5;
+
+/** Inputs for building a "continue on WhatsApp" handoff link. */
+export interface WhatsAppHandoffInput {
+  lastMessage: string;
+  results: ShareProperty[];
+  filters?: ChatFilters;
+  siteUrl: string;
+  businessPhone: string;
+}
+
+/** Short human label for one chat filter. Returns "" when not set. */
+function describeFilter(
+  label: string,
+  value: string | number | boolean | undefined | null,
+): string {
+  if (value === undefined || value === null || value === "") return "";
+  if (typeof value === "boolean") return value ? label : "";
+  return `${label}: ${value}`;
+}
+
+/**
+ * Builds a `wa.me` handoff link so a visitor can continue the property search
+ * on WhatsApp. The message carries the last chat message, the active filters
+ * and the top results found so far, so the WhatsApp bot (chat-bot.ts) can
+ * keep the context with "y más baratas" style follow-ups.
+ */
+export function buildWhatsAppHandoffLink(input: WhatsAppHandoffInput): string {
+  const { lastMessage, results, filters, siteUrl, businessPhone } = input;
+  const phone = businessPhone.replace(/\D/g, "");
+
+  const filtersSummary = filters
+    ? [
+        filters.type,
+        describeFilter("ciudad", filters.city),
+        describeFilter("colonia", filters.colonia),
+        describeFilter("min $", filters.minPrice),
+        describeFilter("max $", filters.maxPrice),
+        describeFilter("mín m2", filters.minM2),
+        describeFilter("máx m2", filters.maxM2),
+        filters.minBedrooms ? `mín ${filters.minBedrooms} rec` : "",
+        filters.isLand ? "terrenos" : "",
+      ]
+        .filter(Boolean)
+        .join(", ")
+    : "";
+
+  const shown = results.slice(0, MAX_HANDOFF_PROPERTIES);
+  const hidden = results.length - shown.length;
+
+  const lines = shown.map((p, i) => {
+    const location = [p.colonia, p.city].filter(Boolean).join(", ");
+    return (
+      `${i + 1}. ${p.title} · ${location} · ` +
+      `$${p.price.toLocaleString("es-MX")} ${p.currency ?? "MXN"} ` +
+      `- ${siteUrl}/property/${p.slug}`
+    );
+  });
+
+  let message = `Hola 👋 continúo mi búsqueda de propiedades.\n`;
+  message += `Buscaba: ${lastMessage.trim()}\n`;
+  if (filtersSummary) message += `Filtros: ${filtersSummary}\n`;
+  if (lines.length > 0) {
+    message += `\nOpciones que encontré:\n${lines.join("\n")}`;
+    if (hidden > 0) {
+      message += `\n(+${hidden} más)`;
+    }
+  }
+
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
 export type ShareProperty = Pick<
   ChatResult,
   "title" | "colonia" | "city" | "price" | "currency" | "slug"

@@ -111,16 +111,27 @@ function keywordVariants(query: string): string[] {
   return [...variants];
 }
 
-/** OR-ed ilike predicate over title/description/colonia/city, one per variant. */
+/** OR-ed ilike predicate over the searchable columns, one per variant. */
 function buildQueryOrClause(query: string): string {
-  const columns = ["title", "description", "colonia", "city"];
+  // Text columns searched directly; JSONB feature arrays (amenidades,
+  // puntos_fuertes_bento) are cast to text so "alberca", "roof garden",
+  // "frente a la playa" etc. match inside the stored arrays.
+  const columns = [
+    "title",
+    "description",
+    "colonia",
+    "city",
+    "address",
+    "amenidades::text",
+    "puntos_fuertes_bento::text",
+  ];
   const parts: string[] = [];
   for (const column of columns) {
     for (const variant of keywordVariants(query)) {
       parts.push(`${column}.ilike.%${escapeLike(variant)}%`);
-      if (parts.length >= 48) break;
+      if (parts.length >= 56) break;
     }
-    if (parts.length >= 48) break;
+    if (parts.length >= 56) break;
   }
   return parts.join(",");
 }

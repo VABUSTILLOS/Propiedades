@@ -4,8 +4,14 @@ import {
   storeInboundMessage,
   verifyWebhookRequest,
   verifyWebhookSignature,
+  whatsappOutboundConfigured,
   type WhatsAppWebhookPayload,
 } from "@/modules/whatsapp/server";
+import {
+  cleanupExpiredChatStates,
+  replyWhatsAppInbound,
+} from "@/modules/whatsapp/chat-bot";
+import { env } from "@/modules/lib/env";
 
 export const runtime = "nodejs";
 
@@ -71,11 +77,19 @@ export async function POST(req: Request): Promise<Response> {
     stored.push({ id, from: msg.waId, body: msg.body });
   }
 
-  // Fire-and-forget auto-reply for simple booking intents when outbound
-  // WhatsApp credentials are configured.
+  // Fire-and-forget reply. With the chat bot enabled, every inbound text is
+  // answered by the same search engine as the site chatbot (greetings, booking
+  // intents and property searches). Without it, keep the legacy auto-reply for
+  // simple booking intents only. Outbound replies require credentials.
   const first = messages[0];
-  if (first && hasBookingIntent(first.body)) {
-    void autoReply(first);
+  if (first && whatsappOutboundConfigured()) {
+    if (env.whatsappChatEnabled) {
+      void replyWhatsAppInbound(first.waId, first.body).then(() =>
+        cleanupExpiredChatStates(),
+      );
+    } else if (hasBookingIntent(first.body)) {
+      void autoReply(first);
+    }
   }
 
   return Response.json({ ok: true, data: stored }, { status: 200 });

@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Edge functions deploy via Supabase CLI (Deno runtime), not the Next app.
     "supabase/functions/**",
+    // Scraper workspace with its own virtualenv (vendored JS crashes the
+    // formatter) — not part of the Next.js app.
+    "vivanuncios_com_mx/**",
   ]),
 ]);
 

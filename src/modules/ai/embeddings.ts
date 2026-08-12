@@ -4,35 +4,61 @@ import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { env } from "@/modules/lib/env";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
-const EMBEDDING_MODEL = "text-embedding-3-small";
-const EMBEDDING_DIMENSIONS = 1536;
+/**
+ * Free embeddings provider for semantic search.
+ *
+ * Uses Google Gemini `text-embedding-004` via a free Google AI Studio key
+ * (`GEMINI_API_KEY`, https://aistudio.google.com/apikey). The model returns
+ * 768-dimension vectors — the matching column/index/migration (019) and the
+ * `match_properties` RPC expect exactly that dimensionality.
+ *
+ * Every function returns null / false when the key is unset or the request
+ * fails, so callers degrade gracefully to keyword search — the same
+ * graceful-degradation pattern used across the repo.
+ */
+
+const EMBEDDING_MODEL = "text-embedding-004";
+const EMBEDDING_DIMENSIONS = 768;
 
 export function embeddingsConfigured(): boolean {
-  return Boolean(env.openaiApiKey);
+  return Boolean(env.geminiApiKey);
 }
 
 /**
- * Embed a single piece of text with OpenAI's text-embedding-3-small model.
- * Returns null when the API key is missing so callers can degrade gracefully.
+ * Embed a single piece of text with Google Gemini's free text-embedding-004
+ * model (768 dimensions). Returns null when the API key is missing, the
+ * request fails, or the response is malformed.
  */
 export async function embedText(text: string): Promise<number[] | null> {
-  if (!env.openaiApiKey) return null;
+  if (!env.geminiApiKey) return null;
   if (!text.trim()) return null;
 
-  const res = await fetch("https://api.openai.com/v1/embeddings", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.openaiApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ model: EMBEDDING_MODEL, input: text.slice(0, 8_000) }),
-  });
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${EMBEDDING_MODEL}:embedContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": env.geminiApiKey,
+        },
+        body: JSON.stringify({
+          model: `models/${EMBEDDING_MODEL}`,
+          content: { parts: [{ text: text.slice(0, 8_000) }] },
+        }),
+      },
+    );
 
-  if (!res.ok) return null;
-  const data = (await res.json()) as { data?: { embedding?: number[] }[] };
-  const embedding = data.data?.[0]?.embedding;
-  if (!embedding || embedding.length !== EMBEDDING_DIMENSIONS) return null;
-  return embedding;
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      embedding?: { values?: number[] };
+    };
+    const embedding = data.embedding?.values;
+    if (!embedding || embedding.length !== EMBEDDING_DIMENSIONS) return null;
+    return embedding;
+  } catch {
+    return null;
+  }
 }
 
 /**

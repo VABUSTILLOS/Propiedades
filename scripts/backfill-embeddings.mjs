@@ -2,7 +2,7 @@
 /**
  * Backfill embeddings for all active properties using the service role key.
  *
- * Requires: OPENAI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+ * Requires: GEMINI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
  *
  * Usage:
  *   node scripts/backfill-embeddings.mjs
@@ -20,11 +20,11 @@ try {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-const openaiKey = process.env.OPENAI_API_KEY ?? "";
+const geminiKey = process.env.GEMINI_API_KEY ?? "";
 
-if (!supabaseUrl || !serviceKey || !openaiKey) {
+if (!supabaseUrl || !serviceKey || !geminiKey) {
   console.error(
-    "Missing env: set NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY and OPENAI_API_KEY.",
+    "Missing env: set NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY and GEMINI_API_KEY.",
   );
   process.exit(1);
 }
@@ -34,17 +34,23 @@ const supabase = createClient(supabaseUrl, serviceKey, {
 });
 
 async function embedText(text) {
-  const res = await fetch("https://api.openai.com/v1/embeddings", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${openaiKey}`,
-      "Content-Type": "application/json",
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": geminiKey,
+      },
+      body: JSON.stringify({
+        model: "models/text-embedding-004",
+        content: { parts: [{ text: text.slice(0, 8000) }] },
+      }),
     },
-    body: JSON.stringify({ model: "text-embedding-3-small", input: text.slice(0, 8000) }),
-  });
+  );
   if (!res.ok) return null;
   const data = await res.json();
-  return data?.data?.[0]?.embedding ?? null;
+  return data?.embedding?.values ?? null;
 }
 
 function embeddingText(property) {
