@@ -209,7 +209,7 @@ function SortableRow({
       <AddToListDialog
         propertyId={property?.id ?? ""}
         lists={lists}
-        initiallyContaining={containingListIds}
+        containingListIds={containingListIds}
         trigger={
           <Button
             type="button"

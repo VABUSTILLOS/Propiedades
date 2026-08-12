@@ -21,13 +21,15 @@ import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
 
 type Props = {
   propertyId: string;
-  propertySlug: string;
+  propertySlug?: string;
   /** The user's lists, used to render the checklist. */
   lists: FavoriteListWithMeta[];
   /** Ids of lists that already contain this property. */
   containingListIds: string[];
-  /** Trigger content (button). */
-  children: ReactNode;
+  /** Custom trigger element (e.g. an icon button in a row). */
+  trigger?: ReactNode;
+  /** Trigger content (default button when no `trigger` is given). */
+  children?: ReactNode;
   className?: string;
 };
 
@@ -41,6 +43,7 @@ export function AddToListDialog({
   propertySlug,
   lists,
   containingListIds,
+  trigger,
   children,
   className,
 }: Props) {
@@ -50,6 +53,10 @@ export function AddToListDialog({
   const [newListName, setNewListName] = useState("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const signUpNext = propertySlug
+    ? `/sign-up?next=/property/${propertySlug}`
+    : "/sign-up";
 
   const toggleOpen = (next: boolean) => {
     setOpen(next);
@@ -70,7 +77,7 @@ export function AddToListDialog({
         const res = await createList({ name });
         if (!res.ok) {
           if (res.code === "AUTH_REQUIRED") {
-            router.push(`/sign-up?next=/property/${propertySlug}`);
+            router.push(signUpNext);
             return;
           }
           setError(res.error);
@@ -88,7 +95,7 @@ export function AddToListDialog({
       const res = await addPropertyToLists({ propertyId, listIds });
       if (!res.ok) {
         if (res.code === "AUTH_REQUIRED") {
-          router.push(`/sign-up?next=/property/${propertySlug}`);
+          router.push(signUpNext);
           return;
         }
         setError(res.error);
@@ -108,9 +115,11 @@ export function AddToListDialog({
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
-        <button type="button" className={className}>
-          {children}
-        </button>
+        {trigger ?? (
+          <button type="button" className={className}>
+            {children}
+          </button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
