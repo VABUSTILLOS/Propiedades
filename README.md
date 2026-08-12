@@ -34,13 +34,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 **CLI path:** `brew install supabase/tap/supabase`, `supabase login`, then with `SUPABASE_PROJECT_REF` set run `npm run setup:db` (runs `supabase link` + `supabase db push`).
 
-**Creating a new project (requires an access token + a free project slot)** — the free plan allows only 2 projects per account. If both slots are taken, create a second Supabase account (the limit is per-account) or delete an unused project. Create a token at https://supabase.com/dashboard/account/tokens, then:
+**Creating a new project (automated, requires an access token + a free project slot)** — the free plan allows only 2 projects per account. If both slots are taken, create a second Supabase account (the limit is per-account) or delete an unused project. Generate a token at https://supabase.com/dashboard/account/tokens, then run:
 
 ```bash
-SUPABASE_ACCESS_TOKEN=sbp_xxx bash scripts/setup-supabase.sh
+SUPABASE_ACCESS_TOKEN=sbp_xxx npm run create:supabase
+# or:  npm run create:supabase -- --token sbp_xxx
 ```
 
-The script logs in, creates a project in `us-east-1` (nearest US region to Mexico; override with `REGION=...`, e.g. `sa-east-1` for São Paulo), links the repo, pushes all migrations (`001_init.sql` → `010_semantic_search.sql`), and prints the env vars to add to Vercel.
+`scripts/provision-supabase.mjs` logs in, creates a project named `propiedades` in `us-east-1` (nearest US region to Mexico; override with `--region sa-east-1` for São Paulo), waits until it's active, fetches the anon + service_role keys, and writes `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_DB_URL` into `.env.local`. Then apply migrations with `npm run setup:db`. Flags: `--org-id`, `--project-ref` (reuse an existing project), `--name`, `--yes`.
 
 Manual equivalent:
 

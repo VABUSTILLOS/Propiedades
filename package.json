@@ -10,6 +10,7 @@
     "lint": "eslint && npm run verify:state-machine",
     "setup:db": "node scripts/setup-db.mjs",
     "gen:migrations": "node scripts/gen-all-in-one.mjs",
+    "create:supabase": "node scripts/provision-supabase.mjs",
     "check:edge": "cd supabase/functions && deno check import-property-ai/index.ts"
   },
   "dependencies": {
