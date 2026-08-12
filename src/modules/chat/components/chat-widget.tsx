@@ -198,22 +198,6 @@ export function ChatWidget() {
         )}
       </div>
 
-      {/* Continuar por WhatsApp */}
-      {handoffHref && (
-        <div className="border-t border-border/60 px-3 py-2">
-          <a
-            href={handoffHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Continuar la búsqueda por WhatsApp"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-3 py-2 text-sm font-medium text-[#128C7E] transition-colors hover:bg-[#25D366]/20"
-          >
-            <WhatsAppIcon className="size-4" />
-            Continuar la búsqueda por WhatsApp
-          </a>
-        </div>
-      )}
-
       {/* Input */}
       <form
         onSubmit={handleSubmit}
@@ -236,6 +220,22 @@ export function ChatWidget() {
           <Send className="size-4" />
         </button>
       </form>
+
+      {/* Mandar resultados por WhatsApp */}
+      {handoffHref && (
+        <div className="border-t border-border/60 px-3 py-2">
+          <a
+            href={handoffHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Manda tus resultados a tu WhatsApp"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-3 py-2 text-sm font-medium text-[#128C7E] transition-colors hover:bg-[#25D366]/20"
+          >
+            <WhatsAppIcon className="size-4" />
+            Manda tus resultados a tu WhatsApp
+          </a>
+        </div>
+      )}
     </div>
   );
 }
