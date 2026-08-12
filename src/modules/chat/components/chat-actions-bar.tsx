@@ -173,7 +173,6 @@ export function ChatActionsBar({
 
           {status.kind === "fallback" && (
             <p className="text-sm text-muted-foreground">
-              No pude escribirte primero 😅{" "}
               {status.url ? (
                 <>
                   <a
@@ -184,8 +183,7 @@ export function ChatActionsBar({
                   >
                     Toca aquí para abrir tu WhatsApp
                   </a>{" "}
-                  y el mensaje queda listo para enviarse; el asistente te sigue
-                  atendiendo ahí.
+                  y el mensaje queda listo para enviarse
                 </>
               ) : (
                 "Inténtalo de nuevo en un momento."

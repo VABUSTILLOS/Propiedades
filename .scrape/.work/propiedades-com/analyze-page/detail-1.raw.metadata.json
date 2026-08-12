@@ -1,0 +1,201 @@
+{
+  "microdata": [
+    {
+      "type": "https://schema.org/GeoCoordinates",
+      "properties": {
+        "latitude": "28.7110556",
+        "longitude": "-106.132914"
+      }
+    },
+    {
+      "type": "https://schema.org/Residence",
+      "properties": {
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Cristobal Colon",
+            "postalCode": "31125",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua"
+          }
+        },
+        "image": [
+          {
+            "type": "http://schema.org/ImageObject",
+            "properties": {
+              "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+              "image": "https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"
+            }
+          },
+          {
+            "type": "http://schema.org/ImageObject",
+            "properties": {
+              "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+              "image": "https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-02.jpeg"
+            }
+          },
+          {
+            "type": "http://schema.org/ImageObject",
+            "properties": {
+              "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+              "image": "https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-03.jpeg"
+            }
+          },
+          {
+            "type": "http://schema.org/ImageObject",
+            "properties": {
+              "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+              "image": "https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-04.jpeg"
+            }
+          },
+          {
+            "type": "http://schema.org/ImageObject",
+            "properties": {
+              "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+              "image": "https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-05.jpeg"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "json-ld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "propiedades1",
+      "mainEntity": {
+        "@id": "Bodega comercial30586778"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Thing",
+      "@id": "Bodega comercial30586778",
+      "image": "cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Apartment",
+      "@id": "Bodega comercial30586778",
+      "address": "Cristobal Colon, Col. Paseos de Chihuahua C.P. 31125, Chihuahua",
+      "description": "✨ Bodega con estilo en Av. Tecnológico ✨ Porque tu negocio merece un espacio que hable de ti. Ubicada sobre una de las avenidas más icónicas y comerciales de Querétaro, esta propiedad no es solo una b",
+      "name": "Bodega comercial en Venta en Chihuahua",
+      "numberOfBathroomsTotal": "0",
+      "petsAllowed": "No",
+      "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+      "yearBuilt": 2026,
+      "floorLevel": ""
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "@id": "Bodega comercial30586778",
+      "offers": {
+        "@id": "offer"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      "@id": "offer",
+      "price": 5600000,
+      "priceCurrency": "MXN"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "@id": "Bodega comercial30586778"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+      "datePosted": "",
+      "offers": {
+        "@type": "Offer",
+        "price": 5600000,
+        "priceCurrency": "MXN",
+        "availability": "https://schema.org/InStock",
+        "businessFunction": "https://schema.org/Sell",
+        "url": "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+        "itemOffered": {
+          "@type": "Place",
+          "name": "Bodega comercial en Venta",
+          "description": "Bodega comercial en venta  localizada en Cristobal Colon, Col. Paseos de Chihuahua C.P. 31125, Chihuahua, Chihuahua. Tiene 373 metros cuadrados.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Cristobal Colon, Col. Paseos de Chihuahua C.P. 31125, Chihuahua",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "postalCode": "31125",
+            "addressCountry": "MX"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "28.7110556",
+            "longitude": "-106.132914"
+          },
+          "image": [
+            "https://propiedadescom.s3.amazonaws.com/files/336x200/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"
+          ]
+        },
+        "seller": {
+          "@type": "RealEstateAgent",
+          "name": "Propiedades.com",
+          "description": "En Propiedades.com puedes vender tu casa o departamento, además de rentar o comprar diversas propiedades.",
+          "legalName": "CORPORATIVO MCNEMEXICO, S. DE R.L. DE C.V.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Avenida Paseo de la Reforma número 333, Piso 3, Oficina 101",
+            "addressLocality": "Colonia Cuauhtémoc",
+            "addressRegion": "Alcaldía Cuauhtémoc",
+            "postalCode": "06500",
+            "addressCountry": "MX"
+          }
+        }
+      }
+    }
+  ],
+  "opengraph": [
+    {
+      "namespace": {
+        "og": "http://ogp.me/ns#"
+      },
+      "properties": [
+        [
+          "og:image",
+          "https://propiedadescom.s3.amazonaws.com/files/600x400/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"
+        ],
+        [
+          "og:image:alt",
+          "Venta bodega en Cristobal Colon, Colonia Paseos de Chihuahua, C.P. 31125"
+        ],
+        [
+          "og:image:height",
+          "630"
+        ],
+        [
+          "og:image:width",
+          "1200"
+        ],
+        [
+          "og:title",
+          "Venta bodega en Cristobal Colon, Colonia Paseos de Chihuahua, C.P. 31125"
+        ],
+        [
+          "og:url",
+          "https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778"
+        ],
+        [
+          "og:site_name",
+          "Propiedades.com"
+        ],
+        [
+          "og:type",
+          "website"
+        ]
+      ]
+    }
+  ]
+}

@@ -308,7 +308,26 @@ export async function sendWhatsAppText(
 ): Promise<string | null> {
   return postWhatsAppMessage(to, {
     type: "text",
-    text: { body: text.slice(0, 1024) },
+    text: { body: text.slice(0, 4096) },
+  });
+}
+
+/**
+ * Send an image message (photo card) via the Cloud API. The image URL must be
+ * publicly reachable — Meta fetches it server-side. Caption is optional and
+ * limited to 1024 chars. Only works inside the 24h customer-service window.
+ */
+export async function sendWhatsAppImage(
+  to: string,
+  imageUrl: string,
+  caption?: string,
+): Promise<string | null> {
+  return postWhatsAppMessage(to, {
+    type: "image",
+    image: {
+      link: imageUrl,
+      ...(caption ? { caption: caption.slice(0, 1024) } : {}),
+    },
   });
 }
 
@@ -323,6 +342,7 @@ export async function sendWhatsAppTemplate(
   templateName: string,
   bodyParams: string[],
   languageCode = "es_MX",
+  headerImageUrl?: string | null,
 ): Promise<string | null> {
   if (!templateName) return null;
   return postWhatsAppMessage(to, {
@@ -331,6 +351,16 @@ export async function sendWhatsAppTemplate(
       name: templateName,
       language: { code: languageCode },
       components: [
+        ...(headerImageUrl
+          ? [
+              {
+                type: "header",
+                parameters: [
+                  { type: "image", image: { link: headerImageUrl } },
+                ],
+              },
+            ]
+          : []),
         {
           type: "body",
           parameters: bodyParams.map((text) => ({ type: "text", text })),

@@ -6,6 +6,7 @@ import { buildConsolidatedMessage } from "@/modules/chat/share";
 import { env } from "@/modules/lib/env";
 import { seedWhatsAppChatState } from "@/modules/whatsapp/chat-bot";
 import {
+  sendWhatsAppImage,
   sendWhatsAppTemplate,
   sendWhatsAppText,
 } from "@/modules/whatsapp/server";
@@ -14,6 +15,9 @@ export const runtime = "nodejs";
 
 export const maxDuration = 30;
 
+/** Top-N results that get a photo card in WhatsApp (avoid spamming the thread). */
+const MAX_PHOTO_CARDS = 3;
+
 const sharePropertySchema = z.object({
   title: z.string().trim().min(1).max(200),
   colonia: z.string().trim().max(100),
@@ -21,6 +25,8 @@ const sharePropertySchema = z.object({
   price: z.number().min(0),
   currency: z.string().trim().max(10),
   slug: z.string().trim().min(1).max(200),
+  /** Public photo URL — sent as a WhatsApp image card when available. */
+  image: z.string().trim().url().max(2048).nullish(),
 });
 
 const sendWhatsAppRequestSchema = z.object({
@@ -76,11 +82,17 @@ export async function POST(request: Request) {
   let sent = await sendWhatsAppText(phone, message);
   let via: "text" | "template" = "text";
 
-  // 2) Cold contact: fall back to the approved template.
+  // 2) Cold contact: fall back to the approved template. The template has an
+  //    image header — the first result's photo becomes the card thumbnail.
   if (!sent && env.whatsappResultsTemplateName) {
-    sent = await sendWhatsAppTemplate(phone, env.whatsappResultsTemplateName, [
-      message.slice(0, 1024),
-    ]);
+    const headerImage = results.find((p) => p.image)?.image ?? null;
+    sent = await sendWhatsAppTemplate(
+      phone,
+      env.whatsappResultsTemplateName,
+      [message.slice(0, 1024)],
+      "es_MX",
+      headerImage,
+    );
     via = "template";
   }
 
@@ -93,6 +105,20 @@ export async function POST(request: Request) {
       ? `https://wa.me/${businessPhone}?text=${encodeURIComponent(message)}`
       : null;
     return NextResponse.json({ ok: false, fallbackUrl }, { status: 200 });
+  }
+
+  // Photo cards for the top results, so the conversation shows thumbnails
+  // like the site chatbot. Free-form images only work inside the 24h window
+  // (the "text" path); the cold-contact template carries its own header image.
+  if (via === "text") {
+    const withPhotos = results.filter((p) => p.image).slice(0, MAX_PHOTO_CARDS);
+    for (const p of withPhotos) {
+      const location = [p.colonia, p.city].filter(Boolean).join(", ");
+      const caption =
+        `${p.title}. ${location} por $${p.price.toLocaleString("es-MX")} ` +
+        `${p.currency ?? "MXN"}.\n${siteUrl}/property/${p.slug}`;
+      await sendWhatsAppImage(phone, p.image as string, caption);
+    }
   }
 
   // Seed the bot's memory so follow-ups in WhatsApp keep the search context.

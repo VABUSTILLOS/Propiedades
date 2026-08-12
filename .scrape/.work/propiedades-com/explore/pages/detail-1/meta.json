@@ -1,0 +1,50 @@
+{
+  "url": "https://web.archive.org/web/20260102172907id_/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778",
+  "captured_at": "2026-08-12T23:08:47.134271+00:00",
+  "page_type": "detail",
+  "discovered_from": {
+    "page": "list-1",
+    "url": "https://propiedades.com/chihuahua-chihuahua/venta"
+  },
+  "http_status": 200,
+  "http_headers": {
+    "Content-Length": "41904",
+    "Server": "nginx",
+    "Date": "Wed, 12 Aug 2026 23:08:46 GMT",
+    "Content-Type": "text/html; charset=utf-8",
+    "X-Archive-Orig-Vary": "Accept-Encoding",
+    "X-Archive-Orig-Access-Control-Allow-Origin": "*",
+    "X-Archive-Orig-Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "X-Archive-Orig-Access-Control-Allow-Headers": "Accept,Authorization,Access-Control-Allow-Origin,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With,Cucu,pf-origin",
+    "X-Archive-Orig-Strict-Transport-Security": "max-age=0; includeSubdomains; preload",
+    "X-Archive-Orig-Expires": "Fri, 02 Jan 2026 17:29:08 GMT",
+    "X-Archive-Orig-Cache-Control": "max-age=0, no-cache, no-store",
+    "X-Archive-Orig-Pragma": "no-cache",
+    "X-Archive-Orig-Date": "Fri, 02 Jan 2026 17:29:08 GMT",
+    "X-Archive-Orig-Content-Length": "41904",
+    "X-Archive-Orig-Connection": "close",
+    "X-Archive-Orig-Alt-Svc": "h3=\":443\"; ma=93600",
+    "Cache-Control": "private",
+    "Accept-Ranges": "bytes",
+    "Memento-Datetime": "Fri, 02 Jan 2026 17:29:07 GMT",
+    "Link": "<https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"original\", <https://web.archive.org/web/timemap/link/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"timemap\"; type=\"application/link-format\", <https://web.archive.org/web/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"timegate\", <https://web.archive.org/web/20260102172907/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"first memento\"; datetime=\"Fri, 02 Jan 2026 17:29:07 GMT\", <https://web.archive.org/web/20260102172907/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"memento\"; datetime=\"Fri, 02 Jan 2026 17:29:07 GMT\", <https://web.archive.org/web/20260102172907/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778>; rel=\"last memento\"; datetime=\"Fri, 02 Jan 2026 17:29:07 GMT\"",
+    "Content-Security-Policy": "default-src 'self' 'unsafe-eval' 'unsafe-inline' data: blob: archive.org web.archive.org web-static.archive.org wayback-api.archive.org athena.archive.org analytics.archive.org pragma.archivelab.org wwwb-events.archive.org",
+    "X-Archive-Src": "SPNOUTLINKS-20260102171126-crawl900/SPNOUTLINKS-20260102172540-06865.warc.gz",
+    "Server-Timing": "MISS",
+    "X-App-Server": "wwwb-app262-dc8",
+    "X-Ts": "200",
+    "X-Tr": "455",
+    "Set-Cookie": "wb-p-SERVER=wwwb-app262; path=/",
+    "X-Location": "All",
+    "X-As": "8151",
+    "X-Rl": "0",
+    "X-Na": "0",
+    "X-Page-Cache": "MISS",
+    "X-Nid": "UNINET",
+    "Referrer-Policy": "no-referrer-when-downgrade",
+    "Permissions-Policy": "interest-cohort=()"
+  },
+  "errors": {
+    "playwright": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"https://web.archive.org/web/20260102172907id_/https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778\", waiting until \"load\"\n"
+  }
+}

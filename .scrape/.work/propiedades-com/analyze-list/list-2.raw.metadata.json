@@ -1,0 +1,3770 @@
+{
+  "microdata": [
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6565492",
+            "longitude": "-106.1503201"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-del-valle-bosques-del-valle-chihuahua-30247405#tipos=casas-venta&area=chihuahua-chihuahua&pos=1",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/bosques-del-valle-bosques-del-valle-chihuahua-chihuahua-30247405-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Bosques del Valle, Col. Bosques del Valle",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31160"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5906049",
+            "longitude": "-106.1649453"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-monteverde-monteverde-chihuahua-30120088#tipos=casas-venta&area=chihuahua-chihuahua&pos=2",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/monteverde-monteverde-chihuahua-chihuahua-30120088-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Monteverde, Col. Monteverde",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6443753000",
+            "longitude": "-106.0577908000"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-valdivia-residencial-chihuahua-29483281#tipos=casas-venta&area=chihuahua-chihuahua&pos=3",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/valdivia-residencial-chihuahua-chihuahua-29483281-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": " , Col. Valdivia Residencial",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31160"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6183055",
+            "longitude": "-106.0897372"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-zarco-zarco-chihuahua-29005547#tipos=casas-venta&area=chihuahua-chihuahua&pos=4",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/zarco-zarco-chihuahua-chihuahua-29005547-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "zarco, Col. Zarco",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31020"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5947387",
+            "longitude": "-106.1511425"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-tracia-residencial-monteverde-chihuahua-30175617#tipos=casas-venta&area=chihuahua-chihuahua&pos=5",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/tracia-residencial-monteverde-chihuahua-chihuahua-30175617-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Tracia Residencial, Col. Monteverde",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "27.3330309",
+            "longitude": "-106.0170971"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-laguna-de-bustillos-sn-san-felipe-v-chihuahua-29685660#tipos=casas-venta&area=chihuahua-chihuahua&pos=6",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/38ab123c-1561-11f0-94c7-a7ccea091e20.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "laguna de bustillos #s/n, Col. San Felipe V",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31203"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5997562",
+            "longitude": "-106.1338577"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-monte-caleres-monte-caleres-chihuahua-29010655#tipos=casas-venta&area=chihuahua-chihuahua&pos=7",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/monte-caleres-monte-caleres-chihuahua-chihuahua-29010655-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Monte caleres, Col. Monte Caleres",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31207"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6760747",
+            "longitude": "-106.1397159"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-bahias-bahias-chihuahua-29014436#tipos=casas-venta&area=chihuahua-chihuahua&pos=8",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/bahias-bahias-chihuahua-chihuahua-29014436-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "bahias, Col. Bahías",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31075"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6180023",
+            "longitude": "-106.1098469"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-margarita-lomas-del-santuario-ii-etapa-chihuahua-26913473#tipos=casas-venta&area=chihuahua-chihuahua&pos=9",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/margarita-lomas-del-santuario-ii-etapa-chihuahua-chihuahua-26913473-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Margarita, Col. Lomas del Santuario II Etapa",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31206"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6121744000",
+            "longitude": "-106.1108875000"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-diamante-reliz-chihuahua-30251663#tipos=casas-venta&area=chihuahua-chihuahua&pos=10",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/diamante-reliz-chihuahua-chihuahua-30251663-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": " _ , Col. Diamante Reliz",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31207"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6180023",
+            "longitude": "-106.1098469"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-lomas-del-santuario-lomas-del-santuario-ii-etapa-chihuahua-30064761#tipos=casas-venta&area=chihuahua-chihuahua&pos=11",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/lomas-del-santuario-lomas-del-santuario-ii-etapa-chihuahua-chihuahua-30064761-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Lomas del Santuario, Col. Lomas del Santuario II Etapa",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31206"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.594621",
+            "longitude": "-106.0919419"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-los-pinos-los-pinos-chihuahua-30243852#tipos=casas-venta&area=chihuahua-chihuahua&pos=12",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/los-pinos-los-pinos-chihuahua-chihuahua-30243852-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Los pinos, Col. Los Pinos",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31416"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.1622555000",
+            "longitude": "-105.4803768000"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-colinas-del-valle-chihuahua-30180120#tipos=casas-venta&area=chihuahua-chihuahua&pos=13",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/colinas-del-valle-chihuahua-chihuahua-30180120-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": " , Col. Colinas del Valle",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31217"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5926541",
+            "longitude": "-106.1641864"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-indigo-diamante-reliz-chihuahua-29070452#tipos=casas-venta&area=chihuahua-chihuahua&pos=14",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/indigo-diamante-reliz-chihuahua-chihuahua-29070452-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Índigo, Col. Diamante Reliz",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31207"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.7214771",
+            "longitude": "-106.1656819"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-puerta-rivera-real-puerta-real-chihuahua-30300001#tipos=casas-venta&area=chihuahua-chihuahua&pos=15",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/puerta-rivera-real-puerta-real-chihuahua-chihuahua-30300001-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Puerta Rivera Real, Col. Puerta Real",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31137"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6439021",
+            "longitude": "-106.1301602"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-asturias-asturias-residencial-chihuahua-29084908#tipos=casas-venta&area=chihuahua-chihuahua&pos=16",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/asturias-asturias-residencial-chihuahua-chihuahua-29084908-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Asturias, Col. Asturias Residencial",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31216"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6846041",
+            "longitude": "-106.148985"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-tomas-valles-hacienda-del-moro-chihuahua-30129593#tipos=casas-venta&area=chihuahua-chihuahua&pos=17",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/tomas-valles-hacienda-del-moro-chihuahua-chihuahua-30129593-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Tomas valles, Col. Hacienda del Moro",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31124"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.640416512852475",
+            "longitude": "-106.15181985473633"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-la-haciendita-31216-chihuahua-chih-3171-la-haciendita-chihuahua-30241484#tipos=casas-venta&area=chihuahua-chihuahua&pos=18",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/6685f806-7d4b-11f0-9636-6b206b74482b.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "La Haciendita, 31216 Chihuahua, Chih. #3171, Col. La Haciendita",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31625"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5909173",
+            "longitude": "-106.150132"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-aria-residencial-monteverde-chihuahua-30175611#tipos=casas-venta&area=chihuahua-chihuahua&pos=19",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/aria-residencial-monteverde-chihuahua-chihuahua-30175611-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Aria Residencial, Col. Monteverde",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6052379",
+            "longitude": "-106.0423428"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-torralba-valle-escondido-chihuahua-28531106#tipos=casas-venta&area=chihuahua-chihuahua&pos=20",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/torralba-valle-escondido-chihuahua-chihuahua-28531106-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Torralba, Col. Valle Escondido",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31054"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.649133",
+            "longitude": "-106.1376054"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-escondido-rinconadas-del-valle-chihuahua-30286454#tipos=casas-venta&area=chihuahua-chihuahua&pos=21",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/valle-escondido-rinconadas-del-valle-chihuahua-chihuahua-30286454-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Valle Escondido, Col. Rinconadas del Valle",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31160"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6294043",
+            "longitude": "-106.1297927"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-rincon-de-las-lomas-rincon-de-las-lomas-i-chihuahua-29290004#tipos=casas-venta&area=chihuahua-chihuahua&pos=22",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/rincon-de-las-lomas-rincon-de-las-lomas-i-chihuahua-chihuahua-29290004-foto-01.html"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Rincón de las Lomas, Col. Rincón de Las Lomas I",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31216"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6305133",
+            "longitude": "-106.1130314"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-santa-fe-hacienda-santa-fe-chihuahua-30000454#tipos=casas-venta&area=chihuahua-chihuahua&pos=23",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/hacienda-santa-fe-hacienda-santa-fe-chihuahua-chihuahua-30000454-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Hacienda Santa fe, Col. Hacienda Santa Fe",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31215"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6642311000",
+            "longitude": "-106.0723659000"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-junta-de-los-rios-y-etapas-chihuahua-30003695#tipos=casas-venta&area=chihuahua-chihuahua&pos=24",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/junta-de-los-rios-y-etapas-chihuahua-chihuahua-30003695-foto-01.html"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": " , Col. Junta de los Ríos y Etapas",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31300"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6433753",
+            "longitude": "-106.0587908"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-de-alicante-monteverde-chihuahua-29455656#tipos=casas-venta&area=chihuahua-chihuahua&pos=25",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/bosques-de-alicante-monteverde-chihuahua-chihuahua-29455656-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Bosques De Alicante, Col. Monteverde",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6477422",
+            "longitude": "-106.1475884"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-cantera-puente-de-piedra-chihuahua-30247406#tipos=casas-venta&area=chihuahua-chihuahua&pos=26",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/puente-de-cantera-puente-de-piedra-chihuahua-chihuahua-30247406-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Puente de cantera, Col. Puente de Piedra",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31116"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.606094",
+            "longitude": "-106.1211601"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-peninsula-residencial-diamante-reliz-chihuahua-29089588#tipos=casas-venta&area=chihuahua-chihuahua&pos=27",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/peninsula-residencial-diamante-reliz-chihuahua-chihuahua-29089588-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Península Residencial, Col. Diamante Reliz",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31207"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6406921",
+            "longitude": "-106.1243491"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-c-corvera-31216-chihuahua-chih-asturias-residencial-chihuahua-30220441#tipos=casas-venta&area=chihuahua-chihuahua&pos=28",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/2049890d-78a0-11f0-9e0d-d18df802cec5.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "C. Corvera, 31216 Chihuahua, Chih., Col. Asturias Residencial",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31216"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6579785",
+            "longitude": "-106.148537"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-mision-del-valle-mision-del-valle-chihuahua-29928698#tipos=casas-venta&area=chihuahua-chihuahua&pos=29",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/mision-del-valle-mision-del-valle-chihuahua-chihuahua-29928698-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Misión del Valle, Col. Misión del Valle",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31115"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6800002",
+            "longitude": "-106.0230276"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182874#tipos=casas-venta&area=chihuahua-chihuahua&pos=30",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/montolivo-iii-romanzza-chihuahua-chihuahua-30182874-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Montolivo III, Col. Romanzza",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31313"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.7021256",
+            "longitude": "-106.1470668"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-cordilleras-cordilleras-chihuahua-30235028#tipos=casas-venta&area=chihuahua-chihuahua&pos=31",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/cordilleras-cordilleras-chihuahua-chihuahua-30235028-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Cordilleras, Col. Cordilleras",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31124"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5926541",
+            "longitude": "-106.1641864"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-boreales-ii-monteverde-chihuahua-29381411#tipos=casas-venta&area=chihuahua-chihuahua&pos=32",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/bosques-boreales-ii-monteverde-chihuahua-chihuahua-29381411-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Bosques boreales II, Col. Monteverde",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6800002",
+            "longitude": "-106.0230276"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182875#tipos=casas-venta&area=chihuahua-chihuahua&pos=33",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/montolivo-iii-romanzza-chihuahua-chihuahua-30182875-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Montolivo III, Col. Romanzza",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31313"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6433753",
+            "longitude": "-106.0587908"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-zona-santa-clara-punta-norte-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808281#tipos=casas-venta&area=chihuahua-chihuahua&pos=34",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/zona-santa-clara-punta-norte-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-chihuahua-29808281-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Zona Santa Clara Punta Norte, Col. Provincia de Santa Clara Etapa I a La XII",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31160"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5914248",
+            "longitude": "-106.1587308"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-bonita-sn-haciendas-sofia-chihuahua-29287501#tipos=casas-venta&area=chihuahua-chihuahua&pos=35",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/d14f05c2-e588-11ef-86a5-81ef2a726ac7.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Hacienda Bonita #s/n, Col. Haciendas Sofía",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6509423",
+            "longitude": "-106.0897372"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-domingo-sarmiento-906-parques-de-san-felipe-chihuahua-29770651#tipos=casas-venta&area=chihuahua-chihuahua&pos=36",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/613b2baa-2706-11f0-9f39-03d9877608b0.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Domingo Sarmiento #906, Col. Parques de San Felipe",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31203"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6383499",
+            "longitude": "-106.1283698"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-cantera-vistas-de-las-lomas-chihuahua-28527108#tipos=casas-venta&area=chihuahua-chihuahua&pos=37",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/cantera-vistas-de-las-lomas-chihuahua-chihuahua-28527108-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Cantera, Col. Vistas de las Lomas",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31216"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6433753",
+            "longitude": "-106.0587908"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-santa-clara-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808282#tipos=casas-venta&area=chihuahua-chihuahua&pos=38",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/santa-clara-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-chihuahua-29808282-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "santa clara, Col. Provincia de Santa Clara Etapa I a La XII",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31160"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6262114",
+            "longitude": "-106.0654875"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-calle-sexta-sn-santa-rosa-chihuahua-29295885#tipos=casas-venta&area=chihuahua-chihuahua&pos=39",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/6f09f9ae-e7d5-11ef-8c66-6341093daa42.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Calle Sexta #s/n, Col. Santa Rosa",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31050"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5908899",
+            "longitude": "-106.1547855"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-isabella-hacienda-isabella-chihuahua-30256534#tipos=casas-venta&area=chihuahua-chihuahua&pos=40",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/hacienda-isabella-hacienda-isabella-chihuahua-chihuahua-30256534-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Hacienda Isabella, Col. Hacienda Isabella",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31220"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6205748",
+            "longitude": "-106.109007"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-periferico-de-la-juventud-herradura-la-salle-i-chihuahua-28909971#tipos=casas-venta&area=chihuahua-chihuahua&pos=41",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/periferico-de-la-juventud-herradura-la-salle-i-chihuahua-chihuahua-28909971-foto-01.json"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Periférico de la juventud, Col. Herradura La Salle I",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31206"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6478868",
+            "longitude": "-106.14771"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-piedra-puente-de-piedra-chihuahua-30175614#tipos=casas-venta&area=chihuahua-chihuahua&pos=42",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/puente-de-piedra-puente-de-piedra-chihuahua-chihuahua-30175614-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Puente de piedra, Col. Puente de Piedra",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31116"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.5906289",
+            "longitude": "-106.1293798"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-residencial-saratoga-diamante-reliz-chihuahua-30000455#tipos=casas-venta&area=chihuahua-chihuahua&pos=43",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/residencial-saratoga-diamante-reliz-chihuahua-chihuahua-30000455-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Residencial Saratoga, Col. Diamante Reliz",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31207"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6983822",
+            "longitude": "-106.1410937"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-circuito-puente-dovali-9900-sn-campo-bello-chihuahua-29528007#tipos=casas-venta&area=chihuahua-chihuahua&pos=44",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/62b0f9be-1030-11f0-a4dd-2b7494d22798.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Circuito Puente Dovali 9900 #s/n, Col. Campo Bello",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31124"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6052379",
+            "longitude": "-106.0423428"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-trento-valle-escondido-chihuahua-30175613#tipos=casas-venta&area=chihuahua-chihuahua&pos=45",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/trento-valle-escondido-chihuahua-chihuahua-30175613-foto-01.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Trento, Col. Valle Escondido",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31054"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.6556923",
+            "longitude": "-106.13236529999999"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-del-angel-sn-valle-del-angel-chihuahua-29281689#tipos=casas-venta&area=chihuahua-chihuahua&pos=46",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/f7fa1130-e4ba-11ef-8cb4-e12121618ad4.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "VALLE DEL ANGEL #s/n, Col. Valle del Angel",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31115"
+          }
+        }
+      }
+    },
+    {
+      "type": "https://schema.org/SingleFamilyResidence",
+      "properties": {
+        "geo": {
+          "type": "https://schema.org/GeoCoordinates",
+          "properties": {
+            "latitude": "28.636128319705264",
+            "longitude": "-106.1192720751465"
+          }
+        },
+        "photo": {
+          "type": "https://schema.org/ImageObject",
+          "properties": {
+            "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-la-manga-6356-cumbres-iv-chihuahua-28789233#tipos=casas-venta&area=chihuahua-chihuahua&pos=47",
+            "thumbnail": "https://cdn.propiedades.com/files/600x400/77a3372c-924e-11ef-bfa7-85df0f3d869c.jpeg"
+          }
+        },
+        "address": {
+          "type": "https://schema.org/PostalAddress",
+          "properties": {
+            "streetAddress": "Hacienda la Manga #6356, Col. Cumbres IV",
+            "addressLocality": "Chihuahua",
+            "addressRegion": "Chihuahua",
+            "addressCountry": "México",
+            "postalCode": "31217"
+          }
+        }
+      }
+    }
+  ],
+  "json-ld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "url": "https://propiedades.com/chihuahua-chihuahua/casas-venta",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-del-valle-bosques-del-valle-chihuahua-30247405",
+              "datePosted": "2025-08-21 09:15:11",
+              "offers": {
+                "@type": "Offer",
+                "price": 6750000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-del-valle-bosques-del-valle-chihuahua-30247405",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con espacios únicos ubicada en Bosques del Valle, Col. Bosques del Valle, Chihuahua, con 4 recamaras y 2 baños.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 270,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Bosques del Valle, Col. Bosques del Valle C.P. 31160, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31160",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/bosques-del-valle-bosques-del-valle-chihuahua-chihuahua-30247405-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-monteverde-monteverde-chihuahua-30120088",
+              "datePosted": "2025-07-20 09:13:45",
+              "offers": {
+                "@type": "Offer",
+                "price": 2280000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-monteverde-monteverde-chihuahua-30120088",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta lista para habitar se encuentra en Monteverde, Col. Monteverde, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 98,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Monteverde, Col. Monteverde C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/monteverde-monteverde-chihuahua-chihuahua-30120088-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-valdivia-residencial-chihuahua-29483281",
+              "datePosted": "2025-03-24 09:09:57",
+              "offers": {
+                "@type": "Offer",
+                "price": 4830000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-valdivia-residencial-chihuahua-29483281",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta con buena ventilación ubicada en  , Col. Valdivia Residencial, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 238,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": " , Col. Valdivia Residencial C.P. 31160, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31160",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/valdivia-residencial-chihuahua-chihuahua-29483281-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-zarco-zarco-chihuahua-29005547",
+              "datePosted": "2024-12-19 09:16:34",
+              "offers": {
+                "@type": "Offer",
+                "price": 10300000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-zarco-zarco-chihuahua-29005547",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta bien distribuida localizada en zarco, Col. Zarco, Chihuahua, con 4 recamaras y 3 baños. Cuenta con diferentes amenidades como terraza, Tiene espacios como cuarto de servicio. Tiene servicios como seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 546,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "zarco, Col. Zarco C.P. 31020, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31020",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/zarco-zarco-chihuahua-chihuahua-29005547-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cuarto de servicio",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-tracia-residencial-monteverde-chihuahua-30175617",
+              "datePosted": "2025-08-02 09:47:17",
+              "offers": {
+                "@type": "Offer",
+                "price": 3339900,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-tracia-residencial-monteverde-chihuahua-30175617",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida ubicada en Tracia Residencial, Col. Monteverde, Chihuahua, cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 176,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Tracia Residencial, Col. Monteverde C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/tracia-residencial-monteverde-chihuahua-chihuahua-30175617-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 6,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-laguna-de-bustillos-sn-san-felipe-v-chihuahua-29685660",
+              "datePosted": "2025-04-09 16:36:33",
+              "offers": {
+                "@type": "Offer",
+                "price": 3850000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-laguna-de-bustillos-sn-san-felipe-v-chihuahua-29685660",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta con buena iluminación ubicada en laguna de bustillos #s/n, Col. San Felipe V, Chihuahua, con 3 recamaras y 2 baños. También tiene lavandería, gas natural y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 160,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "laguna de bustillos #s/n, Col. San Felipe V C.P. 31203, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31203",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/38ab123c-1561-11f0-94c7-a7ccea091e20.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "gas natural",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 7,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-monte-caleres-monte-caleres-chihuahua-29010655",
+              "datePosted": "2024-12-20 09:34:26",
+              "offers": {
+                "@type": "Offer",
+                "price": 6900000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-monte-caleres-monte-caleres-chihuahua-29010655",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta lista para habitar ubicada en Monte caleres, Col. Monte Caleres, Chihuahua. Cuenta con 4 recamaras y 3 baños.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": null,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Monte caleres, Col. Monte Caleres C.P. 31207, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31207",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/monte-caleres-monte-caleres-chihuahua-chihuahua-29010655-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 8,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-bahias-bahias-chihuahua-29014436",
+              "datePosted": "2024-12-21 09:16:03",
+              "offers": {
+                "@type": "Offer",
+                "price": 5250000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-bahias-bahias-chihuahua-29014436",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta lista para habitar localizada en bahias, Col. Bahías, Chihuahua. Tiene 3 recamaras y 2 baños. Tiene amenidades como terraza. También tiene seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 287,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "bahias, Col. Bahías C.P. 31075, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31075",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/bahias-bahias-chihuahua-chihuahua-29014436-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 9,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-margarita-lomas-del-santuario-ii-etapa-chihuahua-26913473",
+              "datePosted": "2023-08-25 09:14:06",
+              "offers": {
+                "@type": "Offer",
+                "price": 11800000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-margarita-lomas-del-santuario-ii-etapa-chihuahua-26913473",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Amplia Casa en venta con espacios únicos localizada en Margarita, Col. Lomas del Santuario II Etapa, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 326,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Margarita, Col. Lomas del Santuario II Etapa C.P. 31206, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31206",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/margarita-lomas-del-santuario-ii-etapa-chihuahua-chihuahua-26913473-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 10,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-diamante-reliz-chihuahua-30251663",
+              "datePosted": "2025-08-22 09:14:52",
+              "offers": {
+                "@type": "Offer",
+                "price": 5200000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-diamante-reliz-chihuahua-30251663",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta con espacios únicos se encuentra en  _ , Col. Diamante Reliz, Chihuahua, con 3 recamaras y 2 baños. Además, cuenta con: seguridad privada.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 275,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": " _ , Col. Diamante Reliz C.P. 31207, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31207",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/diamante-reliz-chihuahua-chihuahua-30251663-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 11,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-lomas-del-santuario-lomas-del-santuario-ii-etapa-chihuahua-30064761",
+              "datePosted": "2025-07-06 09:14:37",
+              "offers": {
+                "@type": "Offer",
+                "price": 11800000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-lomas-del-santuario-lomas-del-santuario-ii-etapa-chihuahua-30064761",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con buena iluminación se encuentra en Lomas del Santuario, Col. Lomas del Santuario II Etapa, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 326,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Lomas del Santuario, Col. Lomas del Santuario II Etapa C.P. 31206, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31206",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/lomas-del-santuario-lomas-del-santuario-ii-etapa-chihuahua-chihuahua-30064761-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 12,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-los-pinos-los-pinos-chihuahua-30243852",
+              "datePosted": "2025-08-20 09:57:54",
+              "offers": {
+                "@type": "Offer",
+                "price": 2600000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-los-pinos-los-pinos-chihuahua-30243852",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con espacios únicos se encuentra en Los pinos, Col. Los Pinos, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 176,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Los pinos, Col. Los Pinos C.P. 31416, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31416",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/los-pinos-los-pinos-chihuahua-chihuahua-30243852-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 13,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-colinas-del-valle-chihuahua-30180120",
+              "datePosted": "2025-08-04 09:14:12",
+              "offers": {
+                "@type": "Offer",
+                "price": 2990000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-colinas-del-valle-chihuahua-30180120",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta lista para habitar ubicada en  , Col. Colinas del Valle, Chihuahua. Tiene 3 recamaras y 1 baño. tambien amueblado. También tiene aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 1,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 130,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": " , Col. Colinas del Valle C.P. 31217, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31217",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/colinas-del-valle-chihuahua-chihuahua-30180120-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "amueblado",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 14,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-indigo-diamante-reliz-chihuahua-29070452",
+              "datePosted": "2025-01-11 09:12:18",
+              "offers": {
+                "@type": "Offer",
+                "price": 4950000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-indigo-diamante-reliz-chihuahua-29070452",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con buena iluminación ubicada en Índigo, Col. Diamante Reliz, Chihuahua. Cuenta con 4 recamaras y 4 baños. Tiene servicios como seguridad privada.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 4,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 250,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Índigo, Col. Diamante Reliz C.P. 31207, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31207",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/indigo-diamante-reliz-chihuahua-chihuahua-29070452-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 15,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-puerta-rivera-real-puerta-real-chihuahua-30300001",
+              "datePosted": "2025-09-03 09:13:02",
+              "offers": {
+                "@type": "Offer",
+                "price": 4200000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-puerta-rivera-real-puerta-real-chihuahua-30300001",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con espacios únicos localizada en Puerta Rivera Real, Col. Puerta Real, Chihuahua. Cuenta con 3 recamaras y 2 baños. Además, cuenta con: aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 198,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Puerta Rivera Real, Col. Puerta Real C.P. 31137, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31137",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/puerta-rivera-real-puerta-real-chihuahua-chihuahua-30300001-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 16,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-asturias-asturias-residencial-chihuahua-29084908",
+              "datePosted": "2025-01-15 09:45:54",
+              "offers": {
+                "@type": "Offer",
+                "price": 6195000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-asturias-asturias-residencial-chihuahua-29084908",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con buena ventilación localizada en Asturias, Col. Asturias Residencial, Chihuahua. Tiene 3 recamaras y 2 baños. Tiene servicios como seguridad privada.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 261,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Asturias, Col. Asturias Residencial C.P. 31216, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31216",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/asturias-asturias-residencial-chihuahua-chihuahua-29084908-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 17,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-tomas-valles-hacienda-del-moro-chihuahua-30129593",
+              "datePosted": "2025-07-23 09:10:04",
+              "offers": {
+                "@type": "Offer",
+                "price": 10800000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-tomas-valles-hacienda-del-moro-chihuahua-30129593",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta con espacios únicos se encuentra en Tomas valles, Col. Hacienda del Moro, Chihuahua, cuenta con 4 recamaras y 4 baños.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 4,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 330,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Tomas valles, Col. Hacienda del Moro C.P. 31124, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31124",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/tomas-valles-hacienda-del-moro-chihuahua-chihuahua-30129593-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 18,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-la-haciendita-31216-chihuahua-chih-3171-la-haciendita-chihuahua-30241484",
+              "datePosted": "2025-08-19 22:22:23",
+              "offers": {
+                "@type": "Offer",
+                "price": 3790000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-la-haciendita-31216-chihuahua-chih-3171-la-haciendita-chihuahua-30241484",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con espacios únicos ubicada en La Haciendita, 31216 Chihuahua, Chih. #3171, Col. La Haciendita, Chihuahua. Cuenta con 3 recamaras y 2 baños. Podrás disfrutar de alberca y gimnasio, tambien permite mascotas. Tiene servicios como calefacción, lavandería, gas natural, seguridad privada, aire acondicionado y telefonía.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 166,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": true,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "La Haciendita, 31216 Chihuahua, Chih. #3171, Col. La Haciendita C.P. 31625, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31625",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/6685f806-7d4b-11f0-9636-6b206b74482b.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "gimnasio",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "calefacción",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "gas natural",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "permite mascotas",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "alberca",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "telefonía",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 19,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-aria-residencial-monteverde-chihuahua-30175611",
+              "datePosted": "2025-08-02 09:47:15",
+              "offers": {
+                "@type": "Offer",
+                "price": 3463900,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-aria-residencial-monteverde-chihuahua-30175611",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con buena ventilación localizada en Aria Residencial, Col. Monteverde, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 190,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Aria Residencial, Col. Monteverde C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/aria-residencial-monteverde-chihuahua-chihuahua-30175611-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 20,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-torralba-valle-escondido-chihuahua-28531106",
+              "datePosted": "2024-08-29 19:20:10",
+              "offers": {
+                "@type": "Offer",
+                "price": 5300000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-torralba-valle-escondido-chihuahua-28531106",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida se encuentra en Torralba, Col. Valle Escondido, Chihuahua. Tiene 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 245,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Torralba, Col. Valle Escondido C.P. 31054, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31054",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/torralba-valle-escondido-chihuahua-chihuahua-28531106-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 21,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-escondido-rinconadas-del-valle-chihuahua-30286454",
+              "datePosted": "2025-08-30 09:47:30",
+              "offers": {
+                "@type": "Offer",
+                "price": 4650000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-escondido-rinconadas-del-valle-chihuahua-30286454",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con espacios únicos se encuentra en Valle Escondido, Col. Rinconadas del Valle, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 214,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Valle Escondido, Col. Rinconadas del Valle C.P. 31160, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31160",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/valle-escondido-rinconadas-del-valle-chihuahua-chihuahua-30286454-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 22,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-rincon-de-las-lomas-rincon-de-las-lomas-i-chihuahua-29290004",
+              "datePosted": "2025-02-08 09:34:56",
+              "offers": {
+                "@type": "Offer",
+                "price": 15690000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-rincon-de-las-lomas-rincon-de-las-lomas-i-chihuahua-29290004",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta con buena iluminación se encuentra en Rincón de las Lomas, Col. Rincón de Las Lomas I, Chihuahua, con 3 recamaras y 4 baños. Tiene amenidades como alberca y terraza. Tiene servicios como seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 4,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 473,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Rincón de las Lomas, Col. Rincón de Las Lomas I C.P. 31216, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31216",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/rincon-de-las-lomas-rincon-de-las-lomas-i-chihuahua-chihuahua-29290004-foto-01.html"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "alberca",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 23,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-santa-fe-hacienda-santa-fe-chihuahua-30000454",
+              "datePosted": "2025-06-21 09:41:35",
+              "offers": {
+                "@type": "Offer",
+                "price": 24000000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-santa-fe-hacienda-santa-fe-chihuahua-30000454",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida se encuentra en Hacienda Santa fe, Col. Hacienda Santa Fe, Chihuahua, con 8 recamaras y 10 baños.",
+                  "numberOfRooms": 8,
+                  "numberOfBathroomsTotal": 10,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 1405,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Hacienda Santa fe, Col. Hacienda Santa Fe C.P. 31215, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31215",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/hacienda-santa-fe-hacienda-santa-fe-chihuahua-chihuahua-30000454-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 24,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-junta-de-los-rios-y-etapas-chihuahua-30003695",
+              "datePosted": "2025-06-22 09:17:58",
+              "offers": {
+                "@type": "Offer",
+                "price": 3000000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-junta-de-los-rios-y-etapas-chihuahua-30003695",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta con espacios únicos localizada en  , Col. Junta de los Ríos y Etapas, Chihuahua, con 4 recamaras y 3 baños. Cuenta con increíble: terraza. Tiene servicios como aire acondicionado.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 259,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": " , Col. Junta de los Ríos y Etapas C.P. 31300, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31300",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/junta-de-los-rios-y-etapas-chihuahua-chihuahua-30003695-foto-01.html"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 25,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-de-alicante-monteverde-chihuahua-29455656",
+              "datePosted": "2025-03-16 09:07:48",
+              "offers": {
+                "@type": "Offer",
+                "price": 2920000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-de-alicante-monteverde-chihuahua-29455656",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Amplia Casa en venta con espacios únicos localizada en Bosques De Alicante, Col. Monteverde, Chihuahua. Cuenta con 3 recamaras y 2 baños. Adicionalmente tiene seguridad privada.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 121,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Bosques De Alicante, Col. Monteverde C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/bosques-de-alicante-monteverde-chihuahua-chihuahua-29455656-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 26,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-cantera-puente-de-piedra-chihuahua-30247406",
+              "datePosted": "2025-08-21 09:15:11",
+              "offers": {
+                "@type": "Offer",
+                "price": 2950000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-cantera-puente-de-piedra-chihuahua-30247406",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Amplia Casa en venta con espacios únicos se encuentra en Puente de cantera, Col. Puente de Piedra, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 120,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Puente de cantera, Col. Puente de Piedra C.P. 31116, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31116",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/puente-de-cantera-puente-de-piedra-chihuahua-chihuahua-30247406-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 27,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-peninsula-residencial-diamante-reliz-chihuahua-29089588",
+              "datePosted": "2025-01-16 09:12:38",
+              "offers": {
+                "@type": "Offer",
+                "price": 3400000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-peninsula-residencial-diamante-reliz-chihuahua-29089588",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta bien distribuida se encuentra en Península Residencial, Col. Diamante Reliz, Chihuahua. Tiene 3 recamaras y 2 baños. Tiene servicios como seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 145,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Península Residencial, Col. Diamante Reliz C.P. 31207, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31207",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/peninsula-residencial-diamante-reliz-chihuahua-chihuahua-29089588-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 28,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-c-corvera-31216-chihuahua-chih-asturias-residencial-chihuahua-30220441",
+              "datePosted": "2025-08-13 23:42:21",
+              "offers": {
+                "@type": "Offer",
+                "price": 5990000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-c-corvera-31216-chihuahua-chih-asturias-residencial-chihuahua-30220441",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta bien distribuida localizada en C. Corvera, 31216 Chihuahua, Chih., Col. Asturias Residencial, Chihuahua, cuenta con 3 recamaras y 3 baños. Además, cuenta con: cisterna, calefacción, lavandería, gas natural, seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 259,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "C. Corvera, 31216 Chihuahua, Chih., Col. Asturias Residencial C.P. 31216, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31216",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/2049890d-78a0-11f0-9e0d-d18df802cec5.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cisterna",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "calefacción",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "gas natural",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 29,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-mision-del-valle-mision-del-valle-chihuahua-29928698",
+              "datePosted": "2025-06-05 09:14:53",
+              "offers": {
+                "@type": "Offer",
+                "price": 7750000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-mision-del-valle-mision-del-valle-chihuahua-29928698",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta lista para habitar ubicada en Misión del Valle, Col. Misión del Valle, Chihuahua. Tiene 3 recamaras y 3 baños. Cuenta con diferentes amenidades como terraza, Además, tiene cuarto de servicio. Tiene servicios como seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 330,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Misión del Valle, Col. Misión del Valle C.P. 31115, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31115",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/mision-del-valle-mision-del-valle-chihuahua-chihuahua-29928698-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cuarto de servicio",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 30,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182874",
+              "datePosted": "2025-08-05 09:10:04",
+              "offers": {
+                "@type": "Offer",
+                "price": 1995000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182874",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta lista para habitar localizada en Montolivo III, Col. Romanzza, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 115,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Montolivo III, Col. Romanzza C.P. 31313, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31313",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/montolivo-iii-romanzza-chihuahua-chihuahua-30182874-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 31,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-cordilleras-cordilleras-chihuahua-30235028",
+              "datePosted": "2025-08-17 09:14:06",
+              "offers": {
+                "@type": "Offer",
+                "price": 4350000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-cordilleras-cordilleras-chihuahua-30235028",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta con buena ventilación se encuentra en Cordilleras, Col. Cordilleras, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 235,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Cordilleras, Col. Cordilleras C.P. 31124, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31124",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/cordilleras-cordilleras-chihuahua-chihuahua-30235028-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 32,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-boreales-ii-monteverde-chihuahua-29381411",
+              "datePosted": "2025-02-26 09:08:13",
+              "offers": {
+                "@type": "Offer",
+                "price": 3200000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-bosques-boreales-ii-monteverde-chihuahua-29381411",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta lista para habitar ubicada en Bosques boreales II, Col. Monteverde, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": null,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Bosques boreales II, Col. Monteverde C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/bosques-boreales-ii-monteverde-chihuahua-chihuahua-29381411-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 33,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182875",
+              "datePosted": "2025-08-05 09:10:04",
+              "offers": {
+                "@type": "Offer",
+                "price": 2110000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-montolivo-iii-romanzza-chihuahua-30182875",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida se encuentra en Montolivo III, Col. Romanzza, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 121,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Montolivo III, Col. Romanzza C.P. 31313, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31313",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/montolivo-iii-romanzza-chihuahua-chihuahua-30182875-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 34,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-zona-santa-clara-punta-norte-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808281",
+              "datePosted": "2025-05-12 09:07:57",
+              "offers": {
+                "@type": "Offer",
+                "price": 2700000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-zona-santa-clara-punta-norte-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808281",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Amplia Casa en venta con espacios únicos se encuentra en Zona Santa Clara Punta Norte, Col. Provincia de Santa Clara Etapa I a La XII, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 149,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Zona Santa Clara Punta Norte, Col. Provincia de Santa Clara Etapa I a La XII C.P. 31160, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31160",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/zona-santa-clara-punta-norte-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-chihuahua-29808281-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 35,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-bonita-sn-haciendas-sofia-chihuahua-29287501",
+              "datePosted": "2025-02-07 19:18:49",
+              "offers": {
+                "@type": "Offer",
+                "price": 3400000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-bonita-sn-haciendas-sofia-chihuahua-29287501",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta con espacios únicos ubicada en Hacienda Bonita #s/n, Col. Haciendas Sofía, Chihuahua. Tiene 3 recamaras y 2 baños. Cuenta con increíble: terraza. También tiene calefacción, lavandería, gas natural, seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 163,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Hacienda Bonita #s/n, Col. Haciendas Sofía C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/d14f05c2-e588-11ef-86a5-81ef2a726ac7.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "calefacción",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "gas natural",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 36,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-domingo-sarmiento-906-parques-de-san-felipe-chihuahua-29770651",
+              "datePosted": "2025-05-02 03:32:11",
+              "offers": {
+                "@type": "Offer",
+                "price": 7490000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-domingo-sarmiento-906-parques-de-san-felipe-chihuahua-29770651",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta con buena ventilación localizada en Domingo Sarmiento #906, Col. Parques de San Felipe, Chihuahua. Cuenta con 4 recamaras y 3 baños. Tiene espacios como cuarto de servicio. Servicios que incluye: chimenea, cisterna, calefacción, lavandería, aire acondicionado y telefonía.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 367,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Domingo Sarmiento #906, Col. Parques de San Felipe C.P. 31203, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31203",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/613b2baa-2706-11f0-9f39-03d9877608b0.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "chimenea",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cisterna",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "calefacción",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cuarto de servicio",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "telefonía",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 37,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-cantera-vistas-de-las-lomas-chihuahua-28527108",
+              "datePosted": "2024-08-29 12:10:57",
+              "offers": {
+                "@type": "Offer",
+                "price": 17500000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-cantera-vistas-de-las-lomas-chihuahua-28527108",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida se encuentra en Cantera, Col. Vistas de las Lomas, Chihuahua. Tiene 4 recamaras y 5 baños. Además cuenta con cuarto de servicio. Adicionalmente tiene seguridad privada.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 5,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 479,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Cantera, Col. Vistas de las Lomas C.P. 31216, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31216",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/cantera-vistas-de-las-lomas-chihuahua-chihuahua-28527108-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cuarto de servicio",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 38,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-santa-clara-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808282",
+              "datePosted": "2025-05-12 09:07:57",
+              "offers": {
+                "@type": "Offer",
+                "price": 2863000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-santa-clara-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-29808282",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Moderna Casa en venta lista para habitar se encuentra en santa clara, Col. Provincia de Santa Clara Etapa I a La XII, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 138,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "santa clara, Col. Provincia de Santa Clara Etapa I a La XII C.P. 31160, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31160",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/santa-clara-provincia-de-santa-clara-etapa-i-a-la-xii-chihuahua-chihuahua-29808282-foto-01.json"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 39,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-calle-sexta-sn-santa-rosa-chihuahua-29295885",
+              "datePosted": "2025-02-10 17:30:00",
+              "offers": {
+                "@type": "Offer",
+                "price": 2500000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-calle-sexta-sn-santa-rosa-chihuahua-29295885",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta con espacios únicos ubicada en Calle Sexta #s/n, Col. Santa Rosa, Chihuahua, con 3 recamaras y 2 baños. Tiene servicios como calefacción, lavandería y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 115,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Calle Sexta #s/n, Col. Santa Rosa C.P. 31050, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31050",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/6f09f9ae-e7d5-11ef-8c66-6341093daa42.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "calefacción",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "lavandería",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 40,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-isabella-hacienda-isabella-chihuahua-30256534",
+              "datePosted": "2025-08-23 09:07:36",
+              "offers": {
+                "@type": "Offer",
+                "price": 3900000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-isabella-hacienda-isabella-chihuahua-30256534",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta con buena iluminación localizada en Hacienda Isabella, Col. Hacienda Isabella, Chihuahua, con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 153,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Hacienda Isabella, Col. Hacienda Isabella C.P. 31220, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31220",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/hacienda-isabella-hacienda-isabella-chihuahua-chihuahua-30256534-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 41,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-periferico-de-la-juventud-herradura-la-salle-i-chihuahua-28909971",
+              "datePosted": "2024-11-26 09:30:14",
+              "offers": {
+                "@type": "Offer",
+                "price": 12200000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-periferico-de-la-juventud-herradura-la-salle-i-chihuahua-28909971",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con buena iluminación localizada en Periférico de la juventud, Col. Herradura La Salle I, Chihuahua, cuenta con 3 recamaras y 4 baños. Tambien cuenta con cuarto de servicio. Tiene servicios como seguridad privada y aire acondicionado.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 4,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 412,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Periférico de la juventud, Col. Herradura La Salle I C.P. 31206, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31206",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/periferico-de-la-juventud-herradura-la-salle-i-chihuahua-chihuahua-28909971-foto-01.json"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "cuarto de servicio",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "aire acondicionado",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 42,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-piedra-puente-de-piedra-chihuahua-30175614",
+              "datePosted": "2025-08-02 09:47:16",
+              "offers": {
+                "@type": "Offer",
+                "price": 2990000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-puente-de-piedra-puente-de-piedra-chihuahua-30175614",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Acogedora Casa en venta bien distribuida se encuentra en Puente de piedra, Col. Puente de Piedra, Chihuahua. Tiene 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": null,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Puente de piedra, Col. Puente de Piedra C.P. 31116, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31116",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/puente-de-piedra-puente-de-piedra-chihuahua-chihuahua-30175614-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 43,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-residencial-saratoga-diamante-reliz-chihuahua-30000455",
+              "datePosted": "2025-06-21 09:41:35",
+              "offers": {
+                "@type": "Offer",
+                "price": 3100000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-residencial-saratoga-diamante-reliz-chihuahua-30000455",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta con buena ventilación ubicada en Residencial Saratoga, Col. Diamante Reliz, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 170,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Residencial Saratoga, Col. Diamante Reliz C.P. 31207, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31207",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/residencial-saratoga-diamante-reliz-chihuahua-chihuahua-30000455-foto-01.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 44,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-circuito-puente-dovali-9900-sn-campo-bello-chihuahua-29528007",
+              "datePosted": "2025-04-03 02:03:18",
+              "offers": {
+                "@type": "Offer",
+                "price": 3700000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-circuito-puente-dovali-9900-sn-campo-bello-chihuahua-29528007",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Agradable Casa en venta lista para habitar ubicada en Circuito Puente Dovali 9900 #s/n, Col. Campo Bello, Chihuahua. Cuenta con 3 recamaras y 2 baños.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 2,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 227,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Circuito Puente Dovali 9900 #s/n, Col. Campo Bello C.P. 31124, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31124",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/62b0f9be-1030-11f0-a4dd-2b7494d22798.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 45,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-trento-valle-escondido-chihuahua-30175613",
+              "datePosted": "2025-08-02 09:47:16",
+              "offers": {
+                "@type": "Offer",
+                "price": 3861000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-trento-valle-escondido-chihuahua-30175613",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta con espacios únicos ubicada en Trento, Col. Valle Escondido, Chihuahua. Tiene 3 recamaras y 3 baños. Servicios que incluye: seguridad privada.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 184,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Trento, Col. Valle Escondido C.P. 31054, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31054",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/trento-valle-escondido-chihuahua-chihuahua-30175613-foto-01.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "seguridad privada",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 46,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-del-angel-sn-valle-del-angel-chihuahua-29281689",
+              "datePosted": "2025-02-06 18:18:16",
+              "offers": {
+                "@type": "Offer",
+                "price": 11950000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-valle-del-angel-sn-valle-del-angel-chihuahua-29281689",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Espaciosa Casa en venta lista para habitar ubicada en VALLE DEL ANGEL #s/n, Col. Valle del Angel, Chihuahua. Tiene 4 recamaras y 5 baños.",
+                  "numberOfRooms": 4,
+                  "numberOfBathroomsTotal": 5,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 407,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "VALLE DEL ANGEL #s/n, Col. Valle del Angel C.P. 31115, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31115",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/f7fa1130-e4ba-11ef-8cb4-e12121618ad4.jpeg"
+                  ],
+                  "amenityFeature": null
+                }
+              }
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 47,
+            "item": {
+              "@type": "RealEstateListing",
+              "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-la-manga-6356-cumbres-iv-chihuahua-28789233",
+              "datePosted": "2024-10-24 21:22:36",
+              "offers": {
+                "@type": "Offer",
+                "price": 7900000,
+                "priceCurrency": "MXN",
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell",
+                "url": "https://propiedades.com/inmuebles/casa-en-venta-hacienda-la-manga-6356-cumbres-iv-chihuahua-28789233",
+                "itemOffered": {
+                  "@type": "House",
+                  "name": "Casa en Venta",
+                  "description": "Hermosa Casa en venta bien distribuida ubicada en Hacienda la Manga #6356, Col. Cumbres IV, Chihuahua, con 3 recamaras y 3 baños. Tiene acceso a alberca y terraza, Adicionalmente, cuenta con sótano. Servicios que incluye: telefonía.",
+                  "numberOfRooms": 3,
+                  "numberOfBathroomsTotal": 3,
+                  "floorSize": {
+                    "@type": "QuantitativeValue",
+                    "value": 443,
+                    "unitText": "M2"
+                  },
+                  "petsAllowed": null,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Hacienda la Manga #6356, Col. Cumbres IV C.P. 31217, Chihuahua",
+                    "addressLocality": "Chihuahua",
+                    "addressRegion": "Chihuahua",
+                    "postalCode": "31217",
+                    "addressCountry": "MX"
+                  },
+                  "image": [
+                    "https://cdn.propiedades.com/files/600x400/77a3372c-924e-11ef-bfa7-85df0f3d869c.jpeg"
+                  ],
+                  "amenityFeature": [
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "sótano",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "alberca",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "terraza",
+                      "value": true
+                    },
+                    {
+                      "@type": "LocationFeatureSpecification",
+                      "name": "telefonía",
+                      "value": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "opengraph": [
+    {
+      "namespace": {
+        "og": "http://ogp.me/ns#"
+      },
+      "properties": [
+        [
+          "og:description",
+          "4285 Casas en Venta en Chihuahua ¡Nuestra oferta es exclusiva y se actualiza a diario!"
+        ],
+        [
+          "og:image",
+          "https://propiedadescom.s3.us-east-1.amazonaws.com/files/propiedades.png"
+        ],
+        [
+          "og:image:alt",
+          "4285 Casas en Venta en Chihuahua - Propiedades.com"
+        ],
+        [
+          "og:image:height",
+          "630"
+        ],
+        [
+          "og:image:width",
+          "1200"
+        ],
+        [
+          "og:title",
+          "4285 Casas en Venta en Chihuahua - Propiedades.com"
+        ],
+        [
+          "og:url",
+          "https://propiedades.com/chihuahua-chihuahua/casas-venta"
+        ],
+        [
+          "og:site_name",
+          "Propiedades.com"
+        ],
+        [
+          "og:type",
+          "website"
+        ]
+      ]
+    }
+  ]
+}

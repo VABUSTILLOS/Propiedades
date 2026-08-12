@@ -56,6 +56,13 @@ curl -sf -X POST "https://graph.facebook.com/v23.0/$WABA_ID/message_templates" \
     "language": "es_MX",
     "components": [
       {
+        "type": "HEADER",
+        "format": "IMAGE",
+        "example": {
+          "header_handle": ["https://qfemrfrkxfirpizwcalh.supabase.co/storage/v1/object/public/property-images/68c8b3ab-5471-4755-bd17-0f78067857dc/0.jpg"]
+        }
+      },
+      {
         "type": "BODY",
         "text": "¡Hola! 👋 Estas son las propiedades que buscaste:\n\n{{1}}\n\nResponde a este mensaje para seguir buscando aquí mismo. Escribe \"asesor\" si prefieres que te atienda una persona.",
         "example": {

@@ -112,7 +112,7 @@ export function buildWhatsAppHandoffLink(input: WhatsAppHandoffInput): string {
 }
 export type ShareProperty = Pick<
   ChatResult,
-  "title" | "colonia" | "city" | "price" | "currency" | "slug"
+  "title" | "colonia" | "city" | "price" | "currency" | "slug" | "image"
 >;
 
 const MAX_CONSOLIDATED_PROPERTIES = 20;

@@ -55,7 +55,25 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const listing = await getListingBySlug(slug);
-  return { title: listing?.title ?? "Propiedad" };
+  if (!listing) return { title: "Propiedad" };
+
+  // WhatsApp/Telegram/social render a thumbnail card from these OG tags when
+  // a property link is shared — without og:image the preview is bare text.
+  const location = [listing.colonia, listing.city].filter(Boolean).join(", ");
+  const description =
+    `${location} · $${listing.price.toLocaleString("es-MX")} ` +
+    `${listing.currency ?? "MXN"}`;
+  const images = (listing.images ?? []).filter(Boolean).slice(0, 3);
+
+  return {
+    title: listing.title,
+    description,
+    openGraph: {
+      title: listing.title,
+      description,
+      images,
+    },
+  };
 }
 
 export default async function PropertyDetailPage({ params, searchParams }: Props) {

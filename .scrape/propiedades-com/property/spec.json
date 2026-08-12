@@ -1,0 +1,180 @@
+{
+  "url": "https://propiedades.com",
+  "data_type": "property",
+  "html_variant": "raw",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Título completo del anuncio tal como aparece en el detalle",
+        "source": "requested",
+        "examples": ["Venta bodega en Cristobal Colon, Colonia Paseos de Chihuahua, C.P. 31125"]
+      },
+      "url": {
+        "type": "string",
+        "description": "URL canónica del anuncio en Propiedades.com",
+        "source": "requested",
+        "examples": ["https://propiedades.com/inmuebles/bodega-en-venta-cristobal-colon-paseos-de-chihuahua-chihuahua-30586778"]
+      },
+      "listing_id_propiedades": {
+        "type": "string",
+        "description": "ID del anuncio en Propiedades.com (idempotency key)",
+        "source": "requested",
+        "examples": ["30586778"]
+      },
+      "price": {
+        "type": "number",
+        "description": "Precio de venta en número",
+        "source": "requested",
+        "examples": [5600000]
+      },
+      "price_currency": {
+        "type": "string",
+        "description": "Moneda del precio (MXN o USD)",
+        "source": "requested",
+        "examples": ["MXN"]
+      },
+      "price_formatted": {
+        "type": "string",
+        "description": "Precio formateado como se muestra en el anuncio",
+        "source": "requested",
+        "examples": ["$5,600,000 MXN"]
+      },
+      "operation_type": {
+        "type": "string",
+        "description": "Tipo de operación (Venta/Renta)",
+        "source": "requested",
+        "examples": ["Venta"]
+      },
+      "property_type": {
+        "type": "string",
+        "description": "Tipo de propiedad",
+        "source": "requested",
+        "examples": ["Bodega comercial / Bodegas Industriales"]
+      },
+      "bedrooms": {
+        "type": "integer",
+        "description": "Número de recámaras",
+        "source": "requested",
+        "examples": [0]
+      },
+      "bathrooms": {
+        "type": "integer",
+        "description": "Número de baños",
+        "source": "requested",
+        "examples": [0]
+      },
+      "land_area_m2": {
+        "type": "number",
+        "description": "Superficie del terreno en m²",
+        "source": "requested",
+        "examples": [300]
+      },
+      "built_area_m2": {
+        "type": "number",
+        "description": "Superficie de construcción en m²",
+        "source": "requested",
+        "examples": [373]
+      },
+      "property_age": {
+        "type": "string",
+        "description": "Antigüedad de la propiedad (Nuevo, Usado, o años)",
+        "source": "discovered",
+        "examples": ["Nuevo"]
+      },
+      "year_built": {
+        "type": "integer",
+        "description": "Año de construcción",
+        "source": "discovered",
+        "examples": [2026]
+      },
+      "street_address": {
+        "type": "string",
+        "description": "Calle y número",
+        "source": "discovered",
+        "examples": ["Cristobal Colon"]
+      },
+      "neighborhood": {
+        "type": "string",
+        "description": "Colonia / fraccionamiento",
+        "source": "requested",
+        "examples": ["Paseos de Chihuahua"]
+      },
+      "city": {
+        "type": "string",
+        "description": "Ciudad",
+        "source": "requested",
+        "examples": ["Chihuahua"]
+      },
+      "state": {
+        "type": "string",
+        "description": "Estado",
+        "source": "discovered",
+        "examples": ["Chihuahua"]
+      },
+      "postal_code": {
+        "type": "string",
+        "description": "Código postal",
+        "source": "discovered",
+        "examples": ["31125"]
+      },
+      "full_address": {
+        "type": "string",
+        "description": "Dirección completa",
+        "source": "discovered",
+        "examples": ["Cristobal Colon, Col. Paseos de Chihuahua C.P. 31125, Chihuahua"]
+      },
+      "latitude": {
+        "type": "number",
+        "description": "Latitud",
+        "source": "discovered",
+        "examples": [28.7110556]
+      },
+      "longitude": {
+        "type": "number",
+        "description": "Longitud",
+        "source": "discovered",
+        "examples": [-106.132914]
+      },
+      "description": {
+        "type": "string",
+        "description": "Descripción del anuncio",
+        "source": "requested",
+        "examples": ["Bodega comercial en venta localizada en Cristobal Colon, Col. Paseos de Chihuahua..."]
+      },
+      "images": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "URLs de las fotos de la galería",
+        "source": "requested",
+        "examples": [["https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"]]
+      },
+      "main_image": {
+        "type": "string",
+        "description": "URL de la foto principal",
+        "source": "requested",
+        "examples": ["https://cdn.propiedades.com/files/1200x507/cristobal-colon-paseos-de-chihuahua-chihuahua-chihuahua-30586778-foto-01.jpeg"]
+      },
+      "agency_name": {
+        "type": "string",
+        "description": "Nombre de la agencia inmobiliaria",
+        "source": "discovered",
+        "examples": ["Propiedades.com"]
+      },
+      "date_posted": {
+        "type": "string",
+        "description": "Fecha de publicación del anuncio",
+        "source": "discovered",
+        "examples": [""]
+      },
+      "is_featured": {
+        "type": "string",
+        "description": "Indicador de anuncio destacado",
+        "source": "discovered",
+        "examples": ["DESTACADO"]
+      }
+    }
+  }
+}
