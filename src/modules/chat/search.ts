@@ -161,6 +161,16 @@ export async function runChatSearch(
       relaxedNote = `Mostrando resultados sin filtro de precio.`;
     }
   }
+  if (rows.length === 0 && (filters.minM2 != null || filters.maxM2 != null || filters.minBedrooms != null)) {
+    const relaxed = { ...filters };
+    delete relaxed.minM2;
+    delete relaxed.maxM2;
+    delete relaxed.minBedrooms;
+    rows = await search(relaxed);
+    if (rows.length > 0) {
+      relaxedNote = `Mostrando resultados sin filtro de tamaño o recámaras.`;
+    }
+  }
 
   const reply = await buildReply(rows.length, filters, message, relaxedNote);
 
