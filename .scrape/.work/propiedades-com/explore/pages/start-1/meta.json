@@ -1,0 +1,8 @@
+{
+  "url": "https://propiedades.com/chihuahua-chihuahua/venta/hasta-3000000-pesos",
+  "captured_at": "2026-08-12T22:56:50.994678+00:00",
+  "page_type": "start",
+  "errors": {
+    "playwright": "Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://propiedades.com/chihuahua-chihuahua/venta/hasta-3000000-pesos\nCall log:\n  - navigating to \"https://propiedades.com/chihuahua-chihuahua/venta/hasta-3000000-pesos\", waiting until \"load\"\n"
+  }
+}

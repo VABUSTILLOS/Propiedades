@@ -46,7 +46,7 @@ if [ -z "$WABA_ID" ]; then
   exit 1
 fi
 
-echo "Creando plantilla '$TEMPLATE_NAME' en WABA $WABA_ID…"
+echo "Creando plantilla '$TEMPLATE_NAME' en WABA ${WABA_ID}…"
 curl -sf -X POST "https://graph.facebook.com/v23.0/$WABA_ID/message_templates" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
