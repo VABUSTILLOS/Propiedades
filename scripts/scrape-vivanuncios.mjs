@@ -65,12 +65,13 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function isCloudflareBlocked(text) {
+  if (!text || text.length < 2000) return true;
+  // Genuine challenge pages only. Real Vivanuncios pages legitimately embed
+  // a /cdn-cgi/challenge-platform script — do NOT treat that as a block.
   return (
-    !text ||
-    text.includes("Just a moment") ||
-    text.includes("challenge-platform") ||
-    /cf-?ch[_-]?l|__cf_chl|cf_chl_opt/i.test(text.slice(0, 2000)) ||
-    text.length < 2000
+    /<title>\s*Just a moment/.test(text) ||
+    text.includes("Just a moment...") ||
+    text.includes("Performing security verification")
   );
 }
 
