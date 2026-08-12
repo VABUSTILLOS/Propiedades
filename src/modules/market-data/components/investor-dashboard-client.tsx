@@ -152,11 +152,38 @@ export function InvestorDashboardClient({
       return true;
     });
 
-    if (sortBy === "hot") {
-      // Hotness is pre-computed per item; null scores sink to the bottom.
-      return [...matches].sort((a, b) => (b.hotScore ?? -1) - (a.hotScore ?? -1));
+    if (sortBy === "newest") {
+      // Server already returns listings newest-first; keep that order.
+      return matches;
     }
-    return matches;
+
+    return [...matches].sort((a, b) => {
+      switch (sortBy) {
+        case "hot":
+          return compareDesc(a.hotScore, b.hotScore);
+        case "price-asc":
+          return compareAsc(a.price, b.price);
+        case "price-desc":
+          return compareDesc(a.price, b.price);
+        case "m2-const-asc":
+          return compareAsc(a.precio_m2_const, b.precio_m2_const);
+        case "m2-const-desc":
+          return compareDesc(a.precio_m2_const, b.precio_m2_const);
+        case "m2-land-asc":
+          return compareAsc(a.precio_m2_terreno, b.precio_m2_terreno);
+        case "m2-land-desc":
+          return compareDesc(a.precio_m2_terreno, b.precio_m2_terreno);
+        case "avaluo-discount":
+          // Remates use the appraisal discount; other deals fall back to the
+          // colonia discount so the sort stays meaningful on the "todos" tab.
+          return compareDesc(
+            a.discountAvaluo ?? a.discountPct,
+            b.discountAvaluo ?? b.discountPct,
+          );
+        default:
+          return 0;
+      }
+    });
   }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy]);
 
   // Pins for the map: one per filtered opportunity (all for-sale).
@@ -246,11 +273,20 @@ export function InvestorDashboardClient({
           Ordenar
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "newest" | "hot")}
+            onChange={(e) => setSortBy(e.target.value as SortKey)}
             className="mt-1 block rounded-md border bg-background px-2 py-1 text-sm"
           >
             <option value="newest">Más recientes</option>
             <option value="hot">Más hot (oportunidad)</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="m2-const-asc">$/m² const: menor a mayor</option>
+            <option value="m2-const-desc">$/m² const: mayor a menor</option>
+            <option value="m2-land-asc">$/m² terreno: menor a mayor</option>
+            <option value="m2-land-desc">$/m² terreno: mayor a menor</option>
+            <option value="avaluo-discount">
+              Mayor % descuento vs avalúo
+            </option>
           </select>
         </label>
       </div>

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { getCurrentUser } from "@/modules/auth/session";
+import { SiteHeader } from "@/modules/home/components/site-header";
 import {
   countActiveListings,
   searchListings,
@@ -96,7 +98,8 @@ export default async function InvestorPage({ searchParams }: Props) {
     limit: 100,
   };
 
-  const [listings, counts] = await Promise.all([
+  const [user, listings, counts] = await Promise.all([
+    getCurrentUser(),
     searchListings(filters),
     Promise.all([
       countActiveListings(tabToFilters.todos),
@@ -128,23 +131,27 @@ export default async function InvestorPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-10">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Modo inversionista</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {items.length} {TAB_LABELS[activeTab]} en el catálogo
-          </p>
-        </div>
-      </div>
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader user={user} />
 
-      <InvestorDashboardClient
-        items={items}
-        activeTab={activeTab}
-        counts={countByTab}
-        initialView={mapSearch ? "map" : "list"}
-        initialBounds={bounds}
-      />
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Modo inversionista</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {items.length} {TAB_LABELS[activeTab]} en el catálogo
+            </p>
+          </div>
+        </div>
+
+        <InvestorDashboardClient
+          items={items}
+          activeTab={activeTab}
+          counts={countByTab}
+          initialView={mapSearch ? "map" : "list"}
+          initialBounds={bounds}
+        />
+      </main>
     </div>
   );
 }

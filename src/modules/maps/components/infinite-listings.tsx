@@ -5,6 +5,8 @@ import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { ListingWithHot } from "@/modules/search/queries";
+import { SearchResultCard } from "@/modules/maps/components/search-result-card";
+import { PropertyCard } from "@/modules/home/components/property-card";
 
 type ApiResponse = {
   items: ListingWithHot[];
@@ -22,7 +24,7 @@ export function InfiniteListings({
   initialItems,
   initialTotal,
   filtersQueryString,
-  renderCard,
+  card = "search",
   pageSize = 12,
   gridClassName = "grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3",
   emptyState,
@@ -31,7 +33,8 @@ export function InfiniteListings({
   initialTotal: number;
   /** Current filters (and bounds) as a URL query string, no leading `?`. */
   filtersQueryString: string;
-  renderCard: (item: ListingWithHot) => React.ReactNode;
+  /** Which card to render for each listing (serializable across RSC). */
+  card?: "search" | "property";
   pageSize?: number;
   gridClassName?: string;
   emptyState?: React.ReactNode;
@@ -94,7 +97,31 @@ export function InfiniteListings({
 
   return (
     <div className="space-y-6">
-      <div className={gridClassName}>{items.map(renderCard)}</div>
+      <div className={gridClassName}>
+        {items.map((item) =>
+          card === "property" ? (
+            <PropertyCard
+              key={item.id}
+              listing={item}
+              hotScore={item.hotScore}
+            />
+          ) : (
+            <SearchResultCard
+              key={item.id}
+              title={item.title}
+              slug={item.slug}
+              city={`${item.colonia}, ${item.city}`}
+              price={item.price}
+              currency={item.currency}
+              type={item.type}
+              dealType={item.deal_type}
+              image={item.images?.[0] ?? null}
+              score={item.property_score}
+              hotScore={item.hotScore}
+            />
+          ),
+        )}
+      </div>
 
       {hasMore && (
         <div ref={sentinelRef} className="flex justify-center pt-2">

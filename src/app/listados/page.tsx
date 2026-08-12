@@ -15,7 +15,6 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { toQueryString } from "@/modules/search/query-string";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
-import { PropertyCard } from "@/modules/home/components/property-card";
 import { ListadosTabs } from "@/modules/listados/components/listados-tabs";
 import { SearchResults } from "@/modules/maps/components/search-results";
 
@@ -136,14 +135,8 @@ export default async function ListadosPage({ searchParams }: Props) {
               filtersQueryString={filtersQueryString}
               mapSearch={mapSearch}
               initialBounds={bounds}
+              card="property"
               gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
-              renderCard={(listing) => (
-                <PropertyCard
-                  key={listing.id}
-                  listing={listing}
-                  hotScore={listing.hotScore}
-                />
-              )}
             />
           </div>
         )}

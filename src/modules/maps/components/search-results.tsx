@@ -28,7 +28,7 @@ export function SearchResults({
   filtersQueryString,
   mapSearch = false,
   initialBounds = null,
-  renderCard,
+  card = "search",
   gridClassName,
   emptyState,
   basePath = "/search",
@@ -39,7 +39,8 @@ export function SearchResults({
   filtersQueryString: string;
   mapSearch?: boolean;
   initialBounds?: MapBounds | null;
-  renderCard: (item: ListingWithHot) => React.ReactNode;
+  /** Which card to render for each listing (serializable across RSC). */
+  card?: "search" | "property";
   gridClassName?: string;
   emptyState?: React.ReactNode;
   /** Base path for `router.push` when toggling map / applying a zone. */
@@ -85,7 +86,7 @@ export function SearchResults({
       initialItems={initialItems}
       initialTotal={initialTotal}
       filtersQueryString={filtersQueryString}
-      renderCard={renderCard}
+      card={card}
       gridClassName={gridClassName}
       emptyState={emptyState}
     />

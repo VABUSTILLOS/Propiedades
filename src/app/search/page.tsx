@@ -10,25 +10,14 @@ import {
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
-import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
-import {
-  parseBoundsString,
+import { parseBoundsString,
   searchParamsSchema,
   type MapBounds,
 } from "@/modules/lib/schemas";
 import { getCurrentUser } from "@/modules/auth/session";
-import {
-  estimateEscrituracion,
-  estimatePredial,
-  formatMxn,
-  isFinanciable,
-} from "@/modules/lib/real-estate";
-import type { PropertyDealType } from "@/modules/lib/database.types";
 import { toQueryString } from "@/modules/search/query-string";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
-import { Badge } from "@/components/ui/badge";
-import { ScoreBadge } from "@/components/ui/score-badge";
 import { Building2, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -161,116 +150,13 @@ export default async function SearchPage({ searchParams }: Props) {
             filtersQueryString={filtersQueryString}
             mapSearch={mapSearch}
             initialBounds={bounds}
+            card="search"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
-            renderCard={(listing) => (
-              <SearchResultCard
-                key={listing.id}
-                title={listing.title}
-                slug={listing.slug}
-                city={`${listing.colonia}, ${listing.city}`}
-                price={listing.price}
-                currency={listing.currency}
-                type={listing.type}
-                dealType={listing.deal_type}
-                image={listing.images?.[0] ?? null}
-                score={listing.property_score}
-                hotScore={listing.hotScore}
-              />
-            )}
           />
         )}
       </main>
 
       <SiteFooter />
-    </div>
-  );
-}
-
-function SearchResultCard({
-  title,
-  slug,
-  city,
-  price,
-  currency,
-  type,
-  dealType,
-  image,
-  score,
-  hotScore,
-}: {
-  title: string;
-  slug: string;
-  city: string;
-  price: number;
-  currency: string;
-  type: "sale" | "rent";
-  dealType: PropertyDealType;
-  image: string | null;
-  score: number | null;
-  hotScore: number | null;
-}) {
-  const showCosts = type === "sale" && price > 0;
-  const financiable = isFinanciable(dealType);
-
-  return (
-    <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
-      <Link href={`/property/${slug}`} className="block">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={title}
-            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center bg-muted text-xs text-muted-foreground">
-            Sin foto
-          </div>
-        )}
-        <div className="absolute left-3 top-3 flex gap-2">
-          <Badge className="rounded-full shadow-sm">
-            {type === "rent" ? "Renta" : "Venta"}
-          </Badge>
-        </div>
-        <ScoreBadge
-          score={score}
-          solid
-          className="absolute right-3 top-3 rounded-full"
-        />
-      </div>
-
-      <div className="space-y-1.5 pt-3">
-        <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
-          {title}
-        </h3>
-        <p className="line-clamp-1 text-sm text-muted-foreground">{city}</p>
-        <p className="font-bold">
-          ${price.toLocaleString()}{" "}
-          <span className="text-sm font-normal text-muted-foreground">
-            {currency} · {type === "rent" ? "renta" : "venta"}
-          </span>
-        </p>
-        <HotnessGauge score={hotScore} />
-      </div>
-      </Link>
-
-      {showCosts && (
-        <div className="space-y-1 pt-3">
-          <p className="text-xs text-muted-foreground">
-            Predial est. {formatMxn(estimatePredial(price))}/año · Escrituración
-            est. {formatMxn(estimateEscrituracion(price))}
-          </p>
-          {financiable && (
-            <Link
-              href="/preapproval"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
-            >
-              Precalificate para un crédito
-            </Link>
-          )}
-        </div>
-      )}
     </div>
   );
 }
