@@ -24,11 +24,6 @@ import {
 import { MarketPanel } from "@/modules/market-data/components/market-panel";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  estimateMantenimiento,
-  estimatePredial,
-  formatMxn,
-} from "@/modules/lib/real-estate";
 import { DownloadInvestmentPdfButton } from "@/modules/market-data/components/download-investment-pdf-button";
 
 type Props = {
