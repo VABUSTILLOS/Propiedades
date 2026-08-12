@@ -1,17 +1,72 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { ListingWithHot } from "@/modules/search/queries";
 import { SearchResultCard } from "@/modules/maps/components/search-result-card";
 import { PropertyCard } from "@/modules/home/components/property-card";
+import { CardDetailsToggle } from "@/modules/maps/components/card-details-toggle";
 
 type ApiResponse = {
   items: ListingWithHot[];
   total: number;
 };
+
+const CARD_DETAILS_KEY = "cardShowDetails";
+
+const cardDetailsListeners = new Set<() => void>();
+
+function emitCardDetailsChange(): void {
+  for (const listener of cardDetailsListeners) listener();
+}
+
+function subscribeCardDetails(callback: () => void): () => void {
+  cardDetailsListeners.add(callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    cardDetailsListeners.delete(callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function getCardDetailsSnapshot(): boolean {
+  try {
+    return localStorage.getItem(CARD_DETAILS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** Server render always shows the compact card (details opt-in per user). */
+function getCardDetailsServerSnapshot(): boolean {
+  return false;
+}
+
+/** Persists the pref and notifies subscribers in this tab (and others). */
+function setCardDetailsPref(next: boolean): void {
+  try {
+    localStorage.setItem(CARD_DETAILS_KEY, next ? "1" : "0");
+  } catch {
+    // ignore write failures (storage full / private mode)
+  }
+  emitCardDetailsChange();
+}
+
+/**
+ * Whether the extra financial details (predial, escrituración, barra hot,
+ * $/m², % descuento) are visible on the cards. Backed by localStorage via
+ * useSyncExternalStore so it persists across navigation and remounts without
+ * hydration mismatches or setState-in-effect warnings.
+ */
+function useCardDetailsPref(): boolean {
+  return useSyncExternalStore(
+    subscribeCardDetails,
+    getCardDetailsSnapshot,
+    getCardDetailsServerSnapshot,
+  );
+}
 
 /**
  * Real infinite scroll over `GET /api/search`.
@@ -44,6 +99,10 @@ export function InfiniteListings({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const showDetails = useCardDetailsPref();
+
+  const toggleDetails = (next: boolean) => setCardDetailsPref(next);
 
   // The parent remounts this component with a `key` derived from the current
   // filters/bounds, so state always starts from the latest server render.
@@ -97,10 +156,20 @@ export function InfiniteListings({
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <CardDetailsToggle show={showDetails} onChange={toggleDetails} />
+      </div>
+
       <div className={gridClassName}>
         {items.map((item) =>
           card === "property" ? (
-            <PropertyCard key={item.id} listing={item} />
+            <PropertyCard
+              key={item.id}
+              listing={item}
+              hotScore={item.hotScore}
+              discountPct={item.discountPct}
+              showDetails={showDetails}
+            />
           ) : (
             <SearchResultCard
               key={item.id}
@@ -112,6 +181,11 @@ export function InfiniteListings({
               type={item.type}
               image={item.images?.[0] ?? null}
               score={item.property_score}
+              hotScore={item.hotScore}
+              discountPct={item.discountPct}
+              construccionM2={item.construccion_m2}
+              terrenoM2={item.terreno_m2}
+              showDetails={showDetails}
             />
           ),
         )}

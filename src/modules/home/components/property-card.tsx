@@ -2,22 +2,48 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
-import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Bath,
+  BedDouble,
+  MapPin,
+  Ruler,
+} from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
+import {
+  estimateEscrituracion,
+  estimatePredial,
+  formatMxn,
+} from "@/modules/lib/real-estate";
 
 /**
- * Public property card for the homepage featured grid.
- * Server-safe (no state, no event handlers); the favorite bookmark
+ * Public property card for the homepage featured grid and the listados
+ * grid. Server-safe (no state, no event handlers); the favorite bookmark
  * is a separate client component embedded over the image.
+ *
+ * `showDetails` reveals the optional financial details (predial est.,
+ * escrituración est., barra hot, $/m², % descuento vs colonia) that the
+ * listing pages toggle on/off; the homepage keeps them hidden.
  */
 export function PropertyCard({
   listing,
   saved = false,
+  hotScore = null,
+  discountPct = null,
+  showDetails = false,
 }: {
   listing: PropertiesRow;
   /** Whether the current user already saved this property as a favorite. */
   saved?: boolean;
+  /** Hotness 0–100 for the traffic-light gauge (only when showDetails). */
+  hotScore?: number | null;
+  /** Percent below (positive) or above (negative) the colonia benchmark. */
+  discountPct?: number | null;
+  /** Whether to render the extra financial details on the card. */
+  showDetails?: boolean;
 }) {
   const price =
     listing.price > 0
@@ -28,6 +54,13 @@ export function PropertyCard({
   const isLand = listing.terreno_m2 > 0 && listing.construccion_m2 === 0;
 
   const typeLabel = isLand ? "Tierra" : listing.type === "rent" ? "Renta" : "Venta";
+
+  const precioM2Const =
+    listing.precio_m2_const ??
+    (listing.construccion_m2 > 0 ? listing.price / listing.construccion_m2 : 0);
+  const precioM2Terreno =
+    listing.precio_m2_terreno ??
+    (listing.terreno_m2 > 0 ? listing.price / listing.terreno_m2 : 0);
 
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
@@ -104,6 +137,59 @@ export function PropertyCard({
                   {listing.construccion_m2.toLocaleString()} m²
                 </span>
               )
+            )}
+          </div>
+        )}
+
+        {showDetails && listing.price > 0 && (
+          <div className="space-y-1.5 border-t pt-3">
+            <HotnessGauge score={hotScore ?? null} />
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+              <div className="flex items-baseline justify-between gap-2">
+                <dt className="text-muted-foreground">Predial est.</dt>
+                <dd className="font-medium">
+                  {formatMxn(estimatePredial(listing.price))}
+                  <span className="text-muted-foreground">/año</span>
+                </dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-2">
+                <dt className="text-muted-foreground">Escrituración est.</dt>
+                <dd className="font-medium">
+                  {formatMxn(estimateEscrituracion(listing.price))}
+                </dd>
+              </div>
+              {precioM2Const > 0 && (
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-muted-foreground">$/m² constr.</dt>
+                  <dd className="font-medium">
+                    ${Math.round(precioM2Const).toLocaleString()}
+                  </dd>
+                </div>
+              )}
+              {precioM2Terreno > 0 && (
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-muted-foreground">$/m² terreno</dt>
+                  <dd className="font-medium">
+                    ${Math.round(precioM2Terreno).toLocaleString()}
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {discountPct != null && (
+              <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                Descuento vs colonia:
+                {discountPct >= 0 ? (
+                  <span className="inline-flex items-center gap-0.5 font-semibold text-emerald-600">
+                    <ArrowDownRight className="size-3.5" aria-hidden="true" />
+                    {discountPct.toFixed(1)}% abajo
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-0.5 font-semibold text-amber-600">
+                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    {Math.abs(discountPct).toFixed(1)}% arriba
+                  </span>
+                )}
+              </p>
             )}
           </div>
         )}

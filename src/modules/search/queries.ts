@@ -171,23 +171,32 @@ async function selectListingsPage(filters: SearchFilters): Promise<{
   return { rows: rows ?? [], total: count ?? 0 };
 }
 
-export type ListingWithHot = PropertiesRow & { hotScore: number | null };
+export type ListingWithHot = PropertiesRow & {
+  hotScore: number | null;
+  /** Percent below (positive) or above (negative) the colonia benchmark. */
+  discountPct: number | null;
+};
 
 /**
  * Computes the hotness score for each row (N+1 benchmark + colonia-discount
  * reads, same pattern as /investor). Sorted naturally; hotScore is attached
- * for the traffic-light gauge.
+ * for the traffic-light gauge and discountPct for the cards' optional
+ * "% descuento vs colonia" detail.
  */
 export async function enrichWithHot(
   rows: PropertiesRow[],
 ): Promise<ListingWithHot[]> {
-  const scores = await Promise.all(
+  const meta = await Promise.all(
     rows.map(async (row) => {
       const discountPct = await getColoniaDiscount(row.id);
-      return toHotScore(discountPct, row);
+      return { hotScore: toHotScore(discountPct, row), discountPct };
     }),
   );
-  return rows.map((row, i) => ({ ...row, hotScore: scores[i] ?? null }));
+  return rows.map((row, i) => ({
+    ...row,
+    hotScore: meta[i]?.hotScore ?? null,
+    discountPct: meta[i]?.discountPct ?? null,
+  }));
 }
 
 /**

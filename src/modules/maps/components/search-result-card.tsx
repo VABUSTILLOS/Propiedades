@@ -4,10 +4,21 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
+import {
+  estimateEscrituracion,
+  estimatePredial,
+  formatMxn,
+} from "@/modules/lib/real-estate";
 
 /**
  * Search result card used by the infinite list and the map-zone grid.
  * Pure presentational; the favorite bookmark is a separate client component.
+ *
+ * `showDetails` reveals the optional financial details (predial est.,
+ * escrituración est., barra hot, $/m², % descuento vs colonia) that the
+ * listing pages toggle on/off.
  */
 export function SearchResultCard({
   title,
@@ -18,6 +29,11 @@ export function SearchResultCard({
   type,
   image,
   score,
+  hotScore = null,
+  discountPct = null,
+  construccionM2 = 0,
+  terrenoM2 = 0,
+  showDetails = false,
 }: {
   title: string;
   slug: string;
@@ -27,7 +43,17 @@ export function SearchResultCard({
   type: "sale" | "rent";
   image: string | null;
   score: number | null;
+  /** Hotness 0–100 for the traffic-light gauge (only when showDetails). */
+  hotScore?: number | null;
+  /** Percent below (positive) or above (negative) the colonia benchmark. */
+  discountPct?: number | null;
+  construccionM2?: number;
+  terrenoM2?: number;
+  /** Whether to render the extra financial details on the card. */
+  showDetails?: boolean;
 }) {
+  const precioM2Const = construccionM2 > 0 ? price / construccionM2 : 0;
+  const precioM2Terreno = terrenoM2 > 0 ? price / terrenoM2 : 0;
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={`/property/${slug}`} className="block">
@@ -67,6 +93,59 @@ export function SearchResultCard({
               {currency} · {type === "rent" ? "renta" : "venta"}
             </span>
           </p>
+
+          {showDetails && price > 0 && (
+            <div className="space-y-1.5 border-t pt-3">
+              <HotnessGauge score={hotScore ?? null} />
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-muted-foreground">Predial est.</dt>
+                  <dd className="font-medium">
+                    {formatMxn(estimatePredial(price))}
+                    <span className="text-muted-foreground">/año</span>
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-muted-foreground">Escrituración est.</dt>
+                  <dd className="font-medium">
+                    {formatMxn(estimateEscrituracion(price))}
+                  </dd>
+                </div>
+                {precioM2Const > 0 && (
+                  <div className="flex items-baseline justify-between gap-2">
+                    <dt className="text-muted-foreground">$/m² constr.</dt>
+                    <dd className="font-medium">
+                      ${Math.round(precioM2Const).toLocaleString()}
+                    </dd>
+                  </div>
+                )}
+                {precioM2Terreno > 0 && (
+                  <div className="flex items-baseline justify-between gap-2">
+                    <dt className="text-muted-foreground">$/m² terreno</dt>
+                    <dd className="font-medium">
+                      ${Math.round(precioM2Terreno).toLocaleString()}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              {discountPct != null && (
+                <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                  Descuento vs colonia:
+                  {discountPct >= 0 ? (
+                    <span className="inline-flex items-center gap-0.5 font-semibold text-emerald-600">
+                      <ArrowDownRight className="size-3.5" aria-hidden="true" />
+                      {discountPct.toFixed(1)}% abajo
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-0.5 font-semibold text-amber-600">
+                      <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                      {Math.abs(discountPct).toFixed(1)}% arriba
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </div>
