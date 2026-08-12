@@ -3,16 +3,27 @@ import Link from "next/link";
 
 import {
   getSearchableCities,
-  searchListingsWithHot,
-  enrichWithHot,
+  searchListingsPage,
   type SearchFilters,
 } from "@/modules/search/queries";
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
-import { searchParamsSchema } from "@/modules/lib/schemas";
+import {
+  parseBoundsString,
+  searchParamsSchema,
+  type MapBounds,
+} from "@/modules/lib/schemas";
 import { getCurrentUser } from "@/modules/auth/session";
+import {
+  estimateEscrituracion,
+  estimatePredial,
+  formatMxn,
+  isFinanciable,
+} from "@/modules/lib/real-estate";
+import type { PropertyDealType } from "@/modules/lib/database.types";
+import { toQueryString } from "@/modules/search/query-string";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +43,10 @@ export default async function SearchPage({ searchParams }: Props) {
   const raw = await searchParams;
   const parsed = searchParamsSchema.safeParse(raw);
 
+  const bounds: MapBounds | null = parsed.data?.bounds
+    ? (parseBoundsString(parsed.data.bounds) ?? null)
+    : null;
+
   const filters: SearchFilters = {
     query: parsed.data?.query,
     type: parsed.data?.type,
@@ -44,19 +59,43 @@ export default async function SearchPage({ searchParams }: Props) {
     maxPrice: parsed.data?.maxPrice,
     city: parsed.data?.city,
     colonia: parsed.data?.colonia,
+    bounds: bounds ?? undefined,
     sortBy: parsed.data?.sortBy,
     limit: 24,
   };
 
-  const [user, listings, cities] = await Promise.all([
+  const [user, pageResult, cities] = await Promise.all([
     getCurrentUser(),
     // Natural-language queries go through semantic search when embeddings
     // are configured; otherwise it falls back to the keyword path.
     parsed.data?.query
-      ? searchSemantic(parsed.data.query, 24).then(enrichWithHot)
-      : searchListingsWithHot(filters),
+      ? searchSemantic(parsed.data.query, 24)
+          .then(enrichWithHot)
+          .then((items) => ({ items, total: items.length }))
+      : searchListingsPage(filters),
     getSearchableCities(),
   ]);
+
+  const { items: listings, total } = pageResult;
+
+  // Mirrors `filters` for the paginated /api/search + markers endpoints so
+  // infinite scroll and the map stay in sync with the first server render.
+  const filtersQueryString = toQueryString({
+    query: parsed.data?.query,
+    type: parsed.data?.type,
+    category: parsed.data?.category,
+    dealType: parsed.data?.dealType ?? "venta_directa",
+    minPrice: parsed.data?.minPrice,
+    maxPrice: parsed.data?.maxPrice,
+    city: parsed.data?.city,
+    colonia: parsed.data?.colonia,
+    minM2: parsed.data?.minM2,
+    maxM2: parsed.data?.maxM2,
+    sortBy: parsed.data?.sortBy,
+    bounds: parsed.data?.bounds,
+  });
+
+  const mapSearch = parsed.data?.mapSearch === "true";
 
   const hasFilters = Object.values(filters).some(
     (value) => value !== undefined && value !== "",
@@ -139,6 +178,7 @@ export default async function SearchPage({ searchParams }: Props) {
                   price={listing.price}
                   currency={listing.currency}
                   type={listing.type}
+                  dealType={listing.deal_type}
                   image={listing.images?.[0] ?? null}
                   score={listing.property_score}
                   hotScore={listing.hotScore}
@@ -161,6 +201,7 @@ function SearchResultCard({
   price,
   currency,
   type,
+  dealType,
   image,
   score,
   hotScore,
@@ -171,15 +212,17 @@ function SearchResultCard({
   price: number;
   currency: string;
   type: "sale" | "rent";
+  dealType: PropertyDealType;
   image: string | null;
   score: number | null;
   hotScore: number | null;
 }) {
+  const showCosts = type === "sale" && price > 0;
+  const financiable = isFinanciable(dealType);
+
   return (
-    <Link
-      href={`/property/${slug}`}
-      className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md"
-    >
+    <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
+      <Link href={`/property/${slug}`} className="block">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -218,6 +261,24 @@ function SearchResultCard({
         </p>
         <HotnessGauge score={hotScore} />
       </div>
-    </Link>
+      </Link>
+
+      {showCosts && (
+        <div className="space-y-1 pt-3">
+          <p className="text-xs text-muted-foreground">
+            Predial est. {formatMxn(estimatePredial(price))}/año · Escrituración
+            est. {formatMxn(estimateEscrituracion(price))}
+          </p>
+          {financiable && (
+            <Link
+              href="/preapproval"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
+            >
+              Precalificate para un crédito
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

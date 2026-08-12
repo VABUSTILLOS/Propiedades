@@ -6,7 +6,11 @@ import { MarkerClusterer, type Cluster } from "@googlemaps/markerclusterer";
 import { X } from "lucide-react";
 
 import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps } from "@/modules/maps/hooks";
-import { createMap, createMarker, type MapMarkerHandle } from "@/modules/maps/markers";
+import {
+  createMap,
+  createMarker,
+  type MapMarkerHandle,
+} from "@/modules/maps/markers";
 import type { PropertyMapMarker } from "@/modules/search/queries";
 import type { MapBounds } from "@/modules/lib/schemas";
 import { cn } from "@/lib/utils";
@@ -191,7 +195,7 @@ export function PropertiesMap({
       clustererRef.current = new MarkerClusterer({
         markers: handles.map((h) => h.getMarker()),
         map,
-        onClusterClick: (_event: unknown, cluster: Cluster) => {
+        onClusterClick: (_event: google.maps.MapMouseEvent, cluster: Cluster) => {
           map.fitBounds(cluster.getBounds());
         },
       });

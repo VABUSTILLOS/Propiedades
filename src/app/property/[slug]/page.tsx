@@ -23,6 +23,12 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  estimateEscrituracion,
+  estimatePredial,
+  formatMxn,
+  isFinanciable,
+} from "@/modules/lib/real-estate";
 import { SiteHeader } from "@/modules/home/components/site-header";
 import { SiteFooter } from "@/modules/home/components/site-footer";
 
@@ -59,6 +65,9 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
   const hotScore = toHotScore(discountPct, listing);
+
+  const showCosts = listing.type === "sale" && listing.price > 0;
+  const financiable = isFinanciable(listing.deal_type);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -189,6 +198,27 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                   </p>
                 )}
 
+                {showCosts && (
+                  <dl className="mt-4 space-y-1 border-t pt-3 text-sm">
+                    <div className="flex justify-between">
+                      <dt className="text-muted-foreground">
+                        Predial estimado (anual)
+                      </dt>
+                      <dd className="font-medium">
+                        {formatMxn(estimatePredial(listing.price))}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-muted-foreground">
+                        Escrituración estimada
+                      </dt>
+                      <dd className="font-medium">
+                        {formatMxn(estimateEscrituracion(listing.price))}
+                      </dd>
+                    </div>
+                  </dl>
+                )}
+
                 {hotScore != null && (
                   <div className="mt-4 rounded-xl border bg-card p-3">
                     <div className="mb-2 flex items-center justify-between">
@@ -219,6 +249,17 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                       </div>
                     </dl>
                   </div>
+                )}
+
+                {financiable && (
+                  <Link
+                    href="/preapproval"
+                    className={buttonVariants({
+                      className: "mt-4 w-full",
+                    })}
+                  >
+                    Precalificate para un crédito
+                  </Link>
                 )}
               </CardContent>
             </Card>

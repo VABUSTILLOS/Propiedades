@@ -6,6 +6,12 @@ import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
+import {
+  estimateEscrituracion,
+  estimatePredial,
+  formatMxn,
+  isFinanciable,
+} from "@/modules/lib/real-estate";
 
 /**
  * Public property card for the homepage featured grid.
@@ -33,11 +39,12 @@ export function PropertyCard({
 
   const typeLabel = isLand ? "Tierra" : listing.type === "rent" ? "Renta" : "Venta";
 
+  const showCosts = listing.type === "sale" && listing.price > 0;
+  const financiable = isFinanciable(listing.deal_type);
+
   return (
-    <Link
-      href={`/property/${listing.slug}`}
-      className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md"
-    >
+    <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
+      <Link href={`/property/${listing.slug}`} className="block">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {listing.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -116,7 +123,25 @@ export function PropertyCard({
           </div>
         )}
       </div>
-    </Link>
+      </Link>
+
+      {showCosts && (
+        <div className="space-y-1 pt-3">
+          <p className="text-xs text-muted-foreground">
+            Predial est. {formatMxn(estimatePredial(listing.price))}/año ·
+            Escrituración est. {formatMxn(estimateEscrituracion(listing.price))}
+          </p>
+          {financiable && (
+            <Link
+              href="/preapproval"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
+            >
+              Precalificate para un crédito
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

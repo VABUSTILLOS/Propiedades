@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { ListingWithHot } from "@/modules/search/queries";
 
 type ApiResponse = {
@@ -25,7 +24,7 @@ export function InfiniteListings({
   filtersQueryString,
   renderCard,
   pageSize = 12,
-  className,
+  gridClassName = "grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3",
   emptyState,
 }: {
   initialItems: ListingWithHot[];
@@ -34,7 +33,7 @@ export function InfiniteListings({
   filtersQueryString: string;
   renderCard: (item: ListingWithHot) => React.ReactNode;
   pageSize?: number;
-  className?: string;
+  gridClassName?: string;
   emptyState?: React.ReactNode;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
@@ -102,14 +101,11 @@ export function InfiniteListings({
   }
 
   return (
-    <div className={cn("space-y-4", className)}>
-      <div className="space-y-4">{items.map(renderCard)}</div>
+    <div className="space-y-6">
+      <div className={gridClassName}>{items.map(renderCard)}</div>
 
       {hasMore && (
-        <div
-          ref={sentinelRef}
-          className="flex justify-center pt-4"
-        >
+        <div ref={sentinelRef} className="flex justify-center pt-2">
           <Button
             variant="outline"
             disabled={loading}
