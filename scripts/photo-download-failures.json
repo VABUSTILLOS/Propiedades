@@ -1,11 +1,23 @@
 {
-  "generated_at": "2026-08-12T16:56:30.191Z",
+  "generated_at": "2026-08-12T17:22:05.732Z",
   "failures": [
     {
       "id": "06674110-8e9d-4af6-ba5d-d0d2a9a01e11",
       "title": "Casa en Venta en Cumbres Universidad",
       "failed": 6,
       "of": 6
+    },
+    {
+      "id": "375cd60e-3010-4077-a552-57403f71fc28",
+      "title": "Departamento de 1 habitación, Chihuahua · Departamento Venta Torre Sophia San Felipe Chihuahua 2,790,000 Gl2",
+      "failed": 1,
+      "of": 18
+    },
+    {
+      "id": "f0535f15-dca8-484d-8838-2f587de9cd29",
+      "title": "Casa · 245m² · 3 Recámaras · 2 Estacionamientos · oportunidad¡Venta Casa en Fracc. Valdivia",
+      "failed": 1,
+      "of": 26
     }
   ]
 }

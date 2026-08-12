@@ -149,6 +149,9 @@ async function main() {
         status === "partial" ? "partial_contact" : null,
         !row.source_url ? "missing_source_url" : null,
         images.length === 0 ? "no_images" : null,
+        origins.some((h) => h !== new URL(SUPABASE_URL).hostname)
+          ? "remote_images"
+          : null,
       ].filter(Boolean),
     };
   });
