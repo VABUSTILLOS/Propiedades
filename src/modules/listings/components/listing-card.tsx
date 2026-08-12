@@ -7,6 +7,7 @@ import {
   deleteListing,
   setListingStatus,
   updateListingCategory,
+  updateListingContact,
 } from "@/modules/listings/actions";
 import { scoreListing } from "@/modules/ai/actions";
 import { CreateFlyerButton } from "@/modules/flyers/components/create-flyer-button";
@@ -19,6 +20,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -201,6 +213,7 @@ export function ListingCard({ listing }: { listing: PropertiesRow }) {
         {listing.status === "active" && (
           <CreateFlyerButton propertyId={listing.id} />
         )}
+        <EditContactDialog listing={listing} />
         <Button
           size="sm"
           variant="secondary"
@@ -211,5 +224,155 @@ export function ListingCard({ listing }: { listing: PropertiesRow }) {
         </Button>
       </CardFooter>
     </Card>
+  );
+}
+
+function EditContactDialog({ listing }: { listing: PropertiesRow }) {
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  const [name, setName] = useState(listing.contact_name ?? "");
+  const [type, setType] = useState(listing.contact_type ?? "");
+  const [phone, setPhone] = useState(listing.contact_phone ?? "");
+  const [whatsapp, setWhatsapp] = useState(listing.contact_whatsapp ?? "");
+  const [email, setEmail] = useState(listing.contact_email ?? "");
+
+  const reset = () => {
+    setName(listing.contact_name ?? "");
+    setType(listing.contact_type ?? "");
+    setPhone(listing.contact_phone ?? "");
+    setWhatsapp(listing.contact_whatsapp ?? "");
+    setEmail(listing.contact_email ?? "");
+    setError(null);
+    setSaved(false);
+  };
+
+  const save = () =>
+    startTransition(async () => {
+      setError(null);
+      setSaved(false);
+      const res = await updateListingContact(listing.id, {
+        contact_name: name.trim() || null,
+        contact_type: type || null,
+        contact_phone: phone.trim() || null,
+        contact_whatsapp: whatsapp.trim() || null,
+        contact_email: email.trim() || null,
+      });
+      if (!res.ok) {
+        setError(res.error);
+        return;
+      }
+      setSaved(true);
+    });
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (next) reset();
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">
+          Editar contacto
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Editar contacto</DialogTitle>
+          <DialogDescription>
+            Guarda el nombre y WhatsApp del agente inmobiliario responsable de
+            esta propiedad.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="contact-name">Nombre de contacto</Label>
+            <Input
+              id="contact-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ej. Inmobiliaria Vanguardia"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="contact-type">Tipo de contacto</Label>
+            <Select value={type} onValueChange={(v) => setType(v ?? "")}>
+              <SelectTrigger id="contact-type">
+                <SelectValue placeholder="Selecciona un tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="inmobiliaria">Inmobiliaria</SelectItem>
+                <SelectItem value="agencia">Agencia</SelectItem>
+                <SelectItem value="particular">Particular</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="contact-phone">Teléfono</Label>
+              <Input
+                id="contact-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+52 55 0000 0000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contact-whatsapp">WhatsApp</Label>
+              <Input
+                id="contact-whatsapp"
+                type="tel"
+                value={whatsapp}
+                onChange={(e) => setWhatsapp(e.target.value)}
+                placeholder="+52 55 0000 0000"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="contact-email">Correo electrónico</Label>
+            <Input
+              id="contact-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="contacto@inmobiliaria.com"
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+          {saved && (
+            <p className="text-sm text-emerald-600" role="status">
+              Contacto guardado.
+            </p>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            disabled={isPending}
+            onClick={() => setOpen(false)}
+          >
+            Cancelar
+          </Button>
+          <Button disabled={isPending} onClick={save}>
+            {isPending ? "Guardando…" : "Guardar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

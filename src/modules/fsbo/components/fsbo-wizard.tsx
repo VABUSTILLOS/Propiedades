@@ -27,6 +27,11 @@ type WizardData = {
   lng: string;
   description: string;
   images: string;
+  contact_name: string;
+  contact_type: string;
+  contact_phone: string;
+  contact_whatsapp: string;
+  contact_email: string;
 };
 
 const initialData: WizardData = {
@@ -44,6 +49,11 @@ const initialData: WizardData = {
   lng: "",
   description: "",
   images: "",
+  contact_name: "",
+  contact_type: "",
+  contact_phone: "",
+  contact_whatsapp: "",
+  contact_email: "",
 };
 
 /**
@@ -110,7 +120,7 @@ export function FsboWizard({ cities }: { cities: string[] }) {
       }
       const id = draft.data.id;
 
-      const steps: Array<[2 | 3 | 4, Record<string, unknown>]> = [
+      const steps: Array<[2 | 3 | 4 | 5, Record<string, unknown>]> = [
         [
           2,
           {
@@ -139,6 +149,16 @@ export function FsboWizard({ cities }: { cities: string[] }) {
               .split(",")
               .map((s) => s.trim())
               .filter(Boolean),
+          },
+        ],
+        [
+          5,
+          {
+            contact_name: data.contact_name.trim() || null,
+            contact_type: data.contact_type || null,
+            contact_phone: data.contact_phone.trim() || null,
+            contact_whatsapp: data.contact_whatsapp.trim() || null,
+            contact_email: data.contact_email.trim() || null,
           },
         ],
       ];
@@ -324,6 +344,67 @@ export function FsboWizard({ cities }: { cities: string[] }) {
           onChange={(e) => update("images", e.target.value)}
           placeholder="https://…, https://…"
         />
+      </div>
+
+      <div className="rounded-md border bg-muted/30 p-4">
+        <p className="mb-3 text-xs font-semibold text-muted-foreground">
+          Contacto del agente (se mostrará públicamente)
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="fsbo-contact-name">Nombre de contacto</Label>
+            <Input
+              id="fsbo-contact-name"
+              value={data.contact_name}
+              onChange={(e) => update("contact_name", e.target.value)}
+              placeholder="Ej. Inmobiliaria Vanguardia"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="fsbo-contact-type">Tipo de contacto</Label>
+            <select
+              id="fsbo-contact-type"
+              value={data.contact_type}
+              onChange={(e) => update("contact_type", e.target.value)}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            >
+              <option value="">Selecciona un tipo</option>
+              <option value="inmobiliaria">Inmobiliaria</option>
+              <option value="agencia">Agencia</option>
+              <option value="particular">Particular</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="fsbo-contact-phone">Teléfono</Label>
+            <Input
+              id="fsbo-contact-phone"
+              type="tel"
+              value={data.contact_phone}
+              onChange={(e) => update("contact_phone", e.target.value)}
+              placeholder="+52 55 0000 0000"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="fsbo-contact-whatsapp">WhatsApp</Label>
+            <Input
+              id="fsbo-contact-whatsapp"
+              type="tel"
+              value={data.contact_whatsapp}
+              onChange={(e) => update("contact_whatsapp", e.target.value)}
+              placeholder="+52 55 0000 0000"
+            />
+          </div>
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="fsbo-contact-email">Correo electrónico</Label>
+            <Input
+              id="fsbo-contact-email"
+              type="email"
+              value={data.contact_email}
+              onChange={(e) => update("contact_email", e.target.value)}
+              placeholder="contacto@inmobiliaria.com"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="space-y-2">
