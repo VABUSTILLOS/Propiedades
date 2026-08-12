@@ -4,8 +4,9 @@ import Link from "next/link";
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyFavorites } from "@/modules/favorites/queries";
-import { getMyLists, getListContainmentByProperty } from "@/modules/favorites/lists-queries";
+import { getMyListsWithItems, getListContainmentByProperty } from "@/modules/favorites/lists-queries";
 import { FavoritesView } from "@/modules/favorites/components/favorites-view";
+import { ShareFavoritesDialog } from "@/modules/favorites/components/share-favorites-dialog";
 import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-panel";
 import { getChatMessages } from "@/modules/co-shopping/queries";
 import { buttonVariants } from "@/components/ui/button";
@@ -28,7 +29,8 @@ export default async function FavoritesPage() {
   }
 
   const favorites = await getMyFavorites(user.id);
-  const lists = await getMyLists(user.id);
+  const listsWithItems = await getMyListsWithItems(user.id);
+  const lists = listsWithItems.map((entry) => entry.list);
   const containingByProperty = await getListContainmentByProperty(
     user.id,
     favorites.map((f) => f.property_id),
@@ -52,14 +54,22 @@ export default async function FavoritesPage() {
             Organiza tu shortlist: arrastra para ordenar en la lista o clasifica en el Kanban (Top Choice / Plan B / Descartadas).
           </p>
         </div>
-        {favorites.length >= 2 && (
-          <Link
-            href={`/compare?ids=${favorites.map((f) => f.property_id).join(",")}`}
-            className={buttonVariants({ variant: "outline", size: "sm" })}
-          >
-            Comparar
-          </Link>
-        )}
+        <div className="flex items-center gap-2">
+          {(favorites.length >= 1 || listsWithItems.length > 0) && (
+            <ShareFavoritesDialog
+              favorites={favorites}
+              listsWithItems={listsWithItems}
+            />
+          )}
+          {favorites.length >= 2 && (
+            <Link
+              href={`/compare?ids=${favorites.map((f) => f.property_id).join(",")}`}
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              Comparar
+            </Link>
+          )}
+        </div>
       </div>
 
       <FavoritesView

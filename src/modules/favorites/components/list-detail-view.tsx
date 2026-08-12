@@ -7,6 +7,11 @@ import { useState, useTransition } from "react";
 import { removeFromList } from "@/modules/favorites/lists-actions";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  WhatsAppIcon,
+} from "@/modules/chat/components/share-whatsapp-button";
+import { buildWhatsAppConsolidatedShareLink } from "@/modules/chat/share";
+import { useSiteUrl } from "@/modules/chat/components/use-site-url";
 import type {
   FavoriteListItemWithProperty,
   FavoriteListWithMeta,
@@ -18,9 +23,28 @@ type Props = {
 };
 
 export function ListDetailView({ list, items }: Props) {
+  const siteUrl = useSiteUrl();
   const [localItems, setLocalItems] = useState(items);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const shareable = localItems
+    .map((i) => i.property)
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const shareHref =
+    shareable.length > 0
+      ? buildWhatsAppConsolidatedShareLink(
+          shareable.map((p) => ({
+            title: p.title,
+            colonia: p.colonia,
+            city: p.city,
+            price: p.price,
+            currency: p.currency,
+            slug: p.slug,
+          })),
+          siteUrl,
+        )
+      : undefined;
 
   const remove = (favoriteId: string) =>
     startTransition(async () => {
@@ -43,17 +67,31 @@ export function ListDetailView({ list, items }: Props) {
         Volver a favoritos
       </Link>
 
-      <div className="mb-6">
-        <h1 className="mt-4 text-2xl font-bold tracking-tight">{list.name}</h1>
-        {list.description && (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {list.description}
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight">{list.name}</h1>
+          {list.description && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              {list.description}
+            </p>
+          )}
+          <p className="mt-1 text-xs text-muted-foreground">
+            {localItems.length}{" "}
+            {localItems.length === 1 ? "propiedad" : "propiedades"}
           </p>
+        </div>
+        {shareHref && (
+          <a
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Compartir ${list.name} por WhatsApp`}
+            className="mt-4 inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted dark:border-input dark:bg-input/30 dark:hover:bg-input/50"
+          >
+            <WhatsAppIcon className="size-4" />
+            Compartir por WhatsApp
+          </a>
         )}
-        <p className="mt-1 text-xs text-muted-foreground">
-          {localItems.length}{" "}
-          {localItems.length === 1 ? "propiedad" : "propiedades"}
-        </p>
       </div>
 
       {error && (

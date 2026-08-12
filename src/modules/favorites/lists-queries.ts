@@ -13,13 +13,14 @@ export type FavoriteListWithMeta = FavoriteListsRow & {
 };
 
 const propertyPreviewFields =
-  "id, slug, title, city, price, currency, images";
+  "id, slug, title, city, colonia, price, currency, images";
 
 export type ListItemProperty = {
   id: string;
   slug: string;
   title: string;
   city: string;
+  colonia: string;
   price: number;
   currency: string;
   images: string[] | null;
@@ -86,6 +87,73 @@ export async function getMyLists(
       imageUrl: p.images?.[0] ?? null,
     })),
   }));
+}
+
+/**
+ * Every list of the user together with all of its items (property joined).
+ * Unlike `getMyLists`, the preview is not capped — this is used to build
+ * consolidated WhatsApp share messages. One grouped fetch, no N+1.
+ */
+export type ListWithItems = {
+  list: FavoriteListWithMeta;
+  items: ListItemProperty[];
+};
+
+export async function getMyListsWithItems(
+  userId: string,
+): Promise<ListWithItems[]> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: lists } = await supabase
+    .from("favorite_lists")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true })
+    .returns<FavoriteListsRow[]>();
+
+  if (!lists?.length) return [];
+
+  const { data: items } = await supabase
+    .from("favorite_list_items")
+    .select(
+      `list_id, position, favorite:buyer_favorites(property:properties(${propertyPreviewFields}))`,
+    )
+    .in(
+      "list_id",
+      lists.map((l) => l.id),
+    )
+    .order("position", { ascending: true })
+    .returns<
+      Array<{
+        list_id: string;
+        favorite: { property: ListItemProperty | null } | null;
+      }>
+    >();
+
+  const grouped = new Map<string, ListItemProperty[]>();
+  for (const item of items ?? []) {
+    const property = item.favorite?.property;
+    if (!property) continue;
+    const group = grouped.get(item.list_id) ?? [];
+    group.push(property);
+    grouped.set(item.list_id, group);
+  }
+
+  return lists.map((list) => {
+    const listItems = grouped.get(list.id) ?? [];
+    return {
+      list: {
+        ...list,
+        itemCount: listItems.length,
+        preview: listItems.slice(0, 3).map((p) => ({
+          id: p.id,
+          title: p.title,
+          imageUrl: p.images?.[0] ?? null,
+        })),
+      },
+      items: listItems,
+    };
+  });
 }
 
 /**
