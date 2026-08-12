@@ -12,7 +12,10 @@ export const chatFiltersSchema = z.object({
   maxPrice: z.number().min(0).optional(),
   city: z.string().trim().max(100).optional(),
   colonia: z.string().trim().max(100).optional(),
-  /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
+  minM2: z.number().min(0).optional(),
+  maxM2: z.number().min(0).optional(),
+  minBedrooms: z.number().min(0).optional(),
+  /** Only land listings (category = terreno). */
   isLand: z.boolean().optional(),
 });
 
