@@ -127,7 +127,7 @@ export async function postChatMessage(
     .single();
 
   if (error || !data) {
-    return fail(error?.message ?? "Failed to send message");
+    return fail(error?.message ?? "No se pudo enviar el mensaje");
   }
 
   const message: ChatMessage = {

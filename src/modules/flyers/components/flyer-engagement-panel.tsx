@@ -127,7 +127,7 @@ export function FlyerEngagementPanel({ flyerId, flyerSlug, analytics }: Props) {
                     {SECTION_LABELS[key] ?? key}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {count} {count === 1 ? "view" : "views"}
+                    {count} {count === 1 ? "vista" : "vistas"}
                   </p>
                 </div>
               );

@@ -104,7 +104,7 @@ export function FlyerViewer({ flyer, property }: Props) {
 
   const submitLead = async () => {
     if (!email.trim() && !phone.trim()) {
-      setLeadError("Enter an email or phone so the agent can reply.");
+      setLeadError("Escribe un correo o teléfono para que el agente pueda responder.");
       return;
     }
     setLeadState("saving");

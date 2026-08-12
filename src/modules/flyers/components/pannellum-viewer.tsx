@@ -37,7 +37,7 @@ export function PannellumViewer({ url, title }: Props) {
 
           await new Promise<void>((resolve, reject) => {
             script.onload = () => resolve();
-            script.onerror = () => reject(new Error("Failed to load Pannellum"));
+            script.onerror = () => reject(new Error("No se pudo cargar Pannellum"));
           });
         }
 

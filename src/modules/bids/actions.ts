@@ -33,10 +33,10 @@ export async function createBid(
 
   const listing = propRows?.[0];
   if (!listing || listing.status !== "active") {
-    return fail("Property is not accepting offers.");
+    return fail("La propiedad no acepta ofertas.");
   }
   if (listing.owner_id === user.id) {
-    return fail("You cannot bid on your own listing.");
+    return fail("No puedes hacer una oferta en tu propio listado.");
   }
 
   const { data, error } = await supabase
@@ -110,10 +110,10 @@ export async function respondToBid(
 
   const bid = bidRows?.[0];
   if (!bid) {
-    return fail("Bid not found.");
+    return fail("Oferta no encontrada.");
   }
   if (bid.status !== "pending") {
-    return fail("Only pending bids can be responded to.");
+    return fail("Solo se puede responder a ofertas pendientes.");
   }
 
   const { data: propRows } = await supabase
@@ -124,12 +124,12 @@ export async function respondToBid(
     .limit(1);
 
   if (propRows?.[0]?.owner_id !== user.id) {
-    return fail("Only the listing owner can respond.");
+    return fail("Solo el dueño del listado puede responder.");
   }
 
   const nextStatus = parsed.data.status;
   if (nextStatus === "countered" && parsed.data.counterOfferPrice == null) {
-    return fail("A counter-offer needs a price.");
+    return fail("Una contraoferta necesita un precio.");
   }
 
   const { error } = await supabase
@@ -168,8 +168,8 @@ export async function respondToBid(
         sender_id: user.id,
         content:
           nextStatus === "countered"
-            ? `Owner countered with $${counterPrice.toLocaleString()}.`
-            : "Offer was declined.",
+            ? `El dueño contraofertó con $${counterPrice.toLocaleString()}.`
+            : "La oferta fue rechazada.",
         is_system_event: true,
         action_payload: null,
       });

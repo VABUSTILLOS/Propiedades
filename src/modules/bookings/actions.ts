@@ -31,7 +31,7 @@ export async function createSlot(
     .limit(1);
 
   if (propRows?.[0]?.owner_id !== user.id) {
-    return fail("You do not own this property.");
+    return fail("No eres dueño de esta propiedad.");
   }
 
   const start = new Date(parsed.data.startTime);
@@ -113,7 +113,7 @@ export async function bookSlot(
     return fail("Slot not found.");
   }
   if (slot.agent_or_owner_id === user.id) {
-    return fail("You cannot book your own slot.");
+    return fail("No puedes reservar tu propio espacio.");
   }
   if (slot.is_booked) {
     return fail("This slot is already booked.");

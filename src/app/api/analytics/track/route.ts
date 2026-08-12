@@ -25,7 +25,7 @@ export async function POST(req: Request): Promise<Response> {
     typeof body.visitorSessionId === "string" ? body.visitorSessionId : "";
   if (!flyerId || !visitorSessionId) {
     return Response.json(
-      { ok: false, error: "flyerId and visitorSessionId are required." },
+      { ok: false, error: "Se requieren flyerId y visitorSessionId." },
       { status: 400 },
     );
   }

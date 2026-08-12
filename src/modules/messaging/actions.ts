@@ -70,14 +70,14 @@ export async function sendMessage(
 
 /** Human-readable line for a system event with no typed payload. */
 const SYSTEM_EVENT_TEXT: Record<MessageActionType, string> = {
-  tour_request: "A tour was requested.",
-  tour_accepted: "The tour was confirmed.",
-  offer_submitted: "An offer was submitted.",
-  offer_accepted: "The offer was accepted.",
-  escrow_started: "Escrow has started.",
-  deal_closed: "The deal was closed.",
-  status_change: "The transaction state changed.",
-  canceled: "The transaction was canceled.",
+  tour_request: "Se solicitó una visita.",
+  tour_accepted: "La visita fue confirmada.",
+  offer_submitted: "Se envió una oferta.",
+  offer_accepted: "La oferta fue aceptada.",
+  escrow_started: "El depósito en garantía ha comenzado.",
+  deal_closed: "El trato fue cerrado.",
+  status_change: "El estado de la transacción cambió.",
+  canceled: "La transacción fue cancelada.",
 };
 
 /**

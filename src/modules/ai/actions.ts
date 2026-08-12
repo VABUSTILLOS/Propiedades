@@ -41,7 +41,7 @@ export async function generateDescriptionDraft(input: {
 
   if (!description) {
     return fail(
-      "AI description unavailable — add a DEEPSEEK_API_KEY or KIEAI_API_KEY to generate copy.",
+      "Descripción IA no disponible — agrega una DEEPSEEK_API_KEY o KIEAI_API_KEY para generar el texto.",
     );
   }
 
@@ -67,7 +67,7 @@ export async function scoreListing(
 
   const listing = rows?.[0];
   if (!listing) {
-    return fail("Listing not found.");
+    return fail("Listado no encontrado.");
   }
 
   const result = await scoreProperty({
@@ -82,7 +82,7 @@ export async function scoreListing(
 
   if (!result) {
     return fail(
-      "AI scoring unavailable — add a DEEPSEEK_API_KEY or KIEAI_API_KEY to score listings.",
+      "Puntuación IA no disponible — agrega una DEEPSEEK_API_KEY o KIEAI_API_KEY para puntuar listados.",
     );
   }
 
@@ -108,7 +108,7 @@ export async function populatePropertyEmbedding(
 ): Promise<ActionResult<{ embedded: boolean }>> {
   const user = await requireUserOrThrow();
   if (!embeddingsConfigured()) {
-    return fail("Embeddings are not configured (OPENAI_API_KEY missing).");
+    return fail("Los embeddings no están configurados (falta OPENAI_API_KEY).");
   }
 
   const supabase = await createSupabaseServerClient();
@@ -120,10 +120,10 @@ export async function populatePropertyEmbedding(
     .returns<PropertiesRow[]>()
     .limit(1);
   const property = rows?.[0];
-  if (!property) return fail("Property not found.");
+  if (!property) return fail("Propiedad no encontrada.");
 
   const vector = await embedText(propertyEmbeddingText(property));
-  if (!vector) return fail("Failed to embed this property.");
+  if (!vector) return fail("No se pudo generar el embedding de esta propiedad.");
 
   const { error } = await supabase
     .from("properties")
@@ -144,7 +144,7 @@ export async function populateAllEmbeddings(): Promise<
 > {
   const user = await requireUserOrThrow();
   if (!embeddingsConfigured()) {
-    return fail("Embeddings are not configured (OPENAI_API_KEY missing).");
+    return fail("Los embeddings no están configurados (falta OPENAI_API_KEY).");
   }
 
   const supabase = await createSupabaseServerClient();

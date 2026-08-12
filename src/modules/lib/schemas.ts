@@ -349,7 +349,7 @@ export type MessageActionCard = z.infer<typeof messageActionCardSchema>;
 
 export const messageCreateSchema = z.object({
   transactionId: uuidSchema,
-  content: z.string().trim().min(1, "Message cannot be empty").max(4000),
+  content: z.string().trim().min(1, "El mensaje no puede estar vacío").max(4000),
   is_system_event: z.boolean().default(false),
   action_payload: messageActionPayloadSchema.optional(),
 });
@@ -536,5 +536,5 @@ export const coShoppingInviteSchema = z.object({
 
 export const coShoppingMessageSchema = z.object({
   favoriteId: uuidSchema,
-  content: z.string().trim().min(1, "Message cannot be empty").max(2000),
+  content: z.string().trim().min(1, "El mensaje no puede estar vacío").max(2000),
 });

@@ -29,7 +29,7 @@ export type PlanTourResponse = {
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   const body = (await request.json().catch(() => null)) as { ids?: unknown } | null;
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   if (ids.length < 2) {
     return NextResponse.json(
-      { error: "Select at least 2 properties." },
+      { error: "Selecciona al menos 2 propiedades." },
       { status: 400 },
     );
   }

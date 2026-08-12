@@ -24,7 +24,7 @@ export async function GET(req: Request): Promise<Response> {
   const challenge = verifyWebhookRequest(url);
 
   if (challenge === null) {
-    return new Response("Verification failed", { status: 403 });
+    return new Response("Verificación fallida", { status: 403 });
   }
 
   // Meta expects the challenge echoed back verbatim as the response body.

@@ -6,7 +6,7 @@ import { getProfileByUserId } from "@/modules/profiles/queries";
 import { parseBranding } from "@/modules/profiles/branding";
 import { BrandingSettingsForm } from "@/modules/profiles/components/branding-settings-form";
 
-export const metadata: Metadata = { title: "Settings" };
+export const metadata: Metadata = { title: "Configuración" };
 
 export default async function SettingsPage() {
   const user = await getCurrentUser();

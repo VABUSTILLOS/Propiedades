@@ -34,7 +34,7 @@ export async function createFlyer(
     .limit(1);
 
   if (propRows?.[0]?.owner_id !== user.id) {
-    return fail("You do not own this property.");
+    return fail("No eres dueño de esta propiedad.");
   }
 
   const slug = `${user.id.slice(0, 8)}-${parsed.data.propertyId.slice(0, 8)}`;
@@ -105,7 +105,7 @@ export async function recordFlyerAnalytics(
       ? input.message.trim().slice(0, 500)
       : "";
   if (!flyerId || !message) {
-    return fail("flyerId and message are required.");
+    return fail("Se requieren flyerId y message.");
   }
 
   // Verify ownership before sending.
@@ -119,7 +119,7 @@ export async function recordFlyerAnalytics(
     .limit(1);
 
   if (!rows?.[0]) {
-    return fail("Flyer not found.");
+    return fail("Flyer no encontrado.");
   }
 
   if (!env.whatsappWebhookUrl) {
@@ -138,7 +138,7 @@ export async function recordFlyerAnalytics(
     }
     return ok({ sent: true });
   } catch {
-    return fail("Could not reach the WhatsApp webhook.");
+    return fail("No se pudo contactar el webhook de WhatsApp.");
   }
 }
 export async function captureFlyerLead(
@@ -197,7 +197,7 @@ export async function shareWhiteLabel(
 
   const source = sourceRows?.[0];
   if (!source) {
-    return fail("Source flyer not found.");
+    return fail("Flyer de origen no encontrado.");
   }
 
   // The intermediary agent must own the underlying property to share it.
@@ -209,7 +209,7 @@ export async function shareWhiteLabel(
     .limit(1);
 
   if (propRows?.[0]?.owner_id !== user.id) {
-    return fail("You do not own this property.");
+    return fail("No eres dueño de esta propiedad.");
   }
 
   const slug = `wl-${user.id.slice(0, 6)}-${source.slug.slice(0, 8)}`;

@@ -10,7 +10,7 @@ import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-pa
 import { getChatMessages } from "@/modules/co-shopping/queries";
 import { buttonVariants } from "@/components/ui/button";
 
-export const metadata: Metadata = { title: "Favorites" };
+export const metadata: Metadata = { title: "Favoritos" };
 
 export default async function FavoritesPage() {
   const user = await getCurrentUser();

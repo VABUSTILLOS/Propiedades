@@ -100,7 +100,7 @@ export function ListingCard({ listing }: { listing: PropertiesRow }) {
       </CardHeader>
       <CardContent>
         <p className="line-clamp-2 text-sm text-muted-foreground">
-          {listing.description ?? "No description yet."}
+          {listing.description ?? "Sin descripción todavía."}
         </p>
         {listing.price > 0 && (
           <p className="mt-2 text-sm font-semibold">

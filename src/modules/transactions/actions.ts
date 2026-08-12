@@ -35,10 +35,10 @@ export async function createTransaction(
 
   const listing = property?.[0];
   if (!listing || listing.status !== "active") {
-    return fail("Property is not available for inquiry.");
+    return fail("La propiedad no está disponible para consultas.");
   }
   if (listing.owner_id === user.id) {
-    return fail("You cannot inquire on your own listing.");
+    return fail("No puedes consultar tu propio listado.");
   }
 
   // Prevent duplicate open transactions for the same buyer + property.
@@ -124,7 +124,7 @@ export async function transitionTransaction(
     transaction.buyer_id === user.id ||
     transaction.listing_owner_id === user.id;
   if (!isParticipant) {
-    return fail("You are not part of this transaction.");
+    return fail("No formas parte de esta transacción.");
   }
 
   if (!canTransition(transaction.state, parsed.data.toState)) {

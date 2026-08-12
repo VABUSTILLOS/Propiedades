@@ -18,7 +18,7 @@ export async function updateBranding(input: {
 }): Promise<ActionResult<{ subdomain: string | null }>> {
   const user = await requireUserOrThrow();
   if (user.role !== "agent" && user.role !== "admin") {
-    return fail("Only agents and admins can configure agency branding.");
+    return fail("Solo los agentes y administradores pueden configurar la marca de la agencia.");
   }
 
   const supabase = await createSupabaseServerClient();

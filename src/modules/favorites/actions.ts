@@ -97,7 +97,7 @@ export async function reorderFavorites(
   const mineIds = new Set((mine ?? []).map((f) => f.id));
   for (const id of parsed.data.orderedIds) {
     if (!mineIds.has(id)) {
-      return fail("Cannot reorder a favorite you do not own.");
+      return fail("No puedes reordenar un favorito que no es tuyo.");
     }
   }
 
@@ -251,7 +251,7 @@ export async function reorderFavoritesInColumn(
   const owned = new Set((mine ?? []).map((f) => f.id));
   for (const id of parsed.data.orderedIds) {
     if (!owned.has(id)) {
-      return fail("Cannot reorder a favorite you do not own.");
+      return fail("No puedes reordenar un favorito que no es tuyo.");
     }
   }
 

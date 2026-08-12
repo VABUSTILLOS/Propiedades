@@ -39,24 +39,24 @@ export async function createReview(
 
   const tx = txRows?.[0];
   if (!tx) {
-    return fail("Transaction not found.");
+    return fail("Transacción no encontrada.");
   }
 
   const isParticipant =
     tx.buyer_id === user.id || tx.listing_owner_id === user.id;
   if (!isParticipant) {
-    return fail("You are not part of this transaction.");
+    return fail("No formas parte de esta transacción.");
   }
 
   if (tx.state !== "closed") {
-    return fail("Reviews are only allowed after the transaction closes.");
+    return fail("Las reseñas solo se permiten después de cerrar la transacción.");
   }
 
   if (parsed.data.subjectId !== tx.buyer_id && parsed.data.subjectId !== tx.listing_owner_id) {
-    return fail("Review subject must be the other participant.");
+    return fail("El sujeto de la reseña debe ser el otro participante.");
   }
   if (parsed.data.subjectId === user.id) {
-    return fail("You cannot review yourself.");
+    return fail("No puedes reseñarte a ti mismo.");
   }
 
   const { data, error } = await supabase

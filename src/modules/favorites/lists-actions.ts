@@ -125,7 +125,7 @@ export async function addPropertyToLists(
     .returns<{ id: string }[]>();
   const ownedIds = new Set((ownedLists ?? []).map((l) => l.id));
   if (ownedIds.size !== parsed.data.listIds.length) {
-    return fail("Cannot add to a list you do not own.");
+    return fail("No puedes agregar a una lista que no es tuya.");
   }
 
   const { favoriteId } = await ensureFavorite(user.id, parsed.data.propertyId);

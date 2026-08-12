@@ -105,7 +105,7 @@ export async function saveWizardStep(
     .eq("id", listingId)
     .limit(1);
   if (existing?.[0]?.owner_id !== user.id) {
-    return fail("You do not own this listing.");
+    return fail("No eres dueño de este listado.");
   }
 
   const nextStep = (Math.min(step + 1, 4) as WizardStep);
@@ -145,10 +145,10 @@ export async function setListingStatus(
 
   const listing = existing?.[0];
   if (!listing) {
-    return fail("Listing not found.");
+    return fail("Listado no encontrado.");
   }
   if (listing.owner_id !== user.id) {
-    return fail("You do not own this listing.");
+    return fail("No eres dueño de este listado.");
   }
 
   if (status === "active") {
@@ -206,7 +206,7 @@ export async function deleteListing(listingId: string): Promise<ActionResult<und
     .limit(1);
 
   if (existing?.[0]?.owner_id !== user.id) {
-    return fail("You do not own this listing.");
+    return fail("No eres dueño de este listado.");
   }
 
   const { error } = await supabase.from("properties").delete().eq("id", listingId);
