@@ -76,3 +76,34 @@ export async function getFeaturedListings(limit = 6): Promise<PropertiesRow[]> {
 export async function getTopRatedListings(limit = 6): Promise<PropertiesRow[]> {
   return searchListings({ limit, sortBy: "score" });
 }
+
+/**
+ * Newest active listings in a given city — drives the city-tabbed
+ * featured grid (Bali Listings pattern, adapted to Mexican cities).
+ */
+export async function getFeaturedListingsByCity(
+  city: string,
+  limit = 6,
+): Promise<PropertiesRow[]> {
+  return searchListings({ city, limit, sortBy: "newest" });
+}
+
+/**
+ * Ids of the properties the current user has saved as favorites.
+ * Returns an empty set for anonymous visitors.
+ */
+export async function getSavedPropertyIds(
+  userId: string | null,
+): Promise<Set<string>> {
+  if (!userId) return new Set();
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: rows } = await supabase
+    .from("buyer_favorites")
+    .select("property_id")
+    .eq("user_id", userId)
+    .returns<{ property_id: string }[]>();
+
+  return new Set((rows ?? []).map((row) => row.property_id));
+}

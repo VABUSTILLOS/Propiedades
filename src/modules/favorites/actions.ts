@@ -141,6 +141,56 @@ export async function removeFavorite(
 }
 
 /**
+ * Toggle a property in the user's favorites by property id. Returns the
+ * resulting state so the caller can update its UI. Anonymous visitors get
+ * AUTH_REQUIRED so the card can redirect them to sign-up.
+ */
+export async function toggleFavorite(
+  propertyId: string,
+): Promise<ActionResult<{ saved: boolean }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: existing } = await supabase
+    .from("buyer_favorites")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("property_id", propertyId)
+    .limit(1);
+
+  if (existing?.[0]) {
+    const { error } = await supabase
+      .from("buyer_favorites")
+      .delete()
+      .eq("id", existing[0].id)
+      .eq("user_id", user.id);
+    if (error) {
+      return fail(error.message);
+    }
+    revalidatePath("/favorites");
+    return ok({ saved: false });
+  }
+
+  const { error } = await supabase
+    .from("buyer_favorites")
+    .insert({
+      user_id: user.id,
+      property_id: propertyId,
+      tier_rank: 1,
+      tier_column: "top_choice",
+    })
+    .select("id")
+    .single();
+  if (error) {
+    return fail(error.message);
+  }
+  revalidatePath("/favorites");
+  return ok({ saved: true });
+}
+
+/**
  * Move a favorite between CRM tier columns (Top Choice / Plan B / Descartadas).
  */
 export async function setTierColumn(

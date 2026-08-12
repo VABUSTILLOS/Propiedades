@@ -100,6 +100,28 @@ export const searchParamsSchema = paginationSchema.extend({
   sortBy: z.enum(["price_asc", "price_desc", "newest", "score"]).default("newest"),
 });
 
+// --- Listados (portal page with tabs) ----------------------------------------------
+export const listadosTabSchema = z.enum(["todos", "venta", "renta", "tierra"]);
+export type ListadosTab = z.infer<typeof listadosTabSchema>;
+
+/**
+ * URL params for /listados. `tab` drives the portal tabs; the remaining
+ * fields mirror searchParamsSchema so users can refine and switch tabs
+ * without losing their filters.
+ */
+export const listadosParamsSchema = paginationSchema.extend({
+  tab: listadosTabSchema.default("todos"),
+  query: z.string().trim().max(200).optional(),
+  minPrice: z.coerce.number().min(0).optional(),
+  maxPrice: z.coerce.number().min(0).optional(),
+  city: z.string().trim().max(100).optional(),
+  colonia: z.string().trim().max(100).optional(),
+  minM2: z.coerce.number().min(0).optional(),
+  maxM2: z.coerce.number().min(0).optional(),
+  sortBy: z.enum(["price_asc", "price_desc", "newest", "score"]).default("newest"),
+});
+export type ListadosParams = z.infer<typeof listadosParamsSchema>;
+
 // --- Auth ---------------------------------------------------------------------
 export const emailSchema = z.string().trim().email();
 

@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/search", label: "Comprar" },
   { href: "/investor", label: "Invertir" },
   { href: "/fsbo", label: "Vender" },
+  { href: "/listados", label: "Listados" },
   { href: "/preapproval", label: "Preaprobación" },
 ];
 
@@ -40,12 +41,22 @@ export function SiteHeader({ user }: { user: AuthUser | null }) {
 
         <div className="flex items-center gap-1.5">
           {user ? (
-            <Link
-              href="/dashboard"
-              className={buttonVariants({ className: "hidden sm:inline-flex" })}
-            >
-              Mi panel
-            </Link>
+            <>
+              <Link
+                href="/fsbo"
+                className={buttonVariants({
+                  className: "hidden sm:inline-flex",
+                })}
+              >
+                Publicar
+              </Link>
+              <Link
+                href="/dashboard"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Mi panel
+              </Link>
+            </>
           ) : (
             <>
               <Link
