@@ -242,6 +242,12 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
               <SelectItem value="newest">Más recientes</SelectItem>
               <SelectItem value="price_asc">Precio (menor → mayor)</SelectItem>
               <SelectItem value="price_desc">Precio (mayor → menor)</SelectItem>
+              <SelectItem value="m2_const_asc">
+                Precio/m² construido (menor → mayor)
+              </SelectItem>
+              <SelectItem value="m2_const_desc">
+                Precio/m² construido (mayor → menor)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

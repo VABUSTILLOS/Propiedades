@@ -187,7 +187,7 @@ export const searchParamsSchema = paginationSchema.extend({
   minM2: z.coerce.number().min(0).optional(),
   maxM2: z.coerce.number().min(0).optional(),
   minBedrooms: z.coerce.number().int().min(0).max(20).optional(),
-  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot"]).default("newest"),
+  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot", "m2_const_asc", "m2_const_desc"]).default("newest"),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
 });
@@ -226,7 +226,7 @@ export const listadosParamsSchema = paginationSchema.extend({
   minM2: z.coerce.number().min(0).optional(),
   maxM2: z.coerce.number().min(0).optional(),
   minBedrooms: z.coerce.number().int().min(0).max(20).optional(),
-  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot"]).default("newest"),
+  sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot", "m2_const_asc", "m2_const_desc"]).default("newest"),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
 });

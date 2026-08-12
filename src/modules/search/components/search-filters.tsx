@@ -291,6 +291,12 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
               <SelectItem value="hot">Más hot (oportunidad)</SelectItem>
               <SelectItem value="price_asc">Precio (menor → mayor)</SelectItem>
               <SelectItem value="price_desc">Precio (mayor → menor)</SelectItem>
+              <SelectItem value="m2_const_asc">
+                Precio/m² construido (menor → mayor)
+              </SelectItem>
+              <SelectItem value="m2_const_desc">
+                Precio/m² construido (mayor → menor)
+              </SelectItem>
               <SelectItem value="score">Mejor score</SelectItem>
             </SelectContent>
           </Select>
