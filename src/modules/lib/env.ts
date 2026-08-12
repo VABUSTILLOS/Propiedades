@@ -11,12 +11,18 @@ export const env = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? "",
   deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com",
+  kieaiApiKey: process.env.KIEAI_API_KEY ?? "",
+  kieaiModel: process.env.KIEAI_MODEL ?? "gemini-2.5-flash",
   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   googleMapsMapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ?? "",
   googleMapsServerKey:
     process.env.GOOGLE_MAPS_SERVER_KEY ?? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   whatsappWebhookUrl: process.env.WHATSAPP_WEBHOOK_URL ?? "",
+  whatsappVerifyToken: process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ?? "",
+  whatsappPhoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID ?? "",
+  whatsappGraphToken: process.env.WHATSAPP_ACCESS_TOKEN ?? "",
+  whatsappAppSecret: process.env.WHATSAPP_APP_SECRET ?? "",
 } as const;
 
 export function requireEnv(scope: "client" | "server" = "client"): void {

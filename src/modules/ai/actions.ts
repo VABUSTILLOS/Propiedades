@@ -16,7 +16,7 @@ import type { PropertiesRow } from "@/modules/lib/database.types";
 /**
  * Generate a description draft from structured wizard data.
  * Works before the draft row exists. Falls back gracefully when no
- * DeepSeek key is configured.
+ * DeepSeek or kie.ai key is configured.
  */
 export async function generateDescriptionDraft(input: {
   title: string;
@@ -41,7 +41,7 @@ export async function generateDescriptionDraft(input: {
 
   if (!description) {
     return fail(
-      "AI description unavailable — add your DEEPSEEK_API_KEY to generate copy.",
+      "AI description unavailable — add a DEEPSEEK_API_KEY or KIEAI_API_KEY to generate copy.",
     );
   }
 
@@ -82,7 +82,7 @@ export async function scoreListing(
 
   if (!result) {
     return fail(
-      "AI scoring unavailable — add your DEEPSEEK_API_KEY to score listings.",
+      "AI scoring unavailable — add a DEEPSEEK_API_KEY or KIEAI_API_KEY to score listings.",
     );
   }
 

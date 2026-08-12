@@ -206,6 +206,23 @@ export type FlyerAnalyticsRow = {
   updated_at: string;
 }
 
+export type WhatsappMessagesRow = {
+  id: string;
+  wa_message_id: string | null;
+  wa_id: string;
+  profile_name: string | null;
+  phone_number: string | null;
+  body: string | null;
+  message_type: string;
+  media_type: string | null;
+  media_url: string | null;
+  metadata: Json;
+  flyer_id: string | null;
+  property_id: string | null;
+  is_read: boolean;
+  created_at: string;
+}
+
 export type BuyerFavoritesRow = {
   id: string;
   user_id: string;
@@ -250,6 +267,7 @@ export type Database = {
       bids: { Row: BidsRow; Insert: Insertable<BidsRow>; Update: Partial<BidsRow>; Relationships: [] };
       property_local_surveys: { Row: PropertyLocalSurveysRow; Insert: Insertable<PropertyLocalSurveysRow>; Update: Partial<PropertyLocalSurveysRow>; Relationships: [] };
       co_shopping_chat: { Row: CoShoppingChatRow; Insert: Insertable<CoShoppingChatRow>; Update: Partial<CoShoppingChatRow>; Relationships: [] };
+      whatsapp_messages: { Row: WhatsappMessagesRow; Insert: Insertable<WhatsappMessagesRow>; Update: Partial<WhatsappMessagesRow>; Relationships: [] };
     };
     Views: Record<string, never>,
     Functions: {

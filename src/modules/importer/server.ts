@@ -1,5 +1,6 @@
 import "server-only";
 
+import { chatCompletion } from "@/modules/ai/server";
 import { env } from "@/modules/lib/env";
 import type { ImportedPropertyDraft } from "@/modules/importer/schemas";
 
@@ -86,77 +87,56 @@ function isValidImageUrl(value: unknown): value is string {
 }
 
 /**
- * Ask DeepSeek to extract structured property data from scraped page
- * content. Returns null when DEEPSEEK_API_KEY is unset or on any failure.
+ * Ask the configured AI provider (DeepSeek primary, kie.ai fallback) to extract
+ * structured property data from scraped page content. Returns null when no
+ * provider key is set or on any failure.
  */
 export async function extractPropertyFromMarkdown(
   markdown: string,
 ): Promise<ExtractedProperty | null> {
-  if (!process.env.DEEPSEEK_API_KEY) return null;
+  const result = await chatCompletion({
+    jsonMode: true,
+    temperature: 0.1,
+    maxTokens: 1500,
+    system:
+      'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer MXN sale price, 0 if unknown),\n  "currency": "MXN",\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
+    user: `Extract the listing data from this page content:\n\n${markdown.slice(0, 18000)}`,
+  });
+  const content = result?.content;
+  if (!content) return null;
 
-  const baseUrl = process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com";
-  const model = process.env.DEEPSEEK_MODEL ?? "deepseek-chat";
-
+  // Some providers (Gemini via kie.ai) wrap JSON mode output in ```json fences.
+  let parsed: unknown;
+  const fenced = content.match(/```(?:json)?\s*([\s\S]*?)```/);
   try {
-    const res = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          {
-            role: "system",
-            content:
-              'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer MXN sale price, 0 if unknown),\n  "currency": "MXN",\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
-          },
-          {
-            role: "user",
-            content: `Extract the listing data from this page content:\n\n${markdown.slice(0, 18000)}`,
-          },
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.1,
-        max_tokens: 1500,
-      }),
-    });
-
-    if (!res.ok) return null;
-
-    const data = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) return null;
-
-    const raw = JSON.parse(content) as Record<string, unknown>;
-    if (typeof raw !== "object" || raw === null) return null;
-
-    const images = Array.isArray(raw.images)
-      ? raw.images.filter(isValidImageUrl).slice(0, 20)
-      : [];
-    const bentoHighlights = Array.isArray(raw.bento_highlights)
-      ? raw.bento_highlights.filter((item): item is string => typeof item === "string")
-      : [];
-
-    return {
-      title: toStringOrEmpty(raw.title),
-      price: toNumber(raw.price),
-      currency: toStringOrEmpty(raw.currency) || "MXN",
-      terreno_m2: toNumber(raw.terreno_m2),
-      construccion_m2: toNumber(raw.construccion_m2),
-      description: toStringOrEmpty(raw.description),
-      address_text: toStringOrEmpty(raw.address_text),
-      colonia: toStringOrEmpty(raw.colonia),
-      city: toStringOrEmpty(raw.city),
-      images,
-      bento_highlights: bentoHighlights,
-    };
+    parsed = JSON.parse((fenced && fenced[1]) ?? content);
   } catch {
     return null;
   }
+
+  const raw = parsed as Record<string, unknown> | null;
+  if (typeof raw !== "object" || raw === null) return null;
+
+  const images = Array.isArray(raw.images)
+    ? raw.images.filter(isValidImageUrl).slice(0, 20)
+    : [];
+  const bentoHighlights = Array.isArray(raw.bento_highlights)
+    ? raw.bento_highlights.filter((item): item is string => typeof item === "string")
+    : [];
+
+  return {
+    title: toStringOrEmpty(raw.title),
+    price: toNumber(raw.price),
+    currency: toStringOrEmpty(raw.currency) || "MXN",
+    terreno_m2: toNumber(raw.terreno_m2),
+    construccion_m2: toNumber(raw.construccion_m2),
+    description: toStringOrEmpty(raw.description),
+    address_text: toStringOrEmpty(raw.address_text),
+    colonia: toStringOrEmpty(raw.colonia),
+    city: toStringOrEmpty(raw.city),
+    images,
+    bento_highlights: bentoHighlights,
+  };
 }
 
 export type GeocodeResult = {
@@ -278,7 +258,7 @@ export async function importPropertyFromUrl(
     return {
       ok: false,
       error:
-        "No se pudo extraer la propiedad con IA. Verifica DEEPSEEK_API_KEY o que el enlace sea una publicación válida.",
+        "No se pudo extraer la propiedad con IA. Verifica DEEPSEEK_API_KEY o KIEAI_API_KEY o que el enlace sea una publicación válida.",
       status: 422,
     };
   }
