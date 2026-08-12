@@ -23,17 +23,17 @@ export const slugSchema = z
   .string()
   .min(1)
   .max(200)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Must be a URL-safe slug");
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Debe ser un slug válido para URL");
 
 export const mxnSchema = z
-  .number({ message: "Price is required" })
-  .min(0, "Price cannot be negative")
-  .max(999_999_999_999, "Price is too large");
+  .number({ message: "El precio es obligatorio" })
+  .min(0, "El precio no puede ser negativo")
+  .max(999_999_999_999, "El precio es demasiado alto");
 
 export const areaM2Schema = z
   .number()
-  .min(0, "Area cannot be negative")
-  .max(10_000_000, "Area is too large");
+  .min(0, "El área no puede ser negativa")
+  .max(10_000_000, "El área es demasiado grande");
 
 export const latSchema = z.number().min(-90).max(90);
 export const lngSchema = z.number().min(-180).max(180);
@@ -165,7 +165,7 @@ export const emailSchema = z.string().trim().email();
 
 export const passwordSchema = z
   .string()
-  .min(8, "Password must be at least 8 characters")
+  .min(8, "La contraseña debe tener al menos 8 caracteres")
   .max(128);
 
 export const signInSchema = z.object({
@@ -174,7 +174,7 @@ export const signInSchema = z.object({
 });
 
 export const signUpSchema = signInSchema.extend({
-  fullName: z.string().trim().min(2, "Full name is required").max(120),
+  fullName: z.string().trim().min(2, "El nombre completo es obligatorio").max(120),
   role: userRoleSchema,
 });
 
@@ -207,7 +207,7 @@ export const profileSchema = z.object({
 
 // --- Properties (wizard) -----------------------------------------------------------
 export const propertyWizardStep1Schema = z.object({
-  title: z.string().trim().min(3, "Title must be at least 3 characters").max(200),
+  title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres").max(200),
   type: listingTypeSchema,
   category: propertyCategorySchema.default("casa"),
   deal_type: propertyDealTypeSchema.default("venta_directa"),
@@ -489,7 +489,7 @@ export const ingestionSourceSchema = z.enum(["url", "text", "voice"]);
 
 export const ingestionRequestSchema = z.object({
   source: ingestionSourceSchema,
-  content: z.string().trim().min(3, "Content is too short").max(50_000),
+  content: z.string().trim().min(3, "El contenido es demasiado corto").max(50_000),
 });
 
 /**

@@ -45,7 +45,7 @@ export async function sendMessage(
   const isParticipant =
     tx.buyer_id === user.id || tx.listing_owner_id === user.id;
   if (!isParticipant) {
-    return fail("You are not part of this transaction.");
+    return fail("No formas parte de esta transacción.");
   }
 
   const { data, error } = await supabase
@@ -110,7 +110,7 @@ export async function sendSystemEvent(
   const isParticipant =
     tx.buyer_id === user.id || tx.listing_owner_id === user.id;
   if (!isParticipant) {
-    return fail("You are not part of this transaction.");
+    return fail("No formas parte de esta transacción.");
   }
 
   const { data, error } = await supabase
