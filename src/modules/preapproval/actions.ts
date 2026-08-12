@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/modules/auth/session";
+import { requireUser, requireUserOrThrow } from "@/modules/auth/session";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { fail, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { preapprovalDataSchema } from "@/modules/lib/schemas";
@@ -123,7 +123,7 @@ export async function getMyPreapproval(): Promise<{
   bank_name: string | null;
   calculated_at: string | null;
 }> {
-  const user = await requireUserOrThrow();
+  const user = await requireUser();
   const supabase = await createSupabaseServerClient();
 
   const { data } = await supabase
