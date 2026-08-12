@@ -11,6 +11,7 @@ import {
 import type {
   MarketBenchmarksRow,
   PropertiesRow,
+  PropertyCategory,
 } from "@/modules/lib/database.types";
 import { MarketPanel } from "@/modules/market-data/components/market-panel";
 import { Badge } from "@/components/ui/badge";
@@ -141,6 +142,11 @@ function InvestorView({
     property.precio_m2_terreno ??
     (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
 
+  const posibleRenta = estimateMonthlyRent(
+    property.price,
+    property.category,
+  );
+
   const benchmarkConst =
     benchmark?.avg_price_m2_const != null
       ? Math.round(benchmark.avg_price_m2_const)
@@ -163,6 +169,10 @@ function InvestorView({
           <FinancialRow
             label="Precio de venta"
             value={`$${property.price.toLocaleString()} ${property.currency}`}
+          />
+          <FinancialRow
+            label="Posible Renta"
+            value={`$${posibleRenta.toLocaleString()}/mes`}
           />
           <FinancialRow
             label="Precio por m² construido"
@@ -377,6 +387,23 @@ function InvestmentDealPanel({ property }: { property: PropertiesRow }) {
       </dl>
     </div>
   );
+}
+
+/**
+ * Estimates a monthly rent based on the listing price and property category.
+ *
+ * Comercial categories (local/bodega) use a fixed 0.85% monthly rate; other
+ * categories use a rate that steps down as the price grows.
+ */
+function estimateMonthlyRent(price: number, category: PropertyCategory) {
+  if (category === "local" || category === "bodega") {
+    return price * 0.0085;
+  }
+  if (price <= 1_000_000) return price * 0.008;
+  if (price <= 1_500_000) return price * 0.009;
+  if (price <= 2_500_000) return price * 0.0075;
+  if (price <= 3_500_000) return price * 0.007;
+  return price * 0.006;
 }
 
 function FinancialRow({
