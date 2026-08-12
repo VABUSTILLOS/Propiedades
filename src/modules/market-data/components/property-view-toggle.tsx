@@ -230,7 +230,7 @@ function InvestorView({
               />
               <FinancialRow
                 label="Mantenimiento anual estimado"
-                value={formatMxn(estimateMantenimiento(property.price))}
+                value={formatMxn(estimateMantenimiento(posibleRenta))}
               />
             </>
           )}
@@ -653,7 +653,7 @@ async function downloadFichaPdf({
           },
           {
             label: "Mantenimiento anual estimado",
-            value: formatMxn(estimateMantenimiento(property.price)),
+            value: formatMxn(estimateMantenimiento(posibleRenta)),
           },
         ]
       : []),
