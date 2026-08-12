@@ -1613,8 +1613,8 @@ CREATE INDEX IF NOT EXISTS idx_properties_contact_methods_missing
 --
 -- The old pipeline embedded listings with OpenAI text-embedding-3-small
 -- (VECTOR(1536)). To keep the platform on free models only, embeddings now
--- come from Google Gemini text-embedding-004 via a free Google AI Studio key
--- (768 dimensions). This migration:
+-- come from Google Gemini gemini-embedding-001 (768 dimensions, via
+-- outputDimensionality) with a free Google AI Studio key. This migration:
 --   1. Casts the existing column to vector(768).
 --   2. Recreates the HNSW cosine index for the new dimensionality.
 --   3. Rewrites match_properties to accept vector(768).

@@ -52,12 +52,14 @@ export function PropertyPhotoGallery({ images, title }: Props) {
     };
   }, [activeIndex, showAll]);
 
-  // Keyboard navigation for the lightbox.
+  // Keyboard navigation: Escape closes any open overlay, arrows navigate the lightbox.
   useEffect(() => {
-    if (activeIndex === null) return;
+    const isOpen = activeIndex !== null || showAll;
+    if (!isOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        setShowAll(false);
         closeLightbox();
       } else if (event.key === "ArrowLeft") {
         goPrev();
@@ -68,7 +70,7 @@ export function PropertyPhotoGallery({ images, title }: Props) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex, closeLightbox, goPrev, goNext]);
+  }, [activeIndex, showAll, closeLightbox, goPrev, goNext]);
 
   if (count === 0) {
     return (
@@ -217,7 +219,12 @@ function Lightbox({
         </div>
       </div>
 
-      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-4">
+      <div
+        className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-4"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
         <AnimatePresence mode="wait">
           <motion.img
             key={index}
@@ -310,6 +317,9 @@ function PhotoGridPanel({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
     >
       <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 px-4 py-3 backdrop-blur">
         <h2 className="text-base font-semibold">
@@ -326,7 +336,12 @@ function PhotoGridPanel({
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div
+        className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-3 lg:grid-cols-4"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
         {images.map((src, i) => (
           <button
             key={`${i}-${src}`}

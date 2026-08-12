@@ -110,7 +110,8 @@ Password reset is supported: the email links to `/auth/update-password` (PKCE fl
 - **Chat**: el chatbot del sitio y el bot de WhatsApp interpretan las búsquedas con
   **DeepSeek** (`deepseek-chat`) como proveedor principal y **kie.ai (Gemini 2.5 Flash)**
   como respaldo. Ambos son gratuitos; nada requiere `OPENAI_API_KEY` para chat.
-- **Embeddings semánticos**: se generan con **Gemini `text-embedding-004`** (768 dims) usando
+- **Embeddings semánticos**: se generan con **Gemini `gemini-embedding-001`** (768 dims vía
+  `outputDimensionality`) usando
   una key gratuita de Google AI Studio (`GEMINI_API_KEY`). La búsqueda híbrida fusiona los
   resultados por palabras clave con los semánticos. Sin `GEMINI_API_KEY` el sistema sigue
   funcionando solo con palabras clave.

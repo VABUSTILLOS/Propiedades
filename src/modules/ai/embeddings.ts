@@ -7,17 +7,17 @@ import type { PropertiesRow } from "@/modules/lib/database.types";
 /**
  * Free embeddings provider for semantic search.
  *
- * Uses Google Gemini `text-embedding-004` via a free Google AI Studio key
+ * Uses Google Gemini `gemini-embedding-001` via a free Google AI Studio key
  * (`GEMINI_API_KEY`, https://aistudio.google.com/apikey). The model returns
- * 768-dimension vectors — the matching column/index/migration (019) and the
- * `match_properties` RPC expect exactly that dimensionality.
+ * 768-dimension vectors (via `outputDimensionality`), matching the
+ * column/index/migration (019) and the `match_properties` RPC.
  *
  * Every function returns null / false when the key is unset or the request
  * fails, so callers degrade gracefully to keyword search — the same
  * graceful-degradation pattern used across the repo.
  */
 
-const EMBEDDING_MODEL = "text-embedding-004";
+const EMBEDDING_MODEL = "gemini-embedding-001";
 const EMBEDDING_DIMENSIONS = 768;
 
 export function embeddingsConfigured(): boolean {
@@ -45,6 +45,7 @@ export async function embedText(text: string): Promise<number[] | null> {
         body: JSON.stringify({
           model: `models/${EMBEDDING_MODEL}`,
           content: { parts: [{ text: text.slice(0, 8_000) }] },
+          outputDimensionality: EMBEDDING_DIMENSIONS,
         }),
       },
     );

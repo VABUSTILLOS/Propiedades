@@ -11,6 +11,9 @@
  */
 import { createClient } from "@supabase/supabase-js";
 
+const EMBEDDING_MODEL = "gemini-embedding-001";
+const EMBEDDING_DIMENSIONS = 768;
+
 // Node >=20.12 loads .env.local without a dotenv dependency.
 try {
   process.loadEnvFile(".env.local");
@@ -35,7 +38,7 @@ const supabase = createClient(supabaseUrl, serviceKey, {
 
 async function embedText(text) {
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
+    `https://generativelanguage.googleapis.com/v1beta/models/${EMBEDDING_MODEL}:embedContent`,
     {
       method: "POST",
       headers: {
@@ -43,8 +46,9 @@ async function embedText(text) {
         "x-goog-api-key": geminiKey,
       },
       body: JSON.stringify({
-        model: "models/text-embedding-004",
+        model: `models/${EMBEDDING_MODEL}`,
         content: { parts: [{ text: text.slice(0, 8000) }] },
+        outputDimensionality: EMBEDDING_DIMENSIONS,
       }),
     },
   );
