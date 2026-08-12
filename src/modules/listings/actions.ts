@@ -264,7 +264,7 @@ export async function updateListingContact(
 
   const { error } = await supabase
     .from("properties")
-    .update(parsed.data as Record<string, unknown>)
+    .update(parsed.data as Partial<PropertiesRow>)
     .eq("id", listingId);
 
   if (error) {

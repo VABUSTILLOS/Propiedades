@@ -1,4 +1,3 @@
-import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -34,7 +33,6 @@ export function ScoreBadge({
       )}
       aria-label={`Puntaje de confianza ${score.toFixed(1)} de 100`}
     >
-      <Star className="size-3 fill-current" />
       {score.toFixed(1)}
     </span>
   );

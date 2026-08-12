@@ -17,13 +17,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlacesAutocomplete } from "@/modules/maps/components/places-autocomplete";
 import { cn } from "@/lib/utils";
 
-type WizardStep = 1 | 2 | 3 | 4;
+type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 const STEPS: { step: WizardStep; label: string }[] = [
   { step: 1, label: "Información básica" },
   { step: 2, label: "Precio" },
   { step: 3, label: "Ubicación" },
   { step: 4, label: "Multimedia" },
+  { step: 5, label: "Contacto" },
 ];
 
 type WizardField = keyof WizardData;
@@ -53,6 +54,11 @@ type WizardData = {
   images: string;
   tour_360_url: string;
   video_url: string;
+  contact_name: string;
+  contact_type: string;
+  contact_phone: string;
+  contact_whatsapp: string;
+  contact_email: string;
 };
 
 const initialData: WizardData = {
@@ -80,11 +86,16 @@ const initialData: WizardData = {
   images: "",
   tour_360_url: "",
   video_url: "",
+  contact_name: "",
+  contact_type: "",
+  contact_phone: "",
+  contact_whatsapp: "",
+  contact_email: "",
 };
 
 /**
- * Four-step listing creation wizard.
- * Step 1 creates the draft row; steps 2–4 update it in place.
+ * Five-step listing creation wizard.
+ * Step 1 creates the draft row; steps 2–5 update it in place.
  * Mutations run through Server Actions (Zod-validated server-side).
  */
 export function ListingWizard() {
@@ -162,6 +173,13 @@ export function ListingWizard() {
         tour_360_url: data.tour_360_url.trim() || null,
         video_url: data.video_url.trim() || null,
       },
+      5: {
+        contact_name: data.contact_name.trim() || null,
+        contact_type: data.contact_type || null,
+        contact_phone: data.contact_phone.trim() || null,
+        contact_whatsapp: data.contact_whatsapp.trim() || null,
+        contact_email: data.contact_email.trim() || null,
+      },
     };
 
     const res = await saveWizardStep(listingId, step, stepPayload[step]);
@@ -169,7 +187,7 @@ export function ListingWizard() {
       setError(res.error);
       return;
     }
-    setStep((Math.min(step + 1, 4) as WizardStep));
+    setStep((Math.min(step + 1, 5) as WizardStep));
   };
 
   return (
@@ -214,6 +232,7 @@ export function ListingWizard() {
         {step === 2 && <StepPricing value={data} onChange={updateField} />}
         {step === 3 && <StepLocation value={data} onChange={updateField} />}
         {step === 4 && <StepMedia value={data} onChange={updateField} />}
+        {step === 5 && <StepContact value={data} onChange={updateField} />}
 
         <div className="flex items-center justify-between pt-2">
           {step > 1 ? (
@@ -229,7 +248,7 @@ export function ListingWizard() {
           )}
 
           <Button type="submit">
-            {step === 4
+            {step === 5
               ? "Terminar"
               : step === 1
                 ? "Crear borrador"
@@ -625,6 +644,83 @@ function StepMedia({
             placeholder="https://…"
           />
         </div>
+      </div>
+    </div>
+  );
+}
+
+function StepContact({
+  value,
+  onChange,
+}: {
+  value: WizardData;
+  onChange: (key: WizardField, value: string) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="contact_name">Nombre de contacto</Label>
+        <Input
+          id="contact_name"
+          name="contact_name"
+          value={value.contact_name}
+          onChange={(e) => onChange("contact_name", e.target.value)}
+          placeholder="Ej. Inmobiliaria Vanguardia"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="contact_type">Tipo de contacto</Label>
+        <Select
+          value={value.contact_type}
+          onValueChange={(v) => onChange("contact_type", v ?? "")}
+        >
+          <SelectTrigger id="contact_type">
+            <SelectValue placeholder="Selecciona un tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="inmobiliaria">Inmobiliaria</SelectItem>
+            <SelectItem value="agencia">Agencia</SelectItem>
+            <SelectItem value="particular">Particular</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="contact_phone">Teléfono</Label>
+          <Input
+            id="contact_phone"
+            name="contact_phone"
+            type="tel"
+            value={value.contact_phone}
+            onChange={(e) => onChange("contact_phone", e.target.value)}
+            placeholder="+52 55 0000 0000"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="contact_whatsapp">WhatsApp</Label>
+          <Input
+            id="contact_whatsapp"
+            name="contact_whatsapp"
+            type="tel"
+            value={value.contact_whatsapp}
+            onChange={(e) => onChange("contact_whatsapp", e.target.value)}
+            placeholder="+52 55 0000 0000"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="contact_email">Correo electrónico</Label>
+        <Input
+          id="contact_email"
+          name="contact_email"
+          type="email"
+          value={value.contact_email}
+          onChange={(e) => onChange("contact_email", e.target.value)}
+          placeholder="contacto@inmobiliaria.com"
+        />
       </div>
     </div>
   );

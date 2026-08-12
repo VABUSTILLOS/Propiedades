@@ -1,0 +1,58 @@
+{
+  "url": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/casa-en-venta-fracc-monte-caleres/149315625",
+  "page_id": "detail-2",
+  "fields": {
+    "title": {
+      "target_value": "Casas en venta - 213m2 - 3 recamaras - Fraccionamiento Diamant...",
+      "analysis": "The listing title appears in multiple places:\n\n1. **HTML title tag** `<title>Casas en venta - 213m2 - 3 recamaras - Fraccionamiento Diamant...</title>`\n   - Selector: `title::text`\n   - Reliable\n\n2. **Meta og:title tag**\n   - Selector: `meta[property=\"og:title\"]::attr(content)`\n   - Reliable\n\n3. **JSON-LD** in `<script type=\"application/ld+json\">`:\n   - Property: `name` on the House object\n   - Path: `.name` (JSON-LD)\n   - Also reliable\n\nRecommended: CSS selector `title::text` — most direct and reliable."
+    },
+    "url": {
+      "target_value": "https://www.vivanuncios.com.mx/a-venta-casa/fraccionamiento-diamante-reliz/casa-en-venta-fracc-monte-caleres/149315625",
+      "analysis": "URL is available from:\n\n1. **Canonical link tag**\n   - Selector: `link[rel=\"canonical\"]::attr(href)`\n   - Reliable: unique canonical link\n\n2. **og:url meta tag**\n   - Selector: `meta[property=\"og:url\"]::attr(content)`\n   - Also reliable\n\n3. **Browser context**: Can be derived from current page URL\n\nRecommended: CSS selector `link[rel=\"canonical\"]::attr(href)` — explicit and reliable."
+    },
+    "listing_id_vivanuncios": {
+      "target_value": "149315625",
+      "analysis": "The listing ID can be extracted from:\n\n1. **Canonical URL path** via regex on `link[rel=\"canonical\"]::attr(href)`\n   - Extract last segment: `149315625`\n   - Reliable\n\n2. **JavaScript variable** `postingId = \"149315625\"`\n   - Located in `<script>` tag around line 119\n   - Pattern: `/postingId = \"([^\"]+)\"/`\n   - Reliable: explicit assignment\n\n3. **HTML data attribute**\n   - Located in `Cód. Vivanuncios: 149315625` within `#reactPublisherCodes`\n   - Selector: Extract from text content\n\nRecommended: Regex on canonical URL or JavaScript variable extraction — both reliable."
+    },
+    "contact_phone": {
+      "target_value": "52 6141185785",
+      "analysis": "The phone number is displayed differently on the page:\n\n**On HTML (Blurred):**\n- Publisher card shows: `+5261` (blurred)\n- Selector: `.publisherCard-module__info-phone___3c3Oa::text` → \"+5261\" (incomplete)\n- NOT RELIABLE for full number\n\n**JSON-LD (Full Number - RECOMMENDED):**\n```json\n{\n  \"@type\": \"House\",\n  \"telephone\": \"52 6141185785\"\n}\n```\n- Path: `telephone` on the House object in `<script type=\"application/ld+json\">`\n- RELIABLE: Contains complete, unblurred phone number\n- This is the correct source for the full contact number\n\nRecommended: **JSON-LD path `telephone`** — the full phone is hidden in the HTML but present in structured data."
+    },
+    "agency_name": {
+      "target_value": "Century 21 Robles & Herrera",
+      "analysis": "Agency name appears in:\n\n1. **Publisher Card HTML**\n   - Selector: `a.publisherCard-module__info-name___2UUFj::text`\n   - HTML: `<a ... class=\"publisherCard-module__info-name___2UUFj\" ...>Century 21 Robles & Herrera</a>`\n   - Location: Line 467 in cleaned HTML\n   - RELIABLE: unique, stable selector\n\n2. **JavaScript variable**\n   - `const publisher = {...\"name\":\"Century 21 Robles & Herrera\"...}`\n   - Pattern: Extract from `publisher?.name`\n   - Also reliable but requires JS parsing\n\n3. **JSON-LD** (Publisher Organization object not included in this page's schema)\n\nRecommended: CSS selector `a.publisherCard-module__info-name___2UUFj::text` — direct HTML extraction, most reliable."
+    },
+    "contact_methods_available": {
+      "target_value": [
+        "email_form",
+        "whatsapp_button",
+        "phone_button"
+      ],
+      "analysis": "Contact methods are visible on the page:\n\n1. **Email form**: Present\n   - Selector: `button[data-qa=\"contact-email-button\"]`\n   - HTML: `<button id=\"contactFormSubmit\" ... data-qa=\"contact-email-button\">Contactar</button>`\n   - Presence indicates `email_form` is available\n\n2. **WhatsApp button**: Present\n   - Selector: `button[data-qa=\"contact-whatsapp-button\"]`\n   - HTML: `<button id=\"contactFormWhatsapp\" ... data-qa=\"contact-whatsapp-button\">Contactar por WhatsApp</button>`\n   - Presence indicates `whatsapp_button` is available\n\n3. **Phone button**: Present\n   - Selector: `section#phone-buttons-holder` (may be rendered by React)\n   - React component `#react-contacts` inside phone-buttons-holder\n   - Also present: `button#getPublisherData` in publisher card to reveal phone\n   - Presence indicates `phone_button` is available\n\nRecommended: Check for presence of button selectors with data-qa attributes. Also check for phone-buttons-holder and getPublisherData button."
+    },
+    "price": {
+      "target_value": "MN 5,950,000",
+      "analysis": "Price is displayed in the main price container:\n\n1. **HTML price element**\n   - Located in `.price-container-property` div\n   - Structure: `<div class=\"price-value\"><span>venta <span>MN 5,950,000</span></span></span>`\n   - Selector: `div.price-container-property span.price-value span span::text`\n   - Clean extraction possible\n   - Location: Line 503 in cleaned HTML\n   - RELIABLE\n\n2. **JavaScript variable**\n   - `'precioVenta': \"MN 5950000\"` (without comma)\n   - Requires parsing from script\n   - Slight format difference (no commas)\n\nRecommended: CSS selector on HTML price element — preserves formatting with commas and spaces."
+    },
+    "location": {
+      "target_value": "Circuito Monte Caleres 12099,  Fraccionamiento Diamante Reliz, Chihuahua",
+      "analysis": "Location information appears in:\n\n1. **HTML location heading**\n   - `<h4>Circuito Monte Caleres 12099,  Fraccionamiento Diamante Reliz, Chihuahua</h4>`\n   - Selector: `h4::text` (within the location section)\n   - Location: Line 639 in cleaned HTML\n   - RELIABLE: complete address string\n\n2. **JSON-LD address**\n   ```json\n   \"address\": {\n     \"addressLocality\": \"Chihuahua, Chihuahua, Mexico vivanuncios, \",\n     \"addressRegion\": \"Fraccionamiento Diamante Reliz\",\n     \"streetAddress\": \"Circuito Monte Caleres 12099\"\n   }\n   ```\n   - Requires parsing and reconstruction from JSON-LD\n   - Less convenient than direct HTML extraction\n\nRecommended: CSS selector on HTML h4 — direct extraction of complete, formatted address."
+    },
+    "number_of_bedrooms": {
+      "target_value": 3,
+      "analysis": "Number of bedrooms appears in:\n\n1. **HTML subtitle**\n   - `<h2 class=\"title-type-sup-property\">Casa · 281m² · 3 recámaras · 2 estacionamientos</h2>`\n   - Selector: Extract \"3\" from text using regex `/3\\s+recámaras/`\n   - Location: Line 492\n   - Reliable but requires text parsing\n\n2. **JSON-LD**\n   - Property: `numberOfBedrooms: 3` on House object\n   - Path: `.numberOfBedrooms` (JSON-LD)\n   - RELIABLE: Direct integer value, no parsing needed\n\n3. **JavaScript mainFeatures**\n   - `'CFT2':{'featureId':'CFT2','label':'rec.','value':'3'}`\n   - Requires script parsing\n\nRecommended: **JSON-LD path `numberOfBedrooms`** — clean integer value, most reliable."
+    },
+    "floor_size_m2": {
+      "target_value": 213,
+      "analysis": "Floor size appears in:\n\n1. **HTML subtitle**\n   - `<h2 class=\"title-type-sup-property\">Casa · 281m² · 3 recámaras · 2 estacionamientos</h2>`\n   - Shows \"281m²\" (this is construction size)\n   - Selector: Regex `/281m²/` but this is NOT the floor_size we need\n   - Note: 213 is the lot size, 281 is construction\n\n2. **JSON-LD** (CORRECT SOURCE)\n   ```json\n   \"floorSize\": {\n     \"@type\": \"QuantitativeValue\",\n     \"value\": 213,\n     \"unitCode\": \"MTK\"\n   }\n   ```\n   - Path: `.floorSize.value` on House object\n   - Value: 213 (m²)\n   - RELIABLE: Correct field from structured data\n\n3. **JavaScript mainFeatures**\n   - `'CFT100':{'featureId':'CFT100','label':'lote','measure':'m²','value':'213'}`\n   - Also shows 213 for lot\n\nRecommended: **JSON-LD path `floorSize.value`** — reliable, correctly marked as 213m²."
+    },
+    "days_published": {
+      "target_value": "Publicado hace 145 días",
+      "analysis": "Published date appears in:\n\n1. **HTML user views section**\n   - `<p class=\"userViews-module__post-antiquity-views___8Zfch\">Publicado hace 145 días</p>`\n   - Selector: `p.userViews-module__post-antiquity-views___8Zfch::text`\n   - Location: Line 974\n   - RELIABLE: direct text extraction\n\n2. **JavaScript variable**\n   - `const antiquity = 'Publicado hace 145 días'`\n   - Pattern match: `/Publicado hace \\d+ días/`\n   - Also reliable\n\nRecommended: CSS selector on HTML paragraph — simple and direct."
+    },
+    "property_image": {
+      "target_value": "https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x532/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true",
+      "analysis": "Property main image appears in:\n\n1. **og:image meta tag**\n   - `<meta property=\"og:image\" itemprop=\"image\" content=\"https://img10.naventcdn.com/avisos/18/01/49/31/56/19/720x532/1594934860.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true\">`\n   - Selector: `meta[property=\"og:image\"]::attr(content)`\n   - Location: Line 18\n   - RELIABLE: standard og:image tag\n\n2. **JSON-LD image**\n   - Property: `image` on House object\n   - Path: `.image` (JSON-LD)\n   - Same URL, also reliable\n\n3. **HTML gallery image**\n   - First image in image grid: `<img class=\"imageGrid-module__imgProperty___KJ-2G\" src=\"https://img10.naventcdn.com/avisos/resize/18/01/49/31/56/19/1200x1200/...\">`\n   - Selector: `img.imageGrid-module__id1___3zqZr::attr(src)`\n   - Same image, slightly different URL format\n\nRecommended: CSS selector on og:image meta tag — standard, widely recognized source."
+    }
+  }
+}
