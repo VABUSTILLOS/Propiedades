@@ -159,6 +159,23 @@ export function ChatWidget() {
                       ))}
                     </div>
                   )}
+                  {turn.role === "assistant" &&
+                    turn.matched === false &&
+                    !turn.relaxed &&
+                    turn.requestMessage && (
+                      <div className="flex justify-start pt-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            void sendMessage(turn.requestMessage!, true)
+                          }
+                          disabled={isLoading}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+                        >
+                          Ver alternativas
+                        </button>
+                      </div>
+                    )}
                 </div>
               )}
             </div>
