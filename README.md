@@ -15,7 +15,7 @@ Real estate SaaS & marketplace portal — two-sided marketplace (buyers/investor
 ```bash
 npm install
 cp .env.example .env.local   # fill in NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY
-npm run setup:db             # apply migrations 001→010 (see "Supabase provisioning")
+npm run setup:db             # apply migrations 001→012 (see "Supabase provisioning")
 npm run dev
 ```
 
@@ -28,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000).
 1. Create a project at [supabase.com/dashboard](https://supabase.com/dashboard).
 2. **Settings → API** → copy **Project URL** + **anon key** → fill `.env.local` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
 3. **Settings → Database → Connection string** → copy the pooler **URI** (includes password) → add to `.env.local` as `SUPABASE_DB_URL`.
-4. Run **`npm run setup:db`** — it applies all migrations `001_init.sql` → `010_semantic_search.sql` in order, each in its own transaction (partial failure rolls back only that file).
+4. Run **`npm run setup:db`** — it applies all migrations `001_init.sql` → `012_whatsapp_inbound.sql` in order, each in its own transaction (partial failure rolls back only that file).
 
 **Zero-tooling path:** paste the full contents of `supabase/migrations/_ALL_IN_ONE.sql` (regenerate with `npm run gen:migrations`) into the dashboard **SQL Editor** and run.
 
@@ -101,7 +101,7 @@ Demo credentials (seeded via SQL — verified working):
 > `UPDATE auth.users SET email_change_token_current = '' WHERE email_change_token_current IS NULL;` — a NULL in
 > that column breaks GoTrue's schema query.
 
-Known gap: password reset redirects to `/auth/update-password`, which has no route yet — password reset is a follow-up.
+Password reset is supported: the email links to `/auth/update-password` (PKCE flow, public route) where the user exchanges the code and sets a new password.
 
 ## Deploy on Vercel
 
@@ -120,6 +120,6 @@ src/
 │                               #   transactions, messaging, bookings, bids, reviews,
 │                               #   flyers, favorites, market-data, ai, lib
 └── supabase/
-    ├── migrations/             # 001_init → 010_semantic_search (+ _ALL_IN_ONE.sql generated)
+    ├── migrations/             # 001_init → 012_whatsapp_inbound (+ _ALL_IN_ONE.sql generated)
     └── functions/              # edge functions (import-property-ai)
 ```
