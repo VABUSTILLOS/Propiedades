@@ -3,6 +3,12 @@
 -- Run `npm run gen:migrations` to regenerate after adding a migration.
 -- Concatenation of every numbered migration in order, for one-shot
 -- application via the Supabase SQL Editor (or the setup-db runner).
+--
+-- IMPORTANT: For a FRESH database only. If your database already has
+-- migrations applied (e.g. re-running this after a previous setup),
+-- the script will fail with errors like "type "user_role" already
+-- exists". In that case apply ONLY the newest migrations (files with
+-- the highest number prefix), not this bundle.
 -- ============================================================
 
 -- ============================================================

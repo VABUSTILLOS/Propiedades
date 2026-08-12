@@ -113,7 +113,10 @@ console.log(
     "  1. Open your project dashboard → SQL Editor → New query\n" +
     "  2. Paste the full contents of:\n" +
     "       supabase/migrations/_ALL_IN_ONE.sql\n" +
-    "  3. Run. Applies all 10 migrations in order (idempotent-safe).\n\n" +
+    "  3. Run. Applies all migrations in order. NOTE: use this ONLY on a\n" +
+    "     fresh database. If migrations were already applied before, this\n" +
+    "     fails with \"already exists\" errors — paste only the newest\n" +
+    "     migration files instead.\n\n" +
     "Recommended local path — direct connection:\n" +
     "  1. Supabase dashboard → Settings → Database → Connection string → copy URI\n" +
     "  2. Add to .env.local:  SUPABASE_DB_URL=\"postgresql://...\"\n" +
