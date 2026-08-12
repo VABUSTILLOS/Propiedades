@@ -114,31 +114,8 @@ function ResidentialView({
   property: PropertiesRow;
   benchmark: MarketBenchmarksRow | null;
 }) {
-  const images = property.images ?? [];
-
   return (
     <div className="space-y-6">
-      {images.length > 0 ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:grid-rows-2">
-          {images.slice(0, 5).map((src, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={src}
-              src={src}
-              alt={property.title}
-              className={cn(
-                "aspect-[4/3] w-full rounded-lg object-cover",
-                i === 0 && "col-span-2 row-span-2 aspect-auto sm:h-full",
-              )}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="flex aspect-[4/3] w-full items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-          No photos yet
-        </div>
-      )}
-
       {property.description && (
         <p className="whitespace-pre-line text-muted-foreground">
           {property.description}

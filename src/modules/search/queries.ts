@@ -28,6 +28,8 @@ export type SearchFilters = {
   colonia?: string;
   minM2?: number;
   maxM2?: number;
+  /** Minimum number of bedrooms (recamaras), inclusive. */
+  minBedrooms?: number;
   sortBy?: "price_asc" | "price_desc" | "newest" | "score" | "hot";
   limit?: number;
   /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
@@ -108,6 +110,9 @@ function applyFilters<Q extends FilterableQuery<Q>>(
   }
   if (filters.maxM2 != null) {
     q = q.lte("construccion_m2", filters.maxM2);
+  }
+  if (filters.minBedrooms != null) {
+    q = q.gte("recamaras", filters.minBedrooms);
   }
   if (filters.query) {
     q = q.or(
@@ -286,6 +291,29 @@ export async function getSearchableCities(): Promise<string[]> {
 
   const cities = [...new Set((rows ?? []).map((r) => r.city).filter(Boolean))];
   return cities.sort();
+}
+
+/**
+ * Distinct colonias present in active listings — drives the filter dropdown.
+ * Optionally scoped to a deal type (`sale`/`rent`) for category-specific pages.
+ */
+export async function getSearchableColonias(
+  type?: "sale" | "rent",
+): Promise<string[]> {
+  const supabase = await createSupabaseServerClient();
+
+  let query = supabase
+    .from("properties")
+    .select("colonia")
+    .eq("status", "active");
+  if (type) {
+    query = query.eq("type", type);
+  }
+
+  const { data: rows } = await query.returns<{ colonia: string }[]>();
+
+  const colonias = [...new Set((rows ?? []).map((r) => r.colonia).filter(Boolean))];
+  return colonias.sort();
 }
 
 /**

@@ -41,6 +41,7 @@ export async function GET(request: Request) {
     colonia: p.colonia,
     minM2: p.minM2,
     maxM2: p.maxM2,
+    minBedrooms: p.minBedrooms,
     bounds: p.bounds ? parseBoundsString(p.bounds) ?? undefined : undefined,
   };
 
