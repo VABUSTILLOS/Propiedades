@@ -45,8 +45,8 @@ def parse_page(html_path, meta_path, page_id):
         if link_tag and link_tag.get("href"):
             url = link_tag["href"].split("#")[0]
         listing_id = card.get("data-id")
-        # title / h2 text
-        h2 = card.select_one("h2")
+        # title / h2 or h3 text (variant list layouts use different heading levels)
+        h2 = card.select_one("h2") or card.select_one("h3")
         title_text = None
         street_address = None
         neighborhood = None
@@ -92,44 +92,79 @@ def parse_page(html_path, meta_path, page_id):
                 if cur:
                     price_currency = cur.get_text(strip=True)
 
-        # operation type / property type from section-labels
-        labels = [d.get_text(strip=True) for d in card.select(".section-labels div")]
+        # operation type / property type: variant A uses "section-labels" (type, operation);
+        # variant B uses "labels" which may prepend a featured badge (DESTACADO/PRIME) first.
+        labels_container = card.select_one(".section-labels") or card.select_one(".labels")
+        labels = [d.get_text(strip=True) for d in labels_container.select("div")] if labels_container else []
+        # drop a leading featured badge if present (all-caps single word like DESTACADO/PRIME)
+        known_badges = {"destacado", "prime"}
+        if labels and labels[0].lower() in known_badges:
+            labels = labels[1:]
         property_type = labels[0] if len(labels) > 0 else None
         operation_type = labels[1] if len(labels) > 1 else None
 
-        # amenities: area(s), bedrooms, bathrooms
+        # amenities: area(s), bedrooms, bathrooms.
+        # Variant A: <span class="amenities-count">N</span> plus optional <span class="amenities-label">
+        # Variant B: <div class="amenities-number">N</div> with no label; order is bedrooms, bathrooms, area(s)
         land_area_m2 = None
         built_area_m2 = None
         bedrooms = None
         bathrooms = None
         area_values = []
-        for li in card.select("ul.dHoQuP li.amenities, ul[class*='dHoQuP'] li.amenities"):
-            count_span = li.select_one(".amenities-count")
-            label_span = li.select_one(".amenities-label")
-            if not count_span:
-                continue
-            val = count_span.get_text(strip=True)
-            if label_span:
-                label = label_span.get_text(strip=True).lower()
-                if "recámara" in label or "recamara" in label:
-                    bedrooms = clean_num(val)
-                elif "baño" in label or "bano" in label:
-                    bathrooms = clean_num(val)
-            else:
-                # this is m2 area value (no label span, has sup m2)
-                area_values.append(clean_num(val))
+        amenity_lis = card.select("li.amenities")
+        has_labels = any(li.select_one(".amenities-label") for li in amenity_lis)
+        if has_labels:
+            for li in amenity_lis:
+                count_span = li.select_one(".amenities-count")
+                label_span = li.select_one(".amenities-label")
+                if not count_span:
+                    continue
+                val = count_span.get_text(strip=True)
+                if label_span:
+                    label = label_span.get_text(strip=True).lower()
+                    if "recámara" in label or "recamara" in label:
+                        bedrooms = clean_num(val)
+                    elif "baño" in label or "bano" in label:
+                        bathrooms = clean_num(val)
+                else:
+                    area_values.append(clean_num(val))
+            if len(area_values) == 1:
+                land_area_m2 = area_values[0]
+            elif len(area_values) >= 2:
+                land_area_m2 = area_values[0]
+                built_area_m2 = area_values[1]
+        else:
+            # variant B: amenities-number values in order; m2 values contain a <sup>2</sup>
+            nums = []
+            for li in amenity_lis:
+                num_div = li.select_one(".amenities-number")
+                if not num_div:
+                    continue
+                is_area = num_div.select_one("sup") is not None
+                val = num_div.get_text(strip=True)
+                nums.append((clean_num(val), is_area))
+            non_area = [v for v, is_area in nums if not is_area]
+            area_vals = [v for v, is_area in nums if is_area]
+            if len(non_area) >= 1:
+                bedrooms = non_area[0]
+            if len(non_area) >= 2:
+                bathrooms = non_area[1]
+            if len(area_vals) == 1:
+                land_area_m2 = area_vals[0]
+            elif len(area_vals) >= 2:
+                land_area_m2 = area_vals[0]
+                built_area_m2 = area_vals[1]
 
-        if len(area_values) == 1:
-            land_area_m2 = area_values[0]
-        elif len(area_values) >= 2:
-            land_area_m2 = area_values[0]
-            built_area_m2 = area_values[1]
-
-        # is_featured
+        # is_featured: variant A uses a separate .labels-highlighted div;
+        # variant B prepends the badge as the first label (already captured before stripping)
         is_featured = None
         featured_div = card.select_one(".labels-highlighted")
         if featured_div:
             is_featured = featured_div.get_text(strip=True)
+        elif labels_container:
+            first_labels = [d.get_text(strip=True) for d in labels_container.select("div")]
+            if first_labels and first_labels[0].lower() in known_badges:
+                is_featured = first_labels[0]
 
         # images
         images = []

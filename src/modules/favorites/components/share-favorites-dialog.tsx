@@ -119,6 +119,7 @@ export function ShareFavoritesDialog({ favorites, listsWithItems, trigger }: Pro
       price: p.price,
       currency: p.currency,
       slug: p.slug,
+      image: p.image ?? null,
     })),
     siteUrl,
   );

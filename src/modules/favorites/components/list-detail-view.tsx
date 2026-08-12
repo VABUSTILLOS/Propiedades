@@ -41,6 +41,7 @@ export function ListDetailView({ list, items }: Props) {
             price: p.price,
             currency: p.currency,
             slug: p.slug,
+            image: p.images?.[0] ?? null,
           })),
           siteUrl,
         )

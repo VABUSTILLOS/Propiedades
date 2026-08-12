@@ -46,6 +46,30 @@ if [ -z "$WABA_ID" ]; then
   exit 1
 fi
 
+# IMAGE header templates require an `example.header_handle` from Meta's
+# Resumable Upload API — a plain public URL is rejected (error 2388273).
+# Upload the sample image first to get a handle.
+EXAMPLE_IMAGE_URL="https://qfemrfrkxfirpizwcalh.supabase.co/storage/v1/object/public/property-images/68c8b3ab-5471-4755-bd17-0f78067857dc/0.jpg"
+APP_ID="920084177810670"
+
+TMP_IMG=$(mktemp /tmp/template-sample.XXXXXX.jpg)
+trap 'rm -f "$TMP_IMG"' EXIT
+curl -sf -o "$TMP_IMG" "$EXAMPLE_IMAGE_URL"
+IMG_SIZE=$(stat -f%z "$TMP_IMG" 2>/dev/null || stat -c%s "$TMP_IMG")
+
+UPLOAD_ID=$(curl -sf -X POST "https://graph.facebook.com/v23.0/$APP_ID/uploads" \
+  --data-urlencode "file_name=sample.jpg" \
+  --data-urlencode "file_length=$IMG_SIZE" \
+  --data-urlencode "file_type=image/jpeg" \
+  -H "Authorization: Bearer $TOKEN" \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')
+
+HANDLE=$(curl -sf -X POST "https://graph.facebook.com/v23.0/$UPLOAD_ID" \
+  -H "Authorization: OAuth $TOKEN" \
+  -H "file_offset: 0" \
+  --data-binary "@$TMP_IMG" \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["h"])')
+
 echo "Creando plantilla '$TEMPLATE_NAME' en WABA ${WABA_ID}…"
 curl -sf -X POST "https://graph.facebook.com/v23.0/$WABA_ID/message_templates" \
   -H "Authorization: Bearer $TOKEN" \
@@ -59,7 +83,7 @@ curl -sf -X POST "https://graph.facebook.com/v23.0/$WABA_ID/message_templates" \
         "type": "HEADER",
         "format": "IMAGE",
         "example": {
-          "header_handle": ["https://qfemrfrkxfirpizwcalh.supabase.co/storage/v1/object/public/property-images/68c8b3ab-5471-4755-bd17-0f78067857dc/0.jpg"]
+          "header_handle": ["'"$HANDLE"'"]
         }
       },
       {

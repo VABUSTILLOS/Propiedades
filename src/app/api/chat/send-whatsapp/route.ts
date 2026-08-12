@@ -63,7 +63,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: detail }, { status: 400 });
   }
 
-  const { results, filters } = parsed.data;
+  const { filters } = parsed.data;
+  const results = parsed.data.results.map((r) => ({
+    ...r,
+    image: r.image ?? null,
+  }));
   const phone = parsed.data.phone.replace(/\D/g, "");
   if (phone.length < 10 || phone.length > 15) {
     return NextResponse.json(
