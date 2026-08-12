@@ -49,13 +49,16 @@ export const userRoleSchema = z.enum([
 
 export const listingTypeSchema = z.enum(["sale", "rent"]) satisfies z.ZodType<ListingType>;
 
-export const propertyCategorySchema = z.enum([
+/** The five property categories surfaced across the app (order = display order). */
+export const PROPERTY_CATEGORIES = [
   "casa",
   "departamento",
   "local",
   "bodega",
   "terreno",
-]) satisfies z.ZodType<PropertyCategory>;
+] as const;
+
+export const propertyCategorySchema = z.enum(PROPERTY_CATEGORIES) satisfies z.ZodType<PropertyCategory>;
 
 export const propertyDealTypeSchema = z.enum([
   "venta_directa",
@@ -154,10 +157,28 @@ export function boundsToString(bounds: MapBounds): string {
   ].map((n) => n.toFixed(6)).join(",");
 }
 
+/**
+ * Parses a CSV `categories` URL param (e.g. `casa,departamento`) into a
+ * validated `PropertyCategory[]`, dropping unknown tokens. Returns an empty
+ * array when the param is absent, so callers treat it as "no filter".
+ */
+export function parseCategoriesParam(
+  raw: string | undefined | null,
+): PropertyCategory[] {
+  if (!raw) return [];
+  const valid = new Set<string>(PROPERTY_CATEGORIES);
+  return raw
+    .split(",")
+    .map((token) => token.trim())
+    .filter((token): token is PropertyCategory => valid.has(token));
+}
+
 export const searchParamsSchema = paginationSchema.extend({
   query: z.string().trim().max(200).optional(),
   type: listingTypeSchema.optional(),
   category: propertyCategorySchema.optional(),
+  // CSV multi-select (e.g. `casa,departamento`); wins over `category`.
+  categories: z.string().optional(),
   dealType: propertyDealTypeSchema.optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
@@ -225,6 +246,9 @@ export type InvestorTab = z.infer<typeof investorTabSchema>;
  */
 export const investorParamsSchema = paginationSchema.extend({
   tab: investorTabSchema.default("todos"),
+  // CSV multi-select of property types (e.g. `casa,departamento`); intersected
+  // with the active tab's implicit categories on the server.
+  categories: z.string().optional(),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
 });

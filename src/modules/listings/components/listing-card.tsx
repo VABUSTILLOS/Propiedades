@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   deleteListing,
   setListingStatus,
+  updateListingCategory,
 } from "@/modules/listings/actions";
 import { scoreListing } from "@/modules/ai/actions";
 import { CreateFlyerButton } from "@/modules/flyers/components/create-flyer-button";
@@ -18,7 +19,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { PropertiesRow } from "@/modules/lib/database.types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type {
+  PropertiesRow,
+  PropertyCategory,
+} from "@/modules/lib/database.types";
+
+const CATEGORY_LABELS: Record<PropertyCategory, string> = {
+  casa: "Casa",
+  departamento: "Departamento",
+  local: "Local",
+  bodega: "Bodega",
+  terreno: "Terreno",
+};
+
+const CATEGORY_VALUES = Object.keys(CATEGORY_LABELS) as PropertyCategory[];
 
 const STATUS_LABELS: Record<PropertiesRow["status"], string> = {
   draft: "Borrador",
@@ -69,6 +90,13 @@ export function ListingCard({ listing }: { listing: PropertiesRow }) {
       if (!res.ok) setActionError(res.error);
     });
 
+  const changeCategory = (category: string) =>
+    startTransition(async () => {
+      setActionError(null);
+      const res = await updateListingCategory(listing.id, category);
+      if (!res.ok) setActionError(res.error);
+    });
+
   const runScore = () =>
     startTransition(async () => {
       setActionError(null);
@@ -107,6 +135,29 @@ export function ListingCard({ listing }: { listing: PropertiesRow }) {
             ${listing.price.toLocaleString()} MXN
           </p>
         )}
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <span className="text-xs font-medium text-muted-foreground">
+            Categoría
+          </span>
+          <Select
+            value={listing.category}
+            onValueChange={(v) => {
+              if (v) changeCategory(v);
+            }}
+            disabled={isPending}
+          >
+            <SelectTrigger className="h-8 w-40 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {CATEGORY_VALUES.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {CATEGORY_LABELS[cat]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         {aiScore !== null && (
           <p className="mt-1 text-xs text-muted-foreground">
             AI score: {aiScore.toFixed(1)}/100

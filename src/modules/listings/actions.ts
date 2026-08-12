@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import {
+  propertyCategorySchema,
   propertyCreateSchema,
   propertyWizardStep1Schema,
   propertyWizardStep2Schema,
@@ -188,6 +189,47 @@ export async function setListingStatus(
   }
 
   revalidatePath("/my-listings");
+  return ok({ id: listingId });
+}
+
+/**
+ * Change the category of an existing listing (e.g. from "Mis listados").
+ * Only the property owner can mutate (enforced server-side + RLS).
+ */
+export async function updateListingCategory(
+  listingId: string,
+  category: string,
+): Promise<ActionResult<{ id: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const parsed = propertyCategorySchema.safeParse(category);
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? "Categoría no válida.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: existing } = await supabase
+    .from("properties")
+    .select("owner_id")
+    .eq("id", listingId)
+    .limit(1);
+  if (existing?.[0]?.owner_id !== user.id) {
+    return fail("No eres dueño de este listado.");
+  }
+
+  const { error } = await supabase
+    .from("properties")
+    .update({ category: parsed.data })
+    .eq("id", listingId);
+
+  if (error) {
+    return fail(error.message);
+  }
+
+  revalidatePath("/my-listings");
+  revalidatePath("/property/[slug]");
   return ok({ id: listingId });
 }
 

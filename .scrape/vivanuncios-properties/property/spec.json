@@ -1,0 +1,84 @@
+{
+  "url": "https://www.vivanuncios.com.mx",
+  "data_type": "property",
+  "html_variant": "rendered",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Título del anuncio de la propiedad",
+        "source": "requested",
+        "examples": ["Casa en Venta de Una Planta en Colonia Centro"]
+      },
+      "url": {
+        "type": "string",
+        "description": "URL canónica del anuncio en Vivanuncios",
+        "source": "requested",
+        "examples": ["https://www.vivanuncios.com.mx/a-venta-casa/ciudad-jimenez-centro/casa-en-venta-de-una-planta-en-colonia-centro/150452392"]
+      },
+      "listing_id_vivanuncios": {
+        "type": "string",
+        "description": "ID del anuncio en Vivanuncios",
+        "source": "requested",
+        "examples": ["150452392"]
+      },
+      "contact_phone": {
+        "type": "string",
+        "description": "Teléfono completo del vendedor/agente en formato internacional",
+        "source": "requested",
+        "examples": ["52 6144663753"]
+      },
+      "agency_name": {
+        "type": "string",
+        "description": "Nombre de la agencia inmobiliaria o vendedor",
+        "source": "requested",
+        "examples": ["ABBA Promotores Inmobiliarios"]
+      },
+      "contact_methods_available": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Métodos de contacto disponibles (email_form, whatsapp_button, phone_button)",
+        "source": "requested",
+        "examples": [["email_form", "whatsapp_button", "phone_button"]]
+      },
+      "price": {
+        "type": "string",
+        "description": "Precio tal como se muestra en el anuncio",
+        "source": "requested",
+        "examples": ["MN 3,250,000"]
+      },
+      "location": {
+        "type": "string",
+        "description": "Ubicación de la propiedad (colonia, ciudad)",
+        "source": "requested",
+        "examples": ["Casa EN Venta DE UNA Planta EN Colonia Centro, Ciudad Jimenez Centro, Jiménez"]
+      },
+      "number_of_bedrooms": {
+        "type": "integer",
+        "description": "Número de recámaras",
+        "source": "requested",
+        "examples": [4]
+      },
+      "floor_size_m2": {
+        "type": "integer",
+        "description": "Superficie de construcción en m²",
+        "source": "requested",
+        "examples": [528]
+      },
+      "days_published": {
+        "type": "string",
+        "description": "Hace cuántos días fue publicado el anuncio",
+        "source": "discovered",
+        "examples": ["Publicado hace 37 días"]
+      },
+      "property_image": {
+        "type": "string",
+        "description": "URL de la foto principal del anuncio",
+        "source": "discovered",
+        "examples": ["https://img.vivanuncios.com.mx/mx/property/..."]
+      }
+    }
+  }
+}

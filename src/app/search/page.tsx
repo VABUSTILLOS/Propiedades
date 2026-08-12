@@ -10,7 +10,9 @@ import {
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
 import { SearchResults } from "@/modules/maps/components/search-results";
-import { parseBoundsString,
+import {
+  parseBoundsString,
+  parseCategoriesParam,
   searchParamsSchema,
   type MapBounds,
 } from "@/modules/lib/schemas";
@@ -35,10 +37,15 @@ export default async function SearchPage({ searchParams }: Props) {
     ? (parseBoundsString(parsed.data.bounds) ?? null)
     : null;
 
+  // Multi-select property types (`categories` CSV). When present it wins over
+  // the legacy single `category` param so both are never applied at once.
+  const selectedCategories = parseCategoriesParam(parsed.data?.categories);
+
   const filters: SearchFilters = {
     query: parsed.data?.query,
     type: parsed.data?.type,
-    category: parsed.data?.category,
+    categories: selectedCategories.length > 0 ? selectedCategories : undefined,
+    category: selectedCategories.length > 0 ? undefined : parsed.data?.category,
     // Comprar focuses on person-to-person home sales; default to direct
     // sales and exclude investment vehicles (remates, flips, traspasos)
     // unless the user explicitly asks for one.
@@ -70,7 +77,9 @@ export default async function SearchPage({ searchParams }: Props) {
   const filtersQueryString = toQueryString({
     query: parsed.data?.query,
     type: parsed.data?.type,
-    category: parsed.data?.category,
+    categories:
+      selectedCategories.length > 0 ? selectedCategories.join(",") : undefined,
+    category: selectedCategories.length > 0 ? undefined : parsed.data?.category,
     dealType: parsed.data?.dealType ?? "venta_directa",
     minPrice: parsed.data?.minPrice,
     maxPrice: parsed.data?.maxPrice,

@@ -39,15 +39,22 @@ const OWNER_ID = "80a2428b-4d50-435d-8ce1-b1a9eba61176";
 // Base search URLs. Vivanuncios ignores pagination when `sort=more_recent` is
 // present (p2/p3 return page 1), so page 1 keeps the sort and pages 2+ drop it.
 const SEARCH_URL_TEMPLATE =
-  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p{PAGE}?pt=1,101,12&sort=more_recent";
+  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/v1c1097l1005p{PAGE}?sort=most_lowered_price";
 const SEARCH_URL_TEMPLATE_NO_SORT =
-  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua-chih/v1c1097l10163p{PAGE}?pt=1,101,12";
+  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/v1c1097l1005p{PAGE}";
+
+// Remate bancario filter URLs (same pagination behavior: sort on page 1 only).
+const REMATES_URL_TEMPLATE =
+  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/remate-bancario/v1c1097l1005q0p{PAGE}?sort=most_lowered_price";
+const REMATES_URL_TEMPLATE_NO_SORT =
+  "https://www.vivanuncios.com.mx/s-venta-inmuebles/chihuahua/remate-bancario/v1c1097l1005q0p{PAGE}";
 
 // CLI args
 const args = process.argv.slice(2);
 const pageCount = parseArg(args, "--pages", 3);
 const maxListings = parseArg(args, "--limit", 60);
 const dryRun = args.includes("--dry-run");
+const rematesMode = args.includes("--remates");
 
 function parseArg(args, name, fallback) {
   const i = args.indexOf(name);
@@ -86,32 +93,49 @@ function isCloudflareBlocked(text) {
 async function jinaFetch(targetUrl, { format = "html", retries = 4, waitSelector } = {}) {
   const jinaUrl = `https://r.jina.ai/${targetUrl}`;
   // NOTE: X-No-Cache: true causes Cloudflare challenges on some pages — omit it.
-  const headers = {
+  const baseHeaders = {
     Authorization: `Bearer ${JINA_API_KEY}`,
     "X-Timeout": "60",
   };
-  if (format === "html") headers["X-Return-Format"] = "html";
-  if (waitSelector) headers["X-Wait-For-Selector"] = waitSelector;
+  if (format === "html") baseHeaders["X-Return-Format"] = "html";
+  if (waitSelector) baseHeaders["X-Wait-For-Selector"] = waitSelector;
+
+  // NOTE: do NOT use `cache: "no-store"` on the fetch — it forces Jina to
+  // re-render live and the origin (vivanuncios) Cloudflare-challenges those
+  // fetches. Letting Jina serve its cached copy is what actually gets through.
 
   let lastErr = null;
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const res = await fetch(jinaUrl, { headers, cache: "no-store" });
-      if (!res.ok) {
-        lastErr = new Error(`Jina HTTP ${res.status}`);
-        await sleep(2000 * attempt);
-        continue;
-      }
-      const text = await res.text();
-      if (isCloudflareBlocked(text)) {
-        lastErr = new Error("Cloudflare challenge returned");
+  // Attempts with the API key first; if the account runs out of balance
+  // (402 InsufficientBalanceError), retry the same URL anonymously so Jina's
+  // shared cache can still serve it when a copy exists. The anonymous attempt
+  // must keep the format/selector headers, otherwise Jina returns markdown.
+  const anonHeaders = { ...baseHeaders };
+  delete anonHeaders.Authorization;
+  for (const headers of [baseHeaders, anonHeaders]) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const res = await fetch(jinaUrl, { headers });
+        const text = await res.text();
+        if (!res.ok || res.status === 402 || text.includes("InsufficientBalance")) {
+          lastErr = new Error(`Jina HTTP ${res.status || "402"}`);
+          // If the key is out of balance, don't burn retries on it — fall
+          // through to the anonymous attempt immediately.
+          if (headers.Authorization && (res.status === 402 || text.includes("InsufficientBalance"))) {
+            break;
+          }
+          await sleep(2000 * attempt);
+          continue;
+        }
+        if (isCloudflareBlocked(text)) {
+          lastErr = new Error("Cloudflare challenge returned");
+          await sleep(3000 * attempt);
+          continue;
+        }
+        return text;
+      } catch (err) {
+        lastErr = err;
         await sleep(3000 * attempt);
-        continue;
       }
-      return text;
-    } catch (err) {
-      lastErr = err;
-      await sleep(3000 * attempt);
     }
   }
   throw lastErr ?? new Error("Jina fetch failed");
@@ -546,7 +570,7 @@ function extractAmount(text) {
   return match ? Number(match[0]) || null : null;
 }
 
-async function insertProperty(listing, extracted, geocoded) {
+async function insertProperty(listing, extracted, geocoded, forcedDealType = null) {
   if (await existsBySourceUrl(listing.sourceUrl)) {
     console.log(`  skip (ya existe): ${listing.sourceUrl}`);
     return "skipped";
@@ -564,7 +588,7 @@ async function insertProperty(listing, extracted, geocoded) {
   // Classify the listing; LLM extraction wins, keyword heuristic is the fallback.
   const heuristic = classifyListing(title, description);
   const category = extracted?.category || heuristic.category;
-  const dealType = extracted?.deal_type || heuristic.dealType;
+  const dealType = forcedDealType || extracted?.deal_type || heuristic.dealType;
   const costoReparacion =
     extracted?.costo_reparacion_estimado ??
     (dealType === "flipping" ? extractAmount(description) : null);
@@ -623,15 +647,23 @@ async function insertProperty(listing, extracted, geocoded) {
  * ------------------------------------------------------------------ */
 
 async function main() {
+  const modeLabel = rematesMode ? "remates bancarios" : "venta, precios bajados";
   console.log(
-    `Scraping Vivanuncios Chihuahua (venta, más recientes) — pages=${pageCount} limit=${maxListings} dryRun=${dryRun}`,
+    `Scraping Vivanuncios Chihuahua (${modeLabel}) — pages=${pageCount} limit=${maxListings} dryRun=${dryRun}`,
   );
 
   const allListings = [];
   const seen = new Set();
 
   for (let page = 1; page <= pageCount; page++) {
-    const template = page === 1 ? SEARCH_URL_TEMPLATE : SEARCH_URL_TEMPLATE_NO_SORT;
+    const template =
+      page === 1
+        ? rematesMode
+          ? REMATES_URL_TEMPLATE
+          : SEARCH_URL_TEMPLATE
+        : rematesMode
+          ? REMATES_URL_TEMPLATE_NO_SORT
+          : SEARCH_URL_TEMPLATE_NO_SORT;
     const url = template.replace("{PAGE}", page);
     console.log(`\n=== Página ${page} ===`);
     try {
@@ -699,7 +731,12 @@ async function main() {
     });
     if (geocoded) console.log(`  geo: ${geocoded.lat.toFixed(4)}, ${geocoded.lng.toFixed(4)}`);
 
-    const result = await insertProperty(listing, extracted, geocoded);
+    const result = await insertProperty(
+      listing,
+      extracted,
+      geocoded,
+      rematesMode ? "remate_bancario" : null,
+    );
     if (result === "inserted") inserted++;
     else if (result === "skipped") skipped++;
     else if (result === "error") failed++;

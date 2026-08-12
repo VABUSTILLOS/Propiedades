@@ -19,7 +19,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { MapViewToggle, type MapView } from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
+import { CategoryPills } from "@/modules/search/components/category-pills";
 import type { PropertyMapMarker } from "@/modules/search/queries";
+import { parseCategoriesParam } from "@/modules/lib/schemas";
 import type { MapBounds } from "@/modules/lib/schemas";
 import {
   estimateEscrituracion,
@@ -29,7 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { InvestorItem } from "@/app/investor/page";
 import type { InvestorTab } from "@/modules/lib/schemas";
-import type { PropertyDealType } from "@/modules/lib/database.types";
+import type { PropertyCategory, PropertyDealType } from "@/modules/lib/database.types";
 
 const DEAL_THRESHOLD_PCT = 25;
 
@@ -207,6 +209,27 @@ export function InvestorDashboardClient({
     router.push(qs ? `/investor?${qs}` : "/investor");
   };
 
+  // Property-type multi-select, driven by the `categories` URL param. Pushing
+  // to the URL re-fetches items server-side so tabs, badges and the list stay
+  // consistent (same pattern as selectTab).
+  const selectedCategories = useMemo(
+    () => parseCategoriesParam(searchParams.get("categories")),
+    [searchParams],
+  );
+
+  const setCategories = (next: PropertyCategory[]) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    params.delete("pageSize");
+    if (next.length > 0) {
+      params.set("categories", next.join(","));
+    } else {
+      params.delete("categories");
+    }
+    const qs = params.toString();
+    router.push(qs ? `/investor?${qs}` : "/investor");
+  };
+
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={(v) => selectTab(v as InvestorTab)}>
@@ -288,6 +311,16 @@ export function InvestorDashboardClient({
             </option>
           </select>
         </label>
+
+        <div className="w-full space-y-2 border-t pt-3">
+          <span className="block text-xs text-muted-foreground">
+            Tipo de propiedad
+          </span>
+          <CategoryPills
+            selected={selectedCategories}
+            onChange={setCategories}
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-end">

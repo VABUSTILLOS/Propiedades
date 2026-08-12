@@ -1,0 +1,121 @@
+{
+  "fields": {
+    "title": {
+      "type": "str",
+      "value": "Casa en Venta de Una Planta en Colonia Centro"
+    },
+    "page_title": {
+      "type": "str",
+      "value": "Casas en venta - 528m2 - 4 recamaras - Ciudad Jimenez Centro -..."
+    },
+    "subtitle_summary": {
+      "type": "str",
+      "value": "Casa · 359m² · 4 recámaras · 2 estacionamientos"
+    },
+    "price": {
+      "type": "str",
+      "value": "MN 3,250,000"
+    },
+    "operation_type": {
+      "type": "str",
+      "value": "venta"
+    },
+    "description": {
+      "type": "str",
+      "value": "CASA DE UNA PLANTA UBICADA EN LA ZONA CENTRO CUENTA CON COCHERA EN BATERIA PARA 2 AUTOS, VESTIBULO, SALA, OFICINA, COMEDOR, ESTANCIA, COCINA, DESPENSA, LAVANDERIA, 4 RECAMARAS, 4.5 BAÑOS"
+    },
+    "location": {
+      "type": "str",
+      "value": "Casa EN Venta DE UNA Planta EN Colonia Centro, Ciudad Jimenez Centro, Jiménez"
+    },
+    "address_locality": {
+      "type": "str",
+      "value": "Jiménez, Chihuahua, Mexico vivanuncios"
+    },
+    "address_region": {
+      "type": "str",
+      "value": "Ciudad Jimenez Centro"
+    },
+    "street_address": {
+      "type": "str",
+      "value": "Casa EN Venta DE UNA Planta EN Colonia Centro"
+    },
+    "number_of_bedrooms": {
+      "type": "int",
+      "value": 4
+    },
+    "number_of_bathrooms_total": {
+      "type": "int",
+      "value": 4
+    },
+    "floor_size_m2": {
+      "type": "int",
+      "value": 528
+    },
+    "url": {
+      "type": "str",
+      "value": "https://www.vivanuncios.com.mx/a-venta-casa/ciudad-jimenez-centro/casa-en-venta-de-una-planta-en-colonia-centro/150452392"
+    },
+    "listing_id_vivanuncios": {
+      "type": "str",
+      "value": "150452392"
+    },
+    "publisher_ad_code": {
+      "type": "str",
+      "value": "AHO8405271"
+    },
+    "days_published": {
+      "type": "str",
+      "value": "Publicado hace 37 días"
+    },
+    "contact_phone": {
+      "type": "str",
+      "value": "52 6144663753"
+    },
+    "contact_phone_partial_displayed": {
+      "type": "str",
+      "value": "614 4"
+    },
+    "agency_name": {
+      "type": "str",
+      "value": "ABBA Promotores Inmobiliarios"
+    },
+    "agency_profile_url": {
+      "type": "str",
+      "value": "https://www.vivanuncios.com.mx/u-anuncios-del-vendedor/abba-promotores-inmobiliarios/v1u323313p1"
+    },
+    "agency_logo_image": {
+      "type": "str",
+      "value": "https://img10.naventcdn.com/empresas/18/00/00/05/12/53/130x70/51253.jpg"
+    },
+    "contact_form_fields": {
+      "type": "list",
+      "value": [
+        "email",
+        "name",
+        "phone",
+        "message"
+      ]
+    },
+    "contact_methods_available": {
+      "type": "list",
+      "value": [
+        "Email form (Contactar)",
+        "WhatsApp (Contactar por WhatsApp)",
+        "Ver teléfono button"
+      ]
+    },
+    "property_image": {
+      "type": "str",
+      "value": "https://img10.naventcdn.com/avisos/18/01/50/32/37/99/720x532/1615795330.jpg?rapc=bXZhX2ltYWdl?isFirstImage=true"
+    },
+    "breadcrumb": {
+      "type": "list",
+      "value": [
+        "Vivanuncios",
+        "Casa",
+        "Venta"
+      ]
+    }
+  }
+}

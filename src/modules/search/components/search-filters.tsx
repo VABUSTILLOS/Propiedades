@@ -13,6 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CategoryPills } from "@/modules/search/components/category-pills";
+import { parseCategoriesParam } from "@/modules/lib/schemas";
+import type { PropertyCategory } from "@/modules/lib/database.types";
 
 /**
  * GET-form search filters. Submitting navigates to /search?<params>,
@@ -24,7 +27,13 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
 
   const [query, setQuery] = useState(searchParams.get("query") ?? "");
   const [type, setType] = useState(searchParams.get("type") ?? "");
-  const [category, setCategory] = useState(searchParams.get("category") ?? "");
+  // Multi-select property types. Initialized from the CSV `categories` param,
+  // falling back to the legacy single `category` for old URLs.
+  const [categories, setCategories] = useState<PropertyCategory[]>(() => {
+    const csv = searchParams.get("categories");
+    if (csv) return parseCategoriesParam(csv);
+    return parseCategoriesParam(searchParams.get("category"));
+  });
   const [city, setCity] = useState(searchParams.get("city") ?? "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") ?? "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
@@ -34,7 +43,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     const params = new URLSearchParams();
     if (query.trim()) params.set("query", query.trim());
     if (type) params.set("type", type);
-    if (category) params.set("category", category);
+    if (categories.length > 0) params.set("categories", categories.join(","));
     if (city) params.set("city", city);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
@@ -46,7 +55,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   const reset = () => {
     setQuery("");
     setType("");
-    setCategory("");
+    setCategories([]);
     setCity("");
     setMinPrice("");
     setMaxPrice("");
@@ -77,22 +86,6 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             <SelectContent>
               <SelectItem value="sale">En venta</SelectItem>
               <SelectItem value="rent">En renta</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="search-category">Categoría</Label>
-          <Select value={category} onValueChange={(v) => setCategory(v ?? "")}>
-            <SelectTrigger id="search-category" className="rounded-full">
-              <SelectValue placeholder="Cualquiera" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="casa">Casa</SelectItem>
-              <SelectItem value="departamento">Departamento</SelectItem>
-              <SelectItem value="local">Local</SelectItem>
-              <SelectItem value="bodega">Bodega</SelectItem>
-              <SelectItem value="terreno">Terreno</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -140,6 +133,18 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             className="rounded-full"
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Tipo de propiedad</Label>
+        <CategoryPills
+          id="search-categories"
+          selected={categories}
+          onChange={setCategories}
+        />
+        <p className="text-xs text-muted-foreground">
+          Selecciona uno o varios tipos; los listados mostrarán solo esos.
+        </p>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
