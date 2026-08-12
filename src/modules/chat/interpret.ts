@@ -56,6 +56,15 @@ function findPriceExpressions(text: string): PriceMatch[] {
     if (value == null) continue;
     matches.push({ value, index: m.index ?? 0 });
   }
+  // Fallback: a bare multi-digit number ("de 2,000,000") reads as an amount,
+  // but only when no explicit price was found, to avoid misreading "500 m²".
+  if (matches.length === 0) {
+    for (const m of text.matchAll(/\b\d[\d,]{3,}\b/g)) {
+      const value = parseAmountToken(m[0]);
+      if (value == null) continue;
+      matches.push({ value, index: m.index ?? 0 });
+    }
+  }
   return matches;
 }
 
@@ -119,6 +128,26 @@ function findCity(text: string, cities: string[]): string | undefined {
   return undefined;
 }
 
+/**
+ * Map a city string to a known searchable city name. Handles case
+ * differences and common aliases like "Ciudad Juárez" / "Cd. Juárez".
+ * Returns undefined when the city is not in the catalog.
+ */
+export function normalizeCityName(raw: string, cities: string[]): string | undefined {
+  if (!raw) return undefined;
+  const normalized = raw.trim().toLowerCase();
+  const canonical = cities.find((c) => c.toLowerCase() === normalized);
+  if (canonical) return canonical;
+
+  // Alias: strip a leading "ciudad" / "cd." prefix and retry.
+  const stripped = normalized.replace(/^(?:ciudad|cd\.?)\s+/i, "").trim();
+  if (stripped && stripped !== normalized) {
+    const alias = cities.find((c) => c.toLowerCase() === stripped);
+    if (alias) return alias;
+  }
+  return undefined;
+}
+
 // Stopwords never become part of the keyword query.
 const STOPWORDS = new Set([
   "de", "en", "para", "por", "con", "que", "y", "o", "a", "el", "la", "los",
@@ -147,15 +176,30 @@ export function isStopword(token: string): boolean {
 }
 
 // High-value keywords are preferred when building the ilike query.
+// Singular type-nouns ("casa", "departamento", "terreno") are used instead of
+// their plurals: a title like "Casa en Chihuahua" matches "%casa%" but not
+// "%casas%", so plural keywords return zero rows.
 const KEYWORD_PRIORITY = [
   "alberca", "patio", "jardin", "jardín", "cochera", "estacionamiento",
   "bodega", "local", "oficina", "penthouse", "duplex", "ph", "residencial",
   "fraccionamiento", "condominio", "suite", "loft", "amueblado", "amueblada",
   "semi-amueblado", "nuevo", "nueva", "remodelado", "esquina", "recamaras",
   "recámaras", "habitacion", "habitaciones", "estudio", "económico",
-  "oportunidad", "casas", "casa", "departamentos", "departamento", "depa",
-  "depas", "terrenos", "terreno", "lotes", "lote",
+  "oportunidad", "casa", "departamento", "depa", "terreno", "lote",
 ];
+
+/**
+ * Reduce a keyword to a form more likely to appear in listing titles.
+ * Strips a trailing "s"/"es" (plural → singular) so "casas" searches "%casa%".
+ */
+function stemKeyword(keyword: string): string {
+  const lower = keyword.toLowerCase();
+  if (/(ces|ses|res|nes|jes|ges|tes|des|les|ves|mes|pes|zes)$/.test(lower)) {
+    return lower.slice(0, -2);
+  }
+  if (lower.endsWith("s") && lower.length > 3) return lower.slice(0, -1);
+  return lower;
+}
 
 /** Pick the single best keyword token for the ilike search. */
 function extractKeyword(text: string): string | undefined {
@@ -167,7 +211,7 @@ function extractKeyword(text: string): string | undefined {
   // Prefer high-value keywords regardless of token order in the sentence.
   // A prefix match also catches plural/simple inflections ("locales" → "local").
   for (const keyword of KEYWORD_PRIORITY) {
-    if (tokens.some((t) => t.startsWith(keyword))) return keyword;
+    if (tokens.some((t) => t.startsWith(keyword))) return stemKeyword(keyword);
   }
   // Fall back to the longest meaningful token.
   return tokens.sort((a, b) => b.length - a.length)[0];
