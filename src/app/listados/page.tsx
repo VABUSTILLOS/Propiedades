@@ -16,6 +16,7 @@ import {
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
 import { ListadosTabs } from "@/modules/listados/components/listados-tabs";
+import { ListadosSort } from "@/modules/listados/components/listados-sort";
 import { SearchResults } from "@/modules/maps/components/search-results";
 
 export const metadata: Metadata = { title: "Listados de propiedades" };
@@ -130,6 +131,9 @@ export default async function ListadosPage({ searchParams }: Props) {
           </div>
         ) : (
           <div className="mt-8">
+            <div className="mb-4 flex justify-end">
+              <ListadosSort />
+            </div>
             <SearchResults
               key={filtersQueryString}
               basePath="/listados"

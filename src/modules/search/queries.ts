@@ -34,6 +34,7 @@ export type SearchFilters = {
     | "price_asc"
     | "price_desc"
     | "newest"
+    | "oldest"
     | "score"
     | "hot"
     | "m2_const_asc"
@@ -263,6 +264,9 @@ async function selectListingsPage(filters: SearchFilters): Promise<{
       break;
     case "score":
       query = query.order("property_score", { ascending: false });
+      break;
+    case "oldest":
+      query = query.order("created_at", { ascending: true });
       break;
     default:
       query = query.order("created_at", { ascending: false });
