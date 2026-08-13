@@ -47,7 +47,7 @@ export function HeroSearch({ cities }: { cities: string[] }) {
       <div
         role="tablist"
         aria-label="Tipo de búsqueda"
-        className="mb-3 inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 p-1 backdrop-blur-sm"
+        className="mb-2 inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 p-1 backdrop-blur-sm"
       >
         {TYPE_TABS.map((tab) => {
           const active = type === tab.value;
@@ -58,7 +58,7 @@ export function HeroSearch({ cities }: { cities: string[] }) {
               aria-selected={active}
               onClick={() => setType(tab.value)}
               className={cn(
-                "relative rounded-full px-5 py-2 text-sm font-semibold transition-colors",
+                "relative rounded-full px-4 py-1.5 text-[0.8rem] font-semibold transition-colors",
                 active ? "text-[#8F2E0F]" : "text-white/85 hover:text-white",
               )}
             >
@@ -77,10 +77,10 @@ export function HeroSearch({ cities }: { cities: string[] }) {
 
       <form
         onSubmit={submit}
-        className="flex w-full flex-col gap-2 rounded-[2rem] border border-white/50 bg-white p-2 shadow-2xl shadow-[#2A1508]/30 sm:flex-row sm:items-center"
+        className="flex w-full flex-col gap-1.5 rounded-3xl border border-white/50 bg-white p-1.5 shadow-2xl shadow-[#2A1508]/30 sm:flex-row sm:items-center sm:rounded-full"
       >
         <Select value={city} onValueChange={(value) => setCity(value ?? "")}>
-          <SelectTrigger className="w-full justify-between border-0 bg-transparent shadow-none sm:w-52">
+          <SelectTrigger className="h-9 w-full justify-between border-0 bg-transparent shadow-none sm:w-44">
             <span className="inline-flex items-center gap-2 text-muted-foreground">
               <MapPin className="size-4" />
               <SelectValue placeholder="¿En qué ciudad?" />
@@ -95,21 +95,20 @@ export function HeroSearch({ cities }: { cities: string[] }) {
           </SelectContent>
         </Select>
 
-        <div className="hidden h-9 w-px shrink-0 bg-border sm:block" />
+        <div className="hidden h-6 w-px shrink-0 bg-border sm:block" />
 
         <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Colonia, keywords, descripción…"
-          className="h-10 flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0"
+          className="h-9 flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0"
         />
 
         <Button
           type="submit"
-          size="lg"
-          className="shrink-0 self-end rounded-full px-5 sm:size-14 sm:shrink-0 sm:justify-center sm:p-0"
+          className="shrink-0 self-end rounded-full px-4 sm:size-10 sm:shrink-0 sm:justify-center sm:p-0"
         >
-          <Search className="size-5" />
+          <Search className="size-4" />
           <span className="sm:hidden">Buscar</span>
         </Button>
       </form>

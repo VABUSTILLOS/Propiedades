@@ -164,10 +164,10 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
   };
 
   return (
-    <div className="space-y-5 rounded-3xl border bg-card p-5 shadow-sm">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-2">
-          <Label htmlFor="rent-colonia">Colonia</Label>
+    <div className="space-y-4 rounded-2xl border bg-card p-4 shadow-sm">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs" htmlFor="rent-colonia">Colonia</Label>
           <Select
             value={colonia}
             onValueChange={(v) => {
@@ -189,8 +189,8 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label>Recámaras</Label>
+        <div className="space-y-1.5">
+          <Label className="text-xs">Recámaras</Label>
           <BedroomsSlider
             value={bedroomsValue}
             onChange={handleBedroomsChange}
@@ -199,8 +199,8 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Precio</Label>
+      <div className="space-y-1.5">
+        <Label className="text-xs">Precio</Label>
         <PriceRangeSlider
           min={0}
           max={RENT_PRICE_MAX}
@@ -214,8 +214,8 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label>Tipo de propiedad</Label>
+      <div className="space-y-1.5">
+        <Label className="text-xs">Tipo de propiedad</Label>
         <CategoryPills
           id="rent-categories"
           selected={categories}
@@ -229,9 +229,9 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Label htmlFor="rent-sort" className="shrink-0">
+          <Label className="shrink-0 text-xs" htmlFor="rent-sort">
             Ordenar
           </Label>
           <Select
@@ -260,7 +260,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={reset}>
+          <Button variant="ghost" size="sm" onClick={reset}>
             Limpiar
           </Button>
         </div>

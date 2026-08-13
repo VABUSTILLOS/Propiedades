@@ -48,7 +48,7 @@ export function CategoryPills({
       id={id}
       role="group"
       aria-label={ariaLabel}
-      className={cn("flex flex-wrap gap-2", className)}
+      className={cn("flex flex-wrap gap-1.5", className)}
     >
       {CATEGORY_OPTIONS.map(({ value, label }) => {
         const active = selected.includes(value);
@@ -59,7 +59,7 @@ export function CategoryPills({
             aria-pressed={active}
             onClick={() => toggle(value)}
             className={cn(
-              "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+              "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
               active
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-input bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground",

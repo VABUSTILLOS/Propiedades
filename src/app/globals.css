@@ -10,8 +10,7 @@
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-instrument), Georgia, serif;
-  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: var(--font-instrument), Georgia, serif;  --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
@@ -53,6 +52,13 @@
 @theme {
   --animate-ticker: ticker-scroll 42s linear infinite;
 
+  /* Readability floor: raise the smallest utility sizes so no UI text
+     renders below 13px, with line-heights tuned for legibility. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5rem;
+
   @keyframes ticker-scroll {
     to {
       transform: translateX(-50%);
@@ -72,7 +78,7 @@
   --secondary: #FAE3CE;
   --secondary-foreground: #8C340A;
   --muted: #F7EDE2;
-  --muted-foreground: #7A6559;
+  --muted-foreground: #6B5446;
   --accent: #F9DFC6;
   --accent-foreground: #A23E0C;
   --destructive: #C8503E;
@@ -107,7 +113,7 @@
   --secondary: #33241B;
   --secondary-foreground: #FCF1E8;
   --muted: #2A1E16;
-  --muted-foreground: #B39C8C;
+  --muted-foreground: #C4AC9B;
   --accent: #3A2616;
   --accent-foreground: #F0B085;
   --destructive: #E57C6B;
@@ -135,9 +141,25 @@
   }
   body {
     @apply bg-background text-foreground;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+  }
+  /* Long-form content stays comfortable to read: relaxed leading and a
+     measure that avoids overly long lines. */
+  p,
+  li {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
 }
 

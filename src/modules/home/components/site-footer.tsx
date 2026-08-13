@@ -49,11 +49,11 @@ export function SiteFooter() {
                 Propiedades
               </span>
             </div>
-            <p className="mt-3 max-w-xs text-sm text-white/55">
+            <p className="mt-3 max-w-xs text-sm text-white/70">
               El registro de oportunidades inmobiliarias de México: solo las
               que superan al mercado, con los números a la vista.
             </p>
-            <p className="mt-5 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+            <p className="mt-5 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-white/65">
               <span className="relative flex size-1.5">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#7BC796] opacity-70" />
                 <span className="relative inline-flex size-1.5 rounded-full bg-[#7BC796]" />
@@ -64,7 +64,7 @@ export function SiteFooter() {
 
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.heading}>
-              <h3 className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.28em] text-white/45">
+              <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.28em] text-white/65">
                 {column.heading}
               </h3>
               <ul className="space-y-2.5">

@@ -77,12 +77,12 @@ export function DataEdgeSection() {
               <div key={point.index} className="bg-[#180F08] p-6">
                 <div className="flex items-center justify-between">
                   <Icon className="size-5 text-[#D67E3C]" aria-hidden />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">
+                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-white/60">
                     {point.index}
                   </span>
                 </div>
                 <h3 className="mt-5 font-semibold">{point.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-white/55">
+                <p className="mt-1.5 text-sm leading-relaxed text-white/70">
                   {point.description}
                 </p>
               </div>
@@ -91,7 +91,7 @@ export function DataEdgeSection() {
         </div>
 
         <div className="mt-12 overflow-hidden rounded-2xl border border-white/10">
-          <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_6.5rem] bg-white/5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]">
+          <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_6.5rem] bg-white/5 font-mono text-xs uppercase tracking-[0.2em] text-white/65 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]">
             <span className="px-4 py-3.5 sm:px-6">Dato por propiedad</span>
             <span className="px-2 py-3.5 text-center">Portales</span>
             <span className="bg-white/[0.06] px-2 py-3.5 text-center text-[#7BC796]">

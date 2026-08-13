@@ -189,9 +189,9 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   };
 
   return (
-    <div className="space-y-5 rounded-3xl border bg-card p-5 shadow-sm">
-      <div className="space-y-2">
-        <Label htmlFor="search-query">Buscar</Label>
+    <div className="space-y-4 rounded-2xl border bg-card p-4 shadow-sm">
+      <div className="space-y-1.5">
+        <Label className="text-xs" htmlFor="search-query">Buscar</Label>
         <Input
           id="search-query"
           value={query}
@@ -205,9 +205,9 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-2">
-          <Label htmlFor="search-type">Tipo</Label>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1.5">
+          <Label className="text-xs" htmlFor="search-type">Tipo</Label>
           <Select
             value={type}
             onValueChange={(v) => {
@@ -237,8 +237,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="search-city">Ciudad</Label>
+        <div className="space-y-1.5">
+          <Label className="text-xs" htmlFor="search-city">Ciudad</Label>
           <Select
             value={city}
             onValueChange={(v) => {
@@ -260,8 +260,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label>Recámaras</Label>
+        <div className="space-y-1.5">
+          <Label className="text-xs">Recámaras</Label>
           <BedroomsSlider
             value={bedroomsValue}
             onChange={handleBedroomsChange}
@@ -270,8 +270,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Precio</Label>
+      <div className="space-y-1.5">
+        <Label className="text-xs">Precio</Label>
         <PriceRangeSlider
           min={0}
           max={priceMax}
@@ -285,8 +285,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label>Tipo de propiedad</Label>
+      <div className="space-y-1.5">
+        <Label className="text-xs">Tipo de propiedad</Label>
         <CategoryPills
           id="search-categories"
           selected={categories}
@@ -300,9 +300,9 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Label htmlFor="search-sort" className="shrink-0">
+          <Label className="shrink-0 text-xs" htmlFor="search-sort">
             Ordenar
           </Label>
           <Select
@@ -333,7 +333,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={reset}>
+          <Button variant="ghost" size="sm" onClick={reset}>
             Limpiar
           </Button>
         </div>

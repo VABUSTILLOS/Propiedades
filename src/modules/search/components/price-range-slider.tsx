@@ -42,7 +42,7 @@ export function PriceRangeSlider({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="mb-2 flex items-center justify-between text-sm font-medium tabular-nums">
+      <div className="mb-1 flex items-center justify-between text-sm font-medium tabular-nums">
         <span className="text-foreground">{format(minValue)}</span>
         <span className="text-foreground">{format(maxValue)}</span>
       </div>
@@ -59,7 +59,7 @@ export function PriceRangeSlider({
           onCommitted?.([next[0] ?? minValue, next[1] ?? maxValue])
         }
       >
-        <Slider.Control className="flex w-full touch-none items-center py-3 select-none">
+        <Slider.Control className="flex w-full touch-none items-center py-2 select-none">
           <Slider.Track className="h-1.5 w-full rounded-full bg-muted select-none">
             <Slider.Indicator className="rounded-full bg-primary select-none" />
             <Slider.Thumb

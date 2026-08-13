@@ -35,7 +35,7 @@ export function BedroomsSlider({
 }: BedroomsSliderProps) {
   return (
     <div className={cn("w-full", className)}>
-      <div className="mb-2 flex items-center justify-between text-sm font-medium tabular-nums">
+      <div className="mb-1 flex items-center justify-between text-sm font-medium tabular-nums">
         <span className="text-foreground">{bedroomsLabel(value)}</span>
       </div>
 
@@ -47,7 +47,7 @@ export function BedroomsSlider({
         onValueChange={(next) => onChange(next)}
         onValueCommitted={(next) => onCommitted?.(next)}
       >
-        <Slider.Control className="flex w-full touch-none items-center py-3 select-none">
+        <Slider.Control className="flex w-full touch-none items-center py-2 select-none">
           <Slider.Track className="h-1.5 w-full rounded-full bg-muted select-none">
             <Slider.Indicator className="rounded-full bg-primary select-none" />
             <Slider.Thumb

@@ -40,7 +40,7 @@ export function HeroDealCard({ listing }: { listing: ListingWithHot }) {
           </div>
         )}
         <div className="absolute left-4 top-4">
-          <span className="rounded-full bg-black/55 px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white backdrop-blur-sm">
+          <span className="rounded-full bg-black/55 px-3 py-1 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white backdrop-blur-sm">
             Oportunidad Nº 1
           </span>
         </div>
@@ -57,7 +57,7 @@ export function HeroDealCard({ listing }: { listing: ListingWithHot }) {
           <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">
             {listing.title}
           </h3>
-          <p className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
             <MapPin className="size-3.5 shrink-0" />
             <span className="line-clamp-1">
               {[listing.colonia, listing.city].filter(Boolean).join(" · ")}
