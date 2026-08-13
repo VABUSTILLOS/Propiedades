@@ -3,9 +3,11 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Unified page header matching the homepage visual language:
- * pill eyebrow badge, bold tracking-tight title and muted description,
- * with an optional gradient icon chip and an actions slot.
+ * Unified page header matching the "registro de oportunidades" visual
+ * language: mono folio eyebrow with a terracotta marker, bold tracking-tight
+ * title and muted description, plus an optional flat icon chip and an
+ * actions slot. Shared by every section page so the whole site reads in
+ * the same voice as the homepage.
  */
 export function PageHeader({
   eyebrow,
@@ -31,13 +33,14 @@ export function PageHeader({
     >
       <div className="flex items-start gap-4">
         {Icon && (
-          <span className="hidden size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-chart-2 to-chart-3 text-white shadow-sm sm:flex">
+          <span className="hidden size-11 shrink-0 items-center justify-center rounded-2xl border bg-muted text-primary sm:flex">
             <Icon className="size-5" />
           </span>
         )}
         <div>
           {eyebrow && (
-            <span className="mb-2 inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wider text-secondary-foreground">
+            <span className="mb-2 inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-primary" aria-hidden />
               {eyebrow}
             </span>
           )}

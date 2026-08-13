@@ -31,12 +31,14 @@ const FOOTER_COLUMNS = [
 ];
 
 /**
- * Marketplace footer with brand block and link columns.
+ * Marketplace footer in the registry language: dark ink band, mono column
+ * headings and a live status line. Rendered from the root layout, so every
+ * page of the site closes with the same signature as the homepage.
  */
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/70 bg-muted/40">
-      <div className="mx-auto w-full max-w-6xl px-6 py-12">
+    <footer className="border-t border-white/10 bg-[#180F08] text-[#FBF6F0]">
+      <div className="mx-auto w-full max-w-6xl px-6 py-14">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5">
@@ -47,21 +49,30 @@ export function SiteFooter() {
                 Propiedades
               </span>
             </div>
-            <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-              El marketplace inmobiliario de México para comprar, rentar,
-              invertir y vender con datos y procesos claros.
+            <p className="mt-3 max-w-xs text-sm text-white/55">
+              El registro de oportunidades inmobiliarias de México: solo las
+              que superan al mercado, con los números a la vista.
+            </p>
+            <p className="mt-5 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#7BC796] opacity-70" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-[#7BC796]" />
+              </span>
+              Registro activo · Hecho en México
             </p>
           </div>
 
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.heading}>
-              <h3 className="mb-3 text-sm font-semibold">{column.heading}</h3>
-              <ul className="space-y-2">
+              <h3 className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.28em] text-white/45">
+                {column.heading}
+              </h3>
+              <ul className="space-y-2.5">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                      className="text-sm text-white/65 transition-colors hover:text-[#E89252]"
                     >
                       {link.label}
                     </Link>
@@ -72,9 +83,9 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-border/70 pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center">
-          <span>© {new Date().getFullYear()} Propiedades. Hecho en México.</span>
-          <span className="text-xs">
+        <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 font-mono text-xs text-white/45 sm:flex-row sm:items-center">
+          <span>© {new Date().getFullYear()} Propiedades</span>
+          <span className="uppercase tracking-[0.18em]">
             Compra · Renta · Invierte · Vende
           </span>
         </div>
