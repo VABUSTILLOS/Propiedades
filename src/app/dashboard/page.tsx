@@ -6,18 +6,24 @@ import {
   GitCompareArrows,
   Handshake,
   Heart,
+  KeyRound,
   Landmark,
+  MapPinned,
   Newspaper,
+  Settings,
   Sparkles,
   Store,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
-import { buttonVariants } from "@/components/ui/button";
 import { PageShell } from "@/components/layout/page-shell";
 import { ToolCard } from "@/components/layout/tool-card";
+import { FolioLabel } from "@/modules/home/components/folio-label";
 import { UniversalImporterClient } from "@/modules/importer/components/universal-importer-client";
+import { getDashboardStats } from "@/modules/dashboard/queries";
 
 export const metadata: Metadata = { title: "Panel de control" };
 
@@ -36,103 +42,171 @@ export default async function DashboardPage() {
     );
   }
 
+  const stats = await getDashboardStats(user.id);
+  const firstName = user.fullName.split(" ")[0] || user.email;
+
   return (
     <div className="flex-1">
-      {/* Branded greeting band */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-br from-secondary/80 via-background to-background">
-        <div className="pointer-events-none absolute -left-20 -top-24 size-72 rounded-full bg-chart-2/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-0 size-80 rounded-full bg-primary/10 blur-3xl" />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-4 px-6 py-12 sm:flex-row sm:items-center">
-          <div>
-            <span className="mb-3 inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wider text-secondary-foreground">
-              Panel de control
-            </span>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Hola, {user.fullName || user.email}
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              Rol:{" "}
-              <span className="font-medium capitalize">
-                {user.role.replace("_", " ")}
-              </span>{" "}
-              · Todo tu negocio inmobiliario en un solo lugar.
-            </p>
+      {/* Banda de saludo en tinta oscura — mismo lenguaje que el registro */}
+      <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.14]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(251,246,240,0.5) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+          aria-hidden
+        />
+        <div className="relative mx-auto w-full max-w-6xl px-6 py-12">
+          <FolioLabel index="01" title="Panel de control" light />
+
+          <div className="mt-3 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                Hola, <span className="font-display italic">{firstName}</span>
+              </h1>
+              <p className="mt-1 text-sm text-white/60">
+                Rol:{" "}
+                <span className="font-medium capitalize text-white/85">
+                  {user.role.replace("_", " ")}
+                </span>{" "}
+                · Todo tu negocio inmobiliario en un solo lugar.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/listings/new"
+                className="inline-flex h-10 items-center rounded-full bg-[#FBF6F0] px-5 text-sm font-semibold text-[#180F08] transition-colors hover:bg-white"
+              >
+                Publicar una propiedad
+              </Link>
+              <Link
+                href="/search"
+                className="inline-flex h-10 items-center rounded-full border border-white/25 px-5 text-sm font-medium text-[#FBF6F0] transition-colors hover:border-white/50 hover:bg-white/5"
+              >
+                Ver oportunidades
+              </Link>
+            </div>
           </div>
-          <Link href="/listings/new" className={buttonVariants()}>
-            Publicar una propiedad
-          </Link>
+
+          {/* Tira de métricas estilo ledger: celdas hairline, números mono */}
+          <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4">
+            <Stat value={stats.activeListings} label="Listados activos" />
+            <Stat value={stats.favorites} label="Favoritos guardados" />
+            <Stat value={stats.activeTransactions} label="Transacciones activas" />
+            <Stat value={stats.flyerViews} label="Visitas a tus flyers" />
+          </dl>
         </div>
       </section>
 
       <PageShell>
         <UniversalImporterClient />
 
-        <ToolGroup title="Vender">
+        <ToolGroup index="02" title="Vender">
           <ToolCard
+            index="01"
             title="Mis listados"
             description="Crea y administra tus propiedades con el asistente guiado."
             href="/my-listings"
             icon={Store}
           />
           <ToolCard
+            index="02"
             title="Importar con IA"
             description="Pega un enlace de Facebook, texto o nota de voz: la IA crea el listado y el flyer."
             href="/import"
             icon={Sparkles}
           />
           <ToolCard
+            index="03"
             title="FSBO (Véndela tú mismo)"
             description="Carga tu propiedad en minutos, con valuación automática y agenda de WhatsApp 24/7."
             href="/fsbo"
             icon={CalendarClock}
           />
           <ToolCard
+            index="04"
             title="Red MLS"
             description="Red exclusiva de agentes con desglose transparente de comisiones."
             href="/mls"
             icon={Building2}
           />
           <ToolCard
+            index="05"
             title="Mis flyers"
             description="Páginas compartibles con métricas de visitas y captación de leads."
             href="/my-flyers"
             icon={Newspaper}
           />
+          <ToolCard
+            index="06"
+            title="Mi agencia"
+            description="Panel de tu agencia: agentes, branding y subdominio propio."
+            href="/agencia"
+            icon={Users}
+          />
         </ToolGroup>
 
-        <ToolGroup title="Comprar">
+        <ToolGroup index="03" title="Comprar e invertir">
           <ToolCard
+            index="01"
             title="Favoritos"
             description="Clasifica propiedades en tu lista privada por niveles."
             href="/favorites"
             icon={Heart}
           />
           <ToolCard
+            index="02"
             title="Comparador"
             description="Compara hasta 4 inmuebles lado a lado por $/m²."
             href="/compare"
             icon={GitCompareArrows}
           />
           <ToolCard
+            index="03"
             title="Planificar rutas"
             description="Arma el itinerario óptimo de visitas del fin de semana."
             href="/plan-tour"
-            icon={CalendarClock}
+            icon={MapPinned}
+          />
+          <ToolCard
+            index="04"
+            title="Oportunidades de inversión"
+            description="Remates, flipping y descuentos vs. colonia en un solo tablero."
+            href="/investor"
+            icon={TrendingUp}
+          />
+          <ToolCard
+            index="05"
+            title="Rentas"
+            description="Las mejores oportunidades de renta del mercado, filtradas para ti."
+            href="/rentas"
+            icon={KeyRound}
           />
         </ToolGroup>
 
-        <ToolGroup title="Seguimiento">
+        <ToolGroup index="04" title="Seguimiento">
           <ToolCard
+            index="01"
             title="Transacciones"
             description="Da seguimiento a consultas, visitas, ofertas y depósito en garantía."
             href="/transactions"
             icon={Handshake}
           />
           <ToolCard
+            index="02"
             title="Preaprobación"
             description="Preaprobación de Infonavit y bancos con emparejamiento inteligente."
             href="/preapproval"
             icon={Landmark}
+          />
+          <ToolCard
+            index="03"
+            title="Configuración"
+            description="Datos de tu cuenta, notificaciones y preferencias."
+            href="/settings"
+            icon={Settings}
           />
         </ToolGroup>
       </PageShell>
@@ -140,18 +214,32 @@ export default async function DashboardPage() {
   );
 }
 
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="bg-[#180F08] p-4 sm:p-5">
+      <dd className="font-mono text-2xl font-semibold tabular-nums sm:text-3xl">
+        {value.toLocaleString("es-MX")}
+      </dd>
+      <dt className="mt-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white/55">
+        {label}
+      </dt>
+    </div>
+  );
+}
+
 function ToolGroup({
+  index,
   title,
   children,
 }: {
+  /** Zero-padded folio number, e.g. "02". */
+  index: string;
   title: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="mt-10">
-      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {title}
-      </h2>
+      <FolioLabel index={index} title={title} className="mb-4" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{children}</div>
     </section>
   );

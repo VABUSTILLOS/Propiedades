@@ -2,19 +2,23 @@
 
 /**
  * MortgageCalculator — Simulador de crédito hipotecario para el detalle de
- * propiedad (mercado México).
+ * propiedad (mercado México). Es la ÚNICA calculadora de la publicación:
+ * vive en la vista Residencia (ancla #simulador) y el sidebar enlaza a ella.
  *
  * Matemática:
  *  - Pago mensual: sistema de amortización francesa (cuota constante)
  *      M = P * r(1+r)^n / ((1+r)^n - 1)   +  P * 0.0015  (seguro vida+daños)
  *    donde r = tasa anual / 12  y  n = plazo en años * 12.
+ *  - Pago total: M + predial mensual + mantenimiento (HOA) cuando el inmueble
+ *    trae esos datos, para que la mensualidad mostrada sea la real del bolsillo.
  *  - Capital inicial en caja:
  *      enganche + notaría (6% del precio) + avalúo/apertura (1.5% del precio)
  *      menos el saldo de Subcuenta de Vivienda (Cofinavit) si aplica.
- *  - Ingreso mínimo sugerido: M / 0.30 (regla de 30% de relación pago/ingreso).
+ *  - Ingreso mínimo sugerido: pago total / 0.30 (relación pago/ingreso).
  *
- * El formulario de lead envía los datos de contacto + metadatos de la
- * simulación a la server action `captureMortgageLead` (tabla mortgage_leads).
+ * Conversión: micro-textos de confianza + captura de lead por formulario
+ * (server action `captureMortgageLead`, tabla mortgage_leads) o directo por
+ * WhatsApp con la simulación pre-llenada.
  */
 
 import * as React from "react";
@@ -23,6 +27,7 @@ import {
   Calculator,
   CalendarClock,
   ChevronDown,
+  Handshake,
   Landmark,
   Loader2,
   Percent,
@@ -42,6 +47,8 @@ import {
 import { cn } from "@/lib/utils";
 import { formatMxn } from "@/modules/lib/real-estate";
 import { captureMortgageLead } from "@/modules/listings/actions";
+import { WHATSAPP_CONTACT_NUMBER } from "@/modules/chat/share";
+import { WhatsAppIcon } from "@/modules/chat/components/share-whatsapp-button";
 
 // ---------------------------------------------------------------------------
 // Constantes del modelo financiero
@@ -129,6 +136,10 @@ export type MortgageCalculatorProps = {
   propertyTitle: string;
   /** Precio de venta en MXN. */
   propertyPrice: number;
+  /** Predial anual del inmueble (MXN) — se prorratea a la mensualidad. */
+  predialAnual?: number | null;
+  /** Cuota mensual de mantenimiento / HOA (MXN). */
+  hoaFee?: number | null;
   /** Tasa anual configurable (default 10.5%). */
   defaultAnnualRate?: number;
   /** Monto default de subcuenta Infonavit (default $80,000). */
@@ -140,6 +151,8 @@ export function MortgageCalculator({
   propertyId,
   propertyTitle,
   propertyPrice,
+  predialAnual,
+  hoaFee,
   defaultAnnualRate = DEFAULT_ANNUAL_RATE,
   defaultInfonavitAmount = DEFAULT_INFONAVIT_AMOUNT,
   className,
@@ -166,6 +179,12 @@ export function MortgageCalculator({
     [principal, annualRate, termYears],
   );
 
+  // Costos de tenencia del inmueble prorrateados al mes.
+  const monthlyPredial = Math.max(0, (predialAnual ?? 0) / 12);
+  const monthlyHoa = Math.max(0, hoaFee ?? 0);
+  const hasExtras = monthlyPredial > 0 || monthlyHoa > 0;
+  const totalMonthlyPayment = monthlyPayment + monthlyPredial + monthlyHoa;
+
   const upfront = React.useMemo(
     () =>
       calcUpfrontCash(
@@ -176,7 +195,7 @@ export function MortgageCalculator({
     [propertyPrice, downPaymentAmount, hasInfonavit, infonavitAmount],
   );
 
-  const minIncome = monthlyPayment / PAYMENT_TO_INCOME;
+  const minIncome = totalMonthlyPayment / PAYMENT_TO_INCOME;
 
   // Sincronización enganche % ↔ $ (ambos editables, con clamping).
   const handlePercentChange = (pct: number) => {
@@ -197,21 +216,21 @@ export function MortgageCalculator({
           Simulador de crédito
         </CardTitle>
         <CardDescription>
-          Calcula tu mensualidad y el capital inicial en segundos.
+          Calcula cuánto pagarías al mes y el capital inicial en segundos.
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-5">
-        {/* Pago mensual destacado */}
+        {/* Pago mensual destacado (hipoteca + predial + mantenimiento) */}
         <div className="rounded-xl bg-primary/5 px-4 py-3 text-center ring-1 ring-inset ring-primary/10">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Pago mensual estimado
+            Pago mensual total estimado
           </p>
           <p
             className="mt-1 text-3xl font-bold tabular-nums tracking-tight"
             aria-live="polite"
           >
-            {formatMxn(Math.round(monthlyPayment))}
+            {formatMxn(Math.round(totalMonthlyPayment))}
             <span className="text-sm font-normal text-muted-foreground">
               {" "}
               / mes
@@ -221,6 +240,32 @@ export function MortgageCalculator({
             Crédito de {formatMxn(principal)} · {annualRate.toFixed(2)}% anual ·{" "}
             {termYears} años
           </p>
+          {hasExtras && (
+            <dl className="mt-3 space-y-1 border-t border-primary/10 pt-2 text-left text-xs">
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted-foreground">Hipoteca (crédito + seguro)</dt>
+                <dd className="font-medium tabular-nums">
+                  {formatMxn(Math.round(monthlyPayment))}
+                </dd>
+              </div>
+              {monthlyPredial > 0 && (
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">Predial</dt>
+                  <dd className="font-medium tabular-nums">
+                    {formatMxn(Math.round(monthlyPredial))}
+                  </dd>
+                </div>
+              )}
+              {monthlyHoa > 0 && (
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">Mantenimiento (HOA)</dt>
+                  <dd className="font-medium tabular-nums">
+                    {formatMxn(Math.round(monthlyHoa))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          )}
         </div>
 
         {/* Enganche: slider + % + $ sincronizados */}
@@ -335,12 +380,16 @@ export function MortgageCalculator({
           hasInfonavit={hasInfonavit}
         />
 
-        {/* Captura de lead */}
+        {/* Micro-textos de confianza: bajan la fricción justo antes del lead */}
+        <TrustSignals />
+
+        {/* Captura de lead + CTA directo a WhatsApp */}
         <LeadCaptureForm
           propertyId={propertyId}
           propertyTitle={propertyTitle}
           propertyPrice={propertyPrice}
           monthlyPayment={monthlyPayment}
+          totalMonthlyPayment={totalMonthlyPayment}
           downPaymentAmount={downPaymentAmount}
           simulation={{
             downPaymentPercent,
@@ -357,6 +406,54 @@ export function MortgageCalculator({
         </p>
       </CardContent>
     </Card>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Micro-textos de confianza
+// ---------------------------------------------------------------------------
+
+function TrustSignals() {
+  return (
+    <ul className="space-y-2 rounded-xl border border-dashed bg-muted/40 p-3 text-xs text-muted-foreground">
+      <li className="flex items-start gap-2">
+        <Handshake
+          className="mt-0.5 size-3.5 shrink-0 text-primary"
+          aria-hidden="true"
+        />
+        <span>
+          <strong className="font-medium text-foreground">
+            Asesoría 100% gratuita
+          </strong>{" "}
+          — comparar no te cuesta nada.
+        </span>
+      </li>
+      <li className="flex items-start gap-2">
+        <Landmark
+          className="mt-0.5 size-3.5 shrink-0 text-primary"
+          aria-hidden="true"
+        />
+        <span>
+          Comparamos{" "}
+          <strong className="font-medium text-foreground">
+            Santander, Scotiabank, Banregio, HSBC y más
+          </strong>
+          .
+        </span>
+      </li>
+      <li className="flex items-start gap-2">
+        <ShieldCheck
+          className="mt-0.5 size-3.5 shrink-0 text-primary"
+          aria-hidden="true"
+        />
+        <span>
+          <strong className="font-medium text-foreground">
+            Tu buró no se ve afectado
+          </strong>{" "}
+          por simular.
+        </span>
+      </li>
+    </ul>
   );
 }
 
@@ -558,7 +655,7 @@ function BreakdownRow({
 }
 
 // ---------------------------------------------------------------------------
-// Formulario de captura de lead
+// Formulario de captura de lead + CTA de WhatsApp
 // ---------------------------------------------------------------------------
 
 type LeadFormState =
@@ -572,6 +669,7 @@ function LeadCaptureForm({
   propertyTitle,
   propertyPrice,
   monthlyPayment,
+  totalMonthlyPayment,
   downPaymentAmount,
   simulation,
 }: {
@@ -579,6 +677,7 @@ function LeadCaptureForm({
   propertyTitle: string;
   propertyPrice: number;
   monthlyPayment: number;
+  totalMonthlyPayment: number;
   downPaymentAmount: number;
   simulation: {
     downPaymentPercent: number;
@@ -592,6 +691,16 @@ function LeadCaptureForm({
   const [fullName, setFullName] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
+
+  // CTA directo a WhatsApp: el asesor recibe la simulación ya armada.
+  const whatsAppMessage =
+    `Hola 👋 simulé un crédito para "${propertyTitle}" (${formatMxn(propertyPrice)}): ` +
+    `mensualidad estimada de ${formatMxn(Math.round(totalMonthlyPayment))} al mes ` +
+    `con enganche de ${formatMxn(downPaymentAmount)} a ${simulation.termYears} años. ` +
+    `Quiero comparar créditos hipotecarios y descubrir cuál me conviene más.`;
+  const whatsAppHref = `https://wa.me/${WHATSAPP_CONTACT_NUMBER}?text=${encodeURIComponent(
+    whatsAppMessage,
+  )}`;
 
   const fieldError = (field: string) =>
     state.status === "error" ? state.fieldErrors?.[field]?.[0] : undefined;
@@ -630,8 +739,8 @@ function LeadCaptureForm({
         <BadgeCheck className="size-8 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
         <p className="text-sm font-semibold">¡Solicitud recibida!</p>
         <p className="text-xs text-muted-foreground">
-          Un asesor hipotecario te contactará en menos de 24 horas con tu
-          pre-aprobación sin costo.
+          Un asesor hipotecario te contactará en menos de 24 horas con la
+          comparativa de créditos que mejor te convenga — sin costo.
         </p>
       </div>
     );
@@ -640,87 +749,113 @@ function LeadCaptureForm({
   const submitting = state.status === "submitting";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 border-t pt-4" noValidate>
-      <p className="text-sm font-semibold">¿Te interesa esta propiedad?</p>
-
-      <div className="space-y-1">
-        <Label htmlFor="lead-name" className="text-xs">
-          Nombre completo
-        </Label>
-        <Input
-          id="lead-name"
-          name="fullName"
-          autoComplete="name"
-          required
-          minLength={3}
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          aria-invalid={Boolean(fieldError("fullName"))}
-          className="h-9"
-        />
-        {fieldError("fullName") && (
-          <p className="text-xs text-destructive">{fieldError("fullName")}</p>
-        )}
-      </div>
-
-      <div className="space-y-1">
-        <Label htmlFor="lead-phone" className="text-xs">
-          Teléfono / WhatsApp
-        </Label>
-        <Input
-          id="lead-phone"
-          name="phone"
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          placeholder="614 000 0000"
-          required
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          aria-invalid={Boolean(fieldError("phone"))}
-          className="h-9"
-        />
-        {fieldError("phone") && (
-          <p className="text-xs text-destructive">{fieldError("phone")}</p>
-        )}
-      </div>
-
-      <div className="space-y-1">
-        <Label htmlFor="lead-email" className="text-xs">
-          Correo electrónico
-        </Label>
-        <Input
-          id="lead-email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          aria-invalid={Boolean(fieldError("email"))}
-          className="h-9"
-        />
-        {fieldError("email") && (
-          <p className="text-xs text-destructive">{fieldError("email")}</p>
-        )}
-      </div>
-
-      {state.status === "error" && !state.fieldErrors && (
-        <p className="text-xs text-destructive" role="alert">
-          {state.message}
+    <div className="space-y-4 border-t pt-4">
+      <div>
+        <p className="text-sm font-semibold">
+          Descubre cuál crédito hipotecario te conviene más
         </p>
-      )}
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          Compara y llévate el mejor para ti. Déjanos tu WhatsApp y un asesor
+          te contacta hoy mismo.
+        </p>
+      </div>
 
-      <Button type="submit" disabled={submitting} className="min-h-11 w-full">
-        {submitting ? (
-          <>
-            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            Enviando…
-          </>
-        ) : (
-          "Solicitar Pre-aprobación sin costo (24h)"
+      <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+        <div className="space-y-1">
+          <Label htmlFor="lead-name" className="text-xs">
+            Nombre completo
+          </Label>
+          <Input
+            id="lead-name"
+            name="fullName"
+            autoComplete="name"
+            required
+            minLength={3}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            aria-invalid={Boolean(fieldError("fullName"))}
+            className="h-9"
+          />
+          {fieldError("fullName") && (
+            <p className="text-xs text-destructive">{fieldError("fullName")}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="lead-phone" className="text-xs">
+            Teléfono / WhatsApp
+          </Label>
+          <Input
+            id="lead-phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="614 000 0000"
+            required
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            aria-invalid={Boolean(fieldError("phone"))}
+            className="h-9"
+          />
+          {fieldError("phone") && (
+            <p className="text-xs text-destructive">{fieldError("phone")}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <Label htmlFor="lead-email" className="text-xs">
+            Correo electrónico
+          </Label>
+          <Input
+            id="lead-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            aria-invalid={Boolean(fieldError("email"))}
+            className="h-9"
+          />
+          {fieldError("email") && (
+            <p className="text-xs text-destructive">{fieldError("email")}</p>
+          )}
+        </div>
+
+        {state.status === "error" && !state.fieldErrors && (
+          <p className="text-xs text-destructive" role="alert">
+            {state.message}
+          </p>
         )}
-      </Button>
-    </form>
+
+        <Button type="submit" disabled={submitting} className="min-h-11 w-full">
+          {submitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Enviando…
+            </>
+          ) : (
+            "Comparar créditos gratis — asesoría en 24h"
+          )}
+        </Button>
+      </form>
+
+      <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground">
+        <span className="h-px flex-1 bg-border" aria-hidden="true" />
+        o directo por
+        <span className="h-px flex-1 bg-border" aria-hidden="true" />
+      </div>
+
+      <a
+        href={whatsAppHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+      >
+        <WhatsAppIcon className="size-4" />
+        Descubrir mi mejor crédito por WhatsApp
+      </a>
+    </div>
   );
 }

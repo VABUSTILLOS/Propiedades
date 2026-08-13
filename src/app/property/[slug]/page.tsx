@@ -8,6 +8,7 @@ import {
   Bath,
   BedDouble,
   Building2,
+  Calculator,
   CalendarClock,
   Car,
   LandPlot,
@@ -30,7 +31,6 @@ import {
 } from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { SimilarProperties } from "@/modules/listings/components/similar-properties";
-import { MortgageCalculator } from "@/modules/listings/components/mortgage-calculator";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
@@ -380,22 +380,18 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                   </div>
                 )}
 
-                {financiable && (
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Esta propiedad acepta crédito hipotecario. Simula tu
-                    mensualidad en la calculadora de abajo.
-                  </p>
+                {financiable && showCosts && (
+                  <a
+                    href="#simulador"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                  >
+                    <Calculator className="size-3.5" aria-hidden />
+                    Acepta crédito hipotecario — simula tu mensualidad y compara
+                    bancos
+                  </a>
                 )}
               </CardContent>
             </Card>
-
-            {showCosts && financiable && (
-              <MortgageCalculator
-                propertyId={listing.id}
-                propertyTitle={listing.title}
-                propertyPrice={listing.price}
-              />
-            )}
 
             <Card className="rounded-2xl">
               <CardHeader>

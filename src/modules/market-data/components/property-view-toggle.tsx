@@ -20,8 +20,10 @@ import {
   estimateMantenimiento,
   estimatePredial,
   formatMxn,
+  isFinanciable,
 } from "@/modules/lib/real-estate";
 import { MarketPanel } from "@/modules/market-data/components/market-panel";
+import { MortgageCalculator } from "@/modules/listings/components/mortgage-calculator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { DownloadInvestmentPdfButton } from "@/modules/market-data/components/download-investment-pdf-button";
@@ -38,7 +40,8 @@ type Mode = "residencia" | "inversionista";
 /**
  * Residential vs Investor view toggle for a property detail page.
  *
- * Residencia: property description and an expanded payment calculator.
+ * Residencia: referencia de mercado + la única calculadora de la publicación
+ * (simulador de crédito hipotecario expandido, con ancla #simulador).
  * Inversionista: financial table built on the DB generated $/m² columns and
  * the colonia discount computed server-side.
  */
@@ -116,19 +119,30 @@ function ResidentialView({
   property: PropertiesRow;
   benchmark: MarketBenchmarksRow | null;
 }) {
+  const showSimulator =
+    property.type === "sale" &&
+    property.price > 0 &&
+    isFinanciable(property.deal_type);
+
   return (
     <div className="space-y-6">
-      <details open className="group rounded-lg border bg-card p-4">
-        <summary className="flex cursor-pointer list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
-          <span>Calculadora de pago</span>
-          <span className="text-xs font-normal text-muted-foreground">
-            Estima tu mensualidad
-          </span>
-        </summary>
-        <div className="mt-4">
-          <MarketPanel property={property} benchmark={benchmark} />
-        </div>
-      </details>
+      <MarketPanel property={property} benchmark={benchmark} />
+
+      {showSimulator && (
+        <section
+          id="simulador"
+          className="scroll-mt-24"
+          aria-label="Simulador de crédito hipotecario"
+        >
+          <MortgageCalculator
+            propertyId={property.id}
+            propertyTitle={property.title}
+            propertyPrice={property.price}
+            predialAnual={property.predial_anual}
+            hoaFee={property.hoa_fee}
+          />
+        </section>
+      )}
     </div>
   );
 }
@@ -703,7 +717,9 @@ function FinancialRow({
   label: string;
   value: React.ReactNode;
   hint?: string;
-}) {  return (    <div className="flex items-start justify-between gap-4">
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4">
       <div>
         <dt className="text-muted-foreground">{label}</dt>
         {hint && <p className="mt-0.5 text-xs text-muted-foreground/70">{hint}</p>}
@@ -712,4 +728,3 @@ function FinancialRow({
     </div>
   );
 }
-
