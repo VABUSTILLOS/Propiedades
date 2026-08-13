@@ -141,8 +141,8 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-          <section className="space-y-8">
+        <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[1fr_320px]">
+          <section className="min-w-0 space-y-8">
             <PropertyPhotoGallery
               images={listing.images ?? []}
               title={listing.title}
@@ -198,7 +198,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
             <SimilarProperties listing={listing} />
           </section>
 
-          <aside className="space-y-4">
+          <aside className="min-w-0 space-y-4">
             <WhatsAppInquiryButton
               title={listing.title}
               colonia={listing.colonia}
