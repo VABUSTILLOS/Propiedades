@@ -164,9 +164,9 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border bg-card p-4 shadow-sm">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-1.5">
+    <div className="space-y-3 rounded-2xl border bg-card p-3 shadow-sm">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1">
           <Label className="text-xs" htmlFor="rent-colonia">Colonia</Label>
           <Select
             value={colonia}
@@ -176,7 +176,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
               changeImmediate({ colonia: next });
             }}
           >
-            <SelectTrigger id="rent-colonia" className="rounded-full">
+            <SelectTrigger size="sm" id="rent-colonia" className="rounded-full">
               <SelectValue placeholder="Cualquiera" />
             </SelectTrigger>
             <SelectContent>
@@ -189,7 +189,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label className="text-xs">Recámaras</Label>
           <BedroomsSlider
             value={bedroomsValue}
@@ -199,7 +199,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </div>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <Label className="text-xs">Precio</Label>
         <PriceRangeSlider
           min={0}
@@ -209,12 +209,9 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
           onChange={handlePriceChange}
           onCommitted={handlePriceCommitted}
         />
-        <p className="text-xs text-muted-foreground">
-          Arrastra los controles para ajustar el rango de renta.
-        </p>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <Label className="text-xs">Tipo de propiedad</Label>
         <CategoryPills
           id="rent-categories"
@@ -224,9 +221,6 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
             changeImmediate({ categories: next });
           }}
         />
-        <p className="text-xs text-muted-foreground">
-          Selecciona uno o varios tipos; los listados mostrarán solo esos.
-        </p>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -242,7 +236,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
               changeImmediate({ sortBy: next });
             }}
           >
-            <SelectTrigger id="rent-sort" className="rounded-full">
+            <SelectTrigger size="sm" id="rent-sort" className="rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -260,7 +254,7 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={reset}>
+          <Button variant="ghost" size="xs" onClick={reset}>
             Limpiar
           </Button>
         </div>

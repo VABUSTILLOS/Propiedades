@@ -189,8 +189,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
   };
 
   return (
-    <div className="space-y-4 rounded-2xl border bg-card p-4 shadow-sm">
-      <div className="space-y-1.5">
+    <div className="space-y-3 rounded-2xl border bg-card p-3 shadow-sm">
+      <div className="space-y-1">
         <Label className="text-xs" htmlFor="search-query">Buscar</Label>
         <Input
           id="search-query"
@@ -205,8 +205,8 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-1.5">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1">
           <Label className="text-xs" htmlFor="search-type">Tipo</Label>
           <Select
             value={type}
@@ -227,7 +227,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
               changeImmediate(patch);
             }}
           >
-            <SelectTrigger id="search-type" className="rounded-full">
+            <SelectTrigger size="sm" id="search-type" className="rounded-full">
               <SelectValue placeholder="Cualquiera" />
             </SelectTrigger>
             <SelectContent>
@@ -237,7 +237,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label className="text-xs" htmlFor="search-city">Ciudad</Label>
           <Select
             value={city}
@@ -247,7 +247,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
               changeImmediate({ city: next });
             }}
           >
-            <SelectTrigger id="search-city" className="rounded-full">
+            <SelectTrigger size="sm" id="search-city" className="rounded-full">
               <SelectValue placeholder="Cualquiera" />
             </SelectTrigger>
             <SelectContent>
@@ -260,7 +260,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
           </Select>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label className="text-xs">Recámaras</Label>
           <BedroomsSlider
             value={bedroomsValue}
@@ -270,7 +270,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <Label className="text-xs">Precio</Label>
         <PriceRangeSlider
           min={0}
@@ -280,12 +280,9 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
           onChange={handlePriceChange}
           onCommitted={handlePriceCommitted}
         />
-        <p className="text-xs text-muted-foreground">
-          Arrastra los controles para ajustar el rango de precio.
-        </p>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <Label className="text-xs">Tipo de propiedad</Label>
         <CategoryPills
           id="search-categories"
@@ -295,9 +292,6 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             changeImmediate({ categories: next });
           }}
         />
-        <p className="text-xs text-muted-foreground">
-          Selecciona uno o varios tipos; los listados mostrarán solo esos.
-        </p>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -313,7 +307,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
               changeImmediate({ sortBy: next });
             }}
           >
-            <SelectTrigger id="search-sort" className="rounded-full">
+            <SelectTrigger size="sm" id="search-sort" className="rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -333,7 +327,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={reset}>
+          <Button variant="ghost" size="xs" onClick={reset}>
             Limpiar
           </Button>
         </div>

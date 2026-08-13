@@ -59,7 +59,7 @@ export function CategoryPills({
             aria-pressed={active}
             onClick={() => toggle(value)}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+              "rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
               active
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-input bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground",

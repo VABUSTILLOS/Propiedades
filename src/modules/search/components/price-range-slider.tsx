@@ -59,7 +59,7 @@ export function PriceRangeSlider({
           onCommitted?.([next[0] ?? minValue, next[1] ?? maxValue])
         }
       >
-        <Slider.Control className="flex w-full touch-none items-center py-2 select-none">
+        <Slider.Control className="flex w-full touch-none items-center py-1.5 select-none">
           <Slider.Track className="h-1.5 w-full rounded-full bg-muted select-none">
             <Slider.Indicator className="rounded-full bg-primary select-none" />
             <Slider.Thumb
