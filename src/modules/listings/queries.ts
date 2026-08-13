@@ -59,7 +59,7 @@ export async function getActiveListings(options?: {
 }): Promise<PropertiesRow[]> {
   const supabase = await createSupabaseServerClient();
 
-  let query = supabase.from("properties").select("*").eq("status", "active");
+  let query = supabase.from("properties").select("*").eq("status", "active").gt("image_count", 1);
 
   if (options?.type) {
     query = query.eq("type", options.type);
@@ -87,6 +87,7 @@ export async function getActiveListingsByOwner(
     .select("*")
     .eq("status", "active")
     .eq("owner_id", ownerId)
+    .gt("image_count", 1)
     .order("created_at", { ascending: false })
     .limit(options?.limit ?? 30)
     .returns<PropertiesRow[]>();
@@ -108,6 +109,7 @@ export async function getMlsListings(options?: {
     .select("*")
     .eq("status", "active")
     .eq("is_mls", true)
+    .gt("image_count", 1)
     .order("updated_at", { ascending: false })
     .limit(options?.limit ?? 60)
     .returns<PropertiesRow[]>();
@@ -135,6 +137,7 @@ export async function getSimilarListings(
     .eq("type", listing.type)
     .eq("category", listing.category)
     .eq("city", listing.city)
+    .gt("image_count", 1)
     .neq("id", listing.id)
     .gte("price", listing.price * 0.75)
     .lte("price", listing.price * 1.25)

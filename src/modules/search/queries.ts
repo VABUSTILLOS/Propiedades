@@ -163,6 +163,9 @@ function applyFilters<Q extends FilterableQuery<Q>>(
 ): Q {
   let q = query.eq("status", "active");
 
+  // Only show listings with 2+ photos ("varias fotos") in the public catalog.
+  q = q.gt("image_count", 1);
+
   if (filters.type) {
     q = q.eq("type", filters.type);
   }
@@ -392,6 +395,7 @@ export async function getSearchableCities(): Promise<string[]> {
     .from("properties")
     .select("city")
     .eq("status", "active")
+    .gt("image_count", 1)
     .returns<{ city: string }[]>();
 
   const cities = [...new Set((rows ?? []).map((r) => r.city).filter(Boolean))];
@@ -410,7 +414,8 @@ export async function getSearchableColonias(
   let query = supabase
     .from("properties")
     .select("colonia")
-    .eq("status", "active");
+    .eq("status", "active")
+    .gt("image_count", 1);
   if (type) {
     query = query.eq("type", type);
   }

@@ -124,6 +124,7 @@ export type PropertiesRow = {
   private_notes: string | null;
   source_url: string | null;
   images: string[] | null;
+  image_count: number | null;
   image_sources: string[] | null;
   tour_360_url: string | null;
   video_url: string | null;

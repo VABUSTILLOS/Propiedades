@@ -30,12 +30,14 @@ export async function getHomepageStats(): Promise<HomepageStats> {
   const { count: activeCount } = await supabase
     .from("properties")
     .select("*", { count: "exact", head: true })
-    .eq("status", "active");
+    .eq("status", "active")
+    .gt("image_count", 1);
 
   const { data: cityRows } = await supabase
     .from("properties")
     .select("city")
-    .eq("status", "active");
+    .eq("status", "active")
+    .gt("image_count", 1);
 
   const byCity = new Map<string, number>();
   for (const row of cityRows ?? []) {
@@ -108,6 +110,7 @@ export async function getNewThisWeekCount(): Promise<number> {
     .from("properties")
     .select("*", { count: "exact", head: true })
     .eq("status", "active")
+    .gt("image_count", 1)
     .gte("created_at", since);
 
   return count ?? 0;
