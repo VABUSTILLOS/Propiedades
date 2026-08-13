@@ -21,6 +21,7 @@ export const NAV_LINKS = [
   { href: "/search", label: "Comprar" },
   { href: "/fsbo", label: "Vender" },
   { href: "/preapproval", label: "Preaprobación" },
+  { href: "/listings/new", label: "Sube tu propiedad" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
