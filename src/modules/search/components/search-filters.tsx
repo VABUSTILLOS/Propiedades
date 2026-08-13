@@ -209,7 +209,7 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
             changeDebounced({ query: next });
           }}
           placeholder="Título, descripción, colonia, ciudad…"
-          className="rounded-full"
+          className="rounded-full text-primary caret-primary"
         />
       </div>
 

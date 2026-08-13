@@ -104,7 +104,7 @@ export function HeroSearch({ cities }: { cities: string[] }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Colonia, keywords, descripción…"
-          className="h-8 flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0"
+          className="h-8 flex-1 border-0 bg-transparent text-primary caret-primary shadow-none focus-visible:ring-0"
         />
 
         <Button

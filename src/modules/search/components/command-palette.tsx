@@ -41,7 +41,7 @@ export function CommandPalette() {
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <Command.Input
               placeholder="Busca en lenguaje natural… ej. casa con patio en zona segura"
-              className="h-12 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              className="h-12 flex-1 bg-transparent text-sm text-primary caret-primary outline-none placeholder:text-muted-foreground"
               value={query}
               onValueChange={setQuery}
             />

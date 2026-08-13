@@ -44,6 +44,7 @@ export function PlacesAutocomplete({
         value={value}
         onChange={(e) => onSelect({ formatted_address: e.target.value, city: "", state: "", colonia: "", zip_code: "", lat: null, lng: null }, e.target.value)}
         placeholder={placeholder}
+        className="text-primary caret-primary"
       />
     );
   }

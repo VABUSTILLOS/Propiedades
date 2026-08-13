@@ -194,7 +194,7 @@ export function ChatWidget() {
           aria-label="Describe la propiedad que buscas"
           autoComplete="off"
           spellCheck={false}
-          className="h-10 min-w-0 flex-1 rounded-full border border-border bg-background px-4 text-sm text-foreground caret-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="h-10 min-w-0 flex-1 rounded-full border border-border bg-background px-4 text-sm text-primary caret-primary outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
         <button
           type="submit"
