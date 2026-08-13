@@ -237,7 +237,9 @@ export function PropertiesMap({
     const map = mapRef.current;
     if (!google || !map || !focusId) return;
     const marker = markers.find((m) => m.id === focusId);
-    if (!marker) return;
+    // Rows that were never geocoded fall back to (0,0) — never fly the
+    // camera there; just leave the map on its current view.
+    if (!marker || (marker.lat === 0 && marker.lng === 0)) return;
     map.panTo({ lat: marker.lat, lng: marker.lng });
     map.setZoom(Math.max(map.getZoom() ?? 11, 16));
   }, [google, markers, focusId]);
@@ -289,7 +291,7 @@ export function PropertiesMap({
         </button>
       )}
 
-      {suggest && suggest.count > 0 && (
+      {suggest && suggest.count > 0 && !selected && (
         <div className="absolute inset-x-0 top-3 z-10 flex justify-center">
           <button
             type="button"

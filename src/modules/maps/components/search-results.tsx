@@ -10,6 +10,7 @@ import {
 } from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
 import { InfiniteListings } from "@/modules/maps/components/infinite-listings";
+import { SplitDetailPanel } from "@/modules/maps/components/split-detail-panel";
 import { boundsToString, type MapBounds } from "@/modules/lib/schemas";
 import type { ListingWithHot, PropertyMapMarker } from "@/modules/search/queries";
 
@@ -133,7 +134,21 @@ export function SearchResults({
 
       {view === "split" ? (
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="min-w-0 lg:order-1">{list(true)}</div>
+          <div className="min-w-0 lg:order-1">
+            {/* Keep the list mounted so infinite-scroll state survives; swap
+                it for the compact detail pane while a card is selected. */}
+            <div className={selectedItem ? "hidden" : undefined}>
+              {list(true)}
+            </div>
+            {selectedItem && (
+              <SplitDetailPanel
+                key={selectedItem.id}
+                listing={selectedItem}
+                onClose={() => setSelectedItem(null)}
+                className="lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto"
+              />
+            )}
+          </div>
           <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
             {map("h-[50vh] lg:h-[calc(100vh-11rem)]")}
           </div>

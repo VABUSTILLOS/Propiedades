@@ -444,6 +444,13 @@ export async function getListingMarkers(
     >();
 
   return (rows ?? [])
-    .filter((r) => r.lat != null && r.lng != null)
+    .filter(
+      (r) =>
+        r.lat != null &&
+        r.lng != null &&
+        // (0,0) is the placeholder for rows that were never geocoded — keep
+        // them out of the map so pins don't pile up in the ocean.
+        (r.lat !== 0 || r.lng !== 0),
+    )
     .map((r) => ({ ...r, lat: r.lat as number, lng: r.lng as number }));
 }
