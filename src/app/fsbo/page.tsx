@@ -35,13 +35,13 @@ export default async function FsboPage() {
         description="Publica tu propiedad en minutos, con valuación automática y ofertas digitales 24/7."
       />
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-        <section>
+      <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[1fr_320px]">
+        <section className="min-w-0">
           <h2 className="mb-4 text-lg font-semibold">Carga rápida</h2>
           <FsboWizard cities={cities} />
         </section>
 
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           <div className="rounded-lg border bg-card p-5">
             <h3 className="flex items-center gap-2 font-semibold">
               <MessageCircle className="size-4 text-emerald-600" />

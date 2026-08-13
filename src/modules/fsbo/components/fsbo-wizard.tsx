@@ -441,8 +441,10 @@ export function FsboWizard({ cities }: { cities: string[] }) {
       )}
 
       <Button type="submit" disabled={isPending} className="w-full">
-        <BadgePercent className="mr-2 size-4" />
-        {isPending ? "Publicando…" : "Publicar y abrir Bidding Hub"}
+        <BadgePercent className="mr-2 size-4 shrink-0" />
+        <span className="whitespace-normal">
+          {isPending ? "Publicando…" : "Publicar y abrir Bidding Hub"}
+        </span>
       </Button>
       <p className="text-center text-xs text-muted-foreground">
         Publicar activa ofertas del Bidding Hub y tu enlace de agenda 24/7 por WhatsApp.
