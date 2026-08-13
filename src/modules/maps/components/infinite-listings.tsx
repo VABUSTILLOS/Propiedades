@@ -84,6 +84,7 @@ export function InfiniteListings({
   gridClassName = "grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3",
   emptyState,
   onCardHover,
+  onCardSelect,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -96,6 +97,8 @@ export function InfiniteListings({
   emptyState?: React.ReactNode;
   /** Reports the id of the hovered card (null when leaving) — for map pin sync. */
   onCardHover?: (id: string | null) => void;
+  /** Called when a card is clicked instead of navigating (split detail pane). */
+  onCardSelect?: (item: ListingWithHot) => void;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
   const [total, setTotal] = useState(initialTotal);
@@ -169,6 +172,14 @@ export function InfiniteListings({
             key={item.id}
             onMouseEnter={() => onCardHover?.(item.id)}
             onMouseLeave={() => onCardHover?.(null)}
+            onClick={
+              onCardSelect
+                ? (e) => {
+                    e.preventDefault();
+                    onCardSelect(item);
+                  }
+                : undefined
+            }
           >
             {card === "property" ? (
               <PropertyCard

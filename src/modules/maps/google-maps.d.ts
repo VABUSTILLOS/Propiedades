@@ -42,7 +42,9 @@ declare global {
     class Map {
       constructor(el: HTMLElement, opts?: MapOptions);
       setCenter(center: LatLng | LatLngLiteral): void;
+      panTo(latLng: LatLng | LatLngLiteral): void;
       setZoom(zoom: number): void;
+      getZoom(): number | undefined;
       fitBounds(bounds: LatLngBounds): void;
       getBounds(): LatLngBounds | null;
     }

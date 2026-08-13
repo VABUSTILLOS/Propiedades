@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -19,6 +19,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { MapViewToggle, type MapView } from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
+import { PropertyDetailPanel } from "@/modules/maps/components/property-detail-panel";
 import { CategoryPills } from "@/modules/search/components/category-pills";
 import {
   BedroomsSlider,
@@ -135,6 +136,20 @@ export function InvestorDashboardClient({
   const [view, setView] = useState<MapView>(initialView);
   const [bounds, setBounds] = useState<MapBounds | null>(initialBounds);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<InvestorItem | null>(null);
+  const listScrollRef = useRef(0);
+
+  // The split detail pane swaps the grid for a preview; remember the page
+  // scroll and restore it when the user goes back to the opportunities.
+  const openDetail = (item: InvestorItem) => {
+    listScrollRef.current = window.scrollY;
+    setSelectedItem(item);
+  };
+
+  const closeDetail = () => {
+    setSelectedItem(null);
+    requestAnimationFrame(() => window.scrollTo(0, listScrollRef.current));
+  };
   const [maxM2Const, setMaxM2Const] = useState("");
   const [maxM2Land, setMaxM2Land] = useState("");
   const [minDiscount, setMinDiscount] = useState("");
@@ -388,38 +403,72 @@ export function InvestorDashboardClient({
       {view === "split" ? (
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold">
-              {zoneFiltered.length === 0
-                ? "Ninguna oportunidad en esta zona"
-                : `${zoneFiltered.length} ${
-                    zoneFiltered.length === 1 ? "oportunidad" : "oportunidades"
-                  } en esta zona`}
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {bounds
-                ? "El mapa ajusta la cuadrícula a la zona visible."
-                : "Mueve o acerca el mapa para filtrar por zona."}
-            </p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {zoneFiltered.length === 0 ? (
-                <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2">
-                  <p className="text-sm text-muted-foreground">
-                    No hay oportunidades en esta zona. Restablece la zona o prueba
-                    otra pestaña.
-                  </p>
+            {selectedItem ? (
+              <PropertyDetailPanel
+                item={{
+                  slug: selectedItem.slug,
+                  title: selectedItem.title,
+                  city: selectedItem.city,
+                  colonia: selectedItem.colonia,
+                  price: selectedItem.price,
+                  currency: selectedItem.currency,
+                  image: selectedItem.image,
+                  recamaras: selectedItem.recamaras,
+                  construccion_m2: selectedItem.construccion_m2,
+                  terreno_m2: selectedItem.terreno_m2,
+                  hotScore: selectedItem.hotScore,
+                  discountPct: selectedItem.discountPct,
+                }}
+                onBack={closeDetail}
+              />
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold">
+                  {zoneFiltered.length === 0
+                    ? "Ninguna oportunidad en esta zona"
+                    : `${zoneFiltered.length} ${
+                        zoneFiltered.length === 1
+                          ? "oportunidad"
+                          : "oportunidades"
+                      } en esta zona`}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {bounds
+                    ? "El mapa ajusta la cuadrícula a la zona visible."
+                    : "Mueve o acerca el mapa para filtrar por zona."}
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {zoneFiltered.length === 0 ? (
+                    <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2">
+                      <p className="text-sm text-muted-foreground">
+                        No hay oportunidades en esta zona. Restablece la zona o
+                        prueba otra pestaña.
+                      </p>
+                    </div>
+                  ) : (
+                    zoneFiltered.map((item) => (
+                      <div
+                        key={item.id}
+                        onMouseEnter={() => setHoveredId(item.id)}
+                        onMouseLeave={() => setHoveredId(null)}
+                        onClick={() => openDetail(item)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openDetail(item);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        className="cursor-pointer"
+                      >
+                        <InvestorCard item={item} />
+                      </div>
+                    ))
+                  )}
                 </div>
-              ) : (
-                zoneFiltered.map((item) => (
-                  <div
-                    key={item.id}
-                    onMouseEnter={() => setHoveredId(item.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                  >
-                    <InvestorCard item={item} />
-                  </div>
-                ))
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           <div className="lg:sticky lg:top-6 lg:self-start">
@@ -429,7 +478,8 @@ export function InvestorDashboardClient({
               activeBounds={bounds}
               onApplyBounds={setBounds}
               onResetBounds={() => setBounds(null)}
-              highlightedId={hoveredId}
+              highlightedId={selectedItem?.id ?? hoveredId}
+              focusId={selectedItem?.id ?? null}
               heightClass="h-[50vh] lg:h-[calc(100vh-11rem)]"
             />
           </div>

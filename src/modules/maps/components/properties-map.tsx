@@ -55,6 +55,7 @@ export function PropertiesMap({
   onResetBounds,
   heightClass = "h-[70vh]",
   highlightedId = null,
+  focusId = null,
 }: {
   markers: PropertyMapMarker[];
   /** Center the map on these bounds when they appear (URL-driven navigation). */
@@ -66,6 +67,8 @@ export function PropertiesMap({
   heightClass?: string;
   /** Card hovered in the list — scales its price pill (Airbnb-style sync). */
   highlightedId?: string | null;
+  /** Listing opened in the split detail pane — pans/zooms to its pin. */
+  focusId?: string | null;
 }) {
   const google = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -221,6 +224,17 @@ export function PropertiesMap({
       handles.forEach((handle) => handle.setMap(null));
     };
   }, [google, markers]);
+
+  // Pan/zoom to a listing when it is opened in the split detail pane. The pill
+  // is already scaled via `highlightedId`; here we just bring the pin on view.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!google || !map || !focusId) return;
+    const marker = markers.find((m) => m.id === focusId);
+    if (!marker) return;
+    map.panTo({ lat: marker.lat, lng: marker.lng });
+    map.setZoom(Math.max(map.getZoom() ?? 11, 16));
+  }, [google, markers, focusId]);
 
   // Highlight the selected/hovered pill via direct DOM (avoids rebuilding markers).
   useEffect(() => {
