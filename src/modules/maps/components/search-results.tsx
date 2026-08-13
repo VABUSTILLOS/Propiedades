@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Map as MapIcon } from "lucide-react";
 
@@ -10,7 +10,6 @@ import {
 } from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
 import { InfiniteListings } from "@/modules/maps/components/infinite-listings";
-import { PropertyDetailPanel } from "@/modules/maps/components/property-detail-panel";
 import { boundsToString, type MapBounds } from "@/modules/lib/schemas";
 import type { ListingWithHot, PropertyMapMarker } from "@/modules/search/queries";
 
@@ -57,19 +56,6 @@ export function SearchResults({
   const [markers, setMarkers] = useState<PropertyMapMarker[] | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ListingWithHot | null>(null);
-  const listScrollRef = useRef(0);
-
-  // Opening the split detail pane unmounts the list; remember the page scroll
-  // and restore it when the user goes back so they don't lose their place.
-  const openDetail = (item: ListingWithHot) => {
-    listScrollRef.current = window.scrollY;
-    setSelectedItem(item);
-  };
-
-  const closeDetail = () => {
-    setSelectedItem(null);
-    requestAnimationFrame(() => window.scrollTo(0, listScrollRef.current));
-  };
 
   // The map shows every pin matching the current filters (bounds included),
   // so it always re-fetches when the URL changes.
@@ -115,7 +101,7 @@ export function SearchResults({
       }
       emptyState={emptyState}
       onCardHover={setHoveredId}
-      onCardSelect={split ? openDetail : undefined}
+      onCardSelect={split ? setSelectedItem : undefined}
     />
   );
 
@@ -130,6 +116,7 @@ export function SearchResults({
       onResetBounds={() => updateParam({ bounds: null })}
       highlightedId={selectedItem?.id ?? hoveredId}
       focusId={selectedItem?.id ?? null}
+      selectionId={selectedItem?.id ?? null}
       heightClass={heightClass}
     />
   );
@@ -146,32 +133,7 @@ export function SearchResults({
 
       {view === "split" ? (
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="min-w-0 lg:order-1">
-            {selectedItem ? (
-              <PropertyDetailPanel
-                item={{
-                  slug: selectedItem.slug,
-                  title: selectedItem.title,
-                  city: selectedItem.city,
-                  colonia: selectedItem.colonia,
-                  price: selectedItem.price,
-                  currency: selectedItem.currency,
-                  type: selectedItem.type,
-                  image: selectedItem.images?.[0] ?? null,
-                  recamaras: selectedItem.recamaras,
-                  banos: selectedItem.banos,
-                  construccion_m2: selectedItem.construccion_m2,
-                  terreno_m2: selectedItem.terreno_m2,
-                  score: selectedItem.property_score,
-                  hotScore: selectedItem.hotScore,
-                  discountPct: selectedItem.discountPct,
-                }}
-                onBack={closeDetail}
-              />
-            ) : (
-              list(true)
-            )}
-          </div>
+          <div className="min-w-0 lg:order-1">{list(true)}</div>
           <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
             {map("h-[50vh] lg:h-[calc(100vh-11rem)]")}
           </div>

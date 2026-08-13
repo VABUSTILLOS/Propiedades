@@ -56,6 +56,7 @@ export function PropertiesMap({
   heightClass = "h-[70vh]",
   highlightedId = null,
   focusId = null,
+  selectionId = null,
 }: {
   markers: PropertyMapMarker[];
   /** Center the map on these bounds when they appear (URL-driven navigation). */
@@ -69,6 +70,8 @@ export function PropertiesMap({
   highlightedId?: string | null;
   /** Listing opened in the split detail pane — pans/zooms to its pin. */
   focusId?: string | null;
+  /** Listing selected from the list — shows the compact bottom card (like a pin click). */
+  selectionId?: string | null;
 }) {
   const google = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -79,12 +82,15 @@ export function PropertiesMap({
   const markersRef = useRef<PropertyMapMarker[]>(markers);
   const lastEmittedRef = useRef<MapBounds | null>(null);
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pinSelectedId, setPinSelectedId] = useState<string | null>(null);
   const [suggest, setSuggest] = useState<{
     bounds: MapBounds;
     count: number;
   } | null>(null);
 
+  // The compact bottom card is driven by either a pin click (internal) or a
+  // listing chosen from the list in split view (parent-controlled).
+  const selectedId = selectionId ?? pinSelectedId;
   const selected = markers.find((m) => m.id === selectedId) ?? null;
 
   // Create the map once and listen for pan/zoom idle.
@@ -175,7 +181,7 @@ export function PropertiesMap({
     handlesRef.current.forEach((handle) => handle.setMap(null));
     handlesRef.current.clear();
     pillElsRef.current.clear();
-    setSelectedId(null);
+    setPinSelectedId(null);
 
     const handles = markers.map((marker) => {
       const pill = document.createElement("div");
@@ -203,7 +209,7 @@ export function PropertiesMap({
         content: pill,
         label: formatPrice(marker),
       });
-      handle.addListener("click", () => setSelectedId(marker.id));
+      handle.addListener("click", () => setPinSelectedId(marker.id));
       handlesRef.current.set(marker.id, handle);
       return handle;
     });
