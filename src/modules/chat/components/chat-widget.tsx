@@ -192,7 +192,9 @@ export function ChatWidget() {
           placeholder="Ej. casas en Chihuahua de 2,000,000 MXN"
           maxLength={500}
           aria-label="Describe la propiedad que buscas"
-          className="h-10 min-w-0 flex-1 rounded-full border border-border bg-background px-4 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          autoComplete="off"
+          spellCheck={false}
+          className="h-10 min-w-0 flex-1 rounded-full border border-border bg-background px-4 text-sm text-foreground caret-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
         <button
           type="submit"

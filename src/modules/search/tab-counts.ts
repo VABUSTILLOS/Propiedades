@@ -9,24 +9,26 @@ type CountFilters = Omit<SearchFilters, "limit" | "sortBy" | "query">;
 type CountableQuery<Q> = {
   eq(column: string, value: unknown): Q;
   in(column: string, values: unknown[]): Q;
+  gt(column: string, value: unknown): Q;
   gte(column: string, value: unknown): Q;
   lte(column: string, value: unknown): Q;
 };
 
 /**
  * Same structured predicates as `applyFilters` in search/queries.ts, minus the
- * public-catalog photo policy (`image_count > 1`) and minus the keyword query.
- *
- * The cintillo badges show the real opportunity counts per tab (e.g. "Todos"
- * = every active listing), so they intentionally ignore the photo filter that
- * the listing grid applies via `searchListingsPage`. A keyword search narrows
- * the grid, not the per-tab opportunity totals.
+ * keyword query. The photo rule is included so the cintillo badges match what
+ * the listing grid actually shows: every tab counts only active listings with
+ * more than one photo (`image_count > 1`).
  */
 function applyCountFilters<Q extends CountableQuery<Q>>(
   query: Q,
   filters: CountFilters,
 ): Q {
   let q = query.eq("status", "active");
+
+  // Same public-catalog photo rule as the listing grid ("varias fotos"):
+  // only show/count listings with 2+ photos.
+  q = q.gt("image_count", 1);
 
   if (filters.type) {
     q = q.eq("type", filters.type);
@@ -82,9 +84,9 @@ function applyCountFilters<Q extends CountableQuery<Q>>(
 }
 
 /**
- * Count of active listings matching the given filters, without the
- * public-catalog photo filter. Drives the cintillo count badges on /search so
- * they show the real opportunity totals per tab.
+ * Count of active listings matching the given filters, including the
+ * public-catalog photo rule (`image_count > 1`). Drives the cintillo count
+ * badges on /search so they show exactly what the listing grid shows per tab.
  */
 export async function countActiveTab(filters: CountFilters): Promise<number> {
   const supabase = await createSupabaseServerClient();

@@ -194,6 +194,17 @@
     -webkit-tap-highlight-color: transparent;
     overflow-x: clip;
   }
+  /* iOS autofill forces its own text color/background on inputs, which can
+     make typed text invisible when it doesn't match the site palette.
+     Restore the intended foreground so autofilled text stays readable. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+    caret-color: var(--foreground);
+    transition: background-color 9999s ease-in-out 0s;
+  }
   html {
     @apply font-sans;
   }
