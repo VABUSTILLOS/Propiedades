@@ -16,7 +16,12 @@ export default function UpdatePasswordPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Establece una nueva contraseña</h1>
+        <div>
+          <span className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
+            Tu cuenta
+          </span>
+        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Establece una nueva contraseña</h1>
         <p className="text-sm text-muted-foreground">
           Elige una nueva contraseña para tu cuenta.
         </p>

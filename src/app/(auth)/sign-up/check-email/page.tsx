@@ -13,7 +13,10 @@ export default function CheckEmailPage() {
   return (
     <div className="space-y-6 text-center">
       <div className="space-y-2">
-        <h1 className="text-lg font-semibold">Revisa tu correo</h1>
+        <span className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
+          Tu cuenta
+        </span>
+        <h1 className="text-xl font-semibold tracking-tight">Revisa tu correo</h1>
         <p className="text-sm text-muted-foreground">
           Te enviamos un enlace de confirmación. Haz clic en él para activar tu
           cuenta y luego inicia sesión para empezar.

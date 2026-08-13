@@ -13,7 +13,12 @@ export default function SignInPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Hola de nuevo</h1>
+        <div>
+          <span className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
+            Tu cuenta
+          </span>
+        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Hola de nuevo</h1>
         <p className="text-sm text-muted-foreground">
           Inicia sesión para administrar tus listados y consultas.
         </p>

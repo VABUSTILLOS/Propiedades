@@ -12,7 +12,12 @@ export default function SignUpPage() {
         <Link href="/" className="text-2xl font-bold tracking-tight">
           Propiedades
         </Link>
-        <h1 className="text-lg font-semibold">Crea tu cuenta</h1>
+        <div>
+          <span className="inline-flex items-center rounded-full border bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
+            Tu cuenta
+          </span>
+        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Crea tu cuenta</h1>
         <p className="text-sm text-muted-foreground">
           Compra, invierte, publica o vende — a tu manera.
         </p>
