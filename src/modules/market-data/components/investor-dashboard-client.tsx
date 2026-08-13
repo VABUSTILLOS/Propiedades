@@ -119,20 +119,22 @@ type Props = {
 /**
  * Investor dashboard: opportunity tabs driven by URL deal_type/category
  * filters, with per-category financial KPIs on each card, plus an
- * Airbnb-style List ⇄ Mapa toggle. The map is fed by the client-side
- * filtered items (no extra API calls) and its zone pill filters the grid.
+ * Airbnb-style Lista ⇄ Mapa ⇄ Dividido toggle. The map is fed by the
+ * client-side filtered items (no extra API calls) and its zone pill filters
+ * the grid.
  */
 export function InvestorDashboardClient({
   items,
   activeTab,
   counts,
-  initialView = "list",
+  initialView = "split",
   initialBounds = null,
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [view, setView] = useState<MapView>(initialView);
   const [bounds, setBounds] = useState<MapBounds | null>(initialBounds);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [maxM2Const, setMaxM2Const] = useState("");
   const [maxM2Land, setMaxM2Land] = useState("");
   const [minDiscount, setMinDiscount] = useState("");
@@ -252,6 +254,19 @@ export function InvestorDashboardClient({
     router.push(qs ? `/investor?${qs}` : "/investor");
   };
 
+  // View mode (list/map/split) lives in the URL, same as the other search pages.
+  const changeView = (next: MapView) => {
+    setView(next);
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "split") {
+      params.delete("view");
+    } else {
+      params.set("view", next);
+    }
+    const qs = params.toString();
+    router.push(qs ? `/investor?${qs}` : "/investor", { scroll: false });
+  };
+
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={(v) => selectTab(v as InvestorTab)}>
@@ -367,10 +382,59 @@ export function InvestorDashboardClient({
       </div>
 
       <div className="flex items-center justify-end">
-        <MapViewToggle view={view} onChange={setView} count={filtered.length} />
+        <MapViewToggle view={view} onChange={changeView} count={filtered.length} />
       </div>
 
-      {view === "map" ? (
+      {view === "split" ? (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold">
+              {zoneFiltered.length === 0
+                ? "Ninguna oportunidad en esta zona"
+                : `${zoneFiltered.length} ${
+                    zoneFiltered.length === 1 ? "oportunidad" : "oportunidades"
+                  } en esta zona`}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {bounds
+                ? "El mapa ajusta la cuadrícula a la zona visible."
+                : "Mueve o acerca el mapa para filtrar por zona."}
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {zoneFiltered.length === 0 ? (
+                <div className="rounded-lg border border-dashed px-6 py-16 text-center sm:col-span-2">
+                  <p className="text-sm text-muted-foreground">
+                    No hay oportunidades en esta zona. Restablece la zona o prueba
+                    otra pestaña.
+                  </p>
+                </div>
+              ) : (
+                zoneFiltered.map((item) => (
+                  <div
+                    key={item.id}
+                    onMouseEnter={() => setHoveredId(item.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    <InvestorCard item={item} />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="lg:sticky lg:top-6 lg:self-start">
+            <PropertiesMap
+              markers={markers}
+              initialBounds={bounds}
+              activeBounds={bounds}
+              onApplyBounds={setBounds}
+              onResetBounds={() => setBounds(null)}
+              highlightedId={hoveredId}
+              heightClass="h-[50vh] lg:h-[calc(100vh-11rem)]"
+            />
+          </div>
+        </div>
+      ) : view === "map" ? (
         <div className="space-y-6">
           <PropertiesMap
             markers={markers}
@@ -378,6 +442,7 @@ export function InvestorDashboardClient({
             activeBounds={bounds}
             onApplyBounds={setBounds}
             onResetBounds={() => setBounds(null)}
+            highlightedId={hoveredId}
             heightClass="h-[60vh]"
           />
 
@@ -404,7 +469,13 @@ export function InvestorDashboardClient({
                 </div>
               ) : (
                 zoneFiltered.map((item) => (
-                  <InvestorCard key={item.id} item={item} />
+                  <div
+                    key={item.id}
+                    onMouseEnter={() => setHoveredId(item.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    <InvestorCard item={item} />
+                  </div>
                 ))
               )}
             </div>
@@ -422,7 +493,15 @@ export function InvestorDashboardClient({
               </p>
             </div>
           ) : (
-            filtered.map((item) => <InvestorCard key={item.id} item={item} />)
+            filtered.map((item) => (
+              <div
+                key={item.id}
+                onMouseEnter={() => setHoveredId(item.id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <InvestorCard item={item} />
+              </div>
+            ))
           )}
         </div>
       )}

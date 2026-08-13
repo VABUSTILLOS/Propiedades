@@ -1,13 +1,14 @@
 "use client";
 
-import { List, Map as MapIcon } from "lucide-react";
+import { Columns2, List, Map as MapIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type MapView = "list" | "map";
+export type MapView = "list" | "map" | "split";
 
 /**
- * Controlled List ⇄ Mapa pill. The parent owns the state so switching views
- * can update the URL (`mapSearch=true/false`) instead of only local state.
+ * Controlled Lista ⇄ Mapa ⇄ Dividido pill. The parent owns the state so
+ * switching views can update the URL (`view=list|map|split`) instead of only
+ * local state.
  */
 export function MapViewToggle({
   view,
@@ -54,6 +55,20 @@ export function MapViewToggle({
       >
         <MapIcon className="size-4" aria-hidden="true" />
         Mapa{typeof count === "number" ? ` (${count})` : ""}
+      </button>
+      <button
+        role="tab"
+        aria-selected={view === "split"}
+        onClick={() => onChange("split")}
+        className={cn(
+          "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+          view === "split"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        <Columns2 className="size-4" aria-hidden="true" />
+        Dividido
       </button>
     </div>
   );

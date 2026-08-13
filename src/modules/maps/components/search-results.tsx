@@ -4,29 +4,33 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Map as MapIcon } from "lucide-react";
 
-import { MapViewToggle } from "@/modules/maps/components/map-view-toggle";
+import {
+  MapViewToggle,
+  type MapView,
+} from "@/modules/maps/components/map-view-toggle";
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
 import { InfiniteListings } from "@/modules/maps/components/infinite-listings";
 import { boundsToString, type MapBounds } from "@/modules/lib/schemas";
 import type { ListingWithHot, PropertyMapMarker } from "@/modules/search/queries";
 
 /**
- * Orchestrator for the Airbnb-style List ⇄ Mapa experience.
+ * Orchestrator for the Airbnb-style Lista ⇄ Mapa ⇄ Dividido experience.
  *
  * The parent (server page) remounts this with a `key` derived from the current
  * filters so navigation resets both the infinite list and the map:
  * - List mode → `InfiniteListings` over `GET /api/search`.
  * - Map mode → `PropertiesMap` with pins from `GET /api/search/markers`,
  *   plus the current bounded list below the map.
+ * - Split mode (default) → listings on one half, sticky map on the other.
  *
- * View mode lives in the URL (`mapSearch=true/false`); the zone pill writes
+ * View mode lives in the URL (`view=list|map|split`); the zone pill writes
  * `bounds=minLat,minLng,maxLat,maxLng` so the URL is shareable.
  */
 export function SearchResults({
   initialItems,
   initialTotal,
   filtersQueryString,
-  mapSearch = false,
+  view = "split",
   initialBounds = null,
   card = "search",
   gridClassName,
@@ -37,18 +41,20 @@ export function SearchResults({
   initialTotal: number;
   /** Current filters (and bounds) as a URL query string, no leading `?`. */
   filtersQueryString: string;
-  mapSearch?: boolean;
+  /** Presentation style: list-only, map-only, or the default split. */
+  view?: MapView;
   initialBounds?: MapBounds | null;
   /** Which card to render for each listing (serializable across RSC). */
   card?: "search" | "property";
   gridClassName?: string;
   emptyState?: React.ReactNode;
-  /** Base path for `router.push` when toggling map / applying a zone. */
+  /** Base path for `router.push` when toggling view / applying a zone. */
   basePath?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [markers, setMarkers] = useState<PropertyMapMarker[] | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   // The map shows every pin matching the current filters (bounds included),
   // so it always re-fetches when the URL changes.
@@ -81,14 +87,33 @@ export function SearchResults({
     router.push(`${basePath}?${params.toString()}`, { scroll: false });
   };
 
-  const list = (
+  const list = (split = false) => (
     <InfiniteListings
       initialItems={initialItems}
       initialTotal={initialTotal}
       filtersQueryString={filtersQueryString}
       card={card}
-      gridClassName={gridClassName}
+      gridClassName={
+        split
+          ? "grid gap-x-4 gap-y-6 sm:grid-cols-2"
+          : gridClassName
+      }
       emptyState={emptyState}
+      onCardHover={setHoveredId}
+    />
+  );
+
+  const map = (heightClass: string) => (
+    <PropertiesMap
+      markers={markers ?? []}
+      initialBounds={initialBounds}
+      activeBounds={initialBounds}
+      onApplyBounds={(bounds) =>
+        updateParam({ bounds: boundsToString(bounds) })
+      }
+      onResetBounds={() => updateParam({ bounds: null })}
+      highlightedId={hoveredId}
+      heightClass={heightClass}
     />
   );
 
@@ -96,28 +121,22 @@ export function SearchResults({
     <div className="space-y-6">
       <div className="flex justify-end">
         <MapViewToggle
-          view={mapSearch ? "map" : "list"}
-          onChange={(view) =>
-            updateParam({ mapSearch: view === "map" ? "true" : null })
-          }
+          view={view}
+          onChange={(next) => updateParam({ view: next })}
           count={initialTotal}
         />
       </div>
 
-      {mapSearch ? (
+      {view === "split" ? (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="min-w-0 lg:order-1">{list(true)}</div>
+          <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
+            {map("h-[50vh] lg:h-[calc(100vh-11rem)]")}
+          </div>
+        </div>
+      ) : view === "map" ? (
         <div className="space-y-8">
-          <PropertiesMap
-            markers={markers ?? []}
-            initialBounds={initialBounds}
-            activeBounds={initialBounds}
-            onApplyBounds={(bounds) =>
-              updateParam({
-                bounds: boundsToString(bounds),
-                mapSearch: "true",
-              })
-            }
-            onResetBounds={() => updateParam({ bounds: null })}
-          />
+          {map("h-[60vh]")}
 
           <section className="space-y-4" aria-label="Propiedades en esta zona">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -125,11 +144,11 @@ export function SearchResults({
               {initialTotal} propiedad{initialTotal === 1 ? "" : "es"} en esta
               zona
             </h2>
-            {list}
+            {list()}
           </section>
         </div>
       ) : (
-        list
+        list()
       )}
     </div>
   );

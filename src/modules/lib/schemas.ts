@@ -123,6 +123,12 @@ export const boundsSchema = z
 /** `mapSearch=true/false` drives whether the map mode is active. */
 export const mapSearchSchema = z.enum(["true", "false"]).default("false");
 
+/**
+ * `view=list|map|split` drives the presentation style: list-only, map-only,
+ * or the Airbnb-style split (listings on one half, map on the other).
+ */
+export const viewParamSchema = z.enum(["list", "map", "split"]);
+
 export type MapBounds = {
   minLat: number;
   minLng: number;
@@ -190,6 +196,7 @@ export const searchParamsSchema = paginationSchema.extend({
   sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot", "m2_const_asc", "m2_const_desc"]).default("newest"),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
+  view: viewParamSchema.optional(),
 });
 
 /**
@@ -229,6 +236,7 @@ export const listadosParamsSchema = paginationSchema.extend({
   sortBy: z.enum(["price_asc", "price_desc", "newest", "score", "hot", "m2_const_asc", "m2_const_desc"]).default("newest"),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
+  view: viewParamSchema.optional(),
 });
 export type ListadosParams = z.infer<typeof listadosParamsSchema>;
 
@@ -253,6 +261,7 @@ export const investorParamsSchema = paginationSchema.extend({
   categories: z.string().optional(),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
+  view: viewParamSchema.optional(),
 });
 export type InvestorParams = z.infer<typeof investorParamsSchema>;
 

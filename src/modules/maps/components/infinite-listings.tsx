@@ -83,6 +83,7 @@ export function InfiniteListings({
   pageSize = 12,
   gridClassName = "grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3",
   emptyState,
+  onCardHover,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -93,6 +94,8 @@ export function InfiniteListings({
   pageSize?: number;
   gridClassName?: string;
   emptyState?: React.ReactNode;
+  /** Reports the id of the hovered card (null when leaving) — for map pin sync. */
+  onCardHover?: (id: string | null) => void;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
   const [total, setTotal] = useState(initialTotal);
@@ -161,34 +164,40 @@ export function InfiniteListings({
       </div>
 
       <div className={gridClassName}>
-        {items.map((item) =>
-          card === "property" ? (
-            <PropertyCard
-              key={item.id}
-              listing={item}
-              hotScore={item.hotScore}
-              discountPct={item.discountPct}
-              showDetails={showDetails}
-            />
-          ) : (
-            <SearchResultCard
-              key={item.id}
-              title={item.title}
-              slug={item.slug}
-              city={`${item.colonia}, ${item.city}`}
-              price={item.price}
-              currency={item.currency}
-              type={item.type}
-              image={item.images?.[0] ?? null}
-              score={item.property_score}
-              hotScore={item.hotScore}
-              discountPct={item.discountPct}
-              construccionM2={item.construccion_m2}
-              terrenoM2={item.terreno_m2}
-              showDetails={showDetails}
-            />
-          ),
-        )}
+        {items.map((item) => (
+          <div
+            key={item.id}
+            onMouseEnter={() => onCardHover?.(item.id)}
+            onMouseLeave={() => onCardHover?.(null)}
+          >
+            {card === "property" ? (
+              <PropertyCard
+                key={item.id}
+                listing={item}
+                hotScore={item.hotScore}
+                discountPct={item.discountPct}
+                showDetails={showDetails}
+              />
+            ) : (
+              <SearchResultCard
+                key={item.id}
+                title={item.title}
+                slug={item.slug}
+                city={`${item.colonia}, ${item.city}`}
+                price={item.price}
+                currency={item.currency}
+                type={item.type}
+                image={item.images?.[0] ?? null}
+                score={item.property_score}
+                hotScore={item.hotScore}
+                discountPct={item.discountPct}
+                construccionM2={item.construccion_m2}
+                terrenoM2={item.terreno_m2}
+                showDetails={showDetails}
+              />
+            )}
+          </div>
+        ))}
       </div>
 
       {hasMore && (

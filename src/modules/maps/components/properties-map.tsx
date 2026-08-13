@@ -54,6 +54,7 @@ export function PropertiesMap({
   onApplyBounds,
   onResetBounds,
   heightClass = "h-[70vh]",
+  highlightedId = null,
 }: {
   markers: PropertyMapMarker[];
   /** Center the map on these bounds when they appear (URL-driven navigation). */
@@ -63,6 +64,8 @@ export function PropertiesMap({
   onApplyBounds?: (bounds: MapBounds) => void;
   onResetBounds?: () => void;
   heightClass?: string;
+  /** Card hovered in the list — scales its price pill (Airbnb-style sync). */
+  highlightedId?: string | null;
 }) {
   const google = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -219,10 +222,10 @@ export function PropertiesMap({
     };
   }, [google, markers]);
 
-  // Highlight the selected pill via direct DOM (avoids rebuilding markers).
+  // Highlight the selected/hovered pill via direct DOM (avoids rebuilding markers).
   useEffect(() => {
     pillElsRef.current.forEach((el, id) => {
-      if (id === selectedId) {
+      if (id === selectedId || id === highlightedId) {
         el.style.transform = "scale(1.15)";
         el.style.zIndex = "2";
         el.style.boxShadow = "0 0 0 3px #fff, 0 6px 16px rgba(0,0,0,.3)";
@@ -232,7 +235,7 @@ export function PropertiesMap({
         el.style.boxShadow = "0 2px 6px rgba(0,0,0,.25)";
       }
     });
-  }, [selectedId]);
+  }, [selectedId, highlightedId]);
 
   if (!GOOGLE_MAPS_AVAILABLE) {
     return (

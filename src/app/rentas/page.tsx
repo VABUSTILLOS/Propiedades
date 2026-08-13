@@ -74,6 +74,11 @@ export default async function RentasPage({ searchParams }: Props) {
 
   const mapSearch = parsed.data?.mapSearch === "true";
 
+  // Presentation style lives in the URL. Legacy `mapSearch=true` still maps
+  // to the full-map view; otherwise the Airbnb-style split is the default.
+  const view: "list" | "map" | "split" =
+    parsed.data?.view ?? (mapSearch ? "map" : "split");
+
   return (
     <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
@@ -101,7 +106,7 @@ export default async function RentasPage({ searchParams }: Props) {
             initialItems={listings}
             initialTotal={total}
             filtersQueryString={filtersQueryString}
-            mapSearch={mapSearch}
+            view={view}
             initialBounds={bounds}
             card="search"
             basePath="/rentas"

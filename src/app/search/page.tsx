@@ -95,6 +95,11 @@ export default async function SearchPage({ searchParams }: Props) {
 
   const mapSearch = parsed.data?.mapSearch === "true";
 
+  // Presentation style lives in the URL. Legacy `mapSearch=true` still maps
+  // to the full-map view; otherwise the Airbnb-style split is the default.
+  const view: "list" | "map" | "split" =
+    parsed.data?.view ?? (mapSearch ? "map" : "split");
+
   const hasFilters = Object.values(filters).some(
     (value) => value !== undefined && value !== "",
   );
@@ -148,7 +153,7 @@ export default async function SearchPage({ searchParams }: Props) {
             initialItems={listings}
             initialTotal={total}
             filtersQueryString={filtersQueryString}
-            mapSearch={mapSearch}
+            view={view}
             initialBounds={bounds}
             card="search"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"

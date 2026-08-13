@@ -111,6 +111,11 @@ export default async function InvestorPage({ searchParams }: Props) {
     : null;
   const mapSearch = parsed.data?.mapSearch === "true";
 
+  // Presentation style lives in the URL. Legacy `mapSearch=true` still maps
+  // to the full-map view; otherwise the Airbnb-style split is the default.
+  const view: "list" | "map" | "split" =
+    parsed.data?.view ?? (mapSearch ? "map" : "split");
+
   // Property types chosen by the user (`categories` CSV) — intersected with
   // each tab's implicit categories below.
   const selectedCategories = parseCategoriesParam(parsed.data?.categories);
@@ -203,7 +208,7 @@ export default async function InvestorPage({ searchParams }: Props) {
           items={items}
           activeTab={activeTab}
           counts={countByTab}
-          initialView={mapSearch ? "map" : "list"}
+          initialView={view}
           initialBounds={bounds}
         />
       </main>
