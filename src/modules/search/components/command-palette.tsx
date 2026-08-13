@@ -66,7 +66,7 @@ export function CommandPalette() {
             ) : null}
 
             <Command.Group heading="Ir a">
-              <Command.Item value="investor" onSelect={() => go("/investor")}>
+              <Command.Item value="investor" onSelect={() => go("/search")}>
                 <TrendingUp className="size-4" />
                 <span className="ml-2">Modo inversionista: remates, flipping, traspasos</span>
               </Command.Item>

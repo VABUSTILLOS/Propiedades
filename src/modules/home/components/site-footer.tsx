@@ -8,7 +8,7 @@ const FOOTER_COLUMNS = [
       { href: "/search", label: "Todas las propiedades" },
       { href: "/search?type=sale", label: "Comprar" },
       { href: "/rentas", label: "Rentar" },
-      { href: "/investor", label: "Modo inversionista" },
+      { href: "/search", label: "Modo inversionista" },
     ],
   },
   {

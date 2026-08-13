@@ -19,9 +19,7 @@ import { cn } from "@/lib/utils";
 export const NAV_LINKS = [
   { href: "/rentas", label: "Rentar" },
   { href: "/search", label: "Comprar" },
-  { href: "/investor", label: "Invertir" },
   { href: "/fsbo", label: "Vender" },
-  { href: "/listados", label: "Listados" },
   { href: "/preapproval", label: "Preaprobación" },
 ];
 

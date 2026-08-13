@@ -88,11 +88,11 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const mode = raw.mode === "investor" ? "inversionista" : "residencia";
 
   // Return to the exact listados/search view the user came from (passed as a
-  // `from` query param by the result cards), falling back to /listados.
+  // `from` query param by the result cards), falling back to /search.
   const from =
     typeof raw.from === "string" && isSafeBackHref(raw.from)
       ? raw.from
-      : "/listados";
+      : "/search";
 
   const user = await getCurrentUser();
   const canInquire = user?.id !== listing.owner_id;

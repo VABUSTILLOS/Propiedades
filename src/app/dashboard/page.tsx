@@ -175,7 +175,7 @@ export default async function DashboardPage() {
             index="04"
             title="Oportunidades de inversión"
             description="Remates, flipping y descuentos vs. colonia en un solo tablero."
-            href="/investor"
+            href="/search"
             icon={TrendingUp}
           />
           <ToolCard
