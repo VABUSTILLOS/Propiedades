@@ -1,7 +1,11 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
-import { searchListings } from "@/modules/search/queries";
+import {
+  enrichWithHot,
+  searchListings,
+  type ListingWithHot,
+} from "@/modules/search/queries";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
 export type CityStat = {
@@ -75,6 +79,38 @@ export async function getFeaturedListings(limit = 6): Promise<PropertiesRow[]> {
  */
 export async function getTopRatedListings(limit = 6): Promise<PropertiesRow[]> {
   return searchListings({ limit, sortBy: "score" });
+}
+
+/**
+ * Top opportunities for the homepage ranking: candidates pre-filtered by
+ * trust score, enriched with the colonia discount + hot score, then ordered
+ * by hotness. Caps the benchmark RPC fan-out to the candidate pool (24 rows)
+ * instead of the full HOT_FETCH_CAP scan the /search hot sort performs.
+ */
+export async function getTopOpportunities(
+  limit = 8,
+): Promise<ListingWithHot[]> {
+  const candidates = await searchListings({ sortBy: "score", limit: 24 });
+  const enriched = await enrichWithHot(candidates);
+  enriched.sort((a, b) => (b.hotScore ?? -1) - (a.hotScore ?? -1));
+  return enriched.slice(0, limit);
+}
+
+/**
+ * Active listings published in the last 7 days — feeds the "nuevas esta
+ * semana" pulse stat and the hero status pill.
+ */
+export async function getNewThisWeekCount(): Promise<number> {
+  const supabase = await createSupabaseServerClient();
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  const { count } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "active")
+    .gte("created_at", since);
+
+  return count ?? 0;
 }
 
 /**
