@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -248,7 +248,18 @@ function Lightbox({
             key={index}
             src={images[index]}
             alt={`${title} — foto ${index + 1}`}
-            className="max-h-full max-w-full object-contain"
+            className="max-h-full max-w-full touch-none select-none object-contain"
+            drag={count > 1 ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.25}
+            onDragEnd={(_event, info: PanInfo) => {
+              const { offset } = info;
+              const swiped =
+                Math.abs(offset.x) > 60 && Math.abs(offset.x) > Math.abs(offset.y);
+              if (!swiped) return;
+              if (offset.x < 0) onNext();
+              else onPrev();
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
