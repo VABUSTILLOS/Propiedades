@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { SignInForm } from "@/modules/auth/components/sign-in-form";
+import { Em } from "@/components/layout/emphasis";
 
 export const metadata: Metadata = { title: "Iniciar sesión" };
 
@@ -18,7 +19,7 @@ export default function SignInPage() {
             Tu cuenta
           </span>
         </div>
-        <h1 className="text-xl font-semibold tracking-tight">Hola de nuevo</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Hola <Em>de nuevo</Em></h1>
         <p className="text-sm text-muted-foreground">
           Inicia sesión para administrar tus listados y consultas.
         </p>

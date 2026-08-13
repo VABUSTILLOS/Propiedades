@@ -8,6 +8,7 @@ import { ListingCard } from "@/modules/listings/components/listing-card";
 import { buttonVariants } from "@/components/ui/button";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { EmptyState } from "@/components/layout/empty-state";
 import { Store } from "lucide-react";
 
@@ -35,7 +36,7 @@ export default async function MyListingsPage() {
       <PageHeader
         eyebrow="Vender"
         icon={Store}
-        title="Mis listados"
+        title={<>Mis <Em>listados</Em></>}
         description={`${listings.length} ${listings.length === 1 ? "listado" : "listados"}`}
         actions={
           <Link href="/listings/new" className={buttonVariants()}>

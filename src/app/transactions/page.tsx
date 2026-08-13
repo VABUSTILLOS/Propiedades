@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { EmptyState } from "@/components/layout/empty-state";
 import { Handshake } from "lucide-react";
 
@@ -36,7 +37,7 @@ export default async function TransactionsPage() {
       <PageHeader
         eyebrow="Seguimiento"
         icon={Handshake}
-        title="Transacciones"
+        title={<Em>Transacciones</Em>}
         description="Consultas, visitas, ofertas y depósito en garantía — todo en un solo lugar."
         className="mb-8"
       />

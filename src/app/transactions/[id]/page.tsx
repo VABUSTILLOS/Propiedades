@@ -18,6 +18,7 @@ import { ReviewForm } from "@/modules/reviews/components/review-form";
 import { Badge } from "@/components/ui/badge";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { Handshake } from "lucide-react";
 
 type Props = {
@@ -64,7 +65,7 @@ export default async function TransactionDetailPage({ params }: Props) {
         icon={Handshake}
         title={
           <span className="flex flex-wrap items-center gap-3">
-            Detalles de la transacción
+            Detalles de la <Em>transacción</Em>
             <Badge>{TRANSACTION_LABELS[transaction.state]}</Badge>
           </span>
         }

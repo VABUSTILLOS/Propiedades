@@ -11,6 +11,7 @@ import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-pa
 import { getChatMessages } from "@/modules/co-shopping/queries";
 import { buttonVariants } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { Heart } from "lucide-react";
 
 export const metadata: Metadata = { title: "Favoritos" };
@@ -52,7 +53,7 @@ export default async function FavoritesPage() {
       <PageHeader
         eyebrow="Comprar"
         icon={Heart}
-        title="Favoritos"
+        title={<Em>Favoritos</Em>}
         description="Organiza tu shortlist: arrastra para ordenar en la lista o clasifica en el Kanban (Top Choice / Plan B / Descartadas)."
         className="mb-8"
         actions={

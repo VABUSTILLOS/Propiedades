@@ -8,6 +8,7 @@ import { getMlsListings } from "@/modules/listings/queries";
 import { Badge } from "@/components/ui/badge";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { EmptyState } from "@/components/layout/empty-state";
 import { Building2 } from "lucide-react";
 
@@ -43,7 +44,7 @@ export default async function MlsNetworkPage() {
       <PageHeader
         eyebrow="Vender"
         icon={Building2}
-        title="Red MLS"
+        title={<>Red <Em>MLS</Em></>}
         description={`Bolsa privada de agentes · ${listings.length} propiedades compartidas con desglose transparente de comisiones.`}
       />
 

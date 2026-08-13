@@ -4,6 +4,7 @@ import { CalendarClock, Gavel, Home, MessageCircle } from "lucide-react";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 
 import { getCurrentUser } from "@/modules/auth/session";
 import { getProfileByUserId } from "@/modules/profiles/queries";
@@ -30,7 +31,7 @@ export default async function FsboPage() {
       <PageHeader
         eyebrow="Vender"
         icon={Home}
-        title="Módulo FSBO (Dueño)"
+        title={<>Módulo <Em>FSBO</Em> (Dueño)</>}
         description="Publica tu propiedad en minutos, con valuación automática y ofertas digitales 24/7."
       />
 

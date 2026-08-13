@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { UpdatePasswordForm } from "@/modules/auth/components/update-password-form";
+import { Em } from "@/components/layout/emphasis";
 
 export const metadata: Metadata = {
   title: "Establece una nueva contraseña",
@@ -21,7 +22,7 @@ export default function UpdatePasswordPage() {
             Tu cuenta
           </span>
         </div>
-        <h1 className="text-xl font-semibold tracking-tight">Establece una nueva contraseña</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Establece una <Em>nueva contraseña</Em></h1>
         <p className="text-sm text-muted-foreground">
           Elige una nueva contraseña para tu cuenta.
         </p>

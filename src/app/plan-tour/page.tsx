@@ -4,6 +4,7 @@ import { Route } from "lucide-react";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { getCurrentUser } from "@/modules/auth/session";
 import { getMyFavorites } from "@/modules/favorites/queries";
 import { env } from "@/modules/lib/env";
@@ -27,7 +28,7 @@ export default async function PlanTourPage() {
       <PageHeader
         eyebrow="Comprar"
         icon={Route}
-        title="Planificador de rutas"
+        title={<>Planificador de <Em>rutas</Em></>}
         description="Arma el itinerario óptimo de visitas del fin de semana desde tus favoritos."
       />
 

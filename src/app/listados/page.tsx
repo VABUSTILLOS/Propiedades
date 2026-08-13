@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LayoutGrid } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import {
   countActiveListings,
   searchListingsPage,
@@ -114,7 +115,7 @@ export default async function ListadosPage({ searchParams }: Props) {
         <PageHeader
           eyebrow="Explorar"
           icon={LayoutGrid}
-          title="Listados"
+          title={<Em>Listados</Em>}
           description={`${total} ${TAB_LABELS[activeTab]} en el catálogo`}
           className="mb-6"
         />

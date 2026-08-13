@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { ListingWizard } from "@/modules/listings/components/listing-wizard";
 
 export const metadata: Metadata = { title: "Publicar una propiedad" };
@@ -30,7 +31,7 @@ export default async function NewListingPage() {
       <PageHeader
         eyebrow="Vender"
         icon={Store}
-        title="Publicar una propiedad"
+        title={<>Publicar una <Em>propiedad</Em></>}
         description="Crea un borrador y publícalo cuando cada paso esté completo. Puedes volver a tus borradores en cualquier momento."
         className="mb-8"
       />

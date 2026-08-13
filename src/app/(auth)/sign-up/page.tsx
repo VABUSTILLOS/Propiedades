@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SignUpForm } from "@/modules/auth/components/sign-up-form";
+import { Em } from "@/components/layout/emphasis";
 
 export const metadata: Metadata = { title: "Crear cuenta" };
 
@@ -17,7 +18,7 @@ export default function SignUpPage() {
             Tu cuenta
           </span>
         </div>
-        <h1 className="text-xl font-semibold tracking-tight">Crea tu cuenta</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Crea tu <Em>cuenta</Em></h1>
         <p className="text-sm text-muted-foreground">
           Compra, invierte, publica o vende — a tu manera.
         </p>

@@ -20,6 +20,7 @@ import { toQueryString } from "@/modules/search/query-string";
 import { Building2, Home, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 
 export const metadata: Metadata = { title: "Buscar propiedades" };
 
@@ -110,7 +111,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <PageHeader
           eyebrow="Comprar"
           icon={Home}
-          title="Buscar propiedades"
+          title={<>Buscar <Em>propiedades</Em></>}
           description={`${total} propiedad${total === 1 ? "" : "es"} activa${total === 1 ? "" : "s"}${hasFilters ? " con tus filtros" : " disponibles"}`}
           className="mb-8"
           actions={

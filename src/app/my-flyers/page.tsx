@@ -7,6 +7,7 @@ import { getMyFlyers } from "@/modules/flyers/queries";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { EmptyState } from "@/components/layout/empty-state";
 import { Newspaper } from "lucide-react";
 
@@ -34,7 +35,7 @@ export default async function MyFlyersPage() {
       <PageHeader
         eyebrow="Vender"
         icon={Newspaper}
-        title="Flyers digitales"
+        title={<>Flyers <Em>digitales</Em></>}
         description="Páginas compartibles y con métricas para tus listados."
         className="mb-8"
       />

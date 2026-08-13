@@ -6,6 +6,7 @@ import { getListingsByIds } from "@/modules/listings/queries";
 import { buttonVariants } from "@/components/ui/button";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { EmptyState } from "@/components/layout/empty-state";
 
 export const metadata: Metadata = { title: "Comparador" };
@@ -83,7 +84,7 @@ export default async function ComparePage({ searchParams }: CompareProps) {
       <PageHeader
         eyebrow="Comprar"
         icon={GitCompareArrows}
-        title="Comparador"
+        title={<Em>Comparador</Em>}
         description={`${listings.length} inmuebles · el mejor $/m² construcción se resalta automáticamente.`}
       />
 

@@ -20,6 +20,7 @@ import {
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { PageShell } from "@/components/layout/page-shell";
+import { Em } from "@/components/layout/emphasis";
 import { ToolCard } from "@/components/layout/tool-card";
 import { FolioLabel } from "@/modules/home/components/folio-label";
 import { UniversalImporterClient } from "@/modules/importer/components/universal-importer-client";
@@ -64,7 +65,7 @@ export default async function DashboardPage() {
           <div className="mt-3 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Hola, <span className="font-display italic">{firstName}</span>
+                Hola, <Em>{firstName}</Em>
               </h1>
               <p className="mt-1 text-sm text-white/60">
                 Rol:{" "}

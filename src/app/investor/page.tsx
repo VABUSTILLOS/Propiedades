@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { TrendingUp } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import {
   countActiveListings,
   searchListings,
@@ -199,7 +200,7 @@ export default async function InvestorPage({ searchParams }: Props) {
         <PageHeader
           eyebrow="Invertir"
           icon={TrendingUp}
-          title="Modo inversionista"
+          title={<>Modo <Em>inversionista</Em></>}
           description={`${items.length} ${TAB_LABELS[activeTab]} en el catálogo`}
           className="mb-8"
         />

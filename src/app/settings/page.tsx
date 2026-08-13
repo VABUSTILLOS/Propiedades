@@ -3,6 +3,7 @@ import { Settings } from "lucide-react";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
+import { Em } from "@/components/layout/emphasis";
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getProfileByUserId } from "@/modules/profiles/queries";
@@ -35,7 +36,7 @@ export default async function SettingsPage() {
       <PageHeader
         eyebrow="Cuenta"
         icon={Settings}
-        title="Configuración"
+        title={<Em>Configuración</Em>}
         description="Administra tu cuenta y la identidad de tu agencia."
       />
 
