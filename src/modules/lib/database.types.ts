@@ -24,6 +24,8 @@ export type PropertyStatus =
   | "reserved"
   | "sold"
   | "archived";
+export type IntakeStatus = "procesando" | "borrador_incompleto" | "activo";
+export type IntakeChannel = "whatsapp" | "web";
 export type TransactionState =
   | "inquired"
   | "tour_pending"
@@ -72,7 +74,7 @@ export type MarketBenchmarksRow = {
 
 export type PropertiesRow = {
   id: string;
-  owner_id: string;
+  owner_id: string | null;
   title: string;
   slug: string;
   description: string | null;
@@ -135,6 +137,16 @@ export type PropertiesRow = {
   amenidades: Json;
   puntos_fuertes_bento: Json;
   embedding: unknown | null;
+  // "Sube tu propiedad" intake flow (migration 045)
+  intake_status: IntakeStatus | null;
+  intake_channel: IntakeChannel | null;
+  wa_id: string | null;
+  wa_profile_name: string | null;
+  ai_raw_text: string | null;
+  ai_extracted: Json;
+  missing_fields: string[];
+  intake_token: string | null;
+  intake_expires_at: string | null;
   created_at: string;
   updated_at: string;
 }

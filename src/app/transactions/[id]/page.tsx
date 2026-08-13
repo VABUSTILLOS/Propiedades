@@ -113,7 +113,7 @@ export default async function TransactionDetailPage({ params }: Props) {
             </h2>
             <TourSlots
               propertyId={property.id}
-              ownerId={property.owner_id}
+              ownerId={property.owner_id ?? ""}
               currentUserId={user.id}
               transactionId={transaction.id}
               slots={slots}

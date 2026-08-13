@@ -1,3 +1,5 @@
+import { after } from "next/server";
+
 import {
   parseInboundMessages,
   sendWhatsAppText,
@@ -5,15 +7,31 @@ import {
   verifyWebhookRequest,
   verifyWebhookSignature,
   whatsappOutboundConfigured,
+  type NormalizedInboundMessage,
   type WhatsAppWebhookPayload,
 } from "@/modules/whatsapp/server";
+import { ingestInboundImages } from "@/modules/whatsapp/media";
 import {
   cleanupExpiredChatStates,
   replyWhatsAppInbound,
 } from "@/modules/whatsapp/chat-bot";
+import {
+  appendToIntakeDraft,
+  createIntakeDraft,
+  findOpenIntake,
+  getIntakeState,
+  runExtraction,
+} from "@/modules/intake/server";
+import {
+  FIELD_REGISTRY,
+  type IntakeFieldKey,
+  type IntakeStateDTO,
+} from "@/modules/intake/schemas";
 import { env } from "@/modules/lib/env";
 
 export const runtime = "nodejs";
+// Photos + DeepSeek extraction need more than the default function budget.
+export const maxDuration = 60;
 
 /**
  * WhatsApp Business Cloud API inbound webhook.
@@ -23,7 +41,12 @@ export const runtime = "nodejs";
  *        `hub.challenge` back so Meta activates the subscription.
  * POST — Inbound messages. Meta retries for up to 7 days on non-2xx, so we
  *        always ack with 200 and persist (deduped by wa_message_id).
- *        Optionally sends an auto-reply when outbound credentials are set.
+ *
+ * Two flows share this endpoint:
+ *  - Sell intent ("Sube tu propiedad"): photos/text create an intake draft,
+ *    DeepSeek extracts structured data in `after()` and the bot replies with
+ *    the unique /publicar/[token] wizard link.
+ *  - Everything else: the existing search/booking chat bot.
  */
 export async function GET(req: Request): Promise<Response> {
   const url = new URL(req.url);
@@ -77,13 +100,19 @@ export async function POST(req: Request): Promise<Response> {
     stored.push({ id, from: msg.waId, body: msg.body });
   }
 
-  // Fire-and-forget reply. With the chat bot enabled, every inbound text is
-  // answered by the same search engine as the site chatbot (greetings, booking
-  // intents and property searches). Without it, keep the legacy auto-reply for
-  // simple booking intents only. Outbound replies require credentials.
   const first = messages[0];
   if (first && whatsappOutboundConfigured()) {
-    if (env.whatsappChatEnabled) {
+    if (isAudioOnly(messages)) {
+      // v1: no transcription yet — ask the seller to type it out.
+      void sendWhatsAppText(
+        first.waId,
+        "¡Gracias! 🎙️ Por ahora solo puedo leer mensajes de texto. " +
+          "¿Me describes tu propiedad escrito? (qué es, colonia, precio y recámaras)",
+      );
+    } else if (hasSellIntent(messages)) {
+      // Ack Meta immediately; the intake pipeline runs after the response.
+      after(() => runIntakePipeline(messages));
+    } else if (env.whatsappChatEnabled) {
       void replyWhatsAppInbound(first.waId, first.body).then(() =>
         cleanupExpiredChatStates(),
       );
@@ -93,6 +122,128 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   return Response.json({ ok: true, data: stored }, { status: 200 });
+}
+
+// ── "Sube tu propiedad" intake pipeline ───────────────────────────────────────
+
+/** Voice notes / audio without any text — transcription is a phase-2 feature. */
+function isAudioOnly(messages: NormalizedInboundMessage[]): boolean {
+  return (
+    messages.length > 0 &&
+    messages.every((m) => m.messageType === "audio" && !m.body.trim())
+  );
+}
+
+/**
+ * Sell intent beats the search chat bot: explicit sell verbs, or property
+ * photos (buyers essentially never send images; sellers always do).
+ */
+function hasSellIntent(messages: NormalizedInboundMessage[]): boolean {
+  const SELL_KEYWORDS = [
+    "vendo",
+    "vender",
+    "venta de",
+    "quiero vender",
+    "publicar mi",
+    "anunciar mi",
+    "pongo en venta",
+    "mi casa en",
+    "pido ",
+  ];
+  return messages.some((m) => {
+    if (m.messageType === "image") return true;
+    const normalized = m.body.toLowerCase();
+    return SELL_KEYWORDS.some((k) => normalized.includes(k));
+  });
+}
+
+/**
+ * Full background intake: create-or-append the draft, copy photos to
+ * Supabase Storage, run DeepSeek extraction and reply with the wizard link.
+ * Runs inside `after()` — the webhook already acked Meta.
+ */
+async function runIntakePipeline(
+  messages: NormalizedInboundMessage[],
+): Promise<void> {
+  const first = messages[0];
+  if (!first) return;
+  const text = messages
+    .map((m) => m.body.trim())
+    .filter(Boolean)
+    .join("\n");
+
+  try {
+    let draft = await findOpenIntake(first.waId);
+
+    if (draft) {
+      const imageUrls = await ingestInboundImages(draft.id, messages);
+      await appendToIntakeDraft(draft.id, { text, imageUrls });
+      await runExtraction(draft.id);
+    } else {
+      draft = await createIntakeDraft({
+        waId: first.waId,
+        profileName: first.profileName,
+        text,
+        imageUrls: [],
+      });
+      if (!draft) return;
+      const imageUrls = await ingestInboundImages(draft.id, messages);
+      if (imageUrls.length > 0) {
+        await appendToIntakeDraft(draft.id, { imageUrls });
+      }
+      await runExtraction(draft.id);
+    }
+
+    await sendIntakeSummary(first.waId, draft.token);
+  } catch (error) {
+    console.error("[intake] pipeline failed:", error);
+    await sendWhatsAppText(
+      first.waId,
+      "Recibí tu información, pero tuve un problema procesándola. " +
+        "Un asesor te contactará en breve. 🙏",
+    );
+  }
+}
+
+/** Post-extraction WhatsApp reply with detected data + unique wizard link. */
+async function sendIntakeSummary(waId: string, token: string): Promise<void> {
+  const link = `${env.siteUrl}/publicar/${token}`;
+  const result = await getIntakeState(token);
+
+  if (!result.ok) {
+    await sendWhatsAppText(
+      waId,
+      `¡Recibí tu propiedad! 🏡 Para terminar de activarla, da clic aquí: ${link}`,
+    );
+    return;
+  }
+
+  const detected = summarizePrefilled(result.state);
+  const remaining = result.state.missing.length;
+
+  const body = detected
+    ? `¡Recibí tu propiedad! 🏡 Detecté: ${detected}.\n` +
+      (remaining > 0
+        ? `Solo falta${remaining === 1 ? "" : "n"} ${remaining} dato${remaining === 1 ? "" : "s"} para activarla y calcular tu Score de Oportunidad. `
+        : "Todo listo para activarla y calcular tu Score de Oportunidad. ") +
+      `Da clic aquí: ${link}`
+    : `¡Recibí tu información! 📸 Para activar tu propiedad y calcular tu Score de Oportunidad, completa los datos aquí: ${link}`;
+
+  await sendWhatsAppText(waId, body);
+}
+
+function summarizePrefilled(state: IntakeStateDTO): string {
+  const interesting: IntakeFieldKey[] = [
+    "tipo_propiedad",
+    "colonia",
+    "precio",
+    "recamaras",
+  ];
+  return state.prefilled
+    .filter((f) => interesting.includes(f.key))
+    .map((f) => f.label || FIELD_REGISTRY[f.key].formatValue(f.value))
+    .filter(Boolean)
+    .join(" · ");
 }
 
 async function autoReply(msg: {

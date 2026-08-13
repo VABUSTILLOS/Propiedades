@@ -61,9 +61,9 @@ export type WhatsAppInboundMessage = {
   timestamp?: string;
   type?: string;
   text?: { body?: string };
-  image?: { mime_type?: string; media?: { url?: string } };
-  video?: { mime_type?: string; media?: { url?: string } };
-  audio?: { mime_type?: string; media?: { url?: string } };
+  image?: { id?: string; mime_type?: string; caption?: string; media?: { url?: string } };
+  video?: { id?: string; mime_type?: string; caption?: string; media?: { url?: string } };
+  audio?: { id?: string; mime_type?: string; media?: { url?: string } };
   interactive?: { type?: string; button_reply?: { title?: string } };
 };
 
@@ -77,6 +77,8 @@ export type NormalizedInboundMessage = {
   messageType: string;
   mediaType: string | null;
   mediaUrl: string | null;
+  /** Cloud API media id — required to download the binary via Graph API. */
+  mediaId: string | null;
   receivedAt: string;
   raw: Json;
 };
@@ -154,6 +156,8 @@ export function parseInboundMessages(
         const messageType = msg.type ?? "text";
         const body =
           msg.text?.body ??
+          msg.image?.caption ??
+          msg.video?.caption ??
           msg.interactive?.button_reply?.title ??
           "";
         const mediaType =
@@ -166,6 +170,8 @@ export function parseInboundMessages(
           msg.video?.media?.url ??
           msg.audio?.media?.url ??
           null;
+        const mediaId =
+          msg.image?.id ?? msg.video?.id ?? msg.audio?.id ?? null;
         const receivedAt = msg.timestamp
           ? new Date(Number(msg.timestamp) * 1000).toISOString()
           : new Date().toISOString();
@@ -183,6 +189,7 @@ export function parseInboundMessages(
           messageType,
           mediaType,
           mediaUrl,
+          mediaId,
           receivedAt,
           raw: {
             message: msg,
