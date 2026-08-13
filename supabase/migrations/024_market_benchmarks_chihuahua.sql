@@ -28,5 +28,21 @@ VALUES
   ('Chihuahua', 'Bosques de San Pedro',                      15372,  NULL, 0),
   ('Chihuahua', 'Puente de Piedra',                          21831,  NULL, 0),
   ('Chihuahua', 'Mirador',                                   19226,  NULL, 0),
-  ('Chihuahua', 'Junta de los Ríos y Etapas',                11583,  NULL, 0)
+  ('Chihuahua', 'Junta de los Ríos y Etapas',                11583,  NULL, 0),
+  -- Real benchmarks from detail-page statistics (Nov 2025 + Feb 2025 datasets)
+  ('Chihuahua', 'Ankara',                                    17453, 17798, 0),
+  ('Chihuahua', 'Cuauhtémoc',                                12248,  8729, 0),
+  ('Chihuahua', 'Lomas Montecarlo',                          10197, 10452, 0),
+  ('Chihuahua', 'Los Huertos',                               10350, 12161, 0),
+  ('Chihuahua', 'Panamericana',                              11918,  8854, 0),
+  ('Chihuahua', 'Paseos de Chihuahua',                        8680, 10797, 0),
+  ('Chihuahua', 'Quintas Montecarlo',                         8175,  7766, 0),
+  ('Chihuahua', 'Residencial El León',                        8751,  6837, 0),
+  ('Chihuahua', 'Rincón del Lago',                            8449,  9182, 0),
+  ('Chihuahua', 'Santo Niño',                                29061, 27446, 0),
+  ('Chihuahua', 'Tracia',                                    19111, 18870, 0),
+  -- Fallback benchmarks from list captures (n=1, circular — low confidence)
+  ('Chihuahua', 'Campesina',                                 22936,  NULL, 0),
+  ('Chihuahua', 'Cumbres Universidad',                       13750,  NULL, 0),
+  ('Chihuahua', 'Molino de Agua',                            16480,  NULL, 0)
 ON CONFLICT (city, colonia) DO NOTHING;
