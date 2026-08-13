@@ -104,7 +104,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 pt-10 pb-28 lg:pb-10">
         <Link
           href="/search"
           className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -446,6 +446,27 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
           </aside>
         </div>
       </main>
+
+      {/* Mobile sticky CTA bar: price + WhatsApp inquiry always reachable
+          without scrolling back to the sidebar (which sits below the fold
+          on small screens). Hidden on lg where the sidebar is visible. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-background/85 lg:hidden">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3">
+          <p className="min-w-0 truncate text-lg font-bold">
+            ${listing.price.toLocaleString()}{" "}
+            <span className="text-xs font-normal text-muted-foreground">
+              {listing.currency ?? "MXN"}
+            </span>
+          </p>
+          <WhatsAppInquiryButton
+            title={listing.title}
+            colonia={listing.colonia}
+            city={listing.city}
+            label="Preguntar"
+            className="shrink-0 px-5 py-2.5 text-sm"
+          />
+        </div>
+      </div>
     </div>
   );
 }

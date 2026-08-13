@@ -14,11 +14,14 @@ export function WhatsAppInquiryButton({
   colonia,
   city,
   className,
+  label = "Preguntar por esta propiedad",
 }: {
   title: string;
   colonia?: string | null;
   city?: string | null;
   className?: string;
+  /** Custom label (e.g. shorter text for the mobile sticky bar). */
+  label?: string;
 }) {
   const href = buildWhatsAppInquiryLink({ title, colonia, city });
 
@@ -34,7 +37,7 @@ export function WhatsAppInquiryButton({
       )}
     >
       <WhatsAppIcon className="size-5" />
-      Preguntar por esta propiedad
+      {label}
     </a>
   );
 }

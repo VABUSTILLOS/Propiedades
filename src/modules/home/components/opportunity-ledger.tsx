@@ -59,7 +59,7 @@ export function OpportunityLedger({ items }: { items: ListingWithHot[] }) {
                 </span>
 
                 {/* Mobile: price + delta stacked */}
-                <span className="block text-right sm:hidden">
+                <span className="block whitespace-nowrap text-right sm:hidden">
                   <span className="block font-mono text-sm font-semibold">
                     {formatMxn(listing.price)}
                   </span>

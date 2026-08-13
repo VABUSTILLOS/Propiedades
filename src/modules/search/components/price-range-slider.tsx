@@ -65,12 +65,12 @@ export function PriceRangeSlider({
             <Slider.Thumb
               index={0}
               aria-label="Precio mínimo"
-              className="size-4 rounded-full border-2 border-primary bg-background shadow-sm select-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring"
+              className="relative size-4 rounded-full border-2 border-primary bg-background shadow-sm select-none before:absolute before:-inset-3.5 before:rounded-full before:content-[''] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring"
             />
             <Slider.Thumb
               index={1}
               aria-label="Precio máximo"
-              className="size-4 rounded-full border-2 border-primary bg-background shadow-sm select-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring"
+              className="relative size-4 rounded-full border-2 border-primary bg-background shadow-sm select-none before:absolute before:-inset-3.5 before:rounded-full before:content-[''] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring"
             />
           </Slider.Track>
         </Slider.Control>

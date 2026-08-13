@@ -91,17 +91,17 @@ export function DataEdgeSection() {
         </div>
 
         <div className="mt-12 overflow-hidden rounded-2xl border border-white/10">
-          <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_6.5rem] bg-white/5 font-mono text-xs uppercase tracking-[0.2em] text-white/65 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]">
+          <div className="grid grid-cols-[minmax(0,1fr)_6rem_7rem] bg-white/5 font-mono text-[10px] uppercase tracking-[0.08em] text-white/65 sm:grid-cols-[minmax(0,1fr)_11rem_11rem] sm:text-xs sm:tracking-[0.2em]">
             <span className="px-4 py-3.5 sm:px-6">Dato por propiedad</span>
-            <span className="px-2 py-3.5 text-center">Portales</span>
-            <span className="bg-white/[0.06] px-2 py-3.5 text-center text-live">
+            <span className="px-1 py-3.5 text-center sm:px-2">Portales</span>
+            <span className="bg-white/[0.06] px-1 py-3.5 text-center text-live sm:px-2">
               Propiedades
             </span>
           </div>
           {COMPARISON_ROWS.map((row) => (
             <div
               key={row}
-              className="grid grid-cols-[minmax(0,1fr)_5.5rem_6.5rem] border-t border-white/10 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]"
+              className="grid grid-cols-[minmax(0,1fr)_6rem_7rem] border-t border-white/10 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]"
             >
               <span className="px-4 py-4 text-sm text-white/80 sm:px-6">
                 {row}

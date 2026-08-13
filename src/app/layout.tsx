@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono, Instrument_Serif } from "next/font/google";
 
 import { QueryProvider } from "@/modules/lib/react-query/provider";
@@ -34,6 +34,14 @@ export const metadata: Metadata = {
   },
   description:
     "Compra, renta, invierte y vende propiedades en México con valuaciones, tours, ofertas digitales y procesos transparentes.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Lets fixed bars (mobile CTA) extend into the notch area; padding uses
+  // env(safe-area-inset-*) so content stays clear of the home indicator.
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

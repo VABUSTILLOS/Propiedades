@@ -171,16 +171,21 @@ export function SearchResults({
               {list(true)}
             </div>
             {selectedItem && (
-              <SplitDetailPanel
-                key={selectedItem.id}
-                listing={selectedItem}
-                onClose={() => setSelectedItem(null)}
-                className="lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto"
-              />
+              /* Mobile: full-screen overlay so the panel scrolls within its
+                 own layer instead of growing unbounded in the layout.
+                 Desktop: stays in the left column with a capped height. */
+              <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background lg:static lg:z-auto lg:overflow-visible lg:bg-transparent">
+                <SplitDetailPanel
+                  key={selectedItem.id}
+                  listing={selectedItem}
+                  onClose={() => setSelectedItem(null)}
+                  className="min-h-full rounded-none border-0 lg:min-h-0 lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:rounded-2xl lg:border"
+                />
+              </div>
             )}
           </div>
           <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
-            {map("h-[50vh] lg:h-[calc(100vh-11rem)]")}
+            {map("h-[40vh] lg:h-[calc(100vh-11rem)]")}
           </div>
         </div>
       ) : view === "map" ? (

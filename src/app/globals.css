@@ -190,6 +190,9 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Mobile UX: no gray flash on tap (iOS), no accidental horizontal pan. */
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
