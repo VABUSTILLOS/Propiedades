@@ -34,6 +34,7 @@ export function PropertyCard({
   hotScore = null,
   discountPct = null,
   showDetails = false,
+  from,
 }: {
   listing: PropertiesRow;
   /** Whether the current user already saved this property as a favorite. */
@@ -44,6 +45,8 @@ export function PropertyCard({
   discountPct?: number | null;
   /** Whether to render the extra financial details on the card. */
   showDetails?: boolean;
+  /** Full URL of the current list/search view so the detail page can link back. */
+  from?: string;
 }) {
   const price =
     listing.price > 0
@@ -62,9 +65,13 @@ export function PropertyCard({
     listing.precio_m2_terreno ??
     (listing.terreno_m2 > 0 ? listing.price / listing.terreno_m2 : 0);
 
+  const href = from
+    ? `/property/${listing.slug}?from=${encodeURIComponent(from)}`
+    : `/property/${listing.slug}`;
+
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
-      <Link href={`/property/${listing.slug}`} className="block">
+      <Link href={href} className="block">
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
         {listing.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element

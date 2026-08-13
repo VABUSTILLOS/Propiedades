@@ -71,11 +71,14 @@ export function SplitDetailPanel({
   listing,
   onClose,
   className,
+  from,
 }: {
   listing: ListingWithHot;
   /** Clears the selection and restores the results list. */
   onClose: () => void;
   className?: string;
+  /** Full URL of the current list/search view so the detail page can link back. */
+  from?: string;
 }) {
   const [data, setData] = useState<PanelData | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -497,7 +500,7 @@ export function SplitDetailPanel({
         )}
 
         <Link
-          href={`/property/${listing.slug}`}
+          href={from ? `/property/${listing.slug}?from=${encodeURIComponent(from)}` : `/property/${listing.slug}`}
           className="inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-copper-deep"
         >
           Ver propiedad completa

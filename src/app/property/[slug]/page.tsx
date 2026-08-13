@@ -87,6 +87,13 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const raw = await searchParams;
   const mode = raw.mode === "investor" ? "inversionista" : "residencia";
 
+  // Return to the exact listados/search view the user came from (passed as a
+  // `from` query param by the result cards), falling back to /listados.
+  const from =
+    typeof raw.from === "string" && isSafeBackHref(raw.from)
+      ? raw.from
+      : "/listados";
+
   const user = await getCurrentUser();
   const canInquire = user?.id !== listing.owner_id;
   const isSaved = user ? await isFavoriteSaved(user.id, listing.id) : false;
@@ -106,11 +113,11 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
     <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 pt-10 pb-28 lg:pb-10">
         <Link
-          href="/search"
+          href={from}
           className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
-          Volver a propiedades
+          Volver a listados
         </Link>
 
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -496,4 +503,12 @@ function formatPhoneDisplay(phone: string) {
   const digits = phone.replace(/\D/g, "");
   if (digits.length !== 10) return phone;
   return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+}
+
+/**
+ * Only accept same-site relative paths for the back link (never `//host` or
+ * absolute URLs) so the `from` query param can't be used as an open redirect.
+ */
+function isSafeBackHref(href: string): boolean {
+  return href.startsWith("/") && !href.startsWith("//") && !href.includes(":");
 }

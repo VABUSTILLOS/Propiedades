@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { SignOutButton } from "@/modules/auth/components/sign-out-button";
 import {
   Sheet,
   SheetContent,
@@ -101,20 +102,64 @@ export function MobileNav({ user }: { user: boolean }) {
             );
           })}
         </nav>
-        {user && (
-          <div className="mt-2 border-t border-border px-4 pt-4">
-            <SheetClose
-              render={
-                <Link
-                  href="/fsbo"
-                  className={cn(buttonVariants(), "w-full justify-center")}
-                />
-              }
-            >
-              Publicar propiedad
-            </SheetClose>
-          </div>
-        )}
+        <div className="mt-2 border-t border-border px-4 pt-4">
+          {user ? (
+            <>
+              <SheetClose
+                render={
+                  <Link
+                    href="/fsbo"
+                    className={cn(buttonVariants(), "w-full justify-center")}
+                  />
+                }
+              >
+                Publicar propiedad
+              </SheetClose>
+              <SheetClose
+                render={
+                  <Link
+                    href="/dashboard"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "mt-2 w-full justify-center",
+                    )}
+                  />
+                }
+              >
+                Mi panel
+              </SheetClose>
+              <div className="mt-2">
+                <SignOutButton />
+              </div>
+            </>
+          ) : (
+            <>
+              <SheetClose
+                render={
+                  <Link
+                    href="/sign-up"
+                    className={cn(buttonVariants(), "w-full justify-center")}
+                  />
+                }
+              >
+                Crear cuenta
+              </SheetClose>
+              <SheetClose
+                render={
+                  <Link
+                    href="/sign-in"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "mt-2 w-full justify-center",
+                    )}
+                  />
+                }
+              >
+                Iniciar sesión
+              </SheetClose>
+            </>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );

@@ -34,6 +34,7 @@ export function SearchResultCard({
   construccionM2 = 0,
   terrenoM2 = 0,
   showDetails = false,
+  from,
 }: {
   title: string;
   slug: string;
@@ -51,12 +52,17 @@ export function SearchResultCard({
   terrenoM2?: number;
   /** Whether to render the extra financial details on the card. */
   showDetails?: boolean;
+  /** Full URL of the current list/search view so the detail page can link back. */
+  from?: string;
 }) {
   const precioM2Const = construccionM2 > 0 ? price / construccionM2 : 0;
   const precioM2Terreno = terrenoM2 > 0 ? price / terrenoM2 : 0;
+  const href = from
+    ? `/property/${slug}?from=${encodeURIComponent(from)}`
+    : `/property/${slug}`;
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
-      <Link href={`/property/${slug}`} className="block">
+      <Link href={href} className="block">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element

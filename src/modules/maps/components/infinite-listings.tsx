@@ -85,6 +85,7 @@ export function InfiniteListings({
   emptyState,
   onCardHover,
   onCardSelect,
+  from,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -99,6 +100,9 @@ export function InfiniteListings({
   onCardHover?: (id: string | null) => void;
   /** Called when a card is clicked instead of navigating (split detail pane). */
   onCardSelect?: (item: ListingWithHot) => void;
+  /** Full URL of the current list/search view, passed on so the detail page
+   *  can link back to it. */
+  from?: string;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
   const [total, setTotal] = useState(initialTotal);
@@ -213,6 +217,7 @@ export function InfiniteListings({
                 hotScore={item.hotScore}
                 discountPct={item.discountPct}
                 showDetails={showDetails}
+                from={from}
               />
             ) : (
               <SearchResultCard
@@ -230,6 +235,7 @@ export function InfiniteListings({
                 construccionM2={item.construccion_m2}
                 terrenoM2={item.terreno_m2}
                 showDetails={showDetails}
+                from={from}
               />
             )}
           </div>

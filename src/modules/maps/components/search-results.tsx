@@ -61,6 +61,11 @@ export function SearchResults({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ListingWithHot | null>(null);
 
+  // Full current URL (path + filters) so the property detail page can send
+  // users back to the exact listados/search view they came from.
+  const currentQuery = searchParams.toString();
+  const fromUrl = currentQuery ? `${basePath}?${currentQuery}` : basePath;
+
   // The map shows every pin matching the current filters (bounds included),
   // so it always re-fetches when the URL changes.
   useEffect(() => {
@@ -98,6 +103,7 @@ export function SearchResults({
       initialTotal={initialTotal}
       filtersQueryString={filtersQueryString}
       card={card}
+      from={fromUrl}
       gridClassName={
         split
           ? "grid gap-x-4 gap-y-6 sm:grid-cols-2"
@@ -149,6 +155,7 @@ export function SearchResults({
       focusPosition={focusPosition}
       selectionId={selectedItem?.id ?? null}
       heightClass={heightClass}
+      from={fromUrl}
     />
   );
 
@@ -179,6 +186,7 @@ export function SearchResults({
                   key={selectedItem.id}
                   listing={selectedItem}
                   onClose={() => setSelectedItem(null)}
+                  from={fromUrl}
                   className="min-h-full rounded-none border-0 lg:min-h-0 lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:rounded-2xl lg:border"
                 />
               </div>

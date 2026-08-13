@@ -14,47 +14,54 @@ import { ThemeToggle } from "@/modules/home/components/theme-toggle";
 export function SiteHeader({ user }: { user: AuthUser | null }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-6">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-copper to-copper-deep text-white shadow-sm">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-copper to-copper-deep text-white shadow-sm">
             <Building2 className="size-[18px]" />
           </span>
-          <span className="text-lg font-bold tracking-tight">Propiedades</span>
+          <span className="hidden text-lg font-bold tracking-tight min-[360px]:inline">
+            Propiedades
+          </span>
         </Link>
 
         <DesktopNav />
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <ThemeToggle />
           {user ? (
             <>
-              <Link
-                href="/fsbo"
-                className={buttonVariants({
-                  className: "hidden sm:inline-flex",
-                })}
-              >
-                Publicar
-              </Link>
-              <Link
-                href="/dashboard"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                Mi panel
-              </Link>
-              <SignOutButton />
+              <span className="hidden sm:inline-flex">
+                <Link href="/fsbo" className={buttonVariants()}>
+                  Publicar
+                </Link>
+              </span>
+              <span className="hidden sm:inline-flex">
+                <Link
+                  href="/dashboard"
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  Mi panel
+                </Link>
+              </span>
+              <span className="hidden sm:inline-flex">
+                <SignOutButton />
+              </span>
             </>
           ) : (
             <>
-              <Link
-                href="/sign-in"
-                className={buttonVariants({ variant: "ghost" })}
-              >
-                Entrar
-              </Link>
-              <Link href="/sign-up" className={buttonVariants()}>
-                Crear cuenta
-              </Link>
+              <span className="hidden sm:inline-flex">
+                <Link
+                  href="/sign-in"
+                  className={buttonVariants({ variant: "ghost" })}
+                >
+                  Entrar
+                </Link>
+              </span>
+              <span className="hidden sm:inline-flex">
+                <Link href="/sign-up" className={buttonVariants()}>
+                  Crear cuenta
+                </Link>
+              </span>
             </>
           )}
           <MobileNav user={user !== null} />

@@ -58,6 +58,7 @@ export function PropertiesMap({
   focusId = null,
   focusPosition = null,
   selectionId = null,
+  from,
 }: {
   markers: PropertyMapMarker[];
   /** Center the map on these bounds when they appear (URL-driven navigation). */
@@ -82,6 +83,8 @@ export function PropertiesMap({
   focusPosition?: { lat: number; lng: number; approximate?: boolean } | null;
   /** Listing selected from the list — shows the compact bottom card (like a pin click). */
   selectionId?: string | null;
+  /** Full URL of the current list/search view so the detail page can link back. */
+  from?: string;
 }) {
   const google = useGoogleMaps();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -360,7 +363,7 @@ export function PropertiesMap({
               </p>
             </div>
             <Link
-              href={`/property/${selected.slug}`}
+              href={from ? `/property/${selected.slug}?from=${encodeURIComponent(from)}` : `/property/${selected.slug}`}
               className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-copper-deep"
             >
               Ver propiedad
