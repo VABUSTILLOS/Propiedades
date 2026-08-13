@@ -306,7 +306,7 @@ function drawFooter(doc: jsPDF) {
 /* Photos + WhatsApp CTA                                               */
 /* ------------------------------------------------------------------ */
 
-const WHATSAPP_GREEN: [number, number, number] = [37, 211, 102]; // #25D366
+const WHATSAPP_GREEN: [number, number, number] = [10, 96, 53]; // #0A6035
 
 /**
  * Convert one SVG elliptical arc segment into cubic Bézier curves

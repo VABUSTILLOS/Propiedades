@@ -126,10 +126,10 @@
   --copper-soft: #FFB36B;
   --copper-dark: #6E1D00;
   --live: #7BC796;
-  --whatsapp: #25D366;
-  --whatsapp-deep: #128C7E;
-  --whatsapp-hover: #1EBE5B;
-  --whatsapp-deep-hover: #0F7A6D;
+  --whatsapp: #0A6035;
+  --whatsapp-deep: #064227;
+  --whatsapp-hover: #074F2B;
+  --whatsapp-deep-hover: #05351F;
 }
 
 .dark {
@@ -174,10 +174,10 @@
   --copper-soft: #FFB36B;
   --copper-dark: #6E1D00;
   --live: #7BC796;
-  --whatsapp: #25D366;
-  --whatsapp-deep: #128C7E;
-  --whatsapp-hover: #1EBE5B;
-  --whatsapp-deep-hover: #0F7A6D;
+  --whatsapp: #0A6035;
+  --whatsapp-deep: #064227;
+  --whatsapp-hover: #074F2B;
+  --whatsapp-deep-hover: #05351F;
 }
 
 @layer base {
