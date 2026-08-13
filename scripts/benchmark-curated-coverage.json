@@ -1,0 +1,132 @@
+{
+ "Cerro de la Cruz": {
+  "const": 16779,
+  "land": 19380,
+  "note": "1 prop(s) [local], const samples:1 land samples:1"
+ },
+ "11 de Febrero": {
+  "const": 0,
+  "land": 1458,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ },
+ "Cumbres de San Francisco": {
+  "const": 0,
+  "land": 9000,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ },
+ "Z-5 P1": {
+  "const": 0,
+  "land": 16129,
+  "note": "1 prop(s) [terreno], const samples:1 land samples:1"
+ },
+ "Los Frailes": {
+  "const": 0,
+  "land": 17867,
+  "note": "1 prop(s) [terreno], const samples:1 land samples:1"
+ },
+ "Los Girasoles IV Etapa": {
+  "const": 14286,
+  "land": 14286,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Pedregal del Valle": {
+  "const": 0,
+  "land": 7250,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ },
+ "Chulavista I Etapa": {
+  "const": 14094,
+  "land": 6780,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Los Girasoles III Etapa": {
+  "const": 27660,
+  "land": 18978,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Villa del Real": {
+  "const": 25658,
+  "land": 15600,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "San Felipe I Etapa": {
+  "const": 11250,
+  "land": 11250,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Residencial": {
+  "const": 19043,
+  "land": 17381,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Fraccionamiento Cumbres": {
+  "const": 0,
+  "land": 10400,
+  "note": "1 prop(s) [terreno], const samples:1 land samples:1"
+ },
+ "Colina del Puerto": {
+  "const": 13034,
+  "land": 13897,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Popular": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - data anomaly: 80,000 m² area (2.2M MXN) yields 28/m², ~100x below all other benchmarks; excluded per unreliable-sample precedent."
+ },
+ "Paseos Camino Real": {
+  "const": 25862,
+  "land": 7317,
+  "note": "1 prop(s) [casa], const samples:1 land samples:1"
+ },
+ "Quinta Sebastián": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - no m² data"
+ },
+ "Los Llanos": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - no m² data"
+ },
+ "Las Canteras": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - no m² data"
+ },
+ "Plan de Ayala": {
+  "const": 10638,
+  "land": 0,
+  "note": "1 prop(s) [bodega], const samples:1 land samples:0"
+ },
+ "Ejido Rancho de En Medio": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - no m² data"
+ },
+ "México": {
+  "const": 0,
+  "land": 0,
+  "note": "SKIP - no m² data (dataset-37, terreno land_area=0)"
+ },
+ "Pablo Amaya Norte": {
+  "const": 7075,
+  "land": 0,
+  "note": "1 prop(s) [bodega], const samples:1 land samples:0"
+ },
+ "Parque Industrial Chihuahua Sur": {
+  "const": 0,
+  "land": 954,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ },
+ "Veredas del Sur": {
+  "const": 0,
+  "land": 1480,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ },
+ "Haciendas del Rejón": {
+  "const": 0,
+  "land": 26000,
+  "note": "1 prop(s) [terreno], const samples:0 land samples:1"
+ }
+}

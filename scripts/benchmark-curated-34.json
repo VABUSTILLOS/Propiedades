@@ -1,0 +1,20 @@
+{
+  "Agrícola Francisco Villa":      {"const": 12195, "land": 0,    "note": "casa 30653265 (3000000/246)"},
+  "Barrio de Londres":             {"const": 16438, "land": 0,    "note": "casa 30669086 (1200000/73)"},
+  "Benito Juárez CNOP":            {"const": 0,     "land": 2718, "note": "terreno 30476443 (299000/110)"},
+  "Ejido Terrazas y Minas del Cobre": {"const": 0,  "land": 227,  "note": "terreno 25894267 (190000/836)"},
+  "El Sacramento":                 {"const": 0,     "land": 900,  "note": "terreno 28692797 (1800000/2000)"},
+  "Nuevo Chihuahua":               {"const": 0,     "land": 7303, "note": "terreno 29879337 (1950000/267)"},
+  "Nuevo Sacramento":              {"const": 0,     "land": 267,  "note": "terreno 29937021 (400000/1500)"},
+  "Obrera":                        {"const": 13945, "land": 0,    "note": "depto 30376748 (1785000/128); depto 30108277 sin m2"},
+  "Punta Oriente":                 {"const": 10909, "land": 0,    "note": "local 28391233 (1200000/110)"},
+  "Quintas Carolinas I":           {"const": 0,     "land": 488,  "note": "terreno 29481667 (2342400/4800)"},
+  "Rincones de San Francisco":     {"const": 0,     "land": 8035, "note": "terreno 29427342 (2490870/310)"},
+  "Rincones de Sierra Azul":       {"const": 0,     "land": 877,  "note": "terreno 27041272 (2300000/2622)"},
+  "Robinson Residencial":          {"const": 0,     "land": 1074, "note": "avg terrenos 26731853 (3000000/2622) + 30029283 (2200000/2191)"},
+  "Roma V":                        {"const": 35950, "land": 0,    "note": "depto 28283676 (2876000/80)"},
+  "Sacramento I y II":             {"const": 0,     "land": 380,  "note": "terreno 30256594 (855000/2250)"},
+  "Tabalaopa":                     {"const": 0,     "land": 1020, "note": "terreno 30647278 (2500000/2451)"},
+  "Valle Escondido":               {"const": 0,     "land": 8900, "note": "terreno 29514839 (2225000/250)"},
+  "Valle de Chihuahua":            {"const": 0,     "land": 891,  "note": "terreno 30453435 (2850000/3200)"}
+}

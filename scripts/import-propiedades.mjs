@@ -111,8 +111,12 @@ function inferType(operationType) {
 
 function toPosIntOrNull(v) {
   if (v === undefined || v === null || v === "") return null;
-  const n = Number.parseInt(String(v).replace(/[^\d]/g, ""), 10);
-  return Number.isFinite(n) && n > 0 ? n : null;
+  if (typeof v === "number" && Number.isFinite(v)) {
+    return v > 0 ? Math.round(v * 100) / 100 : null;
+  }
+  const s = String(v).trim().replace(",", "");
+  const n = Number(s);
+  return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
 }
 
 /** Fixed exchange rate used to convert USD-denominated prices to MXN. */
@@ -219,10 +223,16 @@ function findDuplicate(newListing, existingRows, imageIndex) {
   // price + colonia/address heuristic fallback (CDN domains differ across portals)
   const nn = normText(newListing.neighborhood || newListing.street_address || "");
   if (nn) {
+    const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Word-boundary-aware containment: "San Felipe I" must not match "San Felipe II".
+    const wordBoundaryContains = (hay, needle) =>
+      new RegExp(`(^|\\s)${escapeRe(needle)}($|\\s)`).test(hay);
     for (const row of existingRows) {
       if (row.price !== price || row.currency !== (newListing.price_currency ?? "MXN")) continue;
       const en = normText(row.colonia || row.address || "");
-      if (en && (en.includes(nn) || nn.includes(en))) return { type: "price+colonia", row };
+      if (en && (wordBoundaryContains(en, nn) || wordBoundaryContains(nn, en))) {
+        return { type: "price+colonia", row };
+      }
     }
   }
   return null;

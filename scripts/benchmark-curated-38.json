@@ -1,0 +1,17 @@
+{
+ "Campestre las Carolinas": {
+  "const": 3407,
+  "land": 0,
+  "note": "1 prop [casa], const samples:1 (3407) land:0 (dataset-38)"
+ },
+ "Parque Industrial Impulso VII y VIII": {
+  "const": 3662,
+  "land": 0,
+  "note": "1 prop [departamento], const samples:1 (3662) land:0 (dataset-38b)"
+ },
+ "Rinconadas del Valle": {
+  "const": 0,
+  "land": 3048,
+  "note": "1 prop [terreno], const samples:0 land samples:1 (3048) (dataset-38b)"
+ }
+}

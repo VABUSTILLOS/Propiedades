@@ -1,0 +1,18 @@
+[
+  { "colonia": "Américas", "const": 13218, "land": 0, "note": "2300000/174 local single sample" },
+  { "colonia": "Atenas I, II, III, IV, V y VI", "const": 7308, "land": 0, "note": "950000/130 casa single sample" },
+  { "colonia": "Cafetales", "const": 25854, "land": 0, "note": "2120000/82 local single sample" },
+  { "colonia": "Cerrada Baena", "const": 29333, "land": 0, "note": "2640000/90 local single sample" },
+  { "colonia": "Condominos Comerciales Dumas I y II", "const": 6109, "land": 0, "note": "1680000/275 local single sample" },
+  { "colonia": "Guadalupe", "const": 34630, "land": 0, "note": "1870000/54 local single sample" },
+  { "colonia": "Ignacio Allende", "const": 7804, "land": 0, "note": "avg of 2 locals (1990000/255 x2)" },
+  { "colonia": "Jardines del Santuario", "const": 23333, "land": 0, "note": "1260000/54 local single sample" },
+  { "colonia": "La Galera I, II, III, IV y V", "const": 14444, "land": 0, "note": "650000/45 casa single sample" },
+  { "colonia": "Lomas Universidad II", "const": 16667, "land": 0, "note": "2000000/120 casa single sample" },
+  { "colonia": "Poblado San Vicente", "const": 14231, "land": 0, "note": "1850000/130 casa single sample" },
+  { "colonia": "Quinta Versalles", "const": 15000, "land": 0, "note": "1350000/90 casa single sample" },
+  { "colonia": "Quintas Carolinas I, II, III, IV y V", "const": 33621, "land": 0, "note": "1950000/58 local single sample" },
+  { "colonia": "Rinconada de La Sierra I, II, III, IV y V", "const": 11209, "land": 0, "note": "2410000/215 casa single sample" },
+  { "colonia": "San Ángel", "const": 27027, "land": 0, "note": "2000000/74 local single sample" },
+  { "colonia": "Satélite", "const": 6160, "land": 0, "note": "3000000/487 local single sample" }
+]

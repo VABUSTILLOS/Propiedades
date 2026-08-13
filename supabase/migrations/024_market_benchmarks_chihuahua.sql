@@ -44,5 +44,30 @@ VALUES
   -- Fallback benchmarks from list captures (n=1, circular — low confidence)
   ('Chihuahua', 'Campesina',                                 22936,  NULL, 0),
   ('Chihuahua', 'Cumbres Universidad',                       13750,  NULL, 0),
-  ('Chihuahua', 'Molino de Agua',                            16480,  NULL, 0)
+  ('Chihuahua', 'Molino de Agua',                            16480,  NULL, 0),
+  -- Real benchmarks from detail-page statistics (dataset 29, Oct 2023 + Nov 2024 captures)
+  ('Chihuahua', 'Castilla Reliz',                            19549, 15883, 0),
+  ('Chihuahua', 'Chihuahua II',                              12443, 12052, 0),
+  ('Chihuahua', 'Villas del Rey V',                           6717,  5162, 0),
+  ('Chihuahua', 'Rinconada los Nogales',                      6728,  4878, 0),
+  ('Chihuahua', 'Arboledas I',                                9582,  9837, 0),
+  -- Fallback benchmark (n=1, circular — low confidence)
+  ('Chihuahua', 'Diego Lucero',                               8065,  NULL, 0),
+  -- Real benchmarks from detail-page statistics (dataset 30, 2023–2025 captures)
+  ('Chihuahua', 'Los Naranjos',                               6493,  NULL, 0),
+  ('Chihuahua', 'Rigoberto Quiroz',                           5038,  NULL, 0),
+  ('Chihuahua', 'Rincón Colonial',                            7795,  NULL, 0),
+  -- Real benchmarks from multi-sample list captures (dataset 30)
+  ('Chihuahua', 'Chihuahua I',                               21388,  NULL, 0),
+  ('Chihuahua', 'Fraccionamiento Provincia de Santa Clara',  19355,  NULL, 0),
+  -- Fallback benchmarks from list captures (n=1, circular — low confidence)
+  ('Chihuahua', 'Jardines del Sol',                          10433,  NULL, 0),
+  ('Chihuahua', 'Rincón de Los Huertos',                      7770,  NULL, 0),
+  ('Chihuahua', 'Rinconadas de la Sierra',                    6973,  NULL, 0),
+  ('Chihuahua', '2 de Octubre y Ampliación',                  7800,  NULL, 0),
+  ('Chihuahua', 'Tierra y Libertad',                         16667,  NULL, 0),
+  ('Chihuahua', 'Miguel Hidalgo',                             9000,  NULL, 0),
+  ('Chihuahua', 'Adelitas I',                                 8097,  NULL, 0),
+  ('Chihuahua', 'Lomas Vallarta',                            12228,  NULL, 0),
+  ('Chihuahua', 'Ática',                                     23984,  NULL, 0)
 ON CONFLICT (city, colonia) DO NOTHING;

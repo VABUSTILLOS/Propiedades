@@ -1,0 +1,2473 @@
+[
+ {
+  "colonia": "11 de Febrero",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 1458.33,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "1ro de Mayo",
+  "avg_price_m2_const": 8876.4,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "2 de Octubre y Ampliación",
+  "avg_price_m2_const": 7800.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Abraham González",
+  "avg_price_m2_const": 11756.94,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Adelitas I",
+  "avg_price_m2_const": 8097.17,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Adición Sur Universidad",
+  "avg_price_m2_const": 37666.67,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Aeropuerto",
+  "avg_price_m2_const": 3398.71,
+  "avg_price_m2_land": 2076.75,
+  "n_const": 16,
+  "n_land": 8
+ },
+ {
+  "colonia": "Agrícola Francisco Villa",
+  "avg_price_m2_const": 7006.22,
+  "avg_price_m2_land": 1300.0,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Altamira",
+  "avg_price_m2_const": 9933.77,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ampliación Américas",
+  "avg_price_m2_const": 40714.29,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Américas",
+  "avg_price_m2_const": 11033.06,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Angel Trías",
+  "avg_price_m2_const": 17011.49,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ankara",
+  "avg_price_m2_const": 20340.14,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Arboledas I",
+  "avg_price_m2_const": 10657.38,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Arboledas V",
+  "avg_price_m2_const": 11231.88,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Arcadas",
+  "avg_price_m2_const": 4808.28,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Argeo",
+  "avg_price_m2_const": 2563.29,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Arquitectos",
+  "avg_price_m2_const": 8439.68,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Arquitos",
+  "avg_price_m2_const": 31764.71,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Atenas I, II, III, IV, V y VI",
+  "avg_price_m2_const": 7307.69,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Av Colegio",
+  "avg_price_m2_const": 21973.09,
+  "avg_price_m2_land": 21973.09,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Avícola II",
+  "avg_price_m2_const": 9252.08,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Bahías",
+  "avg_price_m2_const": 27016.58,
+  "avg_price_m2_land": null,
+  "n_const": 8,
+  "n_land": 0
+ },
+ {
+  "colonia": "Barrio de Londres",
+  "avg_price_m2_const": 8779.95,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Begonias",
+  "avg_price_m2_const": 13793.1,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Bellavista",
+  "avg_price_m2_const": 8409.68,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Benito Juárez CNOP",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 2718.18,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Bosques de San Pedro",
+  "avg_price_m2_const": 15100.94,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Bosques de San Pedro 1",
+  "avg_price_m2_const": 21626.51,
+  "avg_price_m2_land": 24930.56,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Bosques del Valle",
+  "avg_price_m2_const": 9767.12,
+  "avg_price_m2_land": 5365.58,
+  "n_const": 2,
+  "n_land": 3
+ },
+ {
+  "colonia": "CDP",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 1868.75,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cafetales",
+  "avg_price_m2_const": 18851.59,
+  "avg_price_m2_land": 10445.38,
+  "n_const": 5,
+  "n_land": 2
+ },
+ {
+  "colonia": "Caminos del Valle",
+  "avg_price_m2_const": 27173.91,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campanario",
+  "avg_price_m2_const": 9380.89,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campanario II",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 6106.87,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Campesina",
+  "avg_price_m2_const": 15055.2,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campestre Residencial I",
+  "avg_price_m2_const": 11828.7,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campestre Residencial II",
+  "avg_price_m2_const": 5562.87,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campestre Residencial III",
+  "avg_price_m2_const": 20202.7,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campestre del Bosque",
+  "avg_price_m2_const": 4351.85,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campestre las Carolinas",
+  "avg_price_m2_const": 8279.92,
+  "avg_price_m2_land": 1798.89,
+  "n_const": 6,
+  "n_land": 1
+ },
+ {
+  "colonia": "Campestre-Lomas",
+  "avg_price_m2_const": 17673.72,
+  "avg_price_m2_land": 26233.18,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Campo Bello",
+  "avg_price_m2_const": 29166.67,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Campo Bello Etapa I, II, III, IV, V y VI",
+  "avg_price_m2_const": 10008.26,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Castilla Reliz",
+  "avg_price_m2_const": 22068.89,
+  "avg_price_m2_land": null,
+  "n_const": 8,
+  "n_land": 0
+ },
+ {
+  "colonia": "Catania Residencial",
+  "avg_price_m2_const": 9375.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cdp",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 2940.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Centro SCT Chihuahua",
+  "avg_price_m2_const": 5925.93,
+  "avg_price_m2_land": 4740.31,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cerrada Baena",
+  "avg_price_m2_const": 29333.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cerrada Castilla",
+  "avg_price_m2_const": 26488.77,
+  "avg_price_m2_land": 16161.75,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Cerrada Navarra",
+  "avg_price_m2_const": 11727.11,
+  "avg_price_m2_land": 24012.35,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cerrada Ríoja",
+  "avg_price_m2_const": 16706.59,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cerro Prieto",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 1344.09,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cerro de La Cruz",
+  "avg_price_m2_const": 11262.63,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cerro de la Cruz",
+  "avg_price_m2_const": 16778.52,
+  "avg_price_m2_land": 19379.84,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Charros",
+  "avg_price_m2_const": 10599.08,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Chihuahua Centro",
+  "avg_price_m2_const": 12827.77,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Chihuahua I",
+  "avg_price_m2_const": 14540.32,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Chihuahua II",
+  "avg_price_m2_const": 13608.49,
+  "avg_price_m2_land": 369.23,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Chihuahuense",
+  "avg_price_m2_const": 9772.73,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Chuihuahua 2000",
+  "avg_price_m2_const": 35555.56,
+  "avg_price_m2_land": 35555.56,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Chulavista I",
+  "avg_price_m2_const": 15178.57,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Chulavista I Etapa",
+  "avg_price_m2_const": 14094.49,
+  "avg_price_m2_land": 6780.3,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cima de La Cantera",
+  "avg_price_m2_const": 19448.01,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ciudad Universitaria",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 2666.67,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Club Campestre",
+  "avg_price_m2_const": 4911.42,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Colina del Puerto",
+  "avg_price_m2_const": 13034.48,
+  "avg_price_m2_land": 13897.06,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Colinas del León",
+  "avg_price_m2_const": 10952.38,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Colinas del Sol III",
+  "avg_price_m2_const": 10349.65,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Colinas del Valle",
+  "avg_price_m2_const": 15156.38,
+  "avg_price_m2_land": 17085.71,
+  "n_const": 4,
+  "n_land": 1
+ },
+ {
+  "colonia": "Condesa Rejón",
+  "avg_price_m2_const": 30000.0,
+  "avg_price_m2_land": 30000.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Condominos Comerciales Dumas I y II",
+  "avg_price_m2_const": 6109.09,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cordilleras",
+  "avg_price_m2_const": 14024.44,
+  "avg_price_m2_land": 9749.53,
+  "n_const": 11,
+  "n_land": 4
+ },
+ {
+  "colonia": "Cosmos",
+  "avg_price_m2_const": 14375.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Country Club San Francisco",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 5200.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Crucero",
+  "avg_price_m2_const": 5392.16,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cuauhtémoc",
+  "avg_price_m2_const": 15924.12,
+  "avg_price_m2_land": null,
+  "n_const": 9,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cumbres III Etapa",
+  "avg_price_m2_const": 20140.85,
+  "avg_price_m2_land": 21216.62,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cumbres IV",
+  "avg_price_m2_const": 3293.41,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cumbres Universidad",
+  "avg_price_m2_const": 11902.27,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cumbres Universidad II",
+  "avg_price_m2_const": 5971.08,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cumbres de Robinson",
+  "avg_price_m2_const": 7333.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Cumbres de San Francisco",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 9000.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Cumbres de San Francisco I y II",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 5953.44,
+  "n_const": 0,
+  "n_land": 2
+ },
+ {
+  "colonia": "Cumbres del Sur I",
+  "avg_price_m2_const": 13468.47,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Dale",
+  "avg_price_m2_const": 10044.34,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "De La Madre (10 de Mayo)",
+  "avg_price_m2_const": 11770.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Diamante Reliz",
+  "avg_price_m2_const": 20965.52,
+  "avg_price_m2_land": 10841.86,
+  "n_const": 25,
+  "n_land": 4
+ },
+ {
+  "colonia": "Diego Lucero",
+  "avg_price_m2_const": 7254.84,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ejidal",
+  "avg_price_m2_const": 2187.5,
+  "avg_price_m2_land": 2187.5,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Ejido Labor de Terrazas",
+  "avg_price_m2_const": 29949.37,
+  "avg_price_m2_land": 734.78,
+  "n_const": 6,
+  "n_land": 3
+ },
+ {
+  "colonia": "Ejido Terrazas y Minas del Cobre",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 227.27,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "El Bajo",
+  "avg_price_m2_const": 11598.44,
+  "avg_price_m2_land": 1916.67,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "El Jardín",
+  "avg_price_m2_const": 2363.64,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "El Mineral I, II y III",
+  "avg_price_m2_const": 18461.54,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "El Palomar",
+  "avg_price_m2_const": 9000.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "El Porvenir I",
+  "avg_price_m2_const": 8662.79,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "El Sacramento",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 447.84,
+  "n_const": 0,
+  "n_land": 4
+ },
+ {
+  "colonia": "El Sáuz",
+  "avg_price_m2_const": 34375.0,
+  "avg_price_m2_land": 100.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "El Vallecillo",
+  "avg_price_m2_const": 12500.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Encordada de León",
+  "avg_price_m2_const": 6359.42,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Esperanza",
+  "avg_price_m2_const": 2666.67,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Foxconn",
+  "avg_price_m2_const": 10526.32,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Fraccionamiento Cumbres",
+  "avg_price_m2_const": 10400.0,
+  "avg_price_m2_land": 10400.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Fraccionamiento Cumbres de San Francisco",
+  "avg_price_m2_const": 25059.1,
+  "avg_price_m2_land": 35333.33,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Fraccionamiento Provincia de Santa Clara",
+  "avg_price_m2_const": 12587.79,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Fraccionamiento Puerta Rivera Real",
+  "avg_price_m2_const": 13253.01,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Francisco I Madero",
+  "avg_price_m2_const": 9868.46,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Francisco R Almada",
+  "avg_price_m2_const": 22500.0,
+  "avg_price_m2_land": 5750.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Francisco Villa (Villa Vieja y Villa Nueva)",
+  "avg_price_m2_const": 5234.38,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Fuentes del Santuario",
+  "avg_price_m2_const": 21901.64,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Granjas Cerro Grande",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 600.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Granjas Familiares Valle de Chihuahua",
+  "avg_price_m2_const": 9001.29,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Granjas del Valle",
+  "avg_price_m2_const": 1142.86,
+  "avg_price_m2_land": 1581.48,
+  "n_const": 1,
+  "n_land": 6
+ },
+ {
+  "colonia": "Guadalupe",
+  "avg_price_m2_const": 26456.79,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Hacienda Camila",
+  "avg_price_m2_const": 19116.5,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Hacienda Isabella",
+  "avg_price_m2_const": 8565.11,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Hacienda Santa Fe",
+  "avg_price_m2_const": 16071.43,
+  "avg_price_m2_land": 400.08,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Hacienda Victoria",
+  "avg_price_m2_const": 23414.0,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Hacienda del Moro",
+  "avg_price_m2_const": 6147.95,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Haciendas Real",
+  "avg_price_m2_const": 13520.98,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Haciendas del Rejón",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 26000.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Haciendas del Valle II",
+  "avg_price_m2_const": 40845.07,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Herradura Pdu",
+  "avg_price_m2_const": 5415.48,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ignacio Allende",
+  "avg_price_m2_const": 5883.4,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Independencia",
+  "avg_price_m2_const": 5750.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Industrial",
+  "avg_price_m2_const": 6479.48,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Industrias",
+  "avg_price_m2_const": 6886.23,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Infonavit Nacional",
+  "avg_price_m2_const": 9899.45,
+  "avg_price_m2_land": 23376.62,
+  "n_const": 4,
+  "n_land": 1
+ },
+ {
+  "colonia": "Insurgentes I",
+  "avg_price_m2_const": 4212.17,
+  "avg_price_m2_land": 7388.89,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Insurgentes II",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 2554.74,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Jardines de Oriente",
+  "avg_price_m2_const": 11982.76,
+  "avg_price_m2_land": 1864.75,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Jardines de Oriente IX y X",
+  "avg_price_m2_const": 8840.08,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Jardines de San Francisco",
+  "avg_price_m2_const": 41578.95,
+  "avg_price_m2_land": 41578.95,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Jardines del Sacramento",
+  "avg_price_m2_const": 7431.27,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Jardines del Santuario",
+  "avg_price_m2_const": 32742.77,
+  "avg_price_m2_land": null,
+  "n_const": 8,
+  "n_land": 0
+ },
+ {
+  "colonia": "Jardines del Saucito",
+  "avg_price_m2_const": 45454.55,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Jardines del Sol",
+  "avg_price_m2_const": 10433.42,
+  "avg_price_m2_land": 1851.2,
+  "n_const": 1,
+  "n_land": 2
+ },
+ {
+  "colonia": "Junta de los Ríos \"B\" Ampl",
+  "avg_price_m2_const": 13483.15,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Junta de los Ríos y Etapas",
+  "avg_price_m2_const": 11183.78,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Juventud Norte",
+  "avg_price_m2_const": 20225.98,
+  "avg_price_m2_land": 20600.0,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Karike",
+  "avg_price_m2_const": 8139.75,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "La Cañada",
+  "avg_price_m2_const": 3889.3,
+  "avg_price_m2_land": 3767.82,
+  "n_const": 8,
+  "n_land": 3
+ },
+ {
+  "colonia": "La Galera I, II, III, IV y V",
+  "avg_price_m2_const": 14444.44,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "La Haciendita",
+  "avg_price_m2_const": 31251.13,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "La Joya",
+  "avg_price_m2_const": 19500.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "La Molina",
+  "avg_price_m2_const": 17088.61,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "La Ribereña",
+  "avg_price_m2_const": 9702.66,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Labor de Terrazas",
+  "avg_price_m2_const": 30205.69,
+  "avg_price_m2_land": 26846.15,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Las Animas",
+  "avg_price_m2_const": 22168.5,
+  "avg_price_m2_land": 1074.74,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Las Canteras",
+  "avg_price_m2_const": 29904.3,
+  "avg_price_m2_land": 6161.88,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Las Fuentes",
+  "avg_price_m2_const": 16285.15,
+  "avg_price_m2_land": 5986.69,
+  "n_const": 5,
+  "n_land": 2
+ },
+ {
+  "colonia": "Las Fuentes I",
+  "avg_price_m2_const": 11904.76,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Las Fuentes II",
+  "avg_price_m2_const": 6095.5,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Las Granjas",
+  "avg_price_m2_const": 11042.55,
+  "avg_price_m2_land": 8024.04,
+  "n_const": 12,
+  "n_land": 2
+ },
+ {
+  "colonia": "Las Palmas",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 300.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Las Quintas",
+  "avg_price_m2_const": 9900.99,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Laura Leticia",
+  "avg_price_m2_const": 9281.35,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Leones Universidad",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 10552.76,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Linss",
+  "avg_price_m2_const": 24406.61,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Altas I",
+  "avg_price_m2_const": 15213.67,
+  "avg_price_m2_land": 3760.0,
+  "n_const": 3,
+  "n_land": 5
+ },
+ {
+  "colonia": "Lomas Altas II",
+  "avg_price_m2_const": 13640.1,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Altas III",
+  "avg_price_m2_const": 37210.21,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Altas IV",
+  "avg_price_m2_const": 15709.5,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Altas V",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 7968.13,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Lomas La Salle II",
+  "avg_price_m2_const": 2243.7,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Montecarlo",
+  "avg_price_m2_const": 11233.64,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Universidad I",
+  "avg_price_m2_const": 10210.54,
+  "avg_price_m2_land": 2230.48,
+  "n_const": 4,
+  "n_land": 1
+ },
+ {
+  "colonia": "Lomas Universidad II",
+  "avg_price_m2_const": 16666.67,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Universidad IV",
+  "avg_price_m2_const": 13693.01,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas Vallarta",
+  "avg_price_m2_const": 8359.03,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas del Rejón",
+  "avg_price_m2_const": 25687.33,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas del Santuario",
+  "avg_price_m2_const": 1733.41,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lomas del Santuario I Etapa",
+  "avg_price_m2_const": 27001.09,
+  "avg_price_m2_land": 2395.86,
+  "n_const": 3,
+  "n_land": 4
+ },
+ {
+  "colonia": "Lomas del Santuario II Etapa",
+  "avg_price_m2_const": 42489.9,
+  "avg_price_m2_land": 4200.82,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Lomas del Sol II",
+  "avg_price_m2_const": 15885.52,
+  "avg_price_m2_land": 32142.86,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Lomas del Valle I y II",
+  "avg_price_m2_const": 22219.49,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Claustros Universidad",
+  "avg_price_m2_const": 12319.71,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Encinos",
+  "avg_price_m2_const": 14141.41,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Frailes",
+  "avg_price_m2_const": 14011.9,
+  "avg_price_m2_land": 17866.67,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Los Girasoles III Etapa",
+  "avg_price_m2_const": 26952.71,
+  "avg_price_m2_land": 25289.05,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Los Girasoles IV Etapa",
+  "avg_price_m2_const": 14285.71,
+  "avg_price_m2_land": 14285.71,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Los Huertos",
+  "avg_price_m2_const": 16097.83,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Naranjos",
+  "avg_price_m2_const": 6520.64,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Nogales",
+  "avg_price_m2_const": 16859.9,
+  "avg_price_m2_land": 8235.42,
+  "n_const": 6,
+  "n_land": 8
+ },
+ {
+  "colonia": "Los Pinos",
+  "avg_price_m2_const": 8774.7,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Los Portales",
+  "avg_price_m2_const": 8272.89,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Lourdes",
+  "avg_price_m2_const": 8076.92,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Madera 65",
+  "avg_price_m2_const": 7073.17,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Marielena Hernandez",
+  "avg_price_m2_const": 10000.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Melchor Ocampo",
+  "avg_price_m2_const": 12687.0,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Miguel Hidalgo",
+  "avg_price_m2_const": 9000.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Mirador",
+  "avg_price_m2_const": 23747.61,
+  "avg_price_m2_land": null,
+  "n_const": 25,
+  "n_land": 0
+ },
+ {
+  "colonia": "Mision Universidad I",
+  "avg_price_m2_const": 4905.66,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Misiones Universidad I, II y III",
+  "avg_price_m2_const": 16897.64,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Misión del Bosque I Etapa",
+  "avg_price_m2_const": 22519.08,
+  "avg_price_m2_land": 33522.73,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Misión del Valle",
+  "avg_price_m2_const": 35432.1,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Molino de Agua",
+  "avg_price_m2_const": 16480.45,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Monte Caleres",
+  "avg_price_m2_const": 9842.95,
+  "avg_price_m2_land": 8600.0,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Monte Xenit",
+  "avg_price_m2_const": 4004.79,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Montecarlo",
+  "avg_price_m2_const": 14815.22,
+  "avg_price_m2_land": 18433.18,
+  "n_const": 5,
+  "n_land": 2
+ },
+ {
+  "colonia": "Monteverde",
+  "avg_price_m2_const": 20188.95,
+  "avg_price_m2_land": 13133.72,
+  "n_const": 8,
+  "n_land": 2
+ },
+ {
+  "colonia": "Mármol I",
+  "avg_price_m2_const": 22698.41,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Mármol III",
+  "avg_price_m2_const": 6651.32,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Nacional",
+  "avg_price_m2_const": 11467.14,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Niños Héroes",
+  "avg_price_m2_const": 6358.38,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Nogales",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 451.32,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Nombre de Dios",
+  "avg_price_m2_const": 11098.56,
+  "avg_price_m2_land": 1090.0,
+  "n_const": 4,
+  "n_land": 1
+ },
+ {
+  "colonia": "Nuevo Chihuahua",
+  "avg_price_m2_const": 11562.5,
+  "avg_price_m2_land": 7303.37,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Nuevo Majalca",
+  "avg_price_m2_const": 9615.38,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Nuevo Sacramento",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 258.33,
+  "n_const": 0,
+  "n_land": 2
+ },
+ {
+  "colonia": "Obrera",
+  "avg_price_m2_const": 6704.23,
+  "avg_price_m2_land": 3914.21,
+  "n_const": 7,
+  "n_land": 2
+ },
+ {
+  "colonia": "Obrera Vista Avalos",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 3142.86,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Pablo Amaya Norte",
+  "avg_price_m2_const": 7075.47,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Pacifico",
+  "avg_price_m2_const": 6510.29,
+  "avg_price_m2_land": 6810.81,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Panamericana",
+  "avg_price_m2_const": 19586.95,
+  "avg_price_m2_land": 20095.65,
+  "n_const": 16,
+  "n_land": 2
+ },
+ {
+  "colonia": "Panorámico",
+  "avg_price_m2_const": 10554.83,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Paquime",
+  "avg_price_m2_const": 5714.29,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Parque Industrial Chihuahua Sur",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 953.9,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Parque Industrial Impulso",
+  "avg_price_m2_const": 3647.06,
+  "avg_price_m2_land": 120.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Parque Industrial Impulso VII y VIII",
+  "avg_price_m2_const": 3662.4,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Parque Industrial Intermex Aeropuerto",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 466.67,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Parque Industrial Supra",
+  "avg_price_m2_const": 8027.24,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Parques de San Felipe",
+  "avg_price_m2_const": 38417.66,
+  "avg_price_m2_land": null,
+  "n_const": 10,
+  "n_land": 0
+ },
+ {
+  "colonia": "Paseo de las Misiones",
+  "avg_price_m2_const": 19662.38,
+  "avg_price_m2_land": 9489.05,
+  "n_const": 8,
+  "n_land": 1
+ },
+ {
+  "colonia": "Paseo de las Moras",
+  "avg_price_m2_const": 8917.17,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Paseo de los Leones",
+  "avg_price_m2_const": 6305.98,
+  "avg_price_m2_land": 1770.37,
+  "n_const": 2,
+  "n_land": 3
+ },
+ {
+  "colonia": "Paseos Camino Real",
+  "avg_price_m2_const": 25862.07,
+  "avg_price_m2_land": 7317.07,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Paseos de Chihuahua",
+  "avg_price_m2_const": 6033.19,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Paseos de Chihuahua I y II",
+  "avg_price_m2_const": 9038.49,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Paseos del Camino Real I, II, III y IV",
+  "avg_price_m2_const": 12500.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Pavis Borunda",
+  "avg_price_m2_const": 6111.11,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Pedregal del Real",
+  "avg_price_m2_const": 13750.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Pedregal del Valle",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 7250.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Plan de Ayala",
+  "avg_price_m2_const": 10638.3,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Plutarco Elías Calles",
+  "avg_price_m2_const": 7656.25,
+  "avg_price_m2_land": 15312.5,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Poblado La Haciendita",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 2242.57,
+  "n_const": 0,
+  "n_land": 3
+ },
+ {
+  "colonia": "Poblado Labor de Terrazas o Portillo",
+  "avg_price_m2_const": 25458.29,
+  "avg_price_m2_land": 425.0,
+  "n_const": 5,
+  "n_land": 1
+ },
+ {
+  "colonia": "Poblado San Vicente",
+  "avg_price_m2_const": 14230.77,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Predio la Cantera",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 28938.31,
+  "n_const": 0,
+  "n_land": 2
+ },
+ {
+  "colonia": "Presidentes",
+  "avg_price_m2_const": 20000.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Provincia de Santa Clara Etapa I a La XII",
+  "avg_price_m2_const": 16431.98,
+  "avg_price_m2_land": null,
+  "n_const": 6,
+  "n_land": 0
+ },
+ {
+  "colonia": "Puente de Cantera",
+  "avg_price_m2_const": 14514.55,
+  "avg_price_m2_land": 8000.0,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Puente de Piedra",
+  "avg_price_m2_const": 28251.94,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Puerta del Valle",
+  "avg_price_m2_const": 9655.21,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Puerta del Valle I y II",
+  "avg_price_m2_const": 7326.67,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Punta Oriente",
+  "avg_price_m2_const": 10909.09,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Punto Alto II Etapa",
+  "avg_price_m2_const": 36506.44,
+  "avg_price_m2_land": 36122.22,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Quinta Versalles",
+  "avg_price_m2_const": 10401.91,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Quintas Carolinas",
+  "avg_price_m2_const": 4122.81,
+  "avg_price_m2_land": 507.69,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Quintas Carolinas I",
+  "avg_price_m2_const": 15555.56,
+  "avg_price_m2_land": 488.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Quintas Carolinas I, II, III, IV y V",
+  "avg_price_m2_const": 22701.3,
+  "avg_price_m2_land": 665.0,
+  "n_const": 4,
+  "n_land": 2
+ },
+ {
+  "colonia": "Quintas Juan Pablo",
+  "avg_price_m2_const": 9905.66,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Quintas Montecarlo",
+  "avg_price_m2_const": 10309.41,
+  "avg_price_m2_land": 7573.94,
+  "n_const": 2,
+  "n_land": 1
+ },
+ {
+  "colonia": "Quintas del Sol",
+  "avg_price_m2_const": 12518.43,
+  "avg_price_m2_land": null,
+  "n_const": 15,
+  "n_land": 0
+ },
+ {
+  "colonia": "Quintas del Sol II",
+  "avg_price_m2_const": 3541.67,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ramón Reyes",
+  "avg_price_m2_const": 8697.74,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Real Universidad",
+  "avg_price_m2_const": 4347.2,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Real de Minas",
+  "avg_price_m2_const": 13333.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Reforma",
+  "avg_price_m2_const": 6226.42,
+  "avg_price_m2_land": 2771.08,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Residencial",
+  "avg_price_m2_const": 19043.48,
+  "avg_price_m2_land": 17380.95,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Residencial Campestre Washington",
+  "avg_price_m2_const": 14060.05,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Residencial El León",
+  "avg_price_m2_const": 13497.79,
+  "avg_price_m2_land": 777.78,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Residencial Leones",
+  "avg_price_m2_const": 9052.92,
+  "avg_price_m2_land": 6155.3,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Residencial Universidad",
+  "avg_price_m2_const": 12138.92,
+  "avg_price_m2_land": 5457.2,
+  "n_const": 5,
+  "n_land": 2
+ },
+ {
+  "colonia": "Residencial la Cantera",
+  "avg_price_m2_const": 2821.56,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Revolución",
+  "avg_price_m2_const": 12996.58,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Riberas del Sacramento",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 321.11,
+  "n_const": 0,
+  "n_land": 3
+ },
+ {
+  "colonia": "Rigoberto Quiroz",
+  "avg_price_m2_const": 8910.89,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rinconada de La Sierra I, II, III, IV y V",
+  "avg_price_m2_const": 10867.77,
+  "avg_price_m2_land": 1780.42,
+  "n_const": 13,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rinconada de Oriente I",
+  "avg_price_m2_const": 14705.88,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rinconada los Nogales",
+  "avg_price_m2_const": 11851.85,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rinconadas de la Sierra",
+  "avg_price_m2_const": 7578.53,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rinconadas del Valle",
+  "avg_price_m2_const": 20258.62,
+  "avg_price_m2_land": 3048.23,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rincones de San Francisco",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 8035.06,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rincones de Sierra Azul",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 877.19,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rincones del Pedregal",
+  "avg_price_m2_const": 14924.94,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rincón Colonial",
+  "avg_price_m2_const": 10639.71,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rincón de Los Huertos",
+  "avg_price_m2_const": 21370.49,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rincón de Zaragoza",
+  "avg_price_m2_const": 9497.72,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rincón de las Lomas I",
+  "avg_price_m2_const": 23061.54,
+  "avg_price_m2_land": 19341.94,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rincón del Lago",
+  "avg_price_m2_const": 10050.0,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Rio Sacramento Norte",
+  "avg_price_m2_const": 12813.37,
+  "avg_price_m2_land": 15131.58,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Riscos del Sol Etapa 2",
+  "avg_price_m2_const": 20529.8,
+  "avg_price_m2_land": 19745.22,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Robinson",
+  "avg_price_m2_const": 10513.07,
+  "avg_price_m2_land": 603.55,
+  "n_const": 3,
+  "n_land": 3
+ },
+ {
+  "colonia": "Robinson Residencial",
+  "avg_price_m2_const": 9317.98,
+  "avg_price_m2_land": 1074.14,
+  "n_const": 2,
+  "n_land": 2
+ },
+ {
+  "colonia": "Roma II",
+  "avg_price_m2_const": 9090.91,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Roma Sur",
+  "avg_price_m2_const": 4044.17,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Roma V",
+  "avg_price_m2_const": 35950.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Romanzza",
+  "avg_price_m2_const": 10344.74,
+  "avg_price_m2_land": 16746.03,
+  "n_const": 12,
+  "n_land": 1
+ },
+ {
+  "colonia": "Rosario",
+  "avg_price_m2_const": 6777.66,
+  "avg_price_m2_land": 1023.81,
+  "n_const": 11,
+  "n_land": 1
+ },
+ {
+  "colonia": "Sacramento I y II",
+  "avg_price_m2_const": 7198.35,
+  "avg_price_m2_land": 258.03,
+  "n_const": 4,
+  "n_land": 3
+ },
+ {
+  "colonia": "San Felipe I",
+  "avg_price_m2_const": 30856.03,
+  "avg_price_m2_land": null,
+  "n_const": 20,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Felipe I Etapa",
+  "avg_price_m2_const": 20592.25,
+  "avg_price_m2_land": 12785.71,
+  "n_const": 3,
+  "n_land": 3
+ },
+ {
+  "colonia": "San Felipe II",
+  "avg_price_m2_const": 38922.41,
+  "avg_price_m2_land": null,
+  "n_const": 4,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Felipe II Etapa",
+  "avg_price_m2_const": 24618.83,
+  "avg_price_m2_land": 15685.71,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "San Felipe III",
+  "avg_price_m2_const": 13793.1,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Felipe III Etapa",
+  "avg_price_m2_const": 16393.44,
+  "avg_price_m2_land": 18666.67,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "San Felipe V",
+  "avg_price_m2_const": 2587.86,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Felipe V Etapa",
+  "avg_price_m2_const": 28125.0,
+  "avg_price_m2_land": 16363.64,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "San Felipe VI",
+  "avg_price_m2_const": 43727.86,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Felipe Viejo",
+  "avg_price_m2_const": 15093.2,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Fernando",
+  "avg_price_m2_const": 16901.41,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Francisco I",
+  "avg_price_m2_const": 17384.11,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Jorge",
+  "avg_price_m2_const": 1587.6,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Miguel",
+  "avg_price_m2_const": 9801.98,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Rafael",
+  "avg_price_m2_const": 7332.51,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "San Ángel",
+  "avg_price_m2_const": 15763.51,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ },
+ {
+  "colonia": "Santa Rita",
+  "avg_price_m2_const": 10890.48,
+  "avg_price_m2_land": null,
+  "n_const": 8,
+  "n_land": 0
+ },
+ {
+  "colonia": "Santa Rosa",
+  "avg_price_m2_const": 11207.09,
+  "avg_price_m2_land": 8744.44,
+  "n_const": 9,
+  "n_land": 2
+ },
+ {
+  "colonia": "Santo Domingo",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 698.92,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Santo Niño",
+  "avg_price_m2_const": 20003.26,
+  "avg_price_m2_land": null,
+  "n_const": 15,
+  "n_land": 0
+ },
+ {
+  "colonia": "Satélite",
+  "avg_price_m2_const": 6160.16,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Saucito",
+  "avg_price_m2_const": 26544.45,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Secretaria de La Marina",
+  "avg_price_m2_const": 22500.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Sector Bolívar",
+  "avg_price_m2_const": 5265.99,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Senda Real",
+  "avg_price_m2_const": 12123.17,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Seratta 36",
+  "avg_price_m2_const": 14781.27,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Sierra Azul",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 476.89,
+  "n_const": 0,
+  "n_land": 5
+ },
+ {
+  "colonia": "Tabalaopa",
+  "avg_price_m2_const": 1062.22,
+  "avg_price_m2_land": 592.52,
+  "n_const": 1,
+  "n_land": 2
+ },
+ {
+  "colonia": "Tec. de Monterrey",
+  "avg_price_m2_const": 8238.99,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Tierra y Libertad",
+  "avg_price_m2_const": 9866.67,
+  "avg_price_m2_land": 3827.16,
+  "n_const": 3,
+  "n_land": 3
+ },
+ {
+  "colonia": "Toribio Ortega",
+  "avg_price_m2_const": 7885.3,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Tracia",
+  "avg_price_m2_const": 16560.51,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Unidad",
+  "avg_price_m2_const": 19000.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Unidad Cuauhtémoc",
+  "avg_price_m2_const": 37301.59,
+  "avg_price_m2_land": 6742.42,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Universitaria Ampliación I",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 439.96,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Valle Dorado",
+  "avg_price_m2_const": 5125.0,
+  "avg_price_m2_land": 555.0,
+  "n_const": 1,
+  "n_land": 2
+ },
+ {
+  "colonia": "Valle Escondido",
+  "avg_price_m2_const": 28322.71,
+  "avg_price_m2_land": 8900.0,
+  "n_const": 6,
+  "n_land": 1
+ },
+ {
+  "colonia": "Valle de Chihuahua",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 890.62,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Valle del Angel",
+  "avg_price_m2_const": 26826.9,
+  "avg_price_m2_land": null,
+  "n_const": 3,
+  "n_land": 0
+ },
+ {
+  "colonia": "Verde",
+  "avg_price_m2_const": 1653.44,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Veredas de Sierra Azul",
+  "avg_price_m2_const": 10833.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Veredas del Sur",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 1480.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Versalles",
+  "avg_price_m2_const": 4905.66,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Veteranos de la Revolución",
+  "avg_price_m2_const": 7605.97,
+  "avg_price_m2_land": 1625.0,
+  "n_const": 3,
+  "n_land": 1
+ },
+ {
+  "colonia": "Vicente Guerrero",
+  "avg_price_m2_const": 13223.14,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Villa Juárez",
+  "avg_price_m2_const": 14243.87,
+  "avg_price_m2_land": 6197.92,
+  "n_const": 7,
+  "n_land": 1
+ },
+ {
+  "colonia": "Villa Toscana",
+  "avg_price_m2_const": 13853.55,
+  "avg_price_m2_land": null,
+  "n_const": 5,
+  "n_land": 0
+ },
+ {
+  "colonia": "Villa del Real",
+  "avg_price_m2_const": 25657.89,
+  "avg_price_m2_land": 15600.0,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Villas del Rey I, II y III",
+  "avg_price_m2_const": 1961.0,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Villas del Rey V",
+  "avg_price_m2_const": 5447.07,
+  "avg_price_m2_land": 2314.81,
+  "n_const": 6,
+  "n_land": 1
+ },
+ {
+  "colonia": "Villas del Sol I",
+  "avg_price_m2_const": 6141.08,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Virreyes I",
+  "avg_price_m2_const": 1132.47,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Vistas Campestre",
+  "avg_price_m2_const": 1652.63,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Vistas Cerro Grande",
+  "avg_price_m2_const": 2133.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Vistas del Norte",
+  "avg_price_m2_const": null,
+  "avg_price_m2_land": 176.0,
+  "n_const": 0,
+  "n_land": 1
+ },
+ {
+  "colonia": "Z-5 P1",
+  "avg_price_m2_const": 18533.0,
+  "avg_price_m2_land": 16128.72,
+  "n_const": 1,
+  "n_land": 1
+ },
+ {
+  "colonia": "Zarco",
+  "avg_price_m2_const": 23208.61,
+  "avg_price_m2_land": null,
+  "n_const": 10,
+  "n_land": 0
+ },
+ {
+  "colonia": "Zona Centro",
+  "avg_price_m2_const": 17089.1,
+  "avg_price_m2_land": 3813.17,
+  "n_const": 25,
+  "n_land": 4
+ },
+ {
+  "colonia": "Zootecnia",
+  "avg_price_m2_const": 23333.33,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Álamos",
+  "avg_price_m2_const": 8764.71,
+  "avg_price_m2_land": null,
+  "n_const": 1,
+  "n_land": 0
+ },
+ {
+  "colonia": "Ática",
+  "avg_price_m2_const": 30491.87,
+  "avg_price_m2_land": null,
+  "n_const": 2,
+  "n_land": 0
+ }
+]

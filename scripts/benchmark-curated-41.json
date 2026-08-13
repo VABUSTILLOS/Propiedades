@@ -1,0 +1,188 @@
+[
+  {
+    "colonia": "Adición Sur Universidad",
+    "const": 37667,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Campestre del Bosque",
+    "const": 4352,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cerrada Ríoja",
+    "const": 16707,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cima de La Cantera",
+    "const": 11859,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Colinas del León",
+    "const": 10952,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cosmos",
+    "const": 14375,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cumbres de San Francisco I y II",
+    "const": 0,
+    "land": 8224,
+    "note": "2945500/358.17 terreno single sample"
+  },
+  {
+    "colonia": "Cumbres del Sur I",
+    "const": 13468,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "El Porvenir I",
+    "const": 8663,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "El Vallecillo",
+    "const": 12500,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Foxconn",
+    "const": 10526,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Fraccionamiento Puerta Rivera Real",
+    "const": 13253,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Francisco I Madero",
+    "const": 8929,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Haciendas Real",
+    "const": 13521,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Infonavit Nacional",
+    "const": 11400,
+    "land": 0,
+    "note": "n_const=3 n_land=0"
+  },
+  {
+    "colonia": "Karike",
+    "const": 11000,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "La Molina",
+    "const": 17089,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Las Fuentes I",
+    "const": 11905,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Lomas Altas III",
+    "const": 39661,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Lomas del Rejón",
+    "const": 25687,
+    "land": 0,
+    "note": "n_const=3 n_land=0"
+  },
+  {
+    "colonia": "Lomas del Santuario I Etapa",
+    "const": 29080,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Encinos",
+    "const": 14141,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Misiones Universidad I, II y III",
+    "const": 11847,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Paseos de Chihuahua I y II",
+    "const": 9636,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Puerta del Valle I y II",
+    "const": 7987,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Residencial Universidad",
+    "const": 18087,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Roma II",
+    "const": 9091,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Roma Sur",
+    "const": 4044,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "San Rafael",
+    "const": 6025,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Senda Real",
+    "const": 11475,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Junta de los Ríos \"B\" Ampl",
+    "const": 13483,
+    "land": 0,
+    "note": "1200000/89 casa single sample"
+  }
+]

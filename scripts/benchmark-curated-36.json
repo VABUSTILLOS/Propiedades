@@ -1,0 +1,19 @@
+{
+  "Paseo de las Misiones": { "const": 35432, "land": 0, "note": "1 prop [departamento], const samples:1 land samples:0 (dataset-36)" },
+  "Las Canteras": { "const": 37713, "land": 0, "note": "3 props [terreno/depto/local], const samples:2 (49237,26190) land:0; terreno no m² (dataset-36)" },
+  "Villas del Sol I": { "const": 6141, "land": 0, "note": "1 prop [local], const samples:1 land samples:0 (dataset-36)" },
+  "Haciendas del Valle II": { "const": 40845, "land": 0, "note": "1 prop [local], const samples:1 land samples:0 (dataset-36)" },
+  "Nuevo Majalca": { "const": 9615, "land": 0, "note": "2 props [casa], const samples:2 (10000,9231) land:0 (dataset-36)" },
+  "Aeropuerto": { "const": 7188, "land": 0, "note": "2 props [casa], const samples:1 (7188, real house); rancho sample 1107 excluded (land-in-const); vivanuncios 12.45M excluded (dataset-36)" },
+  "Granjas Familiares Valle de Chihuahua": { "const": 20313, "land": 0, "note": "2 props [casa], const samples:1 (20313, real house); rancho 2500m² sample 700 excluded (land-in-const anomaly) (dataset-36)" },
+  "El Sáuz": { "const": 34375, "land": 0, "note": "1 prop [casa], const samples:1 land samples:0 (dataset-36)" },
+  "Puente de Piedra": { "const": 28252, "land": 0, "note": "5 props [casa/local], const samples:4 (22869,19079,24583,46477) land:0; 1 casa no m² (dataset-36)" },
+  "Insurgentes I": { "const": 0, "land": 7389, "note": "1 prop [terreno], const samples:0 land samples:1 (dataset-36)" },
+  "Brisas del León": { "const": 0, "land": 0, "note": "SKIP - rancho 2500m² land classified as const → 384/m², land-in-const anomaly (dataset-36)" },
+  "Avalos": { "const": 0, "land": 0, "note": "SKIP - rancho 600m² land classified as const → 1833/m², land-in-const anomaly (dataset-36)" },
+  "Mezquites Sur": { "const": 0, "land": 0, "note": "SKIP - no m² data (dataset-36)" },
+  "Cafetales": { "const": 0, "land": 0, "note": "SKIP - no m² data (dataset-36)" },
+  "Campus II Uach": { "const": 0, "land": 0, "note": "SKIP - no m² data (dataset-36)" },
+  "Plomeros": { "const": 0, "land": 0, "note": "SKIP - no m² data (dataset-36)" },
+  "Cantera del Pedregal": { "const": 0, "land": 0, "note": "SKIP - no m² data (dataset-36)" }
+}

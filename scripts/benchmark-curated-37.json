@@ -1,0 +1,7 @@
+{
+  "La Joya": { "const": 19500, "land": 0, "note": "1 prop [casa], const samples:1 (19500) land:0 (dataset-37)" },
+  "Campestre Residencial III": { "const": 20203, "land": 0, "note": "1 prop [casa], const samples:1 (20203) land:0 (dataset-37)" },
+  "Residencial Campestre Washington": { "const": 20203, "land": 0, "note": "1 prop [casa], const samples:1 (20203) land:0 (dataset-37)" },
+  "Laura Leticia": { "const": 10000, "land": 0, "note": "1 prop [casa], const samples:1 (10000) land:0 (dataset-37)" },
+  "México": { "const": 0, "land": 0, "note": "SKIP - terreno habitacional sin datos de m² (land_area=0) (dataset-37)" }
+}

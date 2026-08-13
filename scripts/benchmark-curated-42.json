@@ -1,0 +1,626 @@
+[
+  {
+    "colonia": "Puerta de Hierro I",
+    "const": 36324,
+    "land": 3778,
+    "note": "n_const=2 n_land=1"
+  },
+  {
+    "colonia": "Puerta de Hierro IV",
+    "const": 36073,
+    "land": 0,
+    "note": "n_const=3 n_land=0"
+  },
+  {
+    "colonia": "Misión del Bosque",
+    "const": 35962,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Villas del Sur",
+    "const": 35432,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Las Misiones I, II, III y IV",
+    "const": 21902,
+    "land": 3988,
+    "note": "n_const=4 n_land=1"
+  },
+  {
+    "colonia": "Bosque Real",
+    "const": 10789,
+    "land": 10053,
+    "note": "n_const=1 n_land=1"
+  },
+  {
+    "colonia": "Vallarta",
+    "const": 16500,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Quintas de San Sebastián",
+    "const": 16289,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Alamedas IV",
+    "const": 15801,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Palestina Concordia",
+    "const": 14768,
+    "land": 825,
+    "note": "n_const=5 n_land=1"
+  },
+  {
+    "colonia": "Rinconada Universidad",
+    "const": 13061,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Riscos del Ángel",
+    "const": 12963,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Magisterial Universidad",
+    "const": 12469,
+    "land": 0,
+    "note": "n_const=3 n_land=0"
+  },
+  {
+    "colonia": "Las Águilas",
+    "const": 11842,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Ampliación Insurgentes",
+    "const": 9410,
+    "land": 2306,
+    "note": "n_const=2 n_land=1"
+  },
+  {
+    "colonia": "San Andrés",
+    "const": 11538,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Ejido Labor de Dolores",
+    "const": 11443,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Rincones del Picacho",
+    "const": 11272,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "20 Aniversario",
+    "const": 5574,
+    "land": 5600,
+    "note": "n_const=1 n_land=1"
+  },
+  {
+    "colonia": "Parque Industrial Impulso Habitacional",
+    "const": 0,
+    "land": 11111,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Brisas del Real I",
+    "const": 10995,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Vista del Sol",
+    "const": 10625,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Villas del Sol I, II y III",
+    "const": 10545,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Villas de Nueva España",
+    "const": 10127,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Residencial Cumbres III",
+    "const": 9754,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Fuentes del Sol",
+    "const": 9701,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Zona Industrial Nombre de Dios",
+    "const": 9453,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Colon",
+    "const": 9449,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Arboledas II",
+    "const": 9143,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Chulavista II",
+    "const": 9106,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Colinas del Sol I y II",
+    "const": 9000,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Álamos Unidad",
+    "const": 8962,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "San Cristóbal",
+    "const": 8945,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Quintas Juan Pablo I, II, III y IV",
+    "const": 7003,
+    "land": 1846,
+    "note": "n_const=1 n_land=2"
+  },
+  {
+    "colonia": "Riscos del Sol",
+    "const": 8791,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Las Aldabas I a La IX",
+    "const": 8763,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Acequias de Tabalaopa I y II",
+    "const": 8750,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Olivos I, II, III y IV",
+    "const": 8382,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Sicomoros",
+    "const": 8333,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cordilleras I, II y III",
+    "const": 0,
+    "land": 8000,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Real Carolinas I, II, III y IV",
+    "const": 7850,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Felipe Ángeles",
+    "const": 6374,
+    "land": 1210,
+    "note": "n_const=1 n_land=1"
+  },
+  {
+    "colonia": "Villa del Real I, II, III, IV y V",
+    "const": 7546,
+    "land": 0,
+    "note": "n_const=4 n_land=0"
+  },
+  {
+    "colonia": "Monte Vesubio",
+    "const": 7479,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Quintas Quijote I, II y III",
+    "const": 7443,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Popular I",
+    "const": 7285,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Rincón Parralense",
+    "const": 7265,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Lealtad",
+    "const": 7067,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Arroyos I, II y III",
+    "const": 6953,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Rincones de La Cima",
+    "const": 6897,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Alamedas V",
+    "const": 6801,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cumbres Universidad I",
+    "const": 6410,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Solidaridad Popular",
+    "const": 6102,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Emiliano Zapata",
+    "const": 5616,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Lomas los Frailes",
+    "const": 5590,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "José María Ponce de León",
+    "const": 5538,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Condominios FOVISSSTE",
+    "const": 5439,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Lagos",
+    "const": 5328,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Alamedas I",
+    "const": 5280,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Cantera del Pedregal",
+    "const": 0,
+    "land": 5231,
+    "note": "n_const=0 n_land=6"
+  },
+  {
+    "colonia": "Alamedas II",
+    "const": 5225,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Margarita Maza de Juárez",
+    "const": 5100,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Brasilia",
+    "const": 0,
+    "land": 5013,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Vista Hermosa",
+    "const": 4949,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Insurgentes",
+    "const": 4634,
+    "land": 269,
+    "note": "n_const=1 n_land=1"
+  },
+  {
+    "colonia": "Los Girasoles II",
+    "const": 4873,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "División del Norte Etapa I, II y III",
+    "const": 4498,
+    "land": 333,
+    "note": "n_const=1 n_land=1"
+  },
+  {
+    "colonia": "Residencial La Cantera I, II, III, IV y V",
+    "const": 0,
+    "land": 4800,
+    "note": "n_const=0 n_land=2"
+  },
+  {
+    "colonia": "Sector Salud",
+    "const": 4667,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Avícola I",
+    "const": 0,
+    "land": 4600,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Aquiles Serdán",
+    "const": 4590,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Los Llanos",
+    "const": 4574,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Churubusco",
+    "const": 4368,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Vallarta Infonavit",
+    "const": 4368,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Juan Guereca",
+    "const": 4195,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Nuevo Triunfo",
+    "const": 4162,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Bosques de San Francisco I y II",
+    "const": 0,
+    "land": 4003,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Francisco Domínguez",
+    "const": 3929,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "San Agustin",
+    "const": 3899,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Puerta de Sebastián",
+    "const": 0,
+    "land": 3873,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Villa Juárez (Rancheria Juárez)",
+    "const": 3685,
+    "land": 0,
+    "note": "n_const=4 n_land=0"
+  },
+  {
+    "colonia": "Universidad Regional del Norte",
+    "const": 0,
+    "land": 3438,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Cerrada la Cantera",
+    "const": 0,
+    "land": 2866,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Cumbres 4a Etapa",
+    "const": 0,
+    "land": 2796,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Continental",
+    "const": 0,
+    "land": 2772,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Mármol Viejo",
+    "const": 2635,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Quintas del Río",
+    "const": 0,
+    "land": 2307,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Fuentes de Chihuahua",
+    "const": 2000,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Oscar Flores Sanchez",
+    "const": 0,
+    "land": 1841,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Avalos",
+    "const": 1833,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "San Guillermo",
+    "const": 1339,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Antigua Hacienda Tabaloapa",
+    "const": 1280,
+    "land": 0,
+    "note": "n_const=2 n_land=0"
+  },
+  {
+    "colonia": "Riberas del Sacramento I y II",
+    "const": 0,
+    "land": 1160,
+    "note": "n_const=0 n_land=2"
+  },
+  {
+    "colonia": "Las Huertas",
+    "const": 1156,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Campestre las Alamedas",
+    "const": 1100,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Praderas de León",
+    "const": 1019,
+    "land": 0,
+    "note": "n_const=1 n_land=0"
+  },
+  {
+    "colonia": "Las Acacias",
+    "const": 0,
+    "land": 917,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "La Concordia",
+    "const": 0,
+    "land": 848,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Complejo Industrial Chihuahua",
+    "const": 0,
+    "land": 806,
+    "note": "n_const=0 n_land=2"
+  },
+  {
+    "colonia": "Las Torres",
+    "const": 0,
+    "land": 495,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Chihuahua (General Roberto Fierro Villalobos)",
+    "const": 0,
+    "land": 440,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "San Isidro O los Hoyos",
+    "const": 0,
+    "land": 300,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Granjas Universitarias",
+    "const": 0,
+    "land": 220,
+    "note": "n_const=0 n_land=1"
+  },
+  {
+    "colonia": "Ocampo O Torreón",
+    "const": 0,
+    "land": 194,
+    "note": "n_const=0 n_land=1"
+  }
+]
