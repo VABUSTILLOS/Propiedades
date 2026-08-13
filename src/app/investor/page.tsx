@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { TrendingUp } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
 import {
   countActiveListings,
   searchListings,
@@ -187,16 +189,15 @@ export default async function InvestorPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Modo inversionista</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {items.length} {TAB_LABELS[activeTab]} en el catálogo
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          eyebrow="Invertir"
+          icon={TrendingUp}
+          title="Modo inversionista"
+          description={`${items.length} ${TAB_LABELS[activeTab]} en el catálogo`}
+          className="mb-8"
+        />
 
         <InvestorDashboardClient
           items={items}

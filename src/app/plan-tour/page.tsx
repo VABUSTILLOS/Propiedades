@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Route } from "lucide-react";
 
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
 import { getCurrentUser } from "@/modules/auth/session";
 import { getMyFavorites } from "@/modules/favorites/queries";
 import { env } from "@/modules/lib/env";
@@ -20,14 +23,13 @@ export default async function PlanTourPage() {
   const favorites = user ? await getMyFavorites(user.id) : [];
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Planificador de rutas</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Arma el itinerario óptimo de visitas del fin de semana desde tus
-          favoritos.
-        </p>
-      </div>
+    <PageShell size="md">
+      <PageHeader
+        eyebrow="Comprar"
+        icon={Route}
+        title="Planificador de rutas"
+        description="Arma el itinerario óptimo de visitas del fin de semana desde tus favoritos."
+      />
 
       {!user && (
         <p className="mt-4 rounded-md border bg-card px-3 py-2 text-sm text-muted-foreground">
@@ -45,6 +47,6 @@ export default async function PlanTourPage() {
         favorites={favorites}
         directionsApiKey={env.googleMapsServerKey}
       />
-    </div>
+    </PageShell>
   );
 }

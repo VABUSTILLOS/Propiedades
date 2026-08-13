@@ -6,6 +6,10 @@ import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyListings } from "@/modules/listings/queries";
 import { ListingCard } from "@/modules/listings/components/listing-card";
 import { buttonVariants } from "@/components/ui/button";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
+import { Store } from "lucide-react";
 
 export const metadata: Metadata = { title: "Mis listados" };
 
@@ -27,31 +31,30 @@ export default async function MyListingsPage() {
   const listings = await getMyListings(user.id);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-10">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Mis listados</h1>
-          <p className="text-sm text-muted-foreground">
-            {listings.length} {listings.length === 1 ? "listado" : "listados"}
-          </p>
-        </div>
-        <Link href="/listings/new" className={buttonVariants()}>
-          Nuevo listado
-        </Link>
-      </div>
+    <PageShell>
+      <PageHeader
+        eyebrow="Vender"
+        icon={Store}
+        title="Mis listados"
+        description={`${listings.length} ${listings.length === 1 ? "listado" : "listados"}`}
+        actions={
+          <Link href="/listings/new" className={buttonVariants()}>
+            Nuevo listado
+          </Link>
+        }
+      />
 
       {listings.length === 0 ? (
-        <div className="mt-12 rounded-lg border border-dashed px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            Aún no tienes ningún listado.
-          </p>
-          <Link
-            href="/listings/new"
-            className={buttonVariants({ className: "mt-4" })}
-          >
-            Crea tu primer listado
-          </Link>
-        </div>
+        <EmptyState
+          icon={Store}
+          className="mt-12"
+          description="Aún no tienes ningún listado."
+          action={
+            <Link href="/listings/new" className={buttonVariants()}>
+              Crea tu primer listado
+            </Link>
+          }
+        />
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {listings.map((listing) => (
@@ -59,6 +62,6 @@ export default async function MyListingsPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }

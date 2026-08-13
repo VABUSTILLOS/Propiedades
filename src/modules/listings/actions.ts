@@ -15,6 +15,7 @@ import {
   propertyWizardStep3Schema,
   propertyWizardStep4Schema,
   propertyWizardStep5Schema,
+  mortgageLeadSchema,
 } from "@/modules/lib/schemas";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
@@ -372,4 +373,40 @@ export async function createImportedDraft(
   revalidatePath("/my-listings");
   revalidatePath("/favorites");
   return ok({ id: data.id, slug: data.slug });
+}
+
+/**
+ * Capture a lead from the mortgage simulator on the property detail page.
+ * The id is generated server-side because RLS on mortgage_leads is
+ * insert-only (no SELECT policy), so `insert().select()` would fail.
+ */
+export async function captureMortgageLead(
+  input: Record<string, unknown>,
+): Promise<ActionResult<{ id: string }>> {
+  const parsed = parseInput(mortgageLeadSchema, input);
+  if (!parsed.success) {
+    return fail(parsed.error, parsed.fieldErrors);
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const id = crypto.randomUUID();
+  const { error } = await supabase.from("mortgage_leads").insert({
+    id,
+    property_id: parsed.data.propertyId,
+    property_title: parsed.data.propertyTitle,
+    property_price: parsed.data.propertyPrice,
+    full_name: parsed.data.fullName,
+    phone: parsed.data.phone,
+    email: parsed.data.email,
+    simulated_monthly_payment: parsed.data.simulatedMonthlyPayment,
+    simulated_down_payment: parsed.data.simulatedDownPayment,
+    simulation: parsed.data.simulation ?? {},
+  });
+
+  if (error) {
+    return fail(error.message);
+  }
+
+  return ok({ id });
 }

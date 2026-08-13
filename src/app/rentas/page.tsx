@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Building2 } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
 import {
   getSearchableColonias,
   searchListingsPage,
@@ -14,7 +16,6 @@ import {
   type MapBounds,
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
-import { SiteFooter } from "@/modules/home/components/site-footer";
 
 export const metadata: Metadata = { title: "Propiedades en renta" };
 
@@ -74,17 +75,15 @@ export default async function RentasPage({ searchParams }: Props) {
   const mapSearch = parsed.data?.mapSearch === "true";
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight">
-            Propiedades en renta
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {total} propiedad{total === 1 ? "" : "es"} en renta
-            {total > 0 ? " disponibles" : ""}
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Rentar"
+          icon={Building2}
+          title="Propiedades en renta"
+          description={`${total} propiedad${total === 1 ? "" : "es"} en renta${total > 0 ? " disponibles" : ""}`}
+          className="mb-8"
+        />
 
         <div className="mb-8">
           <RentFiltersForm colonias={colonias} />
@@ -110,8 +109,6 @@ export default async function RentasPage({ searchParams }: Props) {
           />
         )}
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

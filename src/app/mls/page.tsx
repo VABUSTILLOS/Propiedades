@@ -6,6 +6,10 @@ import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getAgentDirectory } from "@/modules/profiles/queries";
 import { getMlsListings } from "@/modules/listings/queries";
 import { Badge } from "@/components/ui/badge";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
+import { Building2 } from "lucide-react";
 
 export const metadata: Metadata = { title: "Red MLS" };
 
@@ -35,23 +39,21 @@ export default async function MlsNetworkPage() {
   ]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Red MLS</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Bolsa privada de agentes · {listings.length} propiedades compartidas con
-          desglose transparente de comisiones.
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader
+        eyebrow="Vender"
+        icon={Building2}
+        title="Red MLS"
+        description={`Bolsa privada de agentes · ${listings.length} propiedades compartidas con desglose transparente de comisiones.`}
+      />
 
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Propiedades MLS</h2>
         {listings.length === 0 ? (
-          <div className="mt-4 rounded-lg border border-dashed px-6 py-12 text-center">
-            <p className="text-sm text-muted-foreground">
-              Aún no hay propiedades compartidas en la red MLS.
-            </p>
-          </div>
+          <EmptyState
+            className="mt-4"
+            description="Aún no hay propiedades compartidas en la red MLS."
+          />
         ) : (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {listings.map((listing) => {
@@ -140,6 +142,6 @@ export default async function MlsNetworkPage() {
           )}
         </div>
       </section>
-    </div>
+    </PageShell>
   );
 }

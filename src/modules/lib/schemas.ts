@@ -596,6 +596,35 @@ export const flyerLeadSchema = z.object({
   phone: z.string().trim().max(30).optional(),
 });
 
+// --- Mortgage calculator leads --------------------------------------------------
+// 10-digit MX phone (allows spaces/dashes, stripped server-side by trim+regex).
+const mxPhoneSchema = z
+  .string()
+  .trim()
+  .regex(/^[\d\s+()-]{10,20}$/, "Ingresa un teléfono válido a 10 dígitos");
+
+export const mortgageLeadSchema = z.object({
+  fullName: z.string().trim().min(3, "El nombre completo es obligatorio").max(120),
+  phone: mxPhoneSchema,
+  email: emailSchema,
+  propertyId: uuidSchema,
+  propertyTitle: z.string().trim().min(1).max(200),
+  propertyPrice: z.number().min(0),
+  simulatedMonthlyPayment: z.number().min(0),
+  simulatedDownPayment: z.number().min(0),
+  simulation: z
+    .object({
+      downPaymentPercent: z.number().min(0).max(100),
+      termYears: z.number().int().min(1).max(40),
+      annualInterestRate: z.number().min(0).max(100),
+      hasInfonavit: z.boolean(),
+      infonavitAmount: z.number().min(0),
+    })
+    .partial()
+    .optional(),
+});
+export type MortgageLeadInput = z.infer<typeof mortgageLeadSchema>;
+
 // --- Ingestion (Stage 2: multimodal import) ------------------------------------------
 export const ingestionSourceSchema = z.enum(["url", "text", "voice"]);
 

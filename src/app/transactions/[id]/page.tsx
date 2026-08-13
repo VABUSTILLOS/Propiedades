@@ -16,6 +16,9 @@ import { TourSlots } from "@/modules/bookings/components/tour-slots";
 import { BidsPanel } from "@/modules/bids/components/bids-panel";
 import { ReviewForm } from "@/modules/reviews/components/review-form";
 import { Badge } from "@/components/ui/badge";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { Handshake } from "lucide-react";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -55,26 +58,34 @@ export default async function TransactionDetailPage({ params }: Props) {
       : transaction.buyer_id;
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10">
-      <div className="mb-8">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">
+    <PageShell size="md">
+      <PageHeader
+        eyebrow="Seguimiento"
+        icon={Handshake}
+        title={
+          <span className="flex flex-wrap items-center gap-3">
             Detalles de la transacción
-          </h1>
-          <Badge>{TRANSACTION_LABELS[transaction.state]}</Badge>
-        </div>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Iniciada {new Date(transaction.created_at).toLocaleDateString()}
-        </p>
-        {property && (
-          <Link
-            href={`/property/${property.slug}`}
-            className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-          >
-            Ver listado
-          </Link>
-        )}
-      </div>
+            <Badge>{TRANSACTION_LABELS[transaction.state]}</Badge>
+          </span>
+        }
+        description={
+          <>
+            Iniciada {new Date(transaction.created_at).toLocaleDateString()}
+            {property && (
+              <>
+                {" · "}
+                <Link
+                  href={`/property/${property.slug}`}
+                  className="font-medium text-primary hover:underline"
+                >
+                  Ver listado
+                </Link>
+              </>
+            )}
+          </>
+        }
+        className="mb-8"
+      />
 
       <TransactionActions
         transactionId={transaction.id}
@@ -134,6 +145,6 @@ export default async function TransactionDetailPage({ params }: Props) {
           </section>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

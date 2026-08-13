@@ -18,7 +18,6 @@ import { OpportunityLedger } from "@/modules/home/components/opportunity-ledger"
 import { DataEdgeSection } from "@/modules/home/components/data-edge-section";
 import { SelectionMethodSection } from "@/modules/home/components/selection-method";
 import { ChatAssistantSection } from "@/modules/chat/components/chat-assistant-section";
-import { SiteFooter } from "@/modules/home/components/site-footer";
 import { FeaturedListings } from "@/modules/home/components/featured-listings";
 import { StatsSection } from "@/modules/home/components/stats-section";
 import { SellerCtaSection } from "@/modules/home/components/seller-cta";
@@ -103,7 +102,7 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="flex-1">
         {/* Hero — registro de oportunidades */}
         <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
@@ -228,8 +227,6 @@ export default async function HomePage() {
 
         <SellerCtaSection user={user} />
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

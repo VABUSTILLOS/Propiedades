@@ -70,7 +70,7 @@ export function ListDetailView({ list, items }: Props) {
 
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight">{list.name}</h1>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight">{list.name}</h1>
           {list.description && (
             <p className="mt-1 text-sm text-muted-foreground">
               {list.description}
@@ -102,7 +102,7 @@ export function ListDetailView({ list, items }: Props) {
       )}
 
       {localItems.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-6 py-16 text-center">
+        <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
           <p className="text-sm text-muted-foreground">
             Esta lista está vacía. Agrega propiedades desde su página o desde
             tus favoritos.

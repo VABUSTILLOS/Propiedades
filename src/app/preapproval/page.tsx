@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Landmark } from "lucide-react";
 
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
 import { getMyPreapproval } from "@/modules/preapproval/actions";
 import { PreapprovalClient } from "@/modules/preapproval/components/preapproval-client";
 
@@ -11,16 +14,17 @@ export default async function PreapprovalPage() {
   const saved = await getMyPreapproval();
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-6 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">Preaprobación crediticia</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Precalifica rápido con Infonavit (NSS + fecha de nacimiento) o tu score
-        bancario, y recibe propiedades que sí alcanzas.
-      </p>
+    <PageShell size="sm">
+      <PageHeader
+        eyebrow="Financiamiento"
+        icon={Landmark}
+        title="Preaprobación crediticia"
+        description="Precalifica rápido con Infonavit (NSS + fecha de nacimiento) o tu score bancario, y recibe propiedades que sí alcanzas."
+      />
 
       <div className="mt-8">
         <PreapprovalClient saved={saved} />
       </div>
-    </div>
+    </PageShell>
   );
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { LayoutGrid } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
 import {
   countActiveListings,
   searchListingsPage,
@@ -12,7 +14,6 @@ import {
   type MapBounds,
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
-import { SiteFooter } from "@/modules/home/components/site-footer";
 import { ListadosTabs } from "@/modules/listados/components/listados-tabs";
 import { SearchResults } from "@/modules/maps/components/search-results";
 
@@ -103,14 +104,15 @@ export default async function ListadosPage({ searchParams }: Props) {
   const mapSearch = params?.mapSearch === "true";
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight">Listados</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {total} {TAB_LABELS[activeTab]} en el catálogo
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Explorar"
+          icon={LayoutGrid}
+          title="Listados"
+          description={`${total} ${TAB_LABELS[activeTab]} en el catálogo`}
+          className="mb-6"
+        />
 
         <ListadosTabs activeTab={activeTab} counts={countByTab} />
 
@@ -136,8 +138,6 @@ export default async function ListadosPage({ searchParams }: Props) {
           </div>
         )}
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

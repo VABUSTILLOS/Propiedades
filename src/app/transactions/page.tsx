@@ -7,6 +7,10 @@ import { getMyTransactions } from "@/modules/transactions/queries";
 import { TRANSACTION_LABELS } from "@/modules/transactions/state-machine";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
+import { Handshake } from "lucide-react";
 
 export const metadata: Metadata = { title: "Transacciones" };
 
@@ -28,21 +32,20 @@ export default async function TransactionsPage() {
   const transactions = await getMyTransactions(user.id);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Transacciones</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Consultas, visitas, ofertas y depósito en garantía — todo en un solo
-          lugar.
-        </p>
-      </div>
+    <PageShell size="md">
+      <PageHeader
+        eyebrow="Seguimiento"
+        icon={Handshake}
+        title="Transacciones"
+        description="Consultas, visitas, ofertas y depósito en garantía — todo en un solo lugar."
+        className="mb-8"
+      />
 
       {transactions.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            Aún no tienes transacciones. Pregunta por una propiedad para empezar.
-          </p>
-        </div>
+        <EmptyState
+          icon={Handshake}
+          description="Aún no tienes transacciones. Pregunta por una propiedad para empezar."
+        />
       ) : (
         <div className="space-y-3">
           {transactions.map((tx) => {
@@ -75,6 +78,6 @@ export default async function TransactionsPage() {
           })}
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }

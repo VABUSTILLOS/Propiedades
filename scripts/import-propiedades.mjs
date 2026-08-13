@@ -298,7 +298,12 @@ async function main() {
     const category = classifyCategory(it.property_type, it.title);
     const recamaras = toPosIntOrNull(it.bedrooms);
     const banos = toPosIntOrNull(it.bathrooms);
-    const terreno_m2 = toPosIntOrNull(it.land_area_m2);
+    // `land_area_m2` in the scrape dataset is mislabelled: for Casas and
+    // Departamentos it holds the CONSTRUCTION size (size_m2), while for Terrenos
+    // it holds the land size. Map by category so precio_m2_const can compute.
+    const sizeVal = toPosIntOrNull(it.land_area_m2);
+    const construccion_m2 = category === "terreno" ? 0 : (sizeVal ?? 0);
+    const terreno_m2 = category === "terreno" ? (sizeVal ?? 0) : 0;
     const images = Array.isArray(it.images) ? it.images.filter(Boolean) : [];
     const colonia = cleanColonia(it.neighborhood || it.street_address || "");
     const description = it.description?.trim() || title;
@@ -316,7 +321,8 @@ async function main() {
       currency,
       recamaras,
       banos,
-      terreno_m2: terreno_m2 ?? 0,
+      construccion_m2,
+      terreno_m2,
       // NOT NULL columns carry DB defaults — use them instead of null.
       address: it.street_address || "",
       colonia: colonia || "",

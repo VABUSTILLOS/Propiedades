@@ -6,6 +6,7 @@ import { CommandPalette } from "@/modules/search/components/command-palette";
 import { resolveTenant } from "@/modules/profiles/tenant";
 import { getCurrentUser } from "@/modules/auth/session";
 import { SiteHeader } from "@/modules/home/components/site-header";
+import { SiteFooter } from "@/modules/home/components/site-footer";
 
 import "./globals.css";
 
@@ -56,9 +57,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <SiteHeader user={user} />
         <QueryProvider>
-          {children}
+          <div className="flex flex-1 flex-col">{children}</div>
           <CommandPalette />
         </QueryProvider>
+        <SiteFooter />
       </body>
     </html>
   );

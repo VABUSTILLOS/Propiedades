@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Trophy } from "lucide-react";
+import { GitCompareArrows, Trophy } from "lucide-react";
 
 import { getListingsByIds } from "@/modules/listings/queries";
 import { buttonVariants } from "@/components/ui/button";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
 
 export const metadata: Metadata = { title: "Comparador" };
 
@@ -28,16 +31,18 @@ export default async function ComparePage({ searchParams }: CompareProps) {
 
   if (idList.length === 0) {
     return (
-      <div className="mx-auto flex min-h-[50vh] max-w-2xl flex-col items-center justify-center px-6 text-center">
-        <h1 className="text-xl font-semibold">Comparador</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Elige hasta 4 inmuebles desde tus favoritos para compararlos lado a
-          lado.
-        </p>
-        <Link href="/favorites" className={buttonVariants({ className: "mt-6" })}>
-          Ir a mis favoritos
-        </Link>
-      </div>
+      <PageShell size="sm" className="flex min-h-[50vh] flex-col justify-center">
+        <EmptyState
+          icon={GitCompareArrows}
+          title="Comparador"
+          description="Elige hasta 4 inmuebles desde tus favoritos para compararlos lado a lado."
+          action={
+            <Link href="/favorites" className={buttonVariants()}>
+              Ir a mis favoritos
+            </Link>
+          }
+        />
+      </PageShell>
     );
   }
 
@@ -74,12 +79,13 @@ export default async function ComparePage({ searchParams }: CompareProps) {
       : null;
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-10">
-      <h1 className="text-2xl font-bold tracking-tight">Comparador</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {listings.length} inmuebles · el mejor $/m² construcción se resalta
-        automáticamente.
-      </p>
+    <PageShell size="xl">
+      <PageHeader
+        eyebrow="Comprar"
+        icon={GitCompareArrows}
+        title="Comparador"
+        description={`${listings.length} inmuebles · el mejor $/m² construcción se resalta automáticamente.`}
+      />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {rows.map(({ listing: l, precio_m2, precio_m2_terreno, discount }) => {
@@ -168,7 +174,7 @@ export default async function ComparePage({ searchParams }: CompareProps) {
           Abre tu tier list
         </Link>
       </p>
-    </div>
+    </PageShell>
   );
 }
 

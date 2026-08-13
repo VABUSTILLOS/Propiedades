@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Settings } from "lucide-react";
 
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getProfileByUserId } from "@/modules/profiles/queries";
@@ -28,19 +31,19 @@ export default async function SettingsPage() {
   const canConfigure = user.role === "agent" || user.role === "admin";
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-6 px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Manage your account and agency branding.
-        </p>
-      </div>
+    <PageShell size="sm" className="space-y-6">
+      <PageHeader
+        eyebrow="Cuenta"
+        icon={Settings}
+        title="Configuración"
+        description="Administra tu cuenta y la identidad de tu agencia."
+      />
 
       <BrandingSettingsForm
         initialSubdomain={profile?.subdomain ?? null}
         initialBranding={parseBranding(profile?.branding_config ?? null)}
         canConfigure={canConfigure}
       />
-    </div>
+    </PageShell>
   );
 }

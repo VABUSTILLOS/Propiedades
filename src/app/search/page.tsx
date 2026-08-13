@@ -17,9 +17,9 @@ import {
   type MapBounds,
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
-import { SiteFooter } from "@/modules/home/components/site-footer";
-import { Building2, Landmark } from "lucide-react";
+import { Building2, Home, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata: Metadata = { title: "Buscar propiedades" };
 
@@ -100,21 +100,15 @@ export default async function SearchPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-        <div className="mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                Buscar propiedades
-              </h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {total} propiedad{total === 1 ? "" : "es"}{" "}
-                activa{total === 1 ? "" : "s"}
-                {hasFilters ? " con tus filtros" : " disponibles"}
-              </p>
-            </div>
-
+        <PageHeader
+          eyebrow="Comprar"
+          icon={Home}
+          title="Buscar propiedades"
+          description={`${total} propiedad${total === 1 ? "" : "es"} activa${total === 1 ? "" : "s"}${hasFilters ? " con tus filtros" : " disponibles"}`}
+          className="mb-8"
+          actions={
             <div className="inline-flex rounded-full border bg-muted/40 p-1">
               <Link
                 href="/search"
@@ -135,8 +129,8 @@ export default async function SearchPage({ searchParams }: Props) {
                 Inversionista
               </Link>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         <div className="mb-8">
           <SearchFiltersForm cities={cities} />
@@ -161,8 +155,6 @@ export default async function SearchPage({ searchParams }: Props) {
           />
         )}
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

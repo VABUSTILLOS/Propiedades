@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarClock, Gavel, MessageCircle } from "lucide-react";
+import { CalendarClock, Gavel, Home, MessageCircle } from "lucide-react";
+
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
 
 import { getCurrentUser } from "@/modules/auth/session";
 import { getProfileByUserId } from "@/modules/profiles/queries";
@@ -23,14 +26,13 @@ export default async function FsboPage() {
   const waNumber = profile?.phone?.replace(/\D/g, "") ?? "";
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Módulo FSBO (Dueño)</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Publica tu propiedad en minutos, con valuación automática y ofertas
-          digitales 24/7.
-        </p>
-      </div>
+    <PageShell>
+      <PageHeader
+        eyebrow="Vender"
+        icon={Home}
+        title="Módulo FSBO (Dueño)"
+        description="Publica tu propiedad en minutos, con valuación automática y ofertas digitales 24/7."
+      />
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
         <section>
@@ -98,6 +100,6 @@ export default async function FsboPage() {
           </div>
         </aside>
       </div>
-    </div>
+    </PageShell>
   );
 }

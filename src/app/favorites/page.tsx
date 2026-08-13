@@ -10,6 +10,8 @@ import { ShareFavoritesDialog } from "@/modules/favorites/components/share-favor
 import { CoShoppingPanel } from "@/modules/co-shopping/components/co-shopping-panel";
 import { getChatMessages } from "@/modules/co-shopping/queries";
 import { buttonVariants } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout/page-header";
+import { Heart } from "lucide-react";
 
 export const metadata: Metadata = { title: "Favoritos" };
 
@@ -47,30 +49,31 @@ export default async function FavoritesPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-10">
-      <div className="mb-8 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Favorites</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Organiza tu shortlist: arrastra para ordenar en la lista o clasifica en el Kanban (Top Choice / Plan B / Descartadas).
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {(favorites.length >= 1 || listsWithItems.length > 0) && (
-            <ShareFavoritesDialog
-              favorites={favorites}
-              listsWithItems={listsWithItems}
-            />
-          )}
-          {favorites.length >= 2 && (
-            <Link
-              href={`/compare?ids=${favorites.map((f) => f.property_id).join(",")}`}
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              Comparar
-            </Link>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Comprar"
+        icon={Heart}
+        title="Favoritos"
+        description="Organiza tu shortlist: arrastra para ordenar en la lista o clasifica en el Kanban (Top Choice / Plan B / Descartadas)."
+        className="mb-8"
+        actions={
+          <>
+            {(favorites.length >= 1 || listsWithItems.length > 0) && (
+              <ShareFavoritesDialog
+                favorites={favorites}
+                listsWithItems={listsWithItems}
+              />
+            )}
+            {favorites.length >= 2 && (
+              <Link
+                href={`/compare?ids=${favorites.map((f) => f.property_id).join(",")}`}
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Comparar
+              </Link>
+            )}
+          </>
+        }
+      />
 
       <FavoritesView
         favorites={favorites}

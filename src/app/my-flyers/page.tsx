@@ -5,6 +5,10 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyFlyers } from "@/modules/flyers/queries";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
+import { Newspaper } from "lucide-react";
 
 export const metadata: Metadata = { title: "Mis flyers" };
 
@@ -26,20 +30,20 @@ export default async function MyFlyersPage() {
   const flyers = await getMyFlyers(user.id);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Flyers digitales</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Páginas compartibles y con métricas para tus listados.
-        </p>
-      </div>
+    <PageShell size="md">
+      <PageHeader
+        eyebrow="Vender"
+        icon={Newspaper}
+        title="Flyers digitales"
+        description="Páginas compartibles y con métricas para tus listados."
+        className="mb-8"
+      />
 
       {flyers.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            Aún no tienes flyers. Crea uno desde cualquiera de tus listados.
-          </p>
-        </div>
+        <EmptyState
+          icon={Newspaper}
+          description="Aún no tienes flyers. Crea uno desde cualquiera de tus listados."
+        />
       ) : (
         <div className="space-y-3">
           {flyers.map((flyer) => (
@@ -64,6 +68,6 @@ export default async function MyFlyersPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }

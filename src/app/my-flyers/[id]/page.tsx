@@ -9,6 +9,9 @@ import { FlyerEngagementPanel } from "@/modules/flyers/components/flyer-engageme
 import { WhiteLabelShareButton } from "@/modules/flyers/components/white-label-share-button";
 import { getListingById } from "@/modules/listings/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageHeader } from "@/components/layout/page-header";
+import { Newspaper } from "lucide-react";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -45,20 +48,21 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
   ).length;
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {flyer.custom_title ?? "Flyer"}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+    <PageShell size="md">
+      <PageHeader
+        eyebrow="Vender"
+        icon={Newspaper}
+        title={flyer.custom_title ?? "Flyer"}
+        description={
+          <>
             {property?.title ?? "Propiedad"} ·{" "}
             <Link href={`/f/${flyer.slug}`} className="text-primary hover:underline">
               /f/{flyer.slug}
             </Link>
-          </p>
-        </div>
-      </div>
+          </>
+        }
+        className="mb-8"
+      />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <Stat label="Vistas" value={analytics.length} />
@@ -121,7 +125,7 @@ export default async function FlyerAnalyticsPage({ params }: Props) {
           />
         </CardContent>
       </Card>
-    </div>
+    </PageShell>
   );
 }
 

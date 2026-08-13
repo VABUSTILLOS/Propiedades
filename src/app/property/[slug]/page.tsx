@@ -30,6 +30,7 @@ import {
 } from "@/modules/market-data/queries";
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { SimilarProperties } from "@/modules/listings/components/similar-properties";
+import { MortgageCalculator } from "@/modules/listings/components/mortgage-calculator";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
@@ -45,7 +46,6 @@ import {
   formatMxn,
   isFinanciable,
 } from "@/modules/lib/real-estate";
-import { SiteFooter } from "@/modules/home/components/site-footer";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -103,7 +103,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const financiable = isFinanciable(listing.deal_type);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-1 flex-col">
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         <Link
           href="/search"
@@ -381,17 +381,21 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                 )}
 
                 {financiable && (
-                  <Link
-                    href="/preapproval"
-                    className={buttonVariants({
-                      className: "mt-4 w-full",
-                    })}
-                  >
-                    Precalificate para un crédito
-                  </Link>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Esta propiedad acepta crédito hipotecario. Simula tu
+                    mensualidad en la calculadora de abajo.
+                  </p>
                 )}
               </CardContent>
             </Card>
+
+            {showCosts && financiable && (
+              <MortgageCalculator
+                propertyId={listing.id}
+                propertyTitle={listing.title}
+                propertyPrice={listing.price}
+              />
+            )}
 
             <Card className="rounded-2xl">
               <CardHeader>
@@ -446,8 +450,6 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
           </aside>
         </div>
       </main>
-
-      <SiteFooter />
     </div>
   );
 }
