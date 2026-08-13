@@ -56,6 +56,7 @@ export function PropertiesMap({
   heightClass = "h-[70vh]",
   highlightedId = null,
   focusId = null,
+  focusPosition = null,
   selectionId = null,
 }: {
   markers: PropertyMapMarker[];
@@ -70,6 +71,15 @@ export function PropertiesMap({
   highlightedId?: string | null;
   /** Listing opened in the split detail pane — pans/zooms to its pin. */
   focusId?: string | null;
+  /**
+   * Coordinates of the listing opened in the split detail pane. Takes
+   * precedence over `focusId`: works even when the pin is not (yet) in the
+   * fetched marker set, and suppresses fit-bounds while active. Set
+   * `approximate` when the position is a colonia/city centroid estimate for
+   * an ungeocoded listing — the camera then stops at neighborhood zoom
+   * instead of street zoom.
+   */
+  focusPosition?: { lat: number; lng: number; approximate?: boolean } | null;
   /** Listing selected from the list — shows the compact bottom card (like a pin click). */
   selectionId?: string | null;
 }) {
@@ -143,6 +153,9 @@ export function PropertiesMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!google || !map) return;
+    // While a listing is focused (split detail pane open) the camera belongs
+    // to the focus effect — refitting here would race/override its pan.
+    if (focusPosition) return;
 
     if (initialBounds) {
       map.fitBounds(
@@ -168,7 +181,7 @@ export function PropertiesMap({
         lastEmittedRef.current = null;
       }
     }
-  }, [google, markers, initialBounds]);
+  }, [google, markers, initialBounds, focusPosition]);
 
   // (Re)build markers + clusterer whenever the pin set changes.
   useEffect(() => {
@@ -233,16 +246,23 @@ export function PropertiesMap({
 
   // Pan/zoom to a listing when it is opened in the split detail pane. The pill
   // is already scaled via `highlightedId`; here we just bring the pin on view.
+  // `focusPosition` (the listing's own coordinates) takes precedence: it works
+  // even when the pin is missing from the fetched marker set.
   useEffect(() => {
     const map = mapRef.current;
-    if (!google || !map || !focusId) return;
-    const marker = markers.find((m) => m.id === focusId);
+    if (!google || !map) return;
+    let target = focusPosition;
+    if (!target && focusId) {
+      const marker = markers.find((m) => m.id === focusId);
+      target = marker ? { lat: marker.lat, lng: marker.lng } : null;
+    }
     // Rows that were never geocoded fall back to (0,0) — never fly the
     // camera there; just leave the map on its current view.
-    if (!marker || (marker.lat === 0 && marker.lng === 0)) return;
-    map.panTo({ lat: marker.lat, lng: marker.lng });
-    map.setZoom(Math.max(map.getZoom() ?? 11, 16));
-  }, [google, markers, focusId]);
+    if (!target || (target.lat === 0 && target.lng === 0)) return;
+    map.panTo(target);
+    const minZoom = focusPosition?.approximate ? 14 : 16;
+    map.setZoom(Math.max(map.getZoom() ?? 11, minZoom));
+  }, [google, markers, focusId, focusPosition]);
 
   // Highlight the selected/hovered pill via direct DOM (avoids rebuilding markers).
   useEffect(() => {

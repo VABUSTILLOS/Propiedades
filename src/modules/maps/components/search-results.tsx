@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Map as MapIcon } from "lucide-react";
 
@@ -13,6 +13,9 @@ import { InfiniteListings } from "@/modules/maps/components/infinite-listings";
 import { SplitDetailPanel } from "@/modules/maps/components/split-detail-panel";
 import { boundsToString, type MapBounds } from "@/modules/lib/schemas";
 import type { ListingWithHot, PropertyMapMarker } from "@/modules/search/queries";
+
+/** Stable empty array so the map's effects don't rerun while pins load. */
+const NO_MARKERS: PropertyMapMarker[] = [];
 
 /**
  * Orchestrator for the Airbnb-style Lista ⇄ Mapa ⇄ Dividido experience.
@@ -106,9 +109,35 @@ export function SearchResults({
     />
   );
 
+  // The map zooms to the selected listing's own coordinates, so the camera
+  // works even when its pin is not in the fetched marker set. Rows that were
+  // never geocoded fall back to (0,0) — for those, approximate the position
+  // with the centroid of fetched markers in the same colonia and city.
+  const focusPosition = useMemo(() => {
+    if (!selectedItem) return null;
+    if (!(selectedItem.lat === 0 && selectedItem.lng === 0)) {
+      return { lat: selectedItem.lat, lng: selectedItem.lng };
+    }
+    const all = markers ?? [];
+    const neighbors = all.filter(
+      (m) =>
+        m.colonia === selectedItem.colonia && m.city === selectedItem.city,
+    );
+    // No geocoded neighbor in the colonia: fall back to the city centroid.
+    const pool = neighbors.length > 0
+      ? neighbors
+      : all.filter((m) => m.city === selectedItem.city);
+    if (pool.length === 0) return null;
+    return {
+      lat: pool.reduce((sum, m) => sum + m.lat, 0) / pool.length,
+      lng: pool.reduce((sum, m) => sum + m.lng, 0) / pool.length,
+      approximate: true,
+    };
+  }, [selectedItem, markers]);
+
   const map = (heightClass: string) => (
     <PropertiesMap
-      markers={markers ?? []}
+      markers={markers ?? NO_MARKERS}
       initialBounds={initialBounds}
       activeBounds={initialBounds}
       onApplyBounds={(bounds) =>
@@ -117,6 +146,7 @@ export function SearchResults({
       onResetBounds={() => updateParam({ bounds: null })}
       highlightedId={selectedItem?.id ?? hoveredId}
       focusId={selectedItem?.id ?? null}
+      focusPosition={focusPosition}
       selectionId={selectedItem?.id ?? null}
       heightClass={heightClass}
     />
