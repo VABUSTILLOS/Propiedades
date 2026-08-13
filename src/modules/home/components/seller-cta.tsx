@@ -36,9 +36,9 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
   const ctaLabel = user ? "Publicar mi propiedad" : "Publicar gratis";
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#D67E3C] via-[#C4571D] to-[#8F2E0F] text-white">
-      <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-white/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -left-20 size-96 rounded-full bg-[#6E1D00]/20 blur-3xl" />
+    <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+      <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-white/5 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-20 size-96 rounded-full bg-white/5 blur-3xl" />
       <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center">
         <div>
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
@@ -54,7 +54,7 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
               className={buttonVariants({
                 size: "lg",
                 className:
-                  "bg-white text-[#C4571D] shadow-sm hover:bg-white/90",
+                  "bg-[#FBF6F0] text-[#180F08] shadow-sm hover:bg-white",
               })}
             >
               {ctaLabel}
