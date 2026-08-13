@@ -69,6 +69,8 @@ export function PropertyCard({
         {listing.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
+            loading="lazy"
+            decoding="async"
             src={listing.images[0]}
             alt={listing.title}
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -179,12 +181,12 @@ export function PropertyCard({
               <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
                 Descuento vs colonia:
                 {discountPct >= 0 ? (
-                  <span className="inline-flex items-center gap-0.5 font-semibold text-emerald-600">
+                  <span className="inline-flex items-center gap-0.5 font-semibold text-emerald-700 dark:text-emerald-400">
                     <ArrowDownRight className="size-3.5" aria-hidden="true" />
                     {discountPct.toFixed(1)}% abajo
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-0.5 font-semibold text-amber-600">
+                  <span className="inline-flex items-center gap-0.5 font-semibold text-amber-700 dark:text-amber-400">
                     <ArrowUpRight className="size-3.5" aria-hidden="true" />
                     {Math.abs(discountPct).toFixed(1)}% arriba
                   </span>

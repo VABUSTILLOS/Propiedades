@@ -189,7 +189,7 @@ export function SearchResults({
 
           <section className="space-y-4" aria-label="Propiedades en esta zona">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <MapIcon className="size-5 text-[#C4571D]" aria-hidden="true" />
+              <MapIcon className="size-5 text-primary" aria-hidden="true" />
               {initialTotal} propiedad{initialTotal === 1 ? "" : "es"} en esta
               zona
             </h2>

@@ -101,7 +101,7 @@ export function PropertyLocationMap({
     <div className="overflow-hidden rounded-2xl border bg-card">
       {address && (
         <div className="flex items-center gap-2 border-b px-4 py-3 text-sm">
-          <MapPin className="size-4 shrink-0 text-[#C4571D]" aria-hidden="true" />
+          <MapPin className="size-4 shrink-0 text-primary" aria-hidden="true" />
           <span className="font-medium">{address}</span>
         </div>
       )}

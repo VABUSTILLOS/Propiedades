@@ -113,7 +113,7 @@ export function ChatActionsBar({
               setStatus({ kind: "idle" });
             }}
             aria-expanded={formOpen}
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-3 py-2 text-sm font-medium text-[#128C7E] transition-colors hover:bg-[#25D366]/20"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-whatsapp/40 bg-whatsapp/10 px-3 py-2 text-sm font-medium text-whatsapp-deep transition-colors hover:bg-whatsapp/20"
           >
             <WhatsAppIcon className="size-4" />
             Manda los resultados a tu WhatsApp
@@ -136,7 +136,7 @@ export function ChatActionsBar({
       {formOpen && hasResults && (
         <div className="space-y-2 rounded-2xl border border-border/60 bg-muted/40 p-3">
           {status.kind === "sent" ? (
-            <p className="text-sm text-[#128C7E]" role="status">
+            <p className="text-sm text-whatsapp-deep" role="status">
               ¡Listo! ✅ Revisa tu WhatsApp — puedes seguir buscando ahí mismo,
               y si escribes &quot;asesor&quot; te atiendo personalmente.
             </p>
@@ -155,7 +155,7 @@ export function ChatActionsBar({
               <button
                 type="submit"
                 disabled={status.kind === "sending" || phone.trim().length < 10}
-                className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-[#128C7E] px-3 text-sm font-medium text-white transition-colors hover:bg-[#0f7a6d] disabled:pointer-events-none disabled:opacity-50"
+                className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-whatsapp-deep px-3 text-sm font-medium text-white transition-colors hover:bg-whatsapp-deep-hover disabled:pointer-events-none disabled:opacity-50"
               >
                 {status.kind === "sending" && (
                   <Loader2 className="size-3.5 animate-spin" />
@@ -179,7 +179,7 @@ export function ChatActionsBar({
                     href={status.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium text-[#128C7E] underline underline-offset-2"
+                    className="font-medium text-whatsapp-deep underline underline-offset-2"
                   >
                     Toca aquí para abrir tu WhatsApp
                   </a>{" "}

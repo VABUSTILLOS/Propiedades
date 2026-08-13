@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { trapDialogTabKey } from "@/lib/a11y";
 
 type Props = {
   images: string[];
@@ -22,6 +23,7 @@ type Props = {
 export function PropertyPhotoGallery({ images, title }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
 
   const count = images.length;
 
@@ -31,6 +33,13 @@ export function PropertyPhotoGallery({ images, title }: Props) {
   }, []);
 
   const closeLightbox = useCallback(() => setActiveIndex(null), []);
+
+  // Restore focus to the tile that opened the last overlay.
+  useEffect(() => {
+    if (activeIndex !== null || showAll) return;
+    lastTriggerRef.current?.focus();
+    lastTriggerRef.current = null;
+  }, [activeIndex, showAll]);
 
   const goPrev = useCallback(() => {
     setActiveIndex((i) => (i === null ? i : (i + count - 1) % count));
@@ -92,7 +101,11 @@ export function PropertyPhotoGallery({ images, title }: Props) {
             <button
               key={`${i}-${src}`}
               type="button"
-              onClick={() => (opensAll ? setShowAll(true) : openLightbox(i))}
+              onClick={(event) => {
+                lastTriggerRef.current = event.currentTarget;
+                if (opensAll) setShowAll(true);
+                else openLightbox(i);
+              }}
               aria-label={
                 opensAll
                   ? `Ver todas las fotos (${count})`
@@ -105,6 +118,9 @@ export function PropertyPhotoGallery({ images, title }: Props) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : undefined}
+                decoding="async"
                 src={src}
                 alt={`${title} — foto ${i + 1}`}
                 className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -187,6 +203,7 @@ function Lightbox({
       aria-modal="true"
       aria-label={`Fotos de ${title}`}
       className="fixed inset-0 z-50 flex flex-col bg-black/95"
+      onKeyDown={trapDialogTabKey}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -227,6 +244,7 @@ function Lightbox({
       >
         <AnimatePresence mode="wait">
           <motion.img
+            decoding="async"
             key={index}
             src={images[index]}
             alt={`${title} — foto ${index + 1}`}
@@ -278,6 +296,8 @@ function Lightbox({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                loading="lazy"
+                decoding="async"
                 src={src}
                 alt=""
                 className="size-14 object-cover"
@@ -313,6 +333,7 @@ function PhotoGridPanel({
       aria-modal="true"
       aria-label={`Todas las fotos de ${title}`}
       className="fixed inset-0 z-50 overflow-y-auto bg-background"
+      onKeyDown={trapDialogTabKey}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -352,6 +373,8 @@ function PhotoGridPanel({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+              loading="lazy"
+              decoding="async"
               src={src}
               alt={`${title} — foto ${i + 1}`}
               className="size-full object-cover transition-transform duration-300 group-hover:scale-105"

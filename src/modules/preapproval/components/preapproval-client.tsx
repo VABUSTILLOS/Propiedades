@@ -190,6 +190,8 @@ export function PreapprovalClient({ saved }: Props) {
                       {m.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
+                          loading="lazy"
+                          decoding="async"
                           src={m.image}
                           alt=""
                           className="size-14 rounded-md object-cover"

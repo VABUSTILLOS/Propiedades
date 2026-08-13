@@ -37,12 +37,12 @@ const FOOTER_COLUMNS = [
  */
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#180F08] text-[#FBF6F0]">
+    <footer className="border-t border-white/10 bg-ink text-ink-foreground">
       <div className="mx-auto w-full max-w-6xl px-6 py-14">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#D67E3C] to-[#A83810] text-white shadow-sm">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-copper to-copper-deep text-white shadow-sm">
                 <Building2 className="size-[18px]" />
               </span>
               <span className="text-lg font-bold tracking-tight">
@@ -55,8 +55,8 @@ export function SiteFooter() {
             </p>
             <p className="mt-5 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-white/65">
               <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#7BC796] opacity-70" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-[#7BC796]" />
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-70" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-live" />
               </span>
               Registro activo · Hecho en México
             </p>
@@ -72,7 +72,7 @@ export function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/65 transition-colors hover:text-[#E89252]"
+                      className="text-sm text-white/65 transition-colors hover:text-copper-bright"
                     >
                       {link.label}
                     </Link>

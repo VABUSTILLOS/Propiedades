@@ -49,7 +49,7 @@ const COMPARISON_ROWS = [
  */
 export function DataEdgeSection() {
   return (
-    <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+    <section className="relative overflow-hidden bg-ink text-ink-foreground">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -74,9 +74,9 @@ export function DataEdgeSection() {
           {DATA_POINTS.map((point) => {
             const Icon = point.icon;
             return (
-              <div key={point.index} className="bg-[#180F08] p-6">
+              <div key={point.index} className="bg-ink p-6">
                 <div className="flex items-center justify-between">
-                  <Icon className="size-5 text-[#D67E3C]" aria-hidden />
+                  <Icon className="size-5 text-copper" aria-hidden />
                   <span className="font-mono text-xs uppercase tracking-[0.28em] text-white/60">
                     {point.index}
                   </span>
@@ -94,7 +94,7 @@ export function DataEdgeSection() {
           <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_6.5rem] bg-white/5 font-mono text-xs uppercase tracking-[0.2em] text-white/65 sm:grid-cols-[minmax(0,1fr)_11rem_11rem]">
             <span className="px-4 py-3.5 sm:px-6">Dato por propiedad</span>
             <span className="px-2 py-3.5 text-center">Portales</span>
-            <span className="bg-white/[0.06] px-2 py-3.5 text-center text-[#7BC796]">
+            <span className="bg-white/[0.06] px-2 py-3.5 text-center text-live">
               Propiedades
             </span>
           </div>
@@ -110,13 +110,13 @@ export function DataEdgeSection() {
                 <Minus className="size-4 text-white/40" aria-label="No disponible" />
               </span>
               <span className="flex items-center justify-center bg-white/[0.06] px-2 py-4">
-                <Check className="size-4 text-[#7BC796]" aria-label="Incluido" />
+                <Check className="size-4 text-live" aria-label="Incluido" />
               </span>
             </div>
           ))}
         </div>
 
-        <p className="mt-8 border-l-2 border-[#D67E3C] pl-4 font-mono text-xs uppercase tracking-[0.18em] text-white/70">
+        <p className="mt-8 border-l-2 border-copper pl-4 font-mono text-xs uppercase tracking-[0.18em] text-white/70">
           Metodología abierta — cada cifra muestra cómo se calcula
         </p>
       </div>

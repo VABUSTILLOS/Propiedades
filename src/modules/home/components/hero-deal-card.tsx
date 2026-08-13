@@ -113,7 +113,7 @@ function VerificationSeal({ discountPct }: { discountPct: number }) {
             d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"
           />
         </defs>
-        <circle cx="50" cy="50" r="50" className="fill-[#180F08]" />
+        <circle cx="50" cy="50" r="50" className="fill-ink" />
         <circle
           cx="50"
           cy="50"
@@ -122,7 +122,7 @@ function VerificationSeal({ discountPct }: { discountPct: number }) {
           strokeWidth="0.75"
         />
         <text
-          className="fill-[#FBF6F0] font-mono text-[9px] uppercase"
+          className="fill-ink-foreground font-mono text-[9px] uppercase"
           style={{ letterSpacing: "0.16em" }}
         >
           <textPath
@@ -134,7 +134,7 @@ function VerificationSeal({ discountPct }: { discountPct: number }) {
           </textPath>
         </text>
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold text-[#7BC796]">
+      <span className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold text-live">
         −{discountPct.toFixed(0)}%
       </span>
     </div>

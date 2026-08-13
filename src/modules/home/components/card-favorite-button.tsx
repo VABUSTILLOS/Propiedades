@@ -49,7 +49,7 @@ export function CardFavoriteButton({ propertyId, propertySlug, initialSaved }: P
       className={cn(
         "flex size-9 items-center justify-center rounded-full shadow-sm backdrop-blur transition-colors",
         saved
-          ? "bg-[#D67E3C] text-white"
+          ? "bg-copper text-white"
           : "bg-white/90 text-neutral-700 hover:bg-white",
       )}
     >

@@ -580,6 +580,8 @@ function InvestorCard({ item }: { item: InvestorItem }) {
       {item.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          loading="lazy"
+          decoding="async"
           src={item.image}
           alt={item.title}
           className="aspect-[4/3] w-full object-cover"

@@ -851,7 +851,7 @@ function LeadCaptureForm({
         href={whatsAppHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#1EBE5A]"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-whatsapp px-4 text-sm font-semibold text-white transition-colors hover:bg-whatsapp-hover"
       >
         <WhatsAppIcon className="size-4" />
         Descubrir mi mejor crédito por WhatsApp

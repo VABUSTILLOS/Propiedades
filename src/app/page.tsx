@@ -105,7 +105,7 @@ export default async function HomePage() {
     <div className="flex flex-1 flex-col">
       <main className="flex-1">
         {/* Hero — registro de oportunidades */}
-        <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+        <section className="relative overflow-hidden bg-ink text-ink-foreground">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-60"
@@ -124,8 +124,8 @@ export default async function HomePage() {
               <div>
                 <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5">
                   <span className="relative flex size-2">
-                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#7BC796] opacity-70" />
-                    <span className="relative inline-flex size-2 rounded-full bg-[#7BC796]" />
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-70" />
+                    <span className="relative inline-flex size-2 rounded-full bg-live" />
                   </span>
                   <span className="font-mono text-xs uppercase tracking-[0.22em] text-white/70">
                     {newThisWeek > 0

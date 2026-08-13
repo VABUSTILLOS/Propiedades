@@ -54,6 +54,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         } as React.CSSProperties
       }
     >
+      <head>
+        {/* Applies the stored/system theme before first paint so there is no
+            flash of the wrong color scheme. Keep in sync with ThemeToggle. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <SiteHeader user={user} />
         <QueryProvider>

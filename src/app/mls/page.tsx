@@ -70,6 +70,8 @@ export default async function MlsNetworkPage() {
                   {typeof image === "string" ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
+                      loading="lazy"
+                      decoding="async"
                       src={image}
                       alt={listing.title}
                       className="aspect-[4/3] w-full object-cover"

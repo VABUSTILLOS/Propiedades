@@ -25,6 +25,8 @@ export function ChatResultCard({ result }: { result: ChatResult }) {
           {result.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
+              loading="lazy"
+              decoding="async"
               src={result.image}
               alt={result.title}
               className="size-full object-cover"
@@ -101,7 +103,7 @@ export function ChatResultCard({ result }: { result: ChatResult }) {
         <ShareWhatsAppButton property={result} compact />
         <Link
           href={`/property/${result.slug}`}
-          className="inline-flex h-7 items-center rounded-full bg-gradient-to-br from-[#D67E3C] to-[#A83810] px-3 text-xs font-medium text-white shadow-sm transition-all hover:from-[#E08A4A] hover:to-[#B54514]"
+          className="inline-flex h-7 items-center rounded-full bg-gradient-to-br from-primary to-copper-deep px-3 text-xs font-medium text-white shadow-sm transition-all hover:from-copper-deep hover:to-copper-ink"
         >
           Ver detalles
         </Link>

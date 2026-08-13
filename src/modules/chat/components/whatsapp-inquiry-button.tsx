@@ -29,7 +29,7 @@ export function WhatsAppInquiryButton({
       rel="noopener noreferrer"
       aria-label={`Preguntar por ${title} en WhatsApp`}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] font-medium text-white shadow-sm transition-colors hover:bg-[#1ebe5b] hover:text-white",
+        "inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp font-medium text-white shadow-sm transition-colors hover:bg-whatsapp-hover hover:text-white",
         className,
       )}
     >

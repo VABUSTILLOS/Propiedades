@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { handleTabListKeyDown } from "@/lib/a11y";
 
 const TYPE_TABS = [
   { value: "", label: "Comprar" },
@@ -47,6 +48,7 @@ export function HeroSearch({ cities }: { cities: string[] }) {
       <div
         role="tablist"
         aria-label="Tipo de búsqueda"
+        onKeyDown={handleTabListKeyDown}
         className="mb-1.5 inline-flex items-center gap-0.5 rounded-full border border-white/25 bg-white/10 p-0.5 backdrop-blur-sm"
       >
         {TYPE_TABS.map((tab) => {
@@ -56,10 +58,11 @@ export function HeroSearch({ cities }: { cities: string[] }) {
               key={tab.label}
               role="tab"
               aria-selected={active}
+              tabIndex={active ? 0 : -1}
               onClick={() => setType(tab.value)}
               className={cn(
                 "relative rounded-full px-3.5 py-1 text-xs font-semibold transition-colors",
-                active ? "text-[#8F2E0F]" : "text-white/85 hover:text-white",
+                active ? "text-copper-ink" : "text-white/85 hover:text-white",
               )}
             >
               {active && (

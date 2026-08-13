@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { PropertyCard } from "@/modules/home/components/property-card";
+import { handleTabListKeyDown } from "@/lib/a11y";
 
 export type CityListingGroup = {
   /** Key for the "Todas" tab. */
@@ -62,6 +63,7 @@ export function FeaturedListings({
         <div
           role="tablist"
           aria-label="Filtrar por ciudad"
+          onKeyDown={handleTabListKeyDown}
           className="mb-8 flex flex-wrap gap-1"
         >
           {tabs.map((city) => {
@@ -71,10 +73,11 @@ export function FeaturedListings({
                 key={city}
                 role="tab"
                 aria-selected={active}
+                tabIndex={active ? 0 : -1}
                 onClick={() => setActiveCity(city)}
                 className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   active
-                    ? "text-[#C4571D]"
+                    ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -82,7 +85,7 @@ export function FeaturedListings({
                 {active && (
                   <motion.span
                     layoutId="city-tab-underline"
-                    className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-[#D67E3C] to-[#C4571D]"
+                    className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-copper to-primary"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                   />
                 )}

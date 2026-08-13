@@ -49,7 +49,7 @@ export default async function DashboardPage() {
   return (
     <div className="flex-1">
       {/* Banda de saludo en tinta oscura — mismo lenguaje que el registro */}
-      <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+      <section className="relative overflow-hidden bg-ink text-ink-foreground">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.14]"
           style={{
@@ -78,13 +78,13 @@ export default async function DashboardPage() {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href="/listings/new"
-                className="inline-flex h-10 items-center rounded-full bg-[#FBF6F0] px-5 text-sm font-semibold text-[#180F08] transition-colors hover:bg-white"
+                className="inline-flex h-10 items-center rounded-full bg-ink-foreground px-5 text-sm font-semibold text-ink transition-colors hover:bg-white"
               >
                 Publicar una propiedad
               </Link>
               <Link
                 href="/search"
-                className="inline-flex h-10 items-center rounded-full border border-white/25 px-5 text-sm font-medium text-[#FBF6F0] transition-colors hover:border-white/50 hover:bg-white/5"
+                className="inline-flex h-10 items-center rounded-full border border-white/25 px-5 text-sm font-medium text-ink-foreground transition-colors hover:border-white/50 hover:bg-white/5"
               >
                 Ver oportunidades
               </Link>
@@ -217,7 +217,7 @@ export default async function DashboardPage() {
 
 function Stat({ value, label }: { value: number; label: string }) {
   return (
-    <div className="bg-[#180F08] p-4 sm:p-5">
+    <div className="bg-ink p-4 sm:p-5">
       <dd className="font-mono text-2xl font-semibold tabular-nums sm:text-3xl">
         {value.toLocaleString("es-MX")}
       </dd>

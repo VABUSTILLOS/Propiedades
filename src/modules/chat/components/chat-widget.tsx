@@ -124,7 +124,7 @@ export function ChatWidget() {
             <div key={turn.id}>
               {turn.role === "user" ? (
                 <div className="flex justify-end">
-                  <p className="max-w-[85%] rounded-2xl rounded-br-md bg-gradient-to-br from-[#D67E3C] to-[#A83810] px-4 py-2 text-sm text-white">
+                  <p className="max-w-[85%] rounded-2xl rounded-br-md bg-gradient-to-br from-primary to-copper-deep px-4 py-2 text-sm text-white">
                     {turn.content}
                   </p>
                 </div>
@@ -198,7 +198,7 @@ export function ChatWidget() {
           type="submit"
           disabled={isLoading || !input.trim()}
           aria-label="Enviar búsqueda"
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D67E3C] to-[#A83810] text-white shadow-sm transition-all hover:from-[#E08A4A] hover:to-[#B54514] disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-copper-deep text-white shadow-sm transition-all hover:from-copper-deep hover:to-copper-ink disabled:pointer-events-none disabled:opacity-50"
         >
           <Send className="size-4" />
         </button>

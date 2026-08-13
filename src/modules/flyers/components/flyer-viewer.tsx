@@ -153,6 +153,8 @@ export function FlyerViewer({ flyer, property }: Props) {
           {property.images && property.images.length > 0 ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
+              loading="lazy"
+              decoding="async"
               src={property.images[0]}
               alt={property.title}
               className="aspect-[16/10] w-full object-cover"

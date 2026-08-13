@@ -394,6 +394,8 @@ function FavoriteCardBody({
       {image && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          loading="lazy"
+          decoding="async"
           src={image}
           alt={property?.title ?? ""}
           className="size-10 shrink-0 rounded object-cover"

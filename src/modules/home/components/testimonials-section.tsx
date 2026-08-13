@@ -5,7 +5,7 @@ const TESTIMONIALS = [
     name: "María G.",
     city: "Ciudad de México",
     initials: "MG",
-    color: "from-[#D67E3C] to-[#C4571D]",
+    color: "from-copper to-primary",
     quote:
       "Encontré el departamento perfecto en dos semanas. El score de calidad y la comparativa de $/m² me dieron mucha confianza para ofrecer.",
   },
@@ -13,7 +13,7 @@ const TESTIMONIALS = [
     name: "Carlos R.",
     city: "Guadalajara",
     initials: "CR",
-    color: "from-[#A83810] to-[#6E1D00]",
+    color: "from-copper-deep to-copper-dark",
     quote:
       "Como inversionista, el cap rate proyectado y el descuento sobre avalúo hicieron que elegir fuera mucho más fácil. Cerré mi primera propiedad.",
   },
@@ -21,7 +21,7 @@ const TESTIMONIALS = [
     name: "Ana L.",
     city: "Monterrey",
     initials: "AL",
-    color: "from-[#FFB36B] to-[#D67E3C]",
+    color: "from-copper-soft to-copper",
     quote:
       "Agendé el tour por WhatsApp y todo fue directo con el dueño. Sin comisiones ocultas, justo lo que buscaba.",
   },

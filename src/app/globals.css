@@ -18,6 +18,19 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-copper: var(--copper);
+  --color-copper-deep: var(--copper-deep);
+  --color-copper-ink: var(--copper-ink);
+  --color-copper-bright: var(--copper-bright);
+  --color-copper-soft: var(--copper-soft);
+  --color-copper-dark: var(--copper-dark);
+  --color-live: var(--live);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-deep: var(--whatsapp-deep);
+  --color-whatsapp-hover: var(--whatsapp-hover);
+  --color-whatsapp-deep-hover: var(--whatsapp-deep-hover);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -73,7 +86,9 @@
   --card-foreground: #24160D;
   --popover: #FFFFFF;
   --popover-foreground: #24160D;
-  --primary: #C4571D;
+  /* Darkened from #C4571D so text/icons at this color pass WCAG AA (5.1:1 on
+     the cream background; primary-foreground reaches 5.2:1 on it). */
+  --primary: #B0491A;
   --primary-foreground: #FFF7F0;
   --secondary: #FAE3CE;
   --secondary-foreground: #8C340A;
@@ -85,7 +100,7 @@
   --border: #ECD9C6;
   --input: #ECD9C6;
   --ring: #D67E3C;
-  --chart-1: #C4571D;
+  --chart-1: #B0491A;
   --chart-2: #D67E3C;
   --chart-3: #A83810;
   --chart-4: #8F2E0F;
@@ -93,15 +108,32 @@
   --radius: 0.875rem;
   --sidebar: #FAEFE2;
   --sidebar-foreground: #24160D;
-  --sidebar-primary: #C4571D;
+  --sidebar-primary: #B0491A;
   --sidebar-primary-foreground: #FFF7F0;
   --sidebar-accent: #F8DEC3;
   --sidebar-accent-foreground: #A23E0C;
   --sidebar-border: #ECD9C6;
   --sidebar-ring: #D67E3C;
+  /* Editorial ink bands (hero, ticker, footer…) stay constant across themes;
+     copper scale is the decorative brand gradient; live is the "registro
+     activo" indicator green; whatsapp is the channel brand color. */
+  --ink: #180F08;
+  --ink-foreground: #FBF6F0;
+  --copper: #D67E3C;
+  --copper-deep: #A83810;
+  --copper-ink: #8F2E0F;
+  --copper-bright: #E89252;
+  --copper-soft: #FFB36B;
+  --copper-dark: #6E1D00;
+  --live: #7BC796;
+  --whatsapp: #25D366;
+  --whatsapp-deep: #128C7E;
+  --whatsapp-hover: #1EBE5B;
+  --whatsapp-deep-hover: #0F7A6D;
 }
 
 .dark {
+  color-scheme: dark;
   --background: #180F08;
   --foreground: #FCF1E8;
   --card: #211610;
@@ -133,6 +165,19 @@
   --sidebar-accent-foreground: #F0B085;
   --sidebar-border: rgba(252, 241, 232, 0.1);
   --sidebar-ring: #D67E3C;
+  --ink: #180F08;
+  --ink-foreground: #FBF6F0;
+  --copper: #D67E3C;
+  --copper-deep: #A83810;
+  --copper-ink: #8F2E0F;
+  --copper-bright: #E89252;
+  --copper-soft: #FFB36B;
+  --copper-dark: #6E1D00;
+  --live: #7BC796;
+  --whatsapp: #25D366;
+  --whatsapp-deep: #128C7E;
+  --whatsapp-hover: #1EBE5B;
+  --whatsapp-deep-hover: #0F7A6D;
 }
 
 @layer base {

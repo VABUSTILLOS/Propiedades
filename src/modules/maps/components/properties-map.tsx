@@ -334,6 +334,8 @@ export function PropertiesMap({
               {selected.images?.[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={selected.images[0]}
                   alt={selected.title}
                   className="size-full object-cover"
@@ -359,7 +361,7 @@ export function PropertiesMap({
             </div>
             <Link
               href={`/property/${selected.slug}`}
-              className="shrink-0 rounded-full bg-[#C4571D] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#D67E3C]"
+              className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-copper-deep"
             >
               Ver propiedad
             </Link>

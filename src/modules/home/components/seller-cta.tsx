@@ -40,7 +40,7 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
   const ctaLabel = user ? "Publicar mi propiedad" : "Publicar gratis";
 
   return (
-    <section className="relative overflow-hidden bg-[#180F08] text-[#FBF6F0]">
+    <section className="relative overflow-hidden bg-ink text-ink-foreground">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -67,7 +67,7 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
               href={ctaHref}
               className={buttonVariants({
                 size: "lg",
-                className: "bg-[#FBF6F0] text-[#180F08] hover:bg-white",
+                className: "bg-ink-foreground text-ink hover:bg-white",
               })}
             >
               {ctaLabel}
@@ -90,8 +90,8 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
           {SELLER_POINTS.map((point) => {
             const Icon = point.icon;
             return (
-              <li key={point.title} className="bg-[#180F08] p-5">
-                <Icon className="size-5 text-[#D67E3C]" aria-hidden />
+              <li key={point.title} className="bg-ink p-5">
+                <Icon className="size-5 text-copper" aria-hidden />
                 <p className="mt-4 font-semibold">{point.title}</p>
                 <p className="mt-1 text-sm leading-relaxed text-white/75">
                   {point.description}
