@@ -46,6 +46,7 @@ export type InvestorItem = {
   image: string | null;
   lat: number;
   lng: number;
+  recamaras: number | null;
   // Investment-specific financial fields.
   costoReparacion: number | null;
   valorPostReparacion: number | null;
@@ -242,6 +243,7 @@ function toInvestorItem(
     image: p.images?.[0] ?? null,
     lat: p.lat,
     lng: p.lng,
+    recamaras: p.recamaras,
     costoReparacion: p.costo_reparacion_estimado,
     valorPostReparacion: p.valor_post_reparacion_estimado,
     institucionBancaria: p.institucion_bancaria,

@@ -13,6 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  BedroomsSlider,
+  MAX_BEDROOMS,
+} from "@/modules/search/components/bedrooms-slider";
 import { CategoryPills } from "@/modules/search/components/category-pills";
 import {
   PriceRangeSlider,
@@ -142,6 +146,25 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
     navigate(stateRef.current);
   };
 
+  // Slider reflects the URL value; empty param means "no minimum" → 0.
+  const bedroomsValue = Math.min(
+    Math.max(Number(minBedrooms) || 0, 0),
+    MAX_BEDROOMS,
+  );
+
+  // During drag only the local state (and the live label) updates; the URL is
+  // updated once on commit so we don't spam server re-renders mid-gesture.
+  const handleBedroomsChange = (next: number) => {
+    const nextStr = next > 0 ? String(next) : "";
+    setMinBedrooms(nextStr);
+    stateRef.current = { ...stateRef.current, minBedrooms: nextStr };
+  };
+
+  const handleBedroomsCommitted = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    navigate(stateRef.current);
+  };
+
   const reset = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setQuery("");
@@ -238,26 +261,12 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="search-bedrooms">Recámaras</Label>
-          <Select
-            value={minBedrooms}
-            onValueChange={(v) => {
-              const next = v ?? "";
-              setMinBedrooms(next);
-              changeImmediate({ minBedrooms: next });
-            }}
-          >
-            <SelectTrigger id="search-bedrooms" className="rounded-full">
-              <SelectValue placeholder="Cualquiera" />
-            </SelectTrigger>
-            <SelectContent>
-              {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n === 7 ? "7 o más" : `${n}+`}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label>Recámaras</Label>
+          <BedroomsSlider
+            value={bedroomsValue}
+            onChange={handleBedroomsChange}
+            onCommitted={handleBedroomsCommitted}
+          />
         </div>
       </div>
 

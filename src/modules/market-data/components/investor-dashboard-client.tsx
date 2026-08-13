@@ -21,6 +21,9 @@ import { MapViewToggle, type MapView } from "@/modules/maps/components/map-view-
 import { PropertiesMap } from "@/modules/maps/components/properties-map";
 import { CategoryPills } from "@/modules/search/components/category-pills";
 import {
+  BedroomsSlider,
+} from "@/modules/search/components/bedrooms-slider";
+import {
   PriceRangeSlider,
   SALE_PRICE_MAX,
 } from "@/modules/search/components/price-range-slider";
@@ -135,6 +138,7 @@ export function InvestorDashboardClient({
   const [minDiscount, setMinDiscount] = useState("");
   const [city, setCity] = useState("all");
   const [sortBy, setSortBy] = useState<SortKey>("newest");
+  const [minBedrooms, setMinBedrooms] = useState(0);
 
   // Price filter. The slider ceiling is the highest listed price (rounded up
   // to a round number) so the range always spans the available inventory.
@@ -165,6 +169,7 @@ export function InvestorDashboardClient({
       if (landPerM2 > maxLandNum) return false;
       if (discount < minDiscountNum) return false;
       if (city !== "all" && item.city !== city) return false;
+      if (minBedrooms > 0 && (item.recamaras ?? 0) < minBedrooms) return false;
       if (item.price < minPrice) return false;
       if (item.price > maxPrice) return false;
       return true;
@@ -202,7 +207,7 @@ export function InvestorDashboardClient({
           return 0;
       }
     });
-  }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy, minPrice, maxPrice]);
+  }, [items, maxConstNum, maxLandNum, minDiscountNum, city, sortBy, minPrice, maxPrice, minBedrooms]);
 
   // Pins for the map: one per filtered opportunity (all for-sale).
   const markers = useMemo(() => filtered.map(toMapMarker), [filtered]);
@@ -341,6 +346,13 @@ export function InvestorDashboardClient({
               setMaxPrice(hi);
             }}
           />
+        </div>
+
+        <div className="w-full space-y-2 border-t pt-3">
+          <span className="block text-xs text-muted-foreground">
+            Recámaras (mínimo)
+          </span>
+          <BedroomsSlider value={minBedrooms} onChange={setMinBedrooms} />
         </div>
 
         <div className="w-full space-y-2 border-t pt-3">
