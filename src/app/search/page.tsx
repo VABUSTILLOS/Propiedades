@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Home } from "lucide-react";
 
 import {
-  countActiveListings,
   enrichWithHot,
   getSearchableCities,
   searchListingsPage,
   type SearchFilters,
 } from "@/modules/search/queries";
+import { countActiveTab } from "@/modules/search/tab-counts";
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { ComprarCintillo } from "@/modules/search/components/comprar-cintillo";
 import { SearchFiltersForm } from "@/modules/search/components/search-filters";
@@ -91,12 +91,12 @@ export default async function SearchPage({ searchParams }: Props) {
       : searchListingsPage(filters),
     getSearchableCities(),
     Promise.all([
-      countActiveListings(tabFiltersMap.todos),
-      countActiveListings(tabFiltersMap.remate),
-      countActiveListings(tabFiltersMap.flipping),
-      countActiveListings(tabFiltersMap.traspaso),
-      countActiveListings(tabFiltersMap.comercial),
-      countActiveListings(tabFiltersMap.terreno),
+      countActiveTab(tabFiltersMap.todos),
+      countActiveTab(tabFiltersMap.remate),
+      countActiveTab(tabFiltersMap.flipping),
+      countActiveTab(tabFiltersMap.traspaso),
+      countActiveTab(tabFiltersMap.comercial),
+      countActiveTab(tabFiltersMap.terreno),
     ]),
   ]);
 
