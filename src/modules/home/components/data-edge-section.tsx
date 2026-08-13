@@ -29,7 +29,7 @@ const DATA_POINTS = [
     index: "04",
     title: "Score de oportunidad",
     description:
-      "Descuento y $/m² combinados en un número de 0 a 100. El mercado, ordenado en segundos.",
+      "Descuento y $/m² construido combinados en un número de 0 a 100. El mercado, ordenado en segundos.",
   },
 ];
 

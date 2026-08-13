@@ -46,15 +46,16 @@ export function computeHotScore(input: {
 }
 
 /**
- * Derive the hotness score for a property row using the stored per-m²
- * columns (construido, falling back to terreno for land listings).
+ * Derive the hotness score for a property row from the cost per constructed
+ * m² only. Terrenos have no constructed area, so `precio_m2_const` is null
+ * and they get no m² component — ranking by terrain per-m² price would make
+ * every land listing look like the best opportunity.
  */
 export function toHotScore(
   discountPct: number | null,
-  row: Pick<PropertiesRow, "precio_m2_const" | "precio_m2_terreno">,
+  row: Pick<PropertiesRow, "precio_m2_const">,
 ): number | null {
-  const m2 = row.precio_m2_const ?? row.precio_m2_terreno;
-  return computeHotScore({ discountPct, m2 });
+  return computeHotScore({ discountPct, m2: row.precio_m2_const });
 }
 
 /**
