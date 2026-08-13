@@ -3,6 +3,7 @@ import { Building2 } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import type { AuthUser } from "@/modules/auth/session";
+import { SignOutButton } from "@/modules/auth/components/sign-out-button";
 
 const NAV_LINKS = [
   { href: "/rentas", label: "Rentar" },
@@ -57,6 +58,7 @@ export function SiteHeader({ user }: { user: AuthUser | null }) {
               >
                 Mi panel
               </Link>
+              <SignOutButton />
             </>
           ) : (
             <>
