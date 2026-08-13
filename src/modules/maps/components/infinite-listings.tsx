@@ -172,10 +172,35 @@ export function InfiniteListings({
             key={item.id}
             onMouseEnter={() => onCardHover?.(item.id)}
             onMouseLeave={() => onCardHover?.(null)}
-            onClick={
+            onClickCapture={
               onCardSelect
                 ? (e) => {
+                    // Split view: select the card and let the map zoom to the
+                    // property instead of navigating to its listing page. The
+                    // capture phase runs before next/link's own click handler,
+                    // so this actually cancels the navigation (a preventDefault
+                    // in the bubble phase arrives too late).
+                    const isModified =
+                      e.metaKey ||
+                      e.ctrlKey ||
+                      e.shiftKey ||
+                      e.altKey ||
+                      e.nativeEvent?.button === 1;
+                    if (isModified) return;
+                    const target = e.target as Element | null;
+                    if (target && typeof target.closest === "function") {
+                      // Interactive children (favorite bookmark, …) keep their
+                      // own behavior.
+                      if (
+                        target.closest(
+                          "button, [role='button'], input, select, textarea",
+                        )
+                      ) {
+                        return;
+                      }
+                    }
                     e.preventDefault();
+                    e.stopPropagation();
                     onCardSelect(item);
                   }
                 : undefined
