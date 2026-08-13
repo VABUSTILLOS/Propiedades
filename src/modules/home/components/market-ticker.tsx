@@ -24,7 +24,7 @@ export function MarketTicker({ items }: { items: string[] }) {
   );
 
   return (
-    <div className="group overflow-hidden border-y border-white/10 bg-[#180F08] py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-white/70">
+    <div className="group overflow-hidden border-y border-white/10 bg-[#180F08] py-3.5 font-mono text-xs uppercase tracking-[0.18em] text-white/80">
       <div className="flex w-max animate-ticker group-hover:[animation-play-state:paused]">
         {half(false)}
         {half(true)}

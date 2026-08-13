@@ -83,7 +83,7 @@ export function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 font-mono text-xs text-white/45 sm:flex-row sm:items-center">
+        <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 font-mono text-xs text-white/65 sm:flex-row sm:items-center">
           <span>© {new Date().getFullYear()} Propiedades</span>
           <span className="uppercase tracking-[0.18em]">
             Compra · Renta · Invierte · Vende

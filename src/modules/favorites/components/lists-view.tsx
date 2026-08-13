@@ -267,7 +267,7 @@ function PreviewStrip({
             />
           ) : (
             <div className="flex size-full items-center justify-center px-2">
-              <span className="line-clamp-3 text-center text-[11px] text-muted-foreground">
+              <span className="line-clamp-3 text-center text-xs text-muted-foreground">
                 {p.title}
               </span>
             </div>

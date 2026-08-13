@@ -93,7 +93,7 @@ export function SellerCtaSection({ user }: { user: AuthUser | null }) {
               <li key={point.title} className="bg-[#180F08] p-5">
                 <Icon className="size-5 text-[#D67E3C]" aria-hidden />
                 <p className="mt-4 font-semibold">{point.title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-white/55">
+                <p className="mt-1 text-sm leading-relaxed text-white/75">
                   {point.description}
                 </p>
               </li>

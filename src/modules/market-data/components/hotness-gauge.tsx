@@ -26,7 +26,7 @@ export function HotnessGauge({
         aria-label="Sin dato de oportunidad"
       >
         <div className="h-2 w-full rounded-full bg-muted" />
-        <p className="text-[11px] text-muted-foreground">Sin dato</p>
+        <p className="text-xs text-muted-foreground">Sin dato</p>
       </div>
     );
   }
@@ -45,7 +45,7 @@ export function HotnessGauge({
           style={{ left: `${clamped}%` }}
         />
       </div>
-      <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>Fría</span>
         <span className="font-medium text-foreground">
           {clamped}/100 · {label}

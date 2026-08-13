@@ -31,7 +31,7 @@ export function ToolCard({
           <Icon className="size-5" />
         </span>
         {index && (
-          <span className="font-mono text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground/60">
+          <span className="font-mono text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">
             {index}
           </span>
         )}

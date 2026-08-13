@@ -400,7 +400,7 @@ export function MortgageCalculator({
           }}
         />
 
-        <p className="text-center text-[11px] leading-snug text-muted-foreground">
+        <p className="text-center text-xs leading-relaxed text-muted-foreground">
           Simulación con fines ilustrativos. Las condiciones finales dependen de
           la evaluación crediticia de cada institución.
         </p>
@@ -536,7 +536,7 @@ function SliderField({
         className="h-2 w-full cursor-pointer accent-primary"
         aria-valuetext={displayValue}
       />
-      <div className="flex justify-between text-[10px] text-muted-foreground">
+      <div className="flex justify-between text-xs text-muted-foreground">
         <span>{min}%</span>
         <span>{max}%</span>
       </div>
@@ -841,7 +841,7 @@ function LeadCaptureForm({
         </Button>
       </form>
 
-      <div className="flex items-center gap-3 text-[11px] uppercase tracking-wide text-muted-foreground">
+      <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
         <span className="h-px flex-1 bg-border" aria-hidden="true" />
         o directo por
         <span className="h-px flex-1 bg-border" aria-hidden="true" />

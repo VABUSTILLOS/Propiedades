@@ -23,8 +23,8 @@ export function FolioLabel({
   return (
     <p
       className={cn(
-        "font-mono text-[10px] font-medium uppercase tracking-[0.28em]",
-        light ? "text-white/55" : "text-muted-foreground",
+        "font-mono text-xs font-medium uppercase tracking-[0.28em]",
+        light ? "text-white/70" : "text-muted-foreground",
         className,
       )}
     >

@@ -107,7 +107,7 @@ export function DataEdgeSection() {
                 {row}
               </span>
               <span className="flex items-center justify-center px-2 py-4">
-                <Minus className="size-4 text-white/20" aria-label="No disponible" />
+                <Minus className="size-4 text-white/40" aria-label="No disponible" />
               </span>
               <span className="flex items-center justify-center bg-white/[0.06] px-2 py-4">
                 <Check className="size-4 text-[#7BC796]" aria-label="Incluido" />
@@ -116,7 +116,7 @@ export function DataEdgeSection() {
           ))}
         </div>
 
-        <p className="mt-8 border-l-2 border-[#D67E3C] pl-4 font-mono text-xs uppercase tracking-[0.18em] text-white/50">
+        <p className="mt-8 border-l-2 border-[#D67E3C] pl-4 font-mono text-xs uppercase tracking-[0.18em] text-white/70">
           Metodología abierta — cada cifra muestra cómo se calcula
         </p>
       </div>

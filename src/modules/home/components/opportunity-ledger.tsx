@@ -52,7 +52,7 @@ export function OpportunityLedger({ items }: { items: ListingWithHot[] }) {
                   <span className="line-clamp-1 block font-semibold">
                     {listing.title}
                   </span>
-                  <span className="mt-0.5 line-clamp-1 block font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="mt-0.5 line-clamp-1 block font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                     {[listing.colonia, listing.city].filter(Boolean).join(" · ") ||
                       "México"}
                   </span>
@@ -97,7 +97,7 @@ function Delta({
   if (discountPct == null) {
     return (
       <span
-        className={`font-mono text-muted-foreground ${small ? "text-[11px]" : "text-sm"}`}
+        className={`font-mono text-muted-foreground ${small ? "text-xs" : "text-sm"}`}
       >
         —
       </span>
@@ -108,7 +108,7 @@ function Delta({
   return (
     <span
       className={`inline-flex items-center gap-1 font-mono font-semibold ${
-        small ? "text-[11px]" : "text-sm"
+        small ? "text-xs" : "text-sm"
       } ${below ? "text-emerald-600" : "text-amber-600"}`}
     >
       {below ? (

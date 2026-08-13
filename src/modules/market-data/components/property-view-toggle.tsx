@@ -722,7 +722,7 @@ function FinancialRow({
     <div className="flex items-start justify-between gap-4">
       <div>
         <dt className="text-muted-foreground">{label}</dt>
-        {hint && <p className="mt-0.5 text-xs text-muted-foreground/70">{hint}</p>}
+        {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
       </div>
       <dd className="text-right font-medium">{value}</dd>
     </div>

@@ -39,7 +39,7 @@ export function PageHeader({
         )}
         <div>
           {eyebrow && (
-            <span className="mb-2 inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            <span className="mb-2 inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">
               <span className="size-1.5 rounded-full bg-primary" aria-hidden />
               {eyebrow}
             </span>

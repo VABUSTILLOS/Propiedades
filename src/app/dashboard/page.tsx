@@ -220,7 +220,7 @@ function Stat({ value, label }: { value: number; label: string }) {
       <dd className="font-mono text-2xl font-semibold tabular-nums sm:text-3xl">
         {value.toLocaleString("es-MX")}
       </dd>
-      <dt className="mt-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white/55">
+      <dt className="mt-1 font-mono text-xs font-medium uppercase tracking-[0.2em] text-white/70">
         {label}
       </dt>
     </div>

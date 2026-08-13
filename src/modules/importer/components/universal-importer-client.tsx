@@ -269,7 +269,7 @@ export function UniversalImporterClient() {
                       rows={5}
                       className="w-full rounded-lg border bg-background p-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                     />
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       ¿La pegaste como texto plano? Funciona igual: la IA
                       extrae título, precio, metros y descripción desde lo que
                       pegues.

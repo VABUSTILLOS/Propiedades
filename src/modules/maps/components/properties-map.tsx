@@ -339,7 +339,7 @@ export function PropertiesMap({
                   className="size-full object-cover"
                 />
               ) : (
-                <div className="flex size-full items-center justify-center text-[10px] text-muted-foreground">
+                <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
                   Sin foto
                 </div>
               )}

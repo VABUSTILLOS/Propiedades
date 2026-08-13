@@ -127,7 +127,7 @@ export default async function HomePage() {
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#7BC796] opacity-70" />
                     <span className="relative inline-flex size-2 rounded-full bg-[#7BC796]" />
                   </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/70">
+                  <span className="font-mono text-xs uppercase tracking-[0.22em] text-white/70">
                     {newThisWeek > 0
                       ? `Registro activo — ${newThisWeek} nuevas esta semana`
                       : "Registro activo — actualizado hoy"}
@@ -168,7 +168,7 @@ export default async function HomePage() {
                     </Link>
                   )}
                   <span className="hidden text-white/25 sm:inline">·</span>
-                  <span className="font-mono text-xs text-white/45">
+                  <span className="font-mono text-xs text-white/70">
                     Sin comisiones ocultas · Ofertas digitales 24/7
                   </span>
                 </div>
@@ -192,7 +192,7 @@ export default async function HomePage() {
                   <dd className="font-mono text-2xl font-semibold tracking-tight sm:text-3xl">
                     {stat.value}
                   </dd>
-                  <dt className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-white/50">
+                  <dt className="mt-1.5 font-mono text-xs uppercase tracking-[0.22em] text-white/70">
                     {stat.label}
                   </dt>
                 </div>

@@ -133,7 +133,7 @@ export function ListDetailView({ list, items }: Props) {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex size-full items-center justify-center text-[10px] text-muted-foreground">
+                    <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
                       Sin imagen
                     </div>
                   )}

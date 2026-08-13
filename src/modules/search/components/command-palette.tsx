@@ -45,7 +45,7 @@ export function CommandPalette() {
               value={query}
               onValueChange={setQuery}
             />
-            <kbd className="hidden rounded border bg-muted px-1.5 text-[10px] text-muted-foreground sm:block">
+            <kbd className="hidden rounded border bg-muted px-1.5 text-xs text-muted-foreground sm:block">
               ⌘K
             </kbd>
           </div>
