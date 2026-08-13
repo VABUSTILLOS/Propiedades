@@ -7,10 +7,17 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
+  DealTypeBadge,
+  DEAL_THRESHOLD_PCT,
+  InvestmentKpis,
+  type InvestmentKpisData,
+} from "@/modules/market-data/components/investment-kpis";
+import {
   estimateEscrituracion,
   estimatePredial,
   formatMxn,
 } from "@/modules/lib/real-estate";
+import type { PropertyDealType } from "@/modules/lib/database.types";
 
 /**
  * Search result card used by the infinite list and the map-zone grid.
@@ -35,6 +42,8 @@ export function SearchResultCard({
   terrenoM2 = 0,
   showDetails = false,
   from,
+  dealType = null,
+  investmentKpis = null,
 }: {
   title: string;
   slug: string;
@@ -54,6 +63,10 @@ export function SearchResultCard({
   showDetails?: boolean;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
+  /** Deal type badge shown on every card (remate/flipping/traspaso/…). */
+  dealType?: PropertyDealType | null;
+  /** Investment KPIs rendered below the price when the row carries them. */
+  investmentKpis?: InvestmentKpisData | null;
 }) {
   const precioM2Const = construccionM2 > 0 ? price / construccionM2 : 0;
   const precioM2Terreno = terrenoM2 > 0 ? price / terrenoM2 : 0;
@@ -101,6 +114,23 @@ export function SearchResultCard({
               {currency} · {type === "rent" ? "renta" : "venta"}
             </span>
           </p>
+
+          {(dealType || investmentKpis) && (
+            <div className="space-y-1.5 border-t pt-3">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {dealType && <DealTypeBadge dealType={dealType} />}
+                {(discountPct ?? 0) >= DEAL_THRESHOLD_PCT && (
+                  <Badge
+                    variant="outline"
+                    className="text-emerald-700 dark:text-emerald-400"
+                  >
+                    Oportunidad
+                  </Badge>
+                )}
+              </div>
+              {investmentKpis && <InvestmentKpis item={investmentKpis} />}
+            </div>
+          )}
 
           {showDetails && price > 0 && (
             <div className="space-y-1.5 border-t pt-3">

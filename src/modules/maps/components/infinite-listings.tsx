@@ -236,6 +236,19 @@ export function InfiniteListings({
                 terrenoM2={item.terreno_m2}
                 showDetails={showDetails}
                 from={from}
+                dealType={item.deal_type}
+                investmentKpis={{
+                  dealType: item.deal_type,
+                  price: item.price,
+                  costoReparacion: item.costo_reparacion_estimado,
+                  valorPostReparacion: item.valor_post_reparacion_estimado,
+                  institucionBancaria: item.institucion_bancaria,
+                  fechaRemate: item.fecha_remate,
+                  condicionesTraspaso: item.condiciones_traspaso,
+                  capRate: item.cap_rate_projected,
+                  rentaEstimada: item.estimated_monthly_rent,
+                  discountAvaluo: item.porcentaje_descuento_avaluo,
+                }}
               />
             )}
           </div>

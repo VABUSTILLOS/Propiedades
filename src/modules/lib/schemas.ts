@@ -179,6 +179,17 @@ export function parseCategoriesParam(
     .filter((token): token is PropertyCategory => valid.has(token));
 }
 
+// --- Investor dashboard (opportunity tabs) -------------------------------------
+export const investorTabSchema = z.enum([
+  "todos",
+  "remate",
+  "flipping",
+  "traspaso",
+  "comercial",
+  "terreno",
+]);
+export type InvestorTab = z.infer<typeof investorTabSchema>;
+
 export const searchParamsSchema = paginationSchema.extend({
   query: z.string().trim().max(200).optional(),
   type: listingTypeSchema.optional(),
@@ -186,6 +197,8 @@ export const searchParamsSchema = paginationSchema.extend({
   // CSV multi-select (e.g. `casa,departamento`); wins over `category`.
   categories: z.string().optional(),
   dealType: propertyDealTypeSchema.optional(),
+  // Opportunity tab from the cintillo (todos|remate|flipping|traspaso|comercial|terreno).
+  tab: investorTabSchema.optional(),
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),
   city: z.string().trim().max(100).optional(),
@@ -239,17 +252,6 @@ export const listadosParamsSchema = paginationSchema.extend({
   view: viewParamSchema.optional(),
 });
 export type ListadosParams = z.infer<typeof listadosParamsSchema>;
-
-// --- Investor dashboard (opportunity tabs) -------------------------------------
-export const investorTabSchema = z.enum([
-  "todos",
-  "remate",
-  "flipping",
-  "traspaso",
-  "comercial",
-  "terreno",
-]);
-export type InvestorTab = z.infer<typeof investorTabSchema>;
 
 /**
  * URL params for /investor. `tab` drives the opportunity dashboard tabs.

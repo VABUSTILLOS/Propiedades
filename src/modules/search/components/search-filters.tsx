@@ -87,6 +87,10 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
 
   const buildParams = (next: SearchFilterState) => {
     const params = new URLSearchParams();
+    // Keep the active cintillo tab so filtering never drops the current
+    // opportunity view (todos/remate/flipping/traspaso/comercial/terreno).
+    const tab = searchParams.get("tab");
+    if (tab) params.set("tab", tab);
     if (next.query.trim()) params.set("query", next.query.trim());
     if (next.type) params.set("type", next.type);
     if (next.categories.length > 0) params.set("categories", next.categories.join(","));
@@ -185,7 +189,11 @@ export function SearchFiltersForm({ cities }: { cities: string[] }) {
       minBedrooms: "",
       sortBy: "newest",
     };
-    router.replace("/search", { scroll: false });
+    const tab = searchParams.get("tab");
+    router.replace(
+      tab ? `/search?tab=${encodeURIComponent(tab)}` : "/search",
+      { scroll: false },
+    );
   };
 
   return (
