@@ -148,6 +148,21 @@ function toStringOrEmpty(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
+/** Fixed exchange rate used to convert USD-denominated prices to MXN. */
+const USD_TO_MXN_RATE = 17.5;
+
+/**
+ * Normalize a listing's price to MXN. Prices published in USD or "Dólares"
+ * are converted by multiplying by USD_TO_MXN_RATE; everything else is kept.
+ * Returns { price, currency } where currency is always "MXN".
+ */
+function normalizePriceToMxn(price: number, currency: string): { price: number; currency: string } {
+  if (currency === "USD" && Number.isFinite(price)) {
+    return { price: Math.round(price * USD_TO_MXN_RATE), currency: "MXN" };
+  }
+  return { price, currency: currency || "MXN" };
+}
+
 function isValidImageUrl(value: unknown): value is string {
   return (
     typeof value === "string" &&
@@ -168,7 +183,7 @@ export async function extractPropertyFromMarkdown(
     temperature: 0.1,
     maxTokens: 1500,
     system:
-      'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer MXN sale price, 0 if unknown),\n  "currency": "MXN",\n  "category": one of "casa","departamento","local","bodega","terreno" (property kind; infer from title/description),\n  "deal_type": one of "venta_directa","remate_bancario","flipping","traspaso" (default "venta_directa"; use "remate_bancario" for bank foreclosures/subastas/judicial, "flipping" for fixer-upper/reparar/renovar, "traspaso" for contract transfers/traspasos; "casa" if unclear),\n  "costo_reparacion_estimado": number|null (MXN, expected repair budget for flipping, else null),\n  "valor_post_reparacion_estimado": number|null (MXN, after-repair value / ARV for flipping, else null),\n  "institucion_bancaria": string|null (bank or institution for remate_bancario, else null),\n  "fecha_remate": string|null (auction date YYYY-MM-DD for remate_bancario, else null),\n  "condiciones_traspaso": string|null (transfer terms for traspaso, else null),\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "recamaras": number (bedrooms, 0 if unknown),\n  "banos": number (bathrooms — count "medio baño" as 1, 0 if unknown),\n  "estacionamientos": number (parking spaces, 0 if unknown),\n  "antiguedad": number (property age in years, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
+      'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer sale price as listed on the page, 0 if unknown),\n  "currency": "MXN" or "USD" (ISO-4217 currency of the listed price),\n  "category": one of "casa","departamento","local","bodega","terreno" (property kind; infer from title/description),\n  "deal_type": one of "venta_directa","remate_bancario","flipping","traspaso" (default "venta_directa"; use "remate_bancario" for bank foreclosures/subastas/judicial, "flipping" for fixer-upper/reparar/renovar, "traspaso" for contract transfers/traspasos; "casa" if unclear),\n  "costo_reparacion_estimado": number|null (MXN, expected repair budget for flipping, else null),\n  "valor_post_reparacion_estimado": number|null (MXN, after-repair value / ARV for flipping, else null),\n  "institucion_bancaria": string|null (bank or institution for remate_bancario, else null),\n  "fecha_remate": string|null (auction date YYYY-MM-DD for remate_bancario, else null),\n  "condiciones_traspaso": string|null (transfer terms for traspaso, else null),\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "recamaras": number (bedrooms, 0 if unknown),\n  "banos": number (bathrooms — count "medio baño" as 1, 0 if unknown),\n  "estacionamientos": number (parking spaces, 0 if unknown),\n  "antiguedad": number (property age in years, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
     user: `Extract the listing data from this page content:\n\n${markdown.slice(0, 18000)}`,
   });
   const content = result?.content;
@@ -198,10 +213,14 @@ export async function extractPropertyFromMarkdown(
   const categories = ["casa", "departamento", "local", "bodega", "terreno"];
   const dealTypes = ["venta_directa", "remate_bancario", "flipping", "traspaso"];
 
+  // USD-priced listings are converted to MXN (× USD_TO_MXN_RATE) so all prices
+  // in the catalog are stored in a single currency.
+  const { price, currency } = normalizePriceToMxn(toNumber(raw.price), toStringOrEmpty(raw.currency));
+
   return {
     title: toStringOrEmpty(raw.title),
-    price: toNumber(raw.price),
-    currency: toStringOrEmpty(raw.currency) || "MXN",
+    price,
+    currency,
     category: (categories.includes(categoryRaw)
       ? categoryRaw
       : "casa") as ExtractedProperty["category"],

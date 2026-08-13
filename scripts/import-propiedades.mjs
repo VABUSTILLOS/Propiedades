@@ -11,7 +11,7 @@
  *   listing_id_propiedades → listing_id_propiedades + source_url (idempotency keys)
  *   title                  → title + slug (transliterated, unique)
  *   url                    → source_url
- *   price                  → price, currency (MXN)
+ *   price                  → price, currency (MXN; USD prices × 17.5 → MXN)
  *   bedrooms / bathrooms   → recamaras / banos
  *   land_area_m2           → terreno_m2
  *   street_address         → address
@@ -113,6 +113,21 @@ function toPosIntOrNull(v) {
   if (v === undefined || v === null || v === "") return null;
   const n = Number.parseInt(String(v).replace(/[^\d]/g, ""), 10);
   return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+/** Fixed exchange rate used to convert USD-denominated prices to MXN. */
+const USD_TO_MXN_RATE = 17.5;
+
+/**
+ * Normalize a listing's price to MXN. Prices published in USD or "Dólares"
+ * are converted by multiplying by USD_TO_MXN_RATE; everything else is kept.
+ * Returns { price, currency } where currency is always "MXN".
+ */
+function normalizePriceToMxn(price, currency) {
+  if (currency === "USD" && typeof price === "number" && Number.isFinite(price)) {
+    return { price: Math.round(price * USD_TO_MXN_RATE), currency: "MXN" };
+  }
+  return { price, currency: currency || "MXN" };
 }
 
 /** Strip CDN size dirs (336x200, 600x400, 1200x507) + placeholders to a filename key. */
@@ -282,8 +297,13 @@ async function main() {
       continue;
     }
 
+    // Normalize USD-priced listings to MXN (× USD_TO_MXN_RATE) before dedup so
+    // the price+photo match compares against MXN prices already in the catalog.
+    const { price, currency } = normalizePriceToMxn(it.price, it.price_currency);
+    const normalized = { ...it, price, price_currency: currency };
+
     // User dedup requirement: photo + price match against existing rows.
-    const dup = findDuplicate(it, existingRows, imageIndex);
+    const dup = findDuplicate(normalized, existingRows, imageIndex);
     if (dup) {
       console.log(`  [${i}] skip (${dup.type} match): ${listingId} → ${dup.row.title?.slice(0, 50)}`);
       skipped++;
@@ -292,8 +312,6 @@ async function main() {
 
     const title = it.title?.trim() || `Propiedad ${listingId}`;
     const slug = await buildUniqueSlug(title);
-    const price = it.price;
-    const currency = it.price_currency === "USD" ? "USD" : "MXN";
     const type = inferType(it.operation_type);
     const category = classifyCategory(it.property_type, it.title);
     const recamaras = toPosIntOrNull(it.bedrooms);

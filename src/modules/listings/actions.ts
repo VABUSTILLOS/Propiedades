@@ -23,6 +23,9 @@ import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5;
 
+/** Fixed exchange rate used to convert USD-denominated prices to MXN. */
+const USD_TO_MXN_RATE = 17.5;
+
 /**
  * Create a new draft listing from the wizard's first step.
  * Returns the created listing id so the client can continue editing.
@@ -327,6 +330,13 @@ export async function createImportedDraft(
     return (data?.length ?? 0) > 0;
   });
 
+  // Normalize USD-priced listings to MXN (× 17.5) so the catalog is single-currency.
+  const price =
+    parsed.data.currency === "USD"
+      ? Math.round(parsed.data.price * USD_TO_MXN_RATE)
+      : parsed.data.price;
+  const currency = "MXN";
+
   const { data, error } = await supabase
     .from("properties")
     .insert({
@@ -344,8 +354,8 @@ export async function createImportedDraft(
       institucion_bancaria: parsed.data.institucion_bancaria,
       fecha_remate: parsed.data.fecha_remate,
       condiciones_traspaso: parsed.data.condiciones_traspaso,
-      price: parsed.data.price,
-      currency: parsed.data.currency,
+      price,
+      currency,
       terreno_m2: parsed.data.terreno_m2,
       construccion_m2: parsed.data.construccion_m2,
       recamaras: parsed.data.recamaras,

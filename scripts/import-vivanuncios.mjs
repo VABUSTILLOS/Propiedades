@@ -14,6 +14,7 @@
  *   title                  → title + slug (transliterated, unique)
  *   url                    → source_url
  *   price "MN 14,990,000"  → price 14990000, currency "MXN"
+ *   price "USD 350,000"    → price 6125000, currency "MXN" (USD × 17.5)
  *   location               → colonia / city / state (split by comma)
  *   floor_size_m2          → construccion_m2 (and terreno_m2)
  *   number_of_bedrooms     → recamaras
@@ -86,6 +87,21 @@ function parsePrice(raw) {
 function priceCurrency(raw) {
   if (typeof raw === "string" && /^USD\b/i.test(raw.trim())) return "USD";
   return "MXN";
+}
+
+/** Fixed exchange rate used to convert USD-denominated prices to MXN. */
+const USD_TO_MXN_RATE = 17.5;
+
+/**
+ * Normalize a listing's price to MXN. Prices published in USD or "Dólares"
+ * are converted by multiplying by USD_TO_MXN_RATE; everything else is kept.
+ * Returns { price, currency } where currency is always "MXN".
+ */
+function normalizePriceToMxn(raw, currency) {
+  if (currency === "USD" && typeof raw === "number" && Number.isFinite(raw)) {
+    return { price: Math.round(raw * USD_TO_MXN_RATE), currency: "MXN" };
+  }
+  return { price: raw, currency: currency || "MXN" };
 }
 
 function toPosIntOrNull(v) {
@@ -285,7 +301,7 @@ async function main() {
 
     const title = it.title?.trim() || `Propiedad Vivanuncios ${listingId}`;
     const slug = await buildUniqueSlug(title);
-    const price = parsePrice(it.price);
+    const { price, currency } = normalizePriceToMxn(parsePrice(it.price), priceCurrency(it.price));
     const type = inferType(it.url, typeArg);
     const { colonia, city, state } = parseLocation(it.location);
     const urlCity = cityFromUrl(it.url);
@@ -308,7 +324,7 @@ async function main() {
       status: "active",
       current_wizard_step: 4,
       price,
-      currency: priceCurrency(it.price),
+      currency,
       construccion_m2: construccion_m2 ?? 0,
       terreno_m2: construccion_m2 ?? 0,
       recamaras,
