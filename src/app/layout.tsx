@@ -63,12 +63,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       }
     >
       <head>
-        {/* Applies the stored/system theme before first paint so there is no
-            flash of the wrong color scheme. Keep in sync with ThemeToggle. */}
+        {/* Applies the stored/system theme and desktop view before first paint
+            so there is no flash of the wrong color scheme or layout. Keep in
+            sync with ThemeToggle. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}",
+              "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}if(localStorage.getItem('desktopView')==='true'){document.documentElement.classList.add('desktop-view');var m=document.querySelector('meta[name=\"viewport\"]');if(m){m.setAttribute('data-original-viewport',m.content);m.setAttribute('content','width=1280')}}}catch(e){}",
           }}
         />
       </head>

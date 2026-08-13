@@ -57,6 +57,8 @@ export type ChatTurn = {
   role: "user" | "assistant";
   content: string;
   results?: ChatResult[];
+  /** Filters that produced the reply, so the widget can show "Entendí" chips. */
+  filters?: ChatFilters;
   /** False when the strict search found nothing (drives the alternatives button). */
   matched?: boolean;
   /** Present when the results were relaxed; the widget shows an "Alternativa" badge. */

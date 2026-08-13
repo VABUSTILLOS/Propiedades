@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { runChatSearch } from "@/modules/chat/search";
-import type { ChatFilters, ChatResult } from "@/modules/chat/types";
+import type { ChatFilters, ChatResponse, ChatResult } from "@/modules/chat/types";
 import { getSearchableCities } from "@/modules/search/queries";
 import { env } from "@/modules/lib/env";
 import { buildAdvisorLink } from "@/modules/chat/share";
@@ -104,6 +104,16 @@ async function saveChatState(waId: string, filters: ChatFilters): Promise<void> 
   }
 }
 
+/** Delete a contact's chat state (e.g. "nueva búsqueda" reset). Best-effort. */
+export async function clearChatState(waId: string): Promise<void> {
+  if (!env.supabaseServiceRoleKey) return;
+  try {
+    await stateClient().from("whatsapp_chat_state").delete().eq("wa_id", waId);
+  } catch {
+    // Best-effort.
+  }
+}
+
 /** Delete chat state rows older than 7 days. Fire-and-forget, best-effort. */
 export async function cleanupExpiredChatStates(): Promise<void> {
   if (!env.supabaseServiceRoleKey) return;
@@ -143,14 +153,17 @@ function formatResultsText(results: ChatResult[]): string {
   return `${header}\n\n${lines.join("\n")}${overflow}`;
 }
 
-function buildHelpMenu(): string {
+function buildHelpMenu(justReset = false): string {
   return (
-    "¡Hola! 👋 Soy el asistente de Propiedades. Busco casas, departamentos y " +
-    "terrenos de tu zona.\n\nPrueba con:\n" +
+    (justReset ? "¡Listo! Empecé una búsqueda nueva. 👋\n\n" : "¡Hola! 👋 Soy el asistente de Propiedades. Busco casas, departamentos y " +
+    "terrenos de tu zona.\n\nPrueba con:\n") +
     '• "casas en renta en Guadalajara"\n' +
     '• "departamento en Condesa, 2 recámaras"\n' +
     '• "terrenos de 500 m2 en Mérida"\n' +
     '• "lo más barato en renta"\n\n' +
+    'Puedes refinar tu búsqueda con frases como "y más baratas" o ' +
+    '"con alberca", y escribir "ver alternativas" si no hay resultados ' +
+    "exactos. Si quieres empezar de cero, escribe \"nueva búsqueda\".\n\n" +
     'Escribe "asesor" en cualquier momento si prefieres que te atienda una ' +
     "persona.\n\n¿En qué te ayudo? 😊"
   );
@@ -174,6 +187,14 @@ function isGreeting(body: string): boolean {
   const normalized = body.toLowerCase().trim();
   if (normalized.length > 30) return false;
   return /^(hola|holi|hello|hi|buenas|buenos d[ií]as|buenas tardes|buenas noches|ayuda|help|men[uú]|qu[eé] es esto|que es esto|empezar|inicio)\b/.test(
+    normalized,
+  );
+}
+
+/** True when the user wants to clear the current filters and start over. */
+function isResetCommand(body: string): boolean {
+  const normalized = body.toLowerCase().trim();
+  return /^(?:nueva\s+b[úu]squeda|reiniciar(?:.*)?|empezar\s+de\s+nuevo|limpiar|reset)\b|nueva\s+b[úu]squeda$/.test(
     normalized,
   );
 }
@@ -212,6 +233,13 @@ export async function handleWhatsAppInbound(
   const message = body.trim();
   if (!message) return null;
 
+  // Reset first: "nueva búsqueda" clears the remembered filters so the next
+  // message starts from scratch. Don't let it fall through to the search.
+  if (isResetCommand(message)) {
+    await clearChatState(waId);
+    return buildHelpMenu(true);
+  }
+
   // Booking intents first: "hola, quiero agendar una visita" starts like a
   // greeting but must reach the human advisor, not the help menu.
   if (hasBookingIntent(message)) return buildAdvisorMessage();
@@ -224,7 +252,7 @@ export async function handleWhatsAppInbound(
   const previous = await getChatState(waId);
   const cities = await getSearchableCities().catch(() => []);
 
-  let response: { reply: string; results: ChatResult[]; filters: ChatFilters };
+  let response: ChatResponse;
   try {
     response = await runChatSearch(message, cities, previous, {
       mode: wantsAlternatives ? "alternatives" : "strict",
@@ -237,7 +265,15 @@ export async function handleWhatsAppInbound(
   await saveChatState(waId, response.filters);
 
   const resultsText = formatResultsText(response.results);
-  const full = resultsText ? `${response.reply}\n\n${resultsText}` : response.reply;
+  let full = resultsText ? `${response.reply}\n\n${resultsText}` : response.reply;
+
+  // No exact matches: suggest relaxing the search or talking to a human
+  // instead of leaving the user with a dead end.
+  if (response.matched === false && !response.relaxed && !wantsAlternatives) {
+    full += "\n\n¿Quieres que busque alternativas similares? " +
+      "Escribe \"ver alternativas\" o pide que te atienda un asesor.";
+  }
+
   return full.slice(0, 1024);
 }
 

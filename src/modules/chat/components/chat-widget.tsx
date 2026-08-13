@@ -1,15 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, RotateCcw, Send, Sparkles } from "lucide-react";
 
 import { ChatResultCard } from "@/modules/chat/components/chat-result-card";
 import { ChatActionsBar } from "@/modules/chat/components/chat-actions-bar";
+import {
+  chatFiltersSearchUrl,
+  describeFilters,
+} from "@/modules/chat/filters-format";
 import type { ChatFilters, ChatResponse, ChatTurn } from "@/modules/chat/types";
 
 const SUGGESTIONS = [
   "Casas en Chihuahua de 2,000,000 MXN",
-  "Departamentos en Chihuahua",
+  "Departamentos en renta en Chihuahua",
   "Terrenos de 500 m²",
   "Casas con alberca por menos de 5 millones",
 ];
@@ -69,6 +74,7 @@ export function ChatWidget() {
         role: "assistant",
         content: data.reply,
         results: data.results,
+        filters: data.filters,
         matched: data.matched,
         relaxed: data.relaxed,
         requestMessage: message,
@@ -89,12 +95,38 @@ export function ChatWidget() {
     void sendMessage(input);
   };
 
+  /** Start a fresh conversation: clears turns, filters and the input. */
+  const resetChat = () => {
+    setTurns([]);
+    setFilters(undefined);
+    setInput("");
+    setError(null);
+  };
+
   const showSuggestions = turns.length === 0;
 
   const results = turns.flatMap((t) => t.results ?? []);
 
   return (
     <div className="flex w-full flex-col overflow-hidden rounded-3xl border border-white/20 bg-white/95 text-left shadow-2xl backdrop-blur-md">
+      {/* Cabecera */}
+      <div className="flex items-center justify-between gap-2 border-b border-border/60 px-4 py-2.5">
+        <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground">
+          <Sparkles className="size-4 text-primary" />
+          Buscador inteligente
+        </p>
+        {turns.length > 0 && (
+          <button
+            type="button"
+            onClick={resetChat}
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <RotateCcw className="size-3" />
+            Nueva búsqueda
+          </button>
+        )}
+      </div>
+
       {/* Conversación */}
       <div
         ref={scrollRef}
@@ -103,8 +135,9 @@ export function ChatWidget() {
         {showSuggestions ? (
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              Escribe qué estás buscando y te muestro propiedades que coincidan.
-              Por ejemplo:
+              Describe la propiedad que buscas y te muestro opciones que
+              coincidan. Puedes mencionar el tipo de propiedad, la ciudad o
+              colonia, el presupuesto, los m² y las recámaras.
             </p>
             <div className="flex flex-wrap gap-2">
               {SUGGESTIONS.map((s) => (
@@ -142,6 +175,35 @@ export function ChatWidget() {
                       ))}
                     </div>
                   )}
+                  {turn.role === "assistant" &&
+                    turn.results &&
+                    turn.results.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        {describeFilters(turn.filters).length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs text-muted-foreground">
+                              Entendí:
+                            </span>
+                            {describeFilters(turn.filters).map((chip) => (
+                              <span
+                                key={chip}
+                                className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+                              >
+                                {chip}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex justify-start">
+                          <Link
+                            href={chatFiltersSearchUrl(turn.filters)}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+                          >
+                            Ver todos los resultados en el mapa
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   {turn.role === "assistant" &&
                     turn.matched === false &&
                     !turn.relaxed &&
