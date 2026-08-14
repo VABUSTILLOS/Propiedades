@@ -328,6 +328,7 @@ function StepBasics({
               <SelectItem value="remate_bancario">Remate bancario</SelectItem>
               <SelectItem value="flipping">Flipping (reparar)</SelectItem>
               <SelectItem value="traspaso">Traspaso inmobiliario</SelectItem>
+              <SelectItem value="renta">Renta</SelectItem>
             </SelectContent>
           </Select>
         </div>

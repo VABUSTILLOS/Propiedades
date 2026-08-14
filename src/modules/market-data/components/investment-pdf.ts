@@ -683,6 +683,8 @@ function dealTypeLabel(dealType: PropertiesRow["deal_type"]): string {
       return "Flipping";
     case "traspaso":
       return "Traspaso";
+    case "renta":
+      return "Renta";
     default:
       return "Venta directa";
   }

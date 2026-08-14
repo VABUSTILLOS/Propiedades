@@ -65,6 +65,7 @@ export const propertyDealTypeSchema = z.enum([
   "remate_bancario",
   "flipping",
   "traspaso",
+  "renta",
 ]) satisfies z.ZodType<PropertyDealType>;
 
 export const propertyStatusSchema = z.enum([

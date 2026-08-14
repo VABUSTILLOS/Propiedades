@@ -16,7 +16,8 @@ export type PropertyDealType =
   | "venta_directa"
   | "remate_bancario"
   | "flipping"
-  | "traspaso";
+  | "traspaso"
+  | "renta";
 export type PropertyStatus =
   | "draft"
   | "pending_approval"

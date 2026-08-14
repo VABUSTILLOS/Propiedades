@@ -359,7 +359,9 @@ function getDealLabel(dealType: string): string {
       ? "Flipping"
       : dealType === "traspaso"
         ? "Traspaso"
-        : "Venta directa";
+        : dealType === "renta"
+          ? "Renta"
+          : "Venta directa";
 }
 
 /**

@@ -6,6 +6,7 @@ export const DEAL_TYPE_BADGES: Record<PropertyDealType, { label: string; classNa
   remate_bancario: { label: "Remate bancario", className: "bg-emerald-600" },
   flipping: { label: "Flipping", className: "bg-amber-600" },
   traspaso: { label: "Traspaso", className: "bg-sky-600" },
+  renta: { label: "Renta", className: "bg-violet-600" },
 };
 
 export const DEAL_THRESHOLD_PCT = 25;
