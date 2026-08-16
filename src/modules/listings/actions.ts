@@ -121,12 +121,21 @@ function inferTitle(text: string): string | null {
 /** Determine category from text hints. */
 function inferCategory(text: string): WizardExtractedData["category"] {
   const t = text.toLowerCase();
-  if (/(bodega|almacén|nave industrial)/.test(t)) return "bodega";
-  if (/(terreno|lote|solar)/.test(t)) return "terreno";
-  if (/(local|comercial|oficina|plaza)/.test(t)) return "local";
-  if (/(departamento|depa|condominio)/.test(t)) return "departamento";
-  if (/(casa|residencial|vivienda)/.test(t)) return "casa";
-  if (/mts|m2|barda|cerca|portón|cisterna/.test(t)) return "terreno";
+  // Terreno: explicit keywords OR land-only features (barda, cisterna, portón, tinaco) without house keywords
+  const hasTerrenoKeyword = /(terreno|lote|solar)/.test(t);
+  const hasLandOnlyFeatures = /(barda|cerca perimetral|portón|cisterna|tinaco)/.test(t);
+  const hasHouseKeyword = /(casa|residencial|vivienda|recámara|habitación|dormitorio|estancia|sala|comedor|cocina)/.test(t);
+  const hasDeptoKeyword = /(departamento|depa|condominio)/.test(t);
+  const hasLocalKeyword = /(local|comercial|plaza|oficina)(?<!oficina de ventas)/.test(t); // oficina alone can be ambiguous
+  const hasBodegaKeyword = /(bodega|almacén|nave industrial)/.test(t);
+
+  if (hasBodegaKeyword) return "bodega";
+  if (hasDeptoKeyword) return "departamento";
+  if (hasLocalKeyword && !hasTerrenoKeyword) return "local";
+  if (hasTerrenoKeyword || (hasLandOnlyFeatures && !hasHouseKeyword)) return "terreno";
+  if (hasHouseKeyword) return "casa";
+  // Fallback: measurements without house keywords suggest terrain
+  if (/mts|m2|m²/.test(t) && !hasHouseKeyword) return "terreno";
   return "casa";
 }
 
@@ -266,6 +275,8 @@ export async function extractWizardText(
       "Normaliza precio a número en MXN: '4.5 millones' => 4500000, '850 mil' => 850000.",
       "type debe ser 'sale' si se vende y 'rent' si se renta.",
       "category: casa | departamento | local | bodega | terreno.",
+      "IMPORTANTE: Si el texto menciona 'terreno', 'lote', 'solar', 'barda', 'cerca perimetral', 'portón', 'cisterna', 'tinaco', o solo medidas de terreno (mts, m2, m²) SIN mencionar construcción/vivienda, la categoría ES 'terreno'.",
+      "No clasifiques como 'casa' un terreno con barda, cisterna, portón u oficina para trabajadores.",
       "deal_type: venta_directa | remate_bancario | flipping | traspaso | renta.",
       "Responde solo JSON válido con estas llaves:",
       JSON.stringify({
