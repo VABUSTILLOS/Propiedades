@@ -72,6 +72,106 @@ function imageExtForType(type: string): string {
   return "jpg";
 }
 
+/** Parse "30,000" or "30.000" or "30000" to number. */
+function parseMXN(text: string): number | null {
+  const m = text.match(/(\d+(?:[.,]\d{3})*(?:[.,]\d{2})?)/);
+  const value = m?.[1];
+  if (!value) return null;
+  const clean = value.replace(/[.,]/g, "");
+  const n = Number(clean);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Parse "2500 mts" or "2,500 m2" to number. */
+function parseTerrenoM2(text: string): number | null {
+  const m = text.match(
+    /(?:terreno|superficie|m2|m²|mts?)\D*(\d+(?:[.,]\d{3})*)/i,
+  );
+  const value = m?.[1];
+  if (!value) return null;
+  const clean = value.replace(/[.,]/g, "");
+  const n = Number(clean);
+  return Number.isFinite(n) && n > 0 && n < 10_000_000 ? n : null;
+}
+
+/** Extract Mexican phone from text. */
+function extractPhone(text: string): string | null {
+  // Matches +52, 52, or bare 10-digit with common separators
+  const m = text.match(
+    /(?:\+?52\s?)?(?:\d{2,3}[\s.-]?)?(?:\d{3,4}[\s.-]?\d{4})/,
+  );
+  if (!m) return null;
+  // Normalize to +52 XX XXXX XXXX
+  const digits = m[0].replace(/\D/g, "");
+  if (digits.length === 10) return `+52 ${digits.slice(0, 2)} ${digits.slice(2, 6)} ${digits.slice(6)}`;
+  if (digits.length === 12 && digits.startsWith("52"))
+    return `+52 ${digits.slice(2, 4)} ${digits.slice(4, 8)} ${digits.slice(8)}`;
+  return m[0];
+}
+
+/** Generate a concise title from text. */
+function inferTitle(text: string): string | null {
+  const lines = text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  const firstLine = lines.at(0);
+  if (!firstLine) return null;
+  const first = firstLine.slice(0, 80);
+  return first || null;
+}
+
+/** Determine category from text hints. */
+function inferCategory(text: string): WizardExtractedData["category"] {
+  const t = text.toLowerCase();
+  if (/(bodega|almacén|nave industrial)/.test(t)) return "bodega";
+  if (/(terreno|lote|solar)/.test(t)) return "terreno";
+  if (/(local|comercial|oficina|plaza)/.test(t)) return "local";
+  if (/(departamento|depa|condominio)/.test(t)) return "departamento";
+  if (/(casa|residencial|vivienda)/.test(t)) return "casa";
+  if (/mts|m2|barda|cerca|portón|cisterna/.test(t)) return "terreno";
+  return "casa";
+}
+
+/** Determine deal_type and type from rent/sale keywords. */
+function inferDealAndType(text: string): Pick<WizardExtractedData, "deal_type" | "type"> {
+  const t = text.toLowerCase();
+  if (/renta|alquiler|arrenda/.test(t)) {
+    return { deal_type: "renta", type: "rent" };
+  }
+  if (/venta|vendo|en venta|se vende/.test(t)) {
+    return { deal_type: "venta_directa", type: "sale" };
+  }
+  if (/remate/.test(t)) return { deal_type: "remate_bancario", type: "sale" };
+  if (/traspaso/.test(t)) return { deal_type: "traspaso", type: "sale" };
+  if (/flipping|reparar|flip/.test(t)) return { deal_type: "flipping", type: "sale" };
+  return { deal_type: null, type: null };
+}
+
+/** Extract price for rent (monthly) or sale. */
+function extractPrice(text: string): number | null {
+  const t = text.toLowerCase();
+  // Look for "renta X pesos" or "precio X" or "$X"
+  const rentMatch = t.match(/(?:renta|alquiler)\D*(\d+(?:[.,]\d{3})*(?:[.,]\d{2})?)/i);
+  const rentValue = rentMatch?.[1];
+  if (rentValue) return parseMXN(rentValue);
+  const priceMatch = t.match(/(?:precio|costo|valor|venta)\D*(\d+(?:[.,]\d{3})*(?:[.,]\d{2})?)/i);
+  const priceValue = priceMatch?.[1];
+  if (priceValue) return parseMXN(priceValue);
+  // Fallback: first large number that looks like price
+  const anyNum = t.match(/\$?\s*(\d+(?:[.,]\d{3})*(?:[.,]\d{2})?)/);
+  const anyValue = anyNum?.[1];
+  if (anyValue) {
+    const n = parseMXN(anyValue);
+    if (n && n >= 1000) return n;
+  }
+  return null;
+}
+
+/** Build enriched description from original text. */
+function buildDescription(raw: string, aiDesc: string | null): string {
+  if (aiDesc && aiDesc.trim().length > 20) return aiDesc.trim();
+  const cleaned = raw.trim().replace(/^inf[:\s]+/i, "").trim();
+  return cleaned.slice(0, 4800);
+}
+
 /**
  * Create a new draft listing from the wizard's first step.
  * Returns the created listing id so the client can continue editing.
@@ -125,8 +225,8 @@ export async function createDraft(
 }
 
 /**
- * Save a specific wizard step for an existing draft.
- * Only the property owner can mutate (enforced server-side + RLS).
+ * Extract structured property data from free text.
+ * Combines AI extraction with deterministic fallback parsing for robustness.
  */
 export async function extractWizardText(
   text: string,
@@ -138,6 +238,21 @@ export async function extractWizardText(
   if (raw.length < 20) {
     return fail("Escribe al menos una descripción corta para extraer datos.");
   }
+
+  // Deterministic fallback extraction (always runs)
+  const fallback: Partial<WizardExtractedData> = {
+    title: inferTitle(raw),
+    price: extractPrice(raw),
+    terreno_m2: parseTerrenoM2(raw),
+    contact_phone: extractPhone(raw),
+    contact_whatsapp: extractPhone(raw),
+    description: buildDescription(raw, null),
+    ...inferDealAndType(raw),
+    category: inferCategory(raw),
+  };
+
+  // Try AI extraction if provider is available
+  let aiData: Partial<WizardExtractedData> = {};
 
   const result = await chatCompletion({
     jsonMode: true,
@@ -175,20 +290,39 @@ export async function extractWizardText(
     user: raw,
   });
 
-  if (!result?.content) {
-    return fail("No pudimos analizar el texto. Intenta de nuevo o llena los campos manualmente.");
+  if (result?.content) {
+    try {
+      const parsed = JSON.parse(stripJsonFences(result.content)) as unknown;
+      const validated = wizardExtractionSchema.safeParse(parsed);
+      if (validated.success) {
+        aiData = validated.data;
+      }
+    } catch {
+      // Ignore AI parse errors; fallback will be used
+    }
   }
 
-  try {
-    const parsed = JSON.parse(stripJsonFences(result.content)) as unknown;
-    const validated = wizardExtractionSchema.safeParse(parsed);
-    if (!validated.success) {
-      return fail("La IA devolvió datos incompletos. Intenta con una descripción más clara.");
-    }
-    return ok(validated.data);
-  } catch {
-    return fail("No pudimos interpretar la respuesta de IA. Intenta de nuevo.");
-  }
+  // Merge: AI data takes precedence when present and non-null
+  const merged: WizardExtractedData = {
+    title: aiData.title ?? fallback.title ?? null,
+    type: aiData.type ?? fallback.type ?? null,
+    category: aiData.category ?? fallback.category ?? null,
+    deal_type: aiData.deal_type ?? fallback.deal_type ?? null,
+    description: aiData.description ?? fallback.description ?? null,
+    price: aiData.price ?? fallback.price ?? null,
+    terreno_m2: aiData.terreno_m2 ?? fallback.terreno_m2 ?? null,
+    construccion_m2: aiData.construccion_m2 ?? fallback.construccion_m2 ?? null,
+    address: aiData.address ?? fallback.address ?? null,
+    colonia: aiData.colonia ?? fallback.colonia ?? null,
+    city: aiData.city ?? fallback.city ?? null,
+    state: aiData.state ?? fallback.state ?? null,
+    zip_code: aiData.zip_code ?? fallback.zip_code ?? null,
+    contact_phone: aiData.contact_phone ?? fallback.contact_phone ?? null,
+    contact_whatsapp: aiData.contact_whatsapp ?? fallback.contact_whatsapp ?? null,
+    contact_email: aiData.contact_email ?? fallback.contact_email ?? null,
+  };
+
+  return ok(merged);
 }
 
 export async function uploadWizardImages(
