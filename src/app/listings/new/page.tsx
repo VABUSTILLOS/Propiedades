@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Store } from "lucide-react";
 
 import { getCurrentUser } from "@/modules/auth/session";
@@ -10,8 +11,40 @@ import { ListingWizard } from "@/modules/listings/components/listing-wizard";
 
 export const metadata: Metadata = { title: "Publicar una propiedad" };
 
+type InitialMapCenter = {
+  lat: number;
+  lng: number;
+  city?: string;
+  state?: string;
+};
+
+const FALLBACK_CENTER: InitialMapCenter = { lat: 19.4326, lng: -99.1332, city: "Ciudad de México", state: "CDMX" };
+
+function decodeHeader(value: string | null): string | undefined {
+  if (!value) return undefined;
+  try {
+    return decodeURIComponent(value.replace(/\+/g, " "));
+  } catch {
+    return value;
+  }
+}
+
+async function getInitialMapCenter(): Promise<InitialMapCenter> {
+  const headerStore = await headers();
+  const lat = Number(headerStore.get("x-vercel-ip-latitude"));
+  const lng = Number(headerStore.get("x-vercel-ip-longitude"));
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return FALLBACK_CENTER;
+
+  return {
+    lat,
+    lng,
+    city: decodeHeader(headerStore.get("x-vercel-ip-city")),
+    state: decodeHeader(headerStore.get("x-vercel-ip-country-region")),
+  };
+}
+
 export default async function NewListingPage() {
-  const user = await getCurrentUser();
+  const [user, initialMapCenter] = await Promise.all([getCurrentUser(), getInitialMapCenter()]);
 
   if (!user) {
     return (
@@ -36,7 +69,7 @@ export default async function NewListingPage() {
         className="mb-8"
       />
 
-      <ListingWizard />
+      <ListingWizard initialMapCenter={initialMapCenter} />
     </PageShell>
   );
 }

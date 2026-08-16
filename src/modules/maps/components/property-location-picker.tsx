@@ -20,6 +20,8 @@ export type LocationResult = {
 type Props = {
   initialLat?: number | null;
   initialLng?: number | null;
+  initialCity?: string;
+  initialState?: string;
   onChange?: (loc: LocationResult) => void;
   className?: string;
 };
@@ -33,6 +35,8 @@ const DEFAULT_CENTER = { lat: 19.4326, lng: -99.1332 };
 export function PropertyLocationPicker({
   initialLat,
   initialLng,
+  initialCity,
+  initialState,
   onChange,
   className,
 }: Props): React.JSX.Element {
@@ -84,6 +88,8 @@ export function PropertyLocationPicker({
           let city: string | undefined;
           let state: string | undefined;
           let zip_code: string | undefined;
+          let streetNumber: string | undefined;
+          let route: string | undefined;
 
           if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
             const result = results[0];
@@ -107,7 +113,24 @@ export function PropertyLocationPicker({
               if (component.types.includes("postal_code")) {
                 zip_code = component.long_name;
               }
+              if (component.types.includes("street_number")) {
+                streetNumber = component.long_name;
+              }
+              if (component.types.includes("route")) {
+                route = component.long_name;
+              }
             }
+          }
+
+          // Fallback to initialCity/initialState if geocoder didn't return them
+          if (!city && initialCity) city = initialCity;
+          if (!state && initialState) state = initialState;
+
+          // Compose cleaner address from street_number + route if available
+          if (streetNumber && route) {
+            address = `${route} ${streetNumber}`;
+          } else if (route) {
+            address = route;
           }
 
           const result: LocationResult = { lat, lng, address, colonia, city, state, zip_code };
@@ -147,7 +170,7 @@ export function PropertyLocationPicker({
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
       setReady(false);
     };
-  }, [google, initialLat, initialLng]);
+    }, [google, initialLat, initialLng, initialCity, initialState]);
 
   if (!GOOGLE_MAPS_AVAILABLE) {
     return (

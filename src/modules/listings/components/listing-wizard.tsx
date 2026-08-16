@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PlacesAutocomplete } from "@/modules/maps/components/places-autocomplete";
+import { PropertyLocationPicker } from "@/modules/maps/components/property-location-picker";
 import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5;
@@ -140,7 +141,11 @@ const initialData: WizardData = {
  * Step 1 creates the draft row; steps 2–5 update it in place.
  * Mutations run through Server Actions (Zod-validated server-side).
  */
-export function ListingWizard() {
+export function ListingWizard({
+  initialMapCenter,
+}: {
+  initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
+}) {
   const [step, setStep] = useState<WizardStep>(1);
   const [listingId, setListingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -273,7 +278,13 @@ export function ListingWizard() {
       >
         {step === 1 && <StepBasics value={data} onChange={updateField} />}
         {step === 2 && <StepPricing value={data} onChange={updateField} />}
-        {step === 3 && <StepLocation value={data} onChange={updateField} />}
+        {step === 3 && (
+          <StepLocation
+            value={data}
+            onChange={updateField}
+            initialMapCenter={initialMapCenter}
+          />
+        )}
         {step === 4 && (
           <StepMedia value={data} onChange={updateField} onImagesChange={setImages} />
         )}
@@ -659,12 +670,37 @@ function StepPricing({
 function StepLocation({
   value,
   onChange,
+  initialMapCenter,
 }: {
   value: WizardData;
   onChange: (key: WizardField, value: string) => void;
+  initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
 }) {
   return (
     <div className="space-y-4">
+      <div className="space-y-2 rounded-md border bg-muted/20 p-3">
+        <Label>Ubica la propiedad en el mapa</Label>
+        <p className="text-xs text-muted-foreground">
+          El mapa inicia en tu ciudad aproximada. Haz clic o arrastra el pin y Google
+          completará calle, número, colonia y código postal cuando estén disponibles.
+        </p>
+        <PropertyLocationPicker
+          initialLat={value.lat ? Number(value.lat) : initialMapCenter?.lat}
+          initialLng={value.lng ? Number(value.lng) : initialMapCenter?.lng}
+          initialCity={value.city || initialMapCenter?.city}
+          initialState={value.state || initialMapCenter?.state}
+          onChange={(result) => {
+            onChange("lat", String(result.lat));
+            onChange("lng", String(result.lng));
+            if (result.address) onChange("address", result.address);
+            if (result.colonia) onChange("colonia", result.colonia);
+            if (result.city) onChange("city", result.city);
+            if (result.state) onChange("state", result.state);
+            if (result.zip_code) onChange("zip_code", result.zip_code);
+          }}
+        />
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="address">Dirección</Label>
         <PlacesAutocomplete
