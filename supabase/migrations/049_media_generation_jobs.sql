@@ -58,9 +58,10 @@ CREATE POLICY "Service role full access"
     WITH CHECK (auth.role() = 'service_role');
 
 -- Trigger for updated_at
+DROP TRIGGER IF EXISTS update_media_gen_jobs_updated_at ON media_generation_jobs;
 CREATE TRIGGER update_media_gen_jobs_updated_at
     BEFORE UPDATE ON media_generation_jobs
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    FOR EACH ROW EXECUTE FUNCTION public.touch_updated_at();
 
 -- Add media generation columns to properties for quick access to latest generated assets
 ALTER TABLE properties
