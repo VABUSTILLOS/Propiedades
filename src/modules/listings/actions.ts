@@ -338,9 +338,17 @@ export async function extractWizardText(
   const hasExplicitTerreno = /(terreno|lote|solar)/.test(t);
   const hasLandOnlyFeatures = /(barda|cerca perimetral|portón|cisterna|tinaco)/.test(t);
   const hasHouseKeyword = /(casa|residencial|vivienda|recámara|habitación|dormitorio|estancia|sala|comedor|cocina)/.test(t);
-  if ((hasExplicitTerreno || (hasLandOnlyFeatures && !hasHouseKeyword)) && merged.category !== "terreno") {
+  const isTerreno = hasExplicitTerreno || (hasLandOnlyFeatures && !hasHouseKeyword);
+  if (isTerreno && merged.category !== "terreno") {
     merged.category = "terreno";
     merged.type = merged.type ?? "sale"; // default to sale for land
+  }
+
+  // Post-merge correction for deal_type/type from rent keywords
+  const hasRentKeyword = /renta|alquiler|arrenda/.test(t);
+  if (hasRentKeyword) {
+    merged.deal_type = "renta";
+    merged.type = "rent";
   }
 
   return ok(merged);
