@@ -16,6 +16,9 @@ import {
   estimateEscrituracion,
   estimatePredial,
   formatMxn,
+  getPrecioM2Const,
+  getPrecioM2Terreno,
+  propertyTypeLabel,
 } from "@/modules/lib/real-estate";
 import type { PropertyDealType } from "@/modules/lib/database.types";
 
@@ -68,8 +71,15 @@ export function SearchResultCard({
   /** Investment KPIs rendered below the price when the row carries them. */
   investmentKpis?: InvestmentKpisData | null;
 }) {
-  const precioM2Const = construccionM2 > 0 ? price / construccionM2 : 0;
-  const precioM2Terreno = terrenoM2 > 0 ? price / terrenoM2 : 0;
+  const m2Metrics = {
+    price,
+    construccion_m2: construccionM2,
+    terreno_m2: terrenoM2,
+    precio_m2_const: null,
+    precio_m2_terreno: null,
+  };
+  const precioM2Const = getPrecioM2Const(m2Metrics) ?? 0;
+  const precioM2Terreno = getPrecioM2Terreno(m2Metrics) ?? 0;
   const href = from
     ? `/property/${slug}?from=${encodeURIComponent(from)}`
     : `/property/${slug}`;
@@ -93,7 +103,7 @@ export function SearchResultCard({
           )}
           <div className="absolute left-3 top-3 flex gap-2">
             <Badge className="rounded-full shadow-sm">
-              {type === "rent" ? "Renta" : "Venta"}
+              {propertyTypeLabel(type)}
             </Badge>
           </div>
           <ScoreBadge

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GitCompareArrows, Trophy } from "lucide-react";
 
 import { getListingsByIds } from "@/modules/listings/queries";
+import { getPrecioM2Const, getPrecioM2Terreno } from "@/modules/lib/real-estate";
 import { buttonVariants } from "@/components/ui/button";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
@@ -65,8 +66,8 @@ export default async function ComparePage({ searchParams }: CompareProps) {
   // Financial metrics per listing; best $/m² construction gets highlighted.
   const rows = listings.map((l) => ({
     listing: l,
-    precio_m2: l.construccion_m2 > 0 ? l.price / l.construccion_m2 : null,
-    precio_m2_terreno: l.terreno_m2 > 0 ? l.price / l.terreno_m2 : null,
+    precio_m2: getPrecioM2Const(l),
+    precio_m2_terreno: getPrecioM2Terreno(l),
     discount:
       l.valor_avaluo != null && l.valor_avaluo > 0
         ? Math.round((1 - l.price / l.valor_avaluo) * 100)

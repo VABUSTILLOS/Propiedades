@@ -7,6 +7,7 @@ import { getProfileBySubdomain } from "@/modules/profiles/queries";
 import { parseBranding } from "@/modules/profiles/branding";
 import { getActiveListingsByOwner } from "@/modules/listings/queries";
 import type { Json } from "@/modules/lib/database.types";
+import { propertyTypeLabel } from "@/modules/lib/real-estate";
 import { Badge } from "@/components/ui/badge";
 
 type Props = {
@@ -142,7 +143,7 @@ function AgencyCard(listing: {
             </span>
           </p>
           <Badge variant={listing.type === "rent" ? "secondary" : "default"}>
-            {listing.type === "rent" ? "Renta" : "Venta"}
+            {propertyTypeLabel(listing.type)}
           </Badge>
         </div>
         <p className="mt-1 truncate text-sm text-muted-foreground">

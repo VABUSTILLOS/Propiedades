@@ -7,12 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
 import type { ChatResult } from "@/modules/chat/types";
+import { isLandListing, propertyTypeLabel } from "@/modules/lib/real-estate";
 
 /** Compact property card rendered inside the chat conversation. */
 export function ChatResultCard({ result }: { result: ChatResult }) {
   // Land (terreno) is inferred: no constructed area, but plot area present.
-  const isLand = result.terreno_m2 > 0 && result.construccion_m2 === 0;
-  const typeLabel = isLand ? "Tierra" : result.type === "rent" ? "Renta" : "Venta";
+  const isLand = isLandListing(result);
+  const typeLabel = propertyTypeLabel(result.type, isLand);
   const price =
     result.price > 0
       ? `$${result.price.toLocaleString()} ${result.currency ?? "MXN"}`

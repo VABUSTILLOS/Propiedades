@@ -13,20 +13,11 @@ import {
 } from "@/modules/maps/markers";
 import type { PropertyMapMarker } from "@/modules/search/queries";
 import type { MapBounds } from "@/modules/lib/schemas";
+import { formatCompactPrice } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
 
 /** Min viewport delta (degrees) before a new "show in this area" suggestion. */
 const EPSILON = 1e-4;
-
-const compactPrice = new Intl.NumberFormat("es-MX", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
-
-function formatPrice(marker: PropertyMapMarker): string {
-  const amount = `$${compactPrice.format(marker.price)}`;
-  return marker.type === "rent" ? `${amount}/mes` : amount;
-}
 
 function inBounds(bounds: MapBounds, marker: PropertyMapMarker): boolean {
   return (
@@ -201,7 +192,7 @@ export function PropertiesMap({
 
     const handles = markers.map((marker) => {
       const pill = document.createElement("div");
-      pill.textContent = formatPrice(marker);
+      pill.textContent = formatCompactPrice(marker.price, marker.type);
       pill.style.cssText = [
         "background:#C4571D",
         "color:#fff",
@@ -223,7 +214,7 @@ export function PropertiesMap({
         position: { lat: marker.lat, lng: marker.lng },
         title: marker.title,
         content: pill,
-        label: formatPrice(marker),
+        label: formatCompactPrice(marker.price, marker.type),
       });
       handle.addListener("click", () => setPinSelectedId(marker.id));
       handlesRef.current.set(marker.id, handle);

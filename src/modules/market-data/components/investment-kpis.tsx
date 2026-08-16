@@ -1,13 +1,22 @@
 import { Badge } from "@/components/ui/badge";
 import type { PropertyDealType } from "@/modules/lib/database.types";
+import { dealTypeLabel } from "@/modules/lib/real-estate";
 
-export const DEAL_TYPE_BADGES: Record<PropertyDealType, { label: string; className: string }> = {
-  venta_directa: { label: "Venta directa", className: "bg-slate-600" },
-  remate_bancario: { label: "Remate bancario", className: "bg-emerald-600" },
-  flipping: { label: "Flipping", className: "bg-amber-600" },
-  traspaso: { label: "Traspaso", className: "bg-sky-600" },
-  renta: { label: "Renta", className: "bg-violet-600" },
+const DEAL_TYPE_CLASSES: Record<PropertyDealType, string> = {
+  venta_directa: "bg-slate-600",
+  remate_bancario: "bg-emerald-600",
+  flipping: "bg-amber-600",
+  traspaso: "bg-sky-600",
+  renta: "bg-violet-600",
 };
+
+export const DEAL_TYPE_BADGES: Record<PropertyDealType, { label: string; className: string }> =
+  Object.fromEntries(
+    (Object.keys(DEAL_TYPE_CLASSES) as PropertyDealType[]).map((dealType) => [
+      dealType,
+      { label: dealTypeLabel(dealType), className: DEAL_TYPE_CLASSES[dealType] },
+    ]),
+  );
 
 export const DEAL_THRESHOLD_PCT = 25;
 

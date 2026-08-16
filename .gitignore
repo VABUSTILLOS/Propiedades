@@ -50,3 +50,8 @@ next-env.d.ts
 
 # Supabase CLI temp state
 supabase/.temp/
+
+# accidental root-level artifacts (see issue: repo-root junk)
+-w
+*.errors.log
+*.db

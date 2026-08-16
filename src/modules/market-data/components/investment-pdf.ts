@@ -7,9 +7,14 @@ import type {
 import { buildWhatsAppInquiryLink } from "@/modules/chat/share";
 import {
   calcularPosibleRenta,
+  dealTypeLabel,
   estimateEscrituracion,
   estimateMantenimiento,
   estimatePredial,
+  formatMoney,
+  formatMxn,
+  getPrecioM2Const,
+  getPrecioM2Terreno,
 } from "@/modules/lib/real-estate";
 
 const PAGE_WIDTH = 210; // A4 portrait in mm
@@ -52,12 +57,8 @@ export async function generateInvestmentPdf({
   y = HEADER_HEIGHT + 10;
 
   y = drawSectionHeader(doc, y, "Datos financieros");
-  const precioM2Const =
-    property.precio_m2_const ??
-    (property.construccion_m2 > 0 ? property.price / property.construccion_m2 : 0);
-  const precioM2Terreno =
-    property.precio_m2_terreno ??
-    (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
+  const precioM2Const = getPrecioM2Const(property) ?? 0;
+  const precioM2Terreno = getPrecioM2Terreno(property) ?? 0;
   const benchmarkConst =
     benchmark?.avg_price_m2_const != null
       ? Math.round(benchmark.avg_price_m2_const)
@@ -67,7 +68,7 @@ export async function generateInvestmentPdf({
       ? Math.round(benchmark.avg_price_m2_land)
       : null;
 
-  y = drawRow(doc, y, "Precio de venta", formatAmount(property.price, property.currency));
+  y = drawRow(doc, y, "Precio de venta", formatMoney(property.price, property.currency));
   y = drawRow(
     doc,
     y,
@@ -214,7 +215,7 @@ function drawHeader(doc: jsPDF, property: PropertiesRow, imageDataUrl: string | 
   const addressLines = doc.splitTextToSize(address, CONTENT_WIDTH - 42) as string[];
   doc.text(addressLines[0] ?? "", MARGIN, titleY + 2);
 
-  const price = formatAmount(property.price, property.currency);
+  const price = formatMoney(property.price, property.currency);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
@@ -666,29 +667,6 @@ function drawWhatsAppCta(doc: jsPDF, y: number, property: PropertiesRow): number
 /* ------------------------------------------------------------------ */
 /* Formatting helpers                                                  */
 /* ------------------------------------------------------------------ */
-
-function formatAmount(price: number, currency: string): string {
-  return `$${price.toLocaleString("es-MX")} ${currency}`;
-}
-
-function formatMxn(amount: number): string {
-  return `$${amount.toLocaleString("es-MX")}`;
-}
-
-function dealTypeLabel(dealType: PropertiesRow["deal_type"]): string {
-  switch (dealType) {
-    case "remate_bancario":
-      return "Remate bancario";
-    case "flipping":
-      return "Flipping";
-    case "traspaso":
-      return "Traspaso";
-    case "renta":
-      return "Renta";
-    default:
-      return "Venta directa";
-  }
-}
 
 async function loadImageDataUrl(
   src: string | undefined,

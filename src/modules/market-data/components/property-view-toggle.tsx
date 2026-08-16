@@ -17,9 +17,12 @@ import type {
 } from "@/modules/lib/database.types";
 import {
   calcularPosibleRenta,
+  dealTypeLabel,
   estimateMantenimiento,
   estimatePredial,
   formatMxn,
+  getPrecioM2Const,
+  getPrecioM2Terreno,
   isFinanciable,
 } from "@/modules/lib/real-estate";
 import { MarketPanel } from "@/modules/market-data/components/market-panel";
@@ -156,14 +159,8 @@ function InvestorView({
   benchmark: MarketBenchmarksRow | null;
   discountPct: number | null;
 }) {
-  const precioM2Const =
-    property.precio_m2_const ??
-    (property.construccion_m2 > 0
-      ? property.price / property.construccion_m2
-      : 0);
-  const precioM2Terreno =
-    property.precio_m2_terreno ??
-    (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
+  const precioM2Const = getPrecioM2Const(property) ?? 0;
+  const precioM2Terreno = getPrecioM2Terreno(property) ?? 0;
 
   const benchmarkConst =
     benchmark?.avg_price_m2_const != null
@@ -296,7 +293,7 @@ function InvestmentDealPanel({
   discountPct: number | null;
 }) {
   const dealType = property.deal_type ?? "venta_directa";
-  const dealLabel = getDealLabel(dealType);
+  const dealLabel = dealTypeLabel(dealType);
 
   const dealTone =
     dealType === "remate_bancario"
@@ -351,18 +348,6 @@ function InvestmentDealPanel({
 }
 
 type DealKpi = { label: string; value: string; hint?: string };
-
-function getDealLabel(dealType: string): string {
-  return dealType === "remate_bancario"
-    ? "Remate bancario"
-    : dealType === "flipping"
-      ? "Flipping"
-      : dealType === "traspaso"
-        ? "Traspaso"
-        : dealType === "renta"
-          ? "Renta"
-          : "Venta directa";
-}
 
 /**
  * Collects the KPI rows that apply to the listing's deal type. Shared between
@@ -580,7 +565,7 @@ async function downloadFichaPdf({
   doc.setFontSize(11);
   doc.setTextColor(90, 90, 90);
   doc.text(
-    pdfSafe(getDealLabel(property.deal_type ?? "venta_directa")),
+    pdfSafe(dealTypeLabel(property.deal_type)),
     pageWidth - margin,
     y,
     { align: "right" },
@@ -592,14 +577,8 @@ async function downloadFichaPdf({
   y += 26;
 
   // ---- Financial table ----
-  const precioM2Const =
-    property.precio_m2_const ??
-    (property.construccion_m2 > 0
-      ? property.price / property.construccion_m2
-      : 0);
-  const precioM2Terreno =
-    property.precio_m2_terreno ??
-    (property.terreno_m2 > 0 ? property.price / property.terreno_m2 : 0);
+  const precioM2Const = getPrecioM2Const(property) ?? 0;
+  const precioM2Terreno = getPrecioM2Terreno(property) ?? 0;
 
   const posibleRenta = calcularPosibleRenta(property);
 

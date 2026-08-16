@@ -5,17 +5,8 @@ import { MapPin } from "lucide-react";
 
 import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps } from "@/modules/maps/hooks";
 import { createMap, createMarker } from "@/modules/maps/markers";
+import { formatCompactPrice } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
-
-const compactPrice = new Intl.NumberFormat("es-MX", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
-
-function formatPrice(price: number, type: "sale" | "rent"): string {
-  const amount = `$${compactPrice.format(price)}`;
-  return type === "rent" ? `${amount}/mes` : amount;
-}
 
 /**
  * Single-location Google Map that pins the property at its coordinates.
@@ -55,7 +46,7 @@ export function PropertyLocationMap({
     mapRef.current = map;
 
     const pill = document.createElement("div");
-    pill.textContent = formatPrice(price, type);
+    pill.textContent = formatCompactPrice(price, type);
     pill.style.cssText = [
       "background:#C4571D",
       "color:#fff",
@@ -75,7 +66,7 @@ export function PropertyLocationMap({
       position,
       title,
       content: pill,
-      label: formatPrice(price, type),
+      label: formatCompactPrice(price, type),
     });
 
     return () => {

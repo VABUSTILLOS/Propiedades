@@ -15,6 +15,8 @@ import {
 import { createSupabaseServiceClient } from "@/modules/lib/supabase/service";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { computeHotScore } from "@/modules/market-data/queries";
+import { getPrecioM2Const } from "@/modules/lib/real-estate";
+import { slugify } from "@/modules/listings/slug";
 
 /**
  * Server-side intake pipeline for "Sube tu propiedad".
@@ -48,16 +50,6 @@ export type ActivateResult =
   | { ok: false; error: "not_found" | "expired" | "incomplete" | "not_intake" };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-function slugify(text: string): string {
-  return text
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60);
-}
 
 function buildTitle(extraction: Partial<AIExtraction> | null): string {
   const category = extraction?.tipo_propiedad ?? null;
@@ -178,7 +170,7 @@ export async function createIntakeDraft(input: {
 }): Promise<IntakeDraft | null> {
   const supabase = createSupabaseServiceClient();
   const title = "Propiedad por publicar";
-  const slug = `${slugify(title)}-${crypto.randomUUID().slice(0, 8)}`;
+  const slug = `${slugify(title, 60)}-${crypto.randomUUID().slice(0, 8)}`;
 
   const { data, error } = await supabase
     .from("properties")
@@ -271,7 +263,7 @@ export async function runExtraction(propertyId: string): Promise<AIExtraction | 
 
     const title = buildTitle(extraction);
     update.title = title;
-    update.slug = `${slugify(title)}-${row.id.slice(0, 8)}`;
+    update.slug = `${slugify(title, 60)}-${row.id.slice(0, 8)}`;
     update.missing_fields = computeMissingFields(extraction);
   } else {
     // Extraction failed: every required field becomes a wizard slide.
@@ -324,7 +316,7 @@ export async function applyAnswer(
     // Category affects the title and whether terreno_m2 is required.
     const extraction = extractionFromRow({ ...row, category: parsed.data } as PropertiesRow);
     update.title = buildTitle(extraction);
-    update.slug = `${slugify(String(update.title))}-${row.id.slice(0, 8)}`;
+    update.slug = `${slugify(String(update.title), 60)}-${row.id.slice(0, 8)}`;
   }
 
   await supabase.from("properties").update(update).eq("id", row.id);
@@ -370,8 +362,7 @@ export async function activateIntake(token: string): Promise<ActivateResult> {
     .maybeSingle();
 
   const benchmarkM2 = benchmark?.avg_price_m2_const ?? null;
-  const priceM2 =
-    row.construccion_m2 > 0 ? row.price / row.construccion_m2 : null;
+  const priceM2 = getPrecioM2Const(row);
   const discountPct =
     benchmarkM2 && priceM2
       ? Math.round(((benchmarkM2 - priceM2) / benchmarkM2) * 10_000) / 100

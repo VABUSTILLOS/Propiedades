@@ -7,6 +7,7 @@ import { runChatSearch } from "@/modules/chat/search";
 import type { ChatFilters, ChatResponse, ChatResult } from "@/modules/chat/types";
 import { getSearchableCities } from "@/modules/search/queries";
 import { env } from "@/modules/lib/env";
+import { formatMoney } from "@/modules/lib/real-estate";
 import { buildAdvisorLink } from "@/modules/chat/share";
 import { sendWhatsAppText } from "@/modules/whatsapp/server";
 
@@ -131,8 +132,7 @@ export async function cleanupExpiredChatStates(): Promise<void> {
 // ── Reply formatting ─────────────────────────────────────────────────────────
 
 function formatPrice(price: number, currency: string): string {
-  const cur = (currency || "MXN").toUpperCase();
-  return `$${price.toLocaleString("es-MX")} ${cur}`;
+  return formatMoney(price, (currency || "MXN").toUpperCase());
 }
 
 function formatResultsText(results: ChatResult[]): string {

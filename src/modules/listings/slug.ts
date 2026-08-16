@@ -20,8 +20,8 @@ const TRANSLITERATION: Record<string, string> = {
   Ñ: "n",
 };
 
-export function slugify(input: string): string {
-  return input
+export function slugify(input: string, maxLength?: number): string {
+  const slug = input
     .split("")
     .map((char) => TRANSLITERATION[char] ?? char)
     .join("")
@@ -32,6 +32,7 @@ export function slugify(input: string): string {
     .trim()
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
+  return maxLength ? slug.slice(0, maxLength) : slug;
 }
 
 /**

@@ -17,6 +17,10 @@ import {
   estimateEscrituracion,
   estimatePredial,
   formatMxn,
+  getPrecioM2Const,
+  getPrecioM2Terreno,
+  isLandListing,
+  propertyTypeLabel,
 } from "@/modules/lib/real-estate";
 
 /**
@@ -54,16 +58,12 @@ export function PropertyCard({
       : "Precio por cotizar";
 
   // Land (terreno) is inferred: no constructed area, but plot area present.
-  const isLand = listing.terreno_m2 > 0 && listing.construccion_m2 === 0;
+  const isLand = isLandListing(listing);
 
-  const typeLabel = isLand ? "Tierra" : listing.type === "rent" ? "Renta" : "Venta";
+  const typeLabel = propertyTypeLabel(listing.type, isLand);
 
-  const precioM2Const =
-    listing.precio_m2_const ??
-    (listing.construccion_m2 > 0 ? listing.price / listing.construccion_m2 : 0);
-  const precioM2Terreno =
-    listing.precio_m2_terreno ??
-    (listing.terreno_m2 > 0 ? listing.price / listing.terreno_m2 : 0);
+  const precioM2Const = getPrecioM2Const(listing) ?? 0;
+  const precioM2Terreno = getPrecioM2Terreno(listing) ?? 0;
 
   const href = from
     ? `/property/${listing.slug}?from=${encodeURIComponent(from)}`

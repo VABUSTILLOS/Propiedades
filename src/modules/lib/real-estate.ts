@@ -51,3 +51,73 @@ export function isFinanciable(dealType: PropertyDealType): boolean {
 export function formatMxn(amount: number): string {
   return `$${amount.toLocaleString("es-MX")}`;
 }
+
+export function formatMoney(amount: number, currency?: string | null): string {
+  return `$${amount.toLocaleString("es-MX")} ${currency ?? ""}`.trim();
+}
+
+const compactMxn = new Intl.NumberFormat("es-MX", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+/** Compact price pill for map markers, e.g. "$1.2M" or "$1.2M/mes". */
+export function formatCompactPrice(
+  price: number,
+  type: PropertiesRow["type"],
+): string {
+  const amount = `$${compactMxn.format(price)}`;
+  return type === "rent" ? `${amount}/mes` : amount;
+}
+
+type AreaMetricsProperty = Pick<
+  PropertiesRow,
+  "price" | "construccion_m2" | "terreno_m2" | "precio_m2_const" | "precio_m2_terreno"
+>;
+
+/** Price per constructed m²; falls back to the generated column when stored. */
+export function getPrecioM2Const(property: AreaMetricsProperty): number | null {
+  if (property.precio_m2_const != null) return property.precio_m2_const;
+  return property.construccion_m2 > 0
+    ? property.price / property.construccion_m2
+    : null;
+}
+
+/** Price per land m²; falls back to the generated column when stored. */
+export function getPrecioM2Terreno(property: AreaMetricsProperty): number | null {
+  if (property.precio_m2_terreno != null) return property.precio_m2_terreno;
+  return property.terreno_m2 > 0 ? property.price / property.terreno_m2 : null;
+}
+
+/** Whether the property is raw land (plot area present, no constructed area). */
+export function isLandListing(
+  property: Pick<PropertiesRow, "terreno_m2" | "construccion_m2">,
+): boolean {
+  return property.terreno_m2 > 0 && property.construccion_m2 === 0;
+}
+
+/** Human label for a listing type; land wins over rent/sale. */
+export function propertyTypeLabel(
+  type: PropertiesRow["type"],
+  isLand = false,
+): string {
+  return isLand ? "Tierra" : type === "rent" ? "Renta" : "Venta";
+}
+
+/** Human label for a deal type (remate/flipping/traspaso/renta/venta directa). */
+export function dealTypeLabel(
+  dealType: PropertiesRow["deal_type"] | null | undefined,
+): string {
+  switch (dealType) {
+    case "remate_bancario":
+      return "Remate bancario";
+    case "flipping":
+      return "Flipping";
+    case "traspaso":
+      return "Traspaso";
+    case "renta":
+      return "Renta";
+    default:
+      return "Venta directa";
+  }
+}

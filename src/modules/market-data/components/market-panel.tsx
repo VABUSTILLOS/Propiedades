@@ -1,4 +1,5 @@
 import type { MarketBenchmarksRow, PropertiesRow } from "@/modules/lib/database.types";
+import { getPrecioM2Const } from "@/modules/lib/real-estate";
 
 type Props = {
   property: PropertiesRow;
@@ -13,8 +14,7 @@ type Props = {
  * con la referencia de mercado que le da contexto al precio.
  */
 export function MarketPanel({ property, benchmark }: Props) {
-  const constPerM2 =
-    property.construccion_m2 > 0 ? property.price / property.construccion_m2 : 0;
+  const constPerM2 = getPrecioM2Const(property) ?? 0;
 
   return (
     <div className="rounded-lg border bg-card p-4">

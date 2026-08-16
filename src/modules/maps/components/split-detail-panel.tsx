@@ -43,6 +43,8 @@ import {
   estimatePredial,
   formatMxn,
   isFinanciable,
+  isLandListing,
+  propertyTypeLabel,
 } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
 
@@ -105,13 +107,8 @@ export function SplitDetailPanel({
   }, [listing.slug]);
 
   // Land (terreno) is inferred: no constructed area, but plot area present.
-  const isLand = listing.terreno_m2 > 0 && listing.construccion_m2 === 0;
-
-  const typeLabel = isLand
-    ? "Tierra"
-    : listing.type === "rent"
-      ? "Renta"
-      : "Venta";
+  const isLand = isLandListing(listing);
+  const typeLabel = propertyTypeLabel(listing.type, isLand);
 
   const price =
     listing.price > 0
