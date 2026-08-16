@@ -1,9 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 
-import { createDraft, saveWizardStep } from "@/modules/listings/actions";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  GripVertical,
+  Link2,
+  Loader2,
+  Sparkles,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
+
+import {
+  createDraft,
+  extractWizardText,
+  saveWizardStep,
+  uploadWizardImages,
+} from "@/modules/listings/actions";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -19,6 +51,16 @@ import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5;
 
+/** An image managed by the wizard before the listing is persisted. */
+type WizardImage = {
+  id: string;
+  url: string;
+  name?: string;
+};
+
+const MAX_WIZARD_IMAGES = 50;
+const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp,image/gif";
+
 const STEPS: { step: WizardStep; label: string }[] = [
   { step: 1, label: "Información básica" },
   { step: 2, label: "Precio" },
@@ -27,7 +69,7 @@ const STEPS: { step: WizardStep; label: string }[] = [
   { step: 5, label: "Contacto" },
 ];
 
-type WizardField = keyof WizardData;
+type WizardField = keyof Omit<WizardData, "images">;
 type WizardData = {
   title: string;
   type: "sale" | "rent";
@@ -51,7 +93,7 @@ type WizardData = {
   zip_code: string;
   lat: string;
   lng: string;
-  images: string;
+  images: WizardImage[];
   tour_360_url: string;
   video_url: string;
   contact_name: string;
@@ -83,7 +125,7 @@ const initialData: WizardData = {
   zip_code: "",
   lat: "",
   lng: "",
-  images: "",
+  images: [],
   tour_360_url: "",
   video_url: "",
   contact_name: "",
@@ -106,6 +148,10 @@ export function ListingWizard() {
 
   const updateField = (key: WizardField, value: string) => {
     setData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const setImages = (updater: (prev: WizardImage[]) => WizardImage[]) => {
+    setData((prev) => ({ ...prev, images: updater(prev.images) }));
   };
 
   const handleNext = async () => {
@@ -166,10 +212,7 @@ export function ListingWizard() {
         lng: Number(data.lng),
       },
       4: {
-        images: data.images
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+        images: data.images.map((image) => image.url),
         tour_360_url: data.tour_360_url.trim() || null,
         video_url: data.video_url.trim() || null,
       },
@@ -231,7 +274,9 @@ export function ListingWizard() {
         {step === 1 && <StepBasics value={data} onChange={updateField} />}
         {step === 2 && <StepPricing value={data} onChange={updateField} />}
         {step === 3 && <StepLocation value={data} onChange={updateField} />}
-        {step === 4 && <StepMedia value={data} onChange={updateField} />}
+        {step === 4 && (
+          <StepMedia value={data} onChange={updateField} onImagesChange={setImages} />
+        )}
         {step === 5 && <StepContact value={data} onChange={updateField} />}
 
         <div className="flex items-center justify-between pt-2">
@@ -267,8 +312,128 @@ function StepBasics({
   value: WizardData;
   onChange: (key: WizardField, value: string) => void;
 }) {
+  const [extractText, setExtractText] = useState("");
+  const [isExtracting, startExtracting] = useTransition();
+  const [extractError, setExtractError] = useState<string | null>(null);
+  const [extractApplied, setExtractApplied] = useState<number | null>(null);
+
+  const handleExtract = () => {
+    const raw = extractText.trim();
+    if (raw.length < 20) {
+      setExtractError("Escribe al menos una descripción corta para extraer datos.");
+      return;
+    }
+    setExtractError(null);
+    setExtractApplied(null);
+    startExtracting(async () => {
+      const res = await extractWizardText(raw);
+      if (!res.ok) {
+        setExtractError(res.error);
+        return;
+      }
+      const d = res.data as Partial<Record<WizardField, string | null>> & {
+        deal_type?: string | null;
+        terreno_m2?: number | null;
+        construccion_m2?: number | null;
+        price?: number | null;
+      };
+      let applied = 0;
+      const fillIfEmpty = (key: WizardField, val: string | null | undefined) => {
+        if (val === null || val === undefined || String(val).trim() === "") return;
+        if (value[key as keyof WizardData] === "") {
+          onChange(key, String(val));
+          applied++;
+        }
+      };
+      fillIfEmpty("title", d.title);
+      fillIfEmpty("description", d.description);
+      fillIfEmpty("category", d.category);
+      fillIfEmpty("dealType", d.deal_type ?? null);
+      fillIfEmpty("address", d.address);
+      fillIfEmpty("colonia", d.colonia);
+      fillIfEmpty("city", d.city);
+      fillIfEmpty("state", d.state);
+      fillIfEmpty("zip_code", d.zip_code);
+      fillIfEmpty("contact_phone", d.contact_phone);
+      fillIfEmpty("contact_whatsapp", d.contact_whatsapp);
+      fillIfEmpty("contact_email", d.contact_email);
+      if (d.type !== null && d.type !== undefined && value.type === "sale") {
+        onChange("type", d.type);
+        applied++;
+      }
+      if (d.price !== null && d.price !== undefined && value.price === "") {
+        onChange("price", String(d.price));
+        applied++;
+      }
+      if (
+        d.terreno_m2 !== null &&
+        d.terreno_m2 !== undefined &&
+        value.terreno_m2 === ""
+      ) {
+        onChange("terreno_m2", String(d.terreno_m2));
+        applied++;
+      }
+      if (
+        d.construccion_m2 !== null &&
+        d.construccion_m2 !== undefined &&
+        value.construccion_m2 === ""
+      ) {
+        onChange("construccion_m2", String(d.construccion_m2));
+        applied++;
+      }
+      setExtractApplied(applied);
+    });
+  };
+
   return (
     <div className="space-y-4">
+      <div className="rounded-md border border-dashed bg-muted/30 p-4">
+        <Label htmlFor="extract" className="flex items-center gap-1.5">
+          <Sparkles className="size-4 text-primary" />
+          ¿Tienes el texto del anuncio? Pegalo y extraemos los datos
+        </Label>
+        <Textarea
+          id="extract"
+          value={extractText}
+          onChange={(e) => setExtractText(e.target.value)}
+          placeholder="Ej. Casa en venta en Polanco, 3 recámaras, 120 m² de terreno, 90 m² de construcción. $3,500,000 MXN. Contacto: 55 1234 5678."
+          rows={3}
+          className="mt-2"
+        />
+        <div className="mt-2 flex items-center gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={handleExtract}
+            disabled={isExtracting}
+          >
+            {isExtracting ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Analizando…
+              </>
+            ) : (
+              <>
+                <Sparkles className="size-4" />
+                Extraer datos
+              </>
+            )}
+          </Button>
+          {extractApplied !== null && extractApplied > 0 && (
+            <span className="text-xs font-medium text-emerald-600">
+              ✓ {extractApplied} dato{extractApplied === 1 ? "" : "s"} aplicado
+              {extractApplied === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+        {extractError && (
+          <p className="mt-2 text-xs text-destructive" role="alert">
+            {extractError}
+          </p>
+        )}
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="title">Título</Label>
         <Input
@@ -603,25 +768,195 @@ function StepLocation({
 function StepMedia({
   value,
   onChange,
+  onImagesChange,
 }: {
   value: WizardData;
   onChange: (key: WizardField, value: string) => void;
+  onImagesChange: (updater: (prev: WizardImage[]) => WizardImage[]) => void;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, startUploading] = useTransition();
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [pasteUrl, setPasteUrl] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const remainingSlots = MAX_WIZARD_IMAGES - value.images.length;
+
+  const uploadFiles = (files: FileList | File[]) => {
+    const list = Array.from(files).filter((f) => f.size > 0);
+    if (list.length === 0) return;
+    if (list.length > remainingSlots) {
+      setUploadError(`Solo puedes agregar ${remainingSlots} imagen(es) más.`);
+      return;
+    }
+    setUploadError(null);
+    startUploading(async () => {
+      const formData = new FormData();
+      for (const file of list) formData.append("images", file);
+      const res = await uploadWizardImages(formData);
+      if (!res.ok) {
+        setUploadError(res.error);
+        return;
+      }
+      const uploaded: WizardImage[] = res.data.urls.map((url) => ({
+        id: crypto.randomUUID(),
+        url,
+      }));
+      onImagesChange((prev) => [...prev, ...uploaded]);
+    });
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    if (event.dataTransfer.files.length > 0) {
+      uploadFiles(event.dataTransfer.files);
+    }
+  };
+
+  const handleReorder = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    onImagesChange((prev) => {
+      const oldIndex = prev.findIndex((img) => img.id === active.id);
+      const newIndex = prev.findIndex((img) => img.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return prev;
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  };
+
+  const removeImage = (id: string) => {
+    onImagesChange((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const addPasteUrl = () => {
+    const url = pasteUrl.trim();
+    if (!url) return;
+    if (remainingSlots <= 0) {
+      setUploadError(`Has alcanzado el límite de ${MAX_WIZARD_IMAGES} imágenes.`);
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      setUploadError("Pega una URL válida que empiece con http:// o https://");
+      return;
+    }
+    setUploadError(null);
+    onImagesChange((prev) => [...prev, { id: crypto.randomUUID(), url }]);
+    setPasteUrl("");
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="images">URLs de imágenes</Label>
-        <Textarea
-          id="images"
-          name="images"
-          value={value.images}
-          onChange={(e) => onChange("images", e.target.value)}
-          placeholder="https://example.com/photo.jpg"
-          rows={3}
-        />
-        <p className="text-xs text-muted-foreground">
-          URLs separadas por comas (hasta 50).
-        </p>
+        <Label>Imágenes de la propiedad</Label>
+
+        {/* Dropzone */}
+        <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={cn(
+            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 text-center transition-colors",
+            isDragging
+              ? "border-primary bg-primary/5"
+              : "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
+          )}
+        >
+          <UploadCloud className="size-8 text-muted-foreground" />
+          <p className="text-sm font-medium">
+            Arrastra tus imágenes aquí o haz clic para subir
+          </p>
+          <p className="text-xs text-muted-foreground">
+            JPG, PNG, WebP o GIF · máx. 10 MB · {remainingSlots} de{" "}
+            {MAX_WIZARD_IMAGES} disponibles
+          </p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED_IMAGE_TYPES}
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files) uploadFiles(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
+
+        {uploadError && (
+          <p className="text-xs text-destructive" role="alert">
+            {uploadError}
+          </p>
+        )}
+
+        {/* Preview grid with drag-to-reorder */}
+        {value.images.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleReorder}
+          >
+            <SortableContext
+              items={value.images.map((img) => img.id)}
+              strategy={rectSortingStrategy}
+            >
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {value.images.map((img, index) => (
+                  <SortableImageCard
+                    key={img.id}
+                    image={img}
+                    index={index}
+                    disabled={isUploading}
+                    onRemove={() => removeImage(img.id)}
+                  />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
+        )}
+
+        {isUploading && (
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Loader2 className="size-3.5 animate-spin" />
+            Subiendo imágenes…
+          </p>
+        )}
+
+        {/* URL fallback */}
+        <div className="flex items-end gap-2 pt-1">
+          <div className="flex-1 space-y-1">
+            <Label htmlFor="image-url" className="text-xs">
+              ¿Tienes una URL de imagen?
+            </Label>
+            <div className="flex items-center gap-2">
+              <Link2 className="size-4 shrink-0 text-muted-foreground" />
+              <Input
+                id="image-url"
+                value={pasteUrl}
+                onChange={(e) => setPasteUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addPasteUrl();
+                  }
+                }}
+                placeholder="https://…/foto.jpg"
+              />
+            </div>
+          </div>
+          <Button type="button" variant="outline" size="sm" onClick={addPasteUrl}>
+            Agregar
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -647,6 +982,77 @@ function StepMedia({
         </div>
       </div>
     </div>
+  );
+}
+
+function SortableImageCard({
+  image,
+  index,
+  disabled,
+  onRemove,
+}: {
+  image: WizardImage;
+  index: number;
+  disabled: boolean;
+  onRemove: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: image.id });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={cn(
+        "group relative aspect-square overflow-hidden rounded-lg border bg-muted",
+        isDragging && "z-10 opacity-90 shadow-lg ring-2 ring-primary",
+      )}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image.url}
+        alt={`Imagen ${index + 1}`}
+        className="size-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+
+      {index === 0 && (
+        <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-[10px]">
+          Portada
+        </Badge>
+      )}
+
+      <button
+        type="button"
+        className="absolute right-1.5 top-1.5 inline-flex size-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-destructive group-hover:opacity-100"
+        onClick={onRemove}
+        disabled={disabled}
+        aria-label={`Quitar imagen ${index + 1}`}
+      >
+        <Trash2 className="size-4" />
+      </button>
+
+      <button
+        type="button"
+        aria-label={`Reordenar imagen ${index + 1}`}
+        className="absolute bottom-1.5 right-1.5 inline-flex size-7 cursor-grab touch-none items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-4" />
+      </button>
+
+      <span className="pointer-events-none absolute bottom-1.5 left-1.5 inline-flex size-6 items-center justify-center rounded-full bg-black/60 text-xs font-semibold text-white">
+        {index + 1}
+      </span>
+    </li>
   );
 }
 

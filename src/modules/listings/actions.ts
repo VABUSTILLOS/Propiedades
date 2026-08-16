@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/modules/auth/session";
+import { chatCompletion } from "@/modules/ai/server";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import { z } from "zod";
 
@@ -25,6 +26,51 @@ type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 /** Fixed exchange rate used to convert USD-denominated prices to MXN. */
 const USD_TO_MXN_RATE = 17.5;
+const IMAGE_BUCKET = "property-images";
+const MAX_WIZARD_IMAGES = 50;
+const MAX_WIZARD_IMAGE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_WIZARD_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
+
+const wizardExtractionSchema = z.object({
+  title: z.string().trim().min(3).max(200).nullable().optional(),
+  type: z.enum(["sale", "rent"]).nullable().optional(),
+  category: propertyCategorySchema.nullable().optional(),
+  deal_type: z
+    .enum(["venta_directa", "remate_bancario", "flipping", "traspaso", "renta"])
+    .nullable()
+    .optional(),
+  description: z.string().trim().max(5000).nullable().optional(),
+  price: z.number().min(0).max(999_999_999_999).nullable().optional(),
+  terreno_m2: z.number().min(0).max(10_000_000).nullable().optional(),
+  construccion_m2: z.number().min(0).max(10_000_000).nullable().optional(),
+  address: z.string().trim().max(200).nullable().optional(),
+  colonia: z.string().trim().max(100).nullable().optional(),
+  city: z.string().trim().max(100).nullable().optional(),
+  state: z.string().trim().max(100).nullable().optional(),
+  zip_code: z.string().trim().max(10).nullable().optional(),
+  contact_phone: z.string().trim().max(50).nullable().optional(),
+  contact_whatsapp: z.string().trim().max(50).nullable().optional(),
+  contact_email: z.string().trim().email().max(200).nullable().optional(),
+});
+
+export type WizardExtractedData = z.infer<typeof wizardExtractionSchema>;
+
+function stripJsonFences(text: string): string {
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  return ((fenced && fenced[1]) ?? text).trim();
+}
+
+function imageExtForType(type: string): string {
+  if (type === "image/png") return "png";
+  if (type === "image/webp") return "webp";
+  if (type === "image/gif") return "gif";
+  return "jpg";
+}
 
 /**
  * Create a new draft listing from the wizard's first step.
@@ -82,6 +128,112 @@ export async function createDraft(
  * Save a specific wizard step for an existing draft.
  * Only the property owner can mutate (enforced server-side + RLS).
  */
+export async function extractWizardText(
+  text: string,
+): Promise<ActionResult<WizardExtractedData>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const raw = text.trim();
+  if (raw.length < 20) {
+    return fail("Escribe al menos una descripción corta para extraer datos.");
+  }
+
+  const result = await chatCompletion({
+    jsonMode: true,
+    temperature: 0,
+    maxTokens: 900,
+    system: [
+      "Eres un extractor de datos para un formulario inmobiliario en México.",
+      "Extrae SOLO datos explícitos o fuertemente inferibles del texto del usuario.",
+      "No inventes dirección, coordenadas, precio, ciudad ni contacto.",
+      "Si un dato no aparece o es ambiguo, usa null.",
+      "Normaliza precio a número en MXN: '4.5 millones' => 4500000, '850 mil' => 850000.",
+      "type debe ser 'sale' si se vende y 'rent' si se renta.",
+      "category: casa | departamento | local | bodega | terreno.",
+      "deal_type: venta_directa | remate_bancario | flipping | traspaso | renta.",
+      "Responde solo JSON válido con estas llaves:",
+      JSON.stringify({
+        title: null,
+        type: null,
+        category: null,
+        deal_type: null,
+        description: null,
+        price: null,
+        terreno_m2: null,
+        construccion_m2: null,
+        address: null,
+        colonia: null,
+        city: null,
+        state: null,
+        zip_code: null,
+        contact_phone: null,
+        contact_whatsapp: null,
+        contact_email: null,
+      }),
+    ].join("\n"),
+    user: raw,
+  });
+
+  if (!result?.content) {
+    return fail("No pudimos analizar el texto. Intenta de nuevo o llena los campos manualmente.");
+  }
+
+  try {
+    const parsed = JSON.parse(stripJsonFences(result.content)) as unknown;
+    const validated = wizardExtractionSchema.safeParse(parsed);
+    if (!validated.success) {
+      return fail("La IA devolvió datos incompletos. Intenta con una descripción más clara.");
+    }
+    return ok(validated.data);
+  } catch {
+    return fail("No pudimos interpretar la respuesta de IA. Intenta de nuevo.");
+  }
+}
+
+export async function uploadWizardImages(
+  formData: FormData,
+): Promise<ActionResult<{ urls: string[] }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const files = formData
+    .getAll("images")
+    .filter((file): file is File => file instanceof File && file.size > 0);
+
+  if (files.length === 0) return fail("Selecciona al menos una imagen.");
+  if (files.length > MAX_WIZARD_IMAGES) {
+    return fail(`Puedes subir hasta ${MAX_WIZARD_IMAGES} imágenes por propiedad.`);
+  }
+
+  for (const file of files) {
+    if (!ALLOWED_WIZARD_IMAGE_TYPES.has(file.type)) {
+      return fail("Solo se aceptan imágenes JPG, PNG, WebP o GIF.");
+    }
+    if (file.size > MAX_WIZARD_IMAGE_SIZE) {
+      return fail("Cada imagen debe pesar máximo 10 MB.");
+    }
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const urls: string[] = [];
+
+  for (const file of files) {
+    const ext = imageExtForType(file.type);
+    const path = `wizard/${user.id}/${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage.from(IMAGE_BUCKET).upload(path, file, {
+      contentType: file.type,
+      upsert: false,
+    });
+    if (error) return fail(error.message);
+
+    const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+    if (data.publicUrl) urls.push(data.publicUrl);
+  }
+
+  return ok({ urls });
+}
+
 export async function saveWizardStep(
   listingId: string,
   step: WizardStep,
