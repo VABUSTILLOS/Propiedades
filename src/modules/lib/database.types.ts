@@ -357,6 +357,18 @@ export type Database = {
         Args: { target_property_id: string };
         Returns: number | null;
       };
+      compute_colonia_discounts: {
+        Args: { p_ids: string[] };
+        Returns: { property_id: string; discount_pct: number }[];
+      };
+      list_active_cities: {
+        Args: Record<string, never>;
+        Returns: { city: string; active_count: number }[];
+      };
+      list_active_colonias: {
+        Args: { p_type?: string | null };
+        Returns: { colonia: string }[];
+      };
       compute_investor_metrics: {
         Args: { target_property_id: string };
         Returns: Json;

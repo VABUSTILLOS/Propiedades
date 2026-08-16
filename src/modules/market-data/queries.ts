@@ -117,6 +117,47 @@ export async function getColoniaDiscount(
 }
 
 /**
+ * Compute colonia discounts for a whole row set with a single set-based RPC
+ * (`compute_colonia_discounts`) instead of one round-trip per property —
+ * search/hot paths enrich up to 300 rows per request. Returns a
+ * property id → discount map; ids absent from the map resolve to null
+ * (same semantics as `getColoniaDiscount`).
+ *
+ * Falls back to the per-row RPCs when the batch function is not deployed yet.
+ */
+export async function getColoniaDiscounts(
+  propertyIds: string[],
+): Promise<Map<string, number>> {
+  const discounts = new Map<string, number>();
+  if (propertyIds.length === 0) return discounts;
+
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .rpc("compute_colonia_discounts", { p_ids: propertyIds })
+    .returns<{ property_id: string; discount_pct: number }[]>();
+
+  if (!error && Array.isArray(data)) {
+    for (const row of data) {
+      if (row?.property_id != null && typeof row.discount_pct === "number") {
+        discounts.set(row.property_id, row.discount_pct);
+      }
+    }
+    return discounts;
+  }
+
+  // Migration not deployed yet — fall back to one RPC per property.
+  const results = await Promise.all(
+    propertyIds.map(
+      async (id): Promise<[string, number | null]> => [id, await getColoniaDiscount(id)],
+    ),
+  );
+  for (const [id, pct] of results) {
+    if (pct != null) discounts.set(id, pct);
+  }
+  return discounts;
+}
+
+/**
  * Estimate property value (AVM) from benchmark $/m² against the listing area.
  * Falls back gracefully when no benchmark exists.
  */

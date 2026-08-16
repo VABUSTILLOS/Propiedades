@@ -2,7 +2,7 @@ import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import {
-  getColoniaDiscount,
+  getColoniaDiscounts,
   toHotScore,
 } from "@/modules/market-data/queries";
 import type {
@@ -291,25 +291,20 @@ export type ListingWithHot = PropertiesRow & {
 };
 
 /**
- * Computes the hotness score for each row (N+1 benchmark + colonia-discount
- * reads, same pattern as /investor). Sorted naturally; hotScore is attached
- * for the traffic-light gauge and discountPct for the cards' optional
- * "% descuento vs colonia" detail.
+ * Computes the hotness score for each row using a single set-based
+ * `compute_colonia_discounts` RPC for the whole row set (previously one
+ * `compute_colonia_discount` RPC per row — up to 300 round-trips on the
+ * "hot" sort). Falls back to the per-row path when the batch function is
+ * not deployed yet.
  */
 export async function enrichWithHot(
   rows: PropertiesRow[],
 ): Promise<ListingWithHot[]> {
-  const meta = await Promise.all(
-    rows.map(async (row) => {
-      const discountPct = await getColoniaDiscount(row.id);
-      return { hotScore: toHotScore(discountPct, row), discountPct };
-    }),
-  );
-  return rows.map((row, i) => ({
-    ...row,
-    hotScore: meta[i]?.hotScore ?? null,
-    discountPct: meta[i]?.discountPct ?? null,
-  }));
+  const discounts = await getColoniaDiscounts(rows.map((row) => row.id));
+  return rows.map((row) => {
+    const discountPct = discounts.get(row.id) ?? null;
+    return { ...row, hotScore: toHotScore(discountPct, row), discountPct };
+  });
 }
 
 /**
@@ -385,12 +380,30 @@ export async function countActiveListings(
   return count ?? 0;
 }
 
+export type CityStat = {
+  name: string;
+  count: number;
+};
+
 /**
- * Distinct cities present in active listings — drives the filter dropdown.
+ * City → active-listing counts, grouped in SQL by `list_active_cities`
+ * (one aggregate query instead of shipping every row to the client). Shared
+ * by the search filter dropdown and the homepage city explorer.
  */
-export async function getSearchableCities(): Promise<string[]> {
+export async function getActiveCityStats(): Promise<CityStat[]> {
   const supabase = await createSupabaseServerClient();
 
+  const { data, error } = await supabase
+    .rpc("list_active_cities")
+    .returns<{ city: string; active_count: number }[]>();
+
+  if (!error && Array.isArray(data)) {
+    return (data ?? [])
+      .filter((row) => row.city)
+      .map((row) => ({ name: row.city, count: Number(row.active_count ?? 0) }));
+  }
+
+  // Migration not deployed yet — fall back to the old scan-and-dedupe path.
   const { data: rows } = await supabase
     .from("properties")
     .select("city")
@@ -398,8 +411,20 @@ export async function getSearchableCities(): Promise<string[]> {
     .gt("image_count", 1)
     .returns<{ city: string }[]>();
 
-  const cities = [...new Set((rows ?? []).map((r) => r.city).filter(Boolean))];
-  return cities.sort();
+  const byCity = new Map<string, number>();
+  for (const row of rows ?? []) {
+    if (!row.city) continue;
+    byCity.set(row.city, (byCity.get(row.city) ?? 0) + 1);
+  }
+  return [...byCity.entries()].map(([name, count]) => ({ name, count }));
+}
+
+/**
+ * Distinct cities present in active listings — drives the filter dropdown.
+ */
+export async function getSearchableCities(): Promise<string[]> {
+  const stats = await getActiveCityStats();
+  return stats.map((stat) => stat.name).sort();
 }
 
 /**
@@ -411,6 +436,15 @@ export async function getSearchableColonias(
 ): Promise<string[]> {
   const supabase = await createSupabaseServerClient();
 
+  const { data, error } = await supabase
+    .rpc("list_active_colonias", { p_type: type ?? null })
+    .returns<{ colonia: string }[]>();
+
+  if (!error && Array.isArray(data)) {
+    return (data ?? []).map((row) => row.colonia).filter(Boolean).sort();
+  }
+
+  // Migration not deployed yet — fall back to the old scan-and-dedupe path.
   let query = supabase
     .from("properties")
     .select("colonia")

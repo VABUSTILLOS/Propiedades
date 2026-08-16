@@ -1,4 +1,4 @@
-import { jsPDF } from "jspdf";
+import type { jsPDF } from "jspdf";
 
 import type {
   MarketBenchmarksRow,
@@ -49,6 +49,10 @@ export async function generateInvestmentPdf({
   const imageDataUrls = await Promise.all(
     (property.images ?? []).map((src) => loadImageDataUrl(src)),
   );
+
+  // Lazy-load the PDF library so jsPDF (~380 KB) stays out of the property
+  // page's initial client bundle and is fetched only when a PDF is requested.
+  const { jsPDF } = await import("jspdf");
 
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   let y = 0;

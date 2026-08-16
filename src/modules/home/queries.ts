@@ -3,15 +3,14 @@ import "server-only";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import {
   enrichWithHot,
+  getActiveCityStats,
   searchListings,
+  type CityStat,
   type ListingWithHot,
 } from "@/modules/search/queries";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
-export type CityStat = {
-  name: string;
-  count: number;
-};
+export type { CityStat };
 
 export type HomepageStats = {
   activeCount: number;
@@ -23,45 +22,35 @@ export type HomepageStats = {
 /**
  * Aggregate stats for the homepage trust strip and city explorer.
  * RLS restricts reads to public active rows.
+ *
+ * The per-city distribution and the total active count come from a single
+ * grouped `list_active_cities` RPC (previously a full `city` column scan plus
+ * a separate exact head-count), and the agents query runs in parallel.
  */
 export async function getHomepageStats(): Promise<HomepageStats> {
   const supabase = await createSupabaseServerClient();
 
-  const { count: activeCount } = await supabase
-    .from("properties")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "active")
-    .gt("image_count", 1);
+  const [cityStats, agentResult] = await Promise.all([
+    getActiveCityStats(),
+    supabase
+      .from("profiles")
+      .select("rating_average")
+      .eq("role", "agent")
+      .not("rating_average", "is", null),
+  ]);
 
-  const { data: cityRows } = await supabase
-    .from("properties")
-    .select("city")
-    .eq("status", "active")
-    .gt("image_count", 1);
+  const activeCount = cityStats.reduce((sum, city) => sum + city.count, 0);
+  const cities = [...cityStats].sort((a, b) => b.count - a.count);
 
-  const byCity = new Map<string, number>();
-  for (const row of cityRows ?? []) {
-    if (!row.city) continue;
-    byCity.set(row.city, (byCity.get(row.city) ?? 0) + 1);
-  }
-  const cities = [...byCity.entries()]
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count);
-
-  const { data: agentRows } = await supabase
-    .from("profiles")
-    .select("rating_average")
-    .eq("role", "agent")
-    .not("rating_average", "is", null);
-
-  const ratings = (agentRows ?? [])
+  const agentRows = agentResult.data ?? [];
+  const ratings = agentRows
     .map((row) => row.rating_average)
     .filter((value): value is number => value != null);
 
   return {
-    activeCount: activeCount ?? 0,
+    activeCount,
     cities,
-    agentCount: agentRows?.length ?? 0,
+    agentCount: agentRows.length,
     avgRating:
       ratings.length > 0
         ? ratings.reduce((sum, value) => sum + value, 0) / ratings.length

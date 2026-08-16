@@ -1,39 +1,48 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 
 /**
  * Fetch a single listing by slug (public read — RLS restricts to active).
+ * Wrapped in React cache() so generateMetadata and the page body share one
+ * query per request instead of hitting the DB twice.
  */
-export async function getListingBySlug(slug: string): Promise<PropertiesRow | null> {
-  const supabase = await createSupabaseServerClient();
+export const getListingBySlug = cache(
+  async (slug: string): Promise<PropertiesRow | null> => {
+    const supabase = await createSupabaseServerClient();
 
-  const { data: rows } = await supabase
-    .from("properties")
-    .select("*")
-    .eq("slug", slug)
-    .returns<PropertiesRow[]>()
-    .limit(1);
+    const { data: rows } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("slug", slug)
+      .returns<PropertiesRow[]>()
+      .limit(1);
 
-  return rows?.[0] ?? null;
-}
+    return rows?.[0] ?? null;
+  },
+);
 
 /**
  * Fetch a single listing by id (public read — RLS restricts to active).
+ * Wrapped in React cache() to dedupe same-request fetches.
  */
-export async function getListingById(id: string): Promise<PropertiesRow | null> {
-  const supabase = await createSupabaseServerClient();
+export const getListingById = cache(
+  async (id: string): Promise<PropertiesRow | null> => {
+    const supabase = await createSupabaseServerClient();
 
-  const { data: rows } = await supabase
-    .from("properties")
-    .select("*")
-    .eq("id", id)
-    .returns<PropertiesRow[]>()
-    .limit(1);
+    const { data: rows } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("id", id)
+      .returns<PropertiesRow[]>()
+      .limit(1);
 
-  return rows?.[0] ?? null;
-}
+    return rows?.[0] ?? null;
+  },
+);
 
 /**
  * Fetch the current user's listings (drafts included — owner RLS scope).
