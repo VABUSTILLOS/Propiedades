@@ -36,8 +36,11 @@ import {
   generateListingMedia,
   getMediaJobStatus,
   saveWizardStep,
+  setListingStatus,
+  uploadGeneratedVideo,
   uploadWizardImages,
 } from "@/modules/listings/actions";
+import { renderPropertyVideo } from "@/modules/listings/media/video-renderer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -154,6 +157,9 @@ export function ListingWizard({
   const [listingId, setListingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<WizardData>(initialData);
+  const [published, setPublished] = useState<{ id: string; slug: string } | null>(
+    null,
+  );
 
   const updateField = (key: WizardField, value: string) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -239,8 +245,47 @@ export function ListingWizard({
       setError(res.error);
       return;
     }
+
+    if (step === 5) {
+      const pub = await setListingStatus(listingId, "active");
+      if (!pub.ok) {
+        setError(pub.error);
+        return;
+      }
+      setPublished({ id: listingId, slug: pub.data.slug });
+      return;
+    }
+
     setStep((Math.min(step + 1, 5) as WizardStep));
   };
+
+  if (published) {
+    return (
+      <div className="mx-auto w-full max-w-2xl">
+        <div className="flex flex-col items-center gap-3 rounded-lg border bg-card p-10 text-center shadow-sm">
+          <CircleCheck className="size-10 text-emerald-600" />
+          <h3 className="text-lg font-semibold">¡Listo!</h3>
+          <p className="text-sm text-muted-foreground">
+            Tu propiedad quedó publicada y ya es visible para todos.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a
+              href={`/property/${published.slug}`}
+              className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"
+            >
+              Ver tu propiedad
+            </a>
+            <a
+              href="/my-listings"
+              className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-muted"
+            >
+              Ir a mis listados
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -1023,6 +1068,27 @@ function StepMedia({
         images={value.images}
         videoUrl={value.video_url}
         tourUrl={value.tour_360_url}
+        title={value.title}
+        priceLabel={
+          value.price.trim() && !Number.isNaN(Number(value.price))
+            ? `${new Intl.NumberFormat("es-MX", {
+                style: "currency",
+                currency: value.currency || "MXN",
+                maximumFractionDigits: 0,
+              }).format(Number(value.price))}${value.type === "rent" ? " /mes" : ""}`
+            : ""
+        }
+        locationLabel={[value.city, value.state].filter(Boolean).join(", ")}
+        sizeLabel={[
+          value.terreno_m2.trim()
+            ? `${Number(value.terreno_m2).toLocaleString("es-MX")} m² terreno`
+            : "",
+          value.construccion_m2.trim()
+            ? `${Number(value.construccion_m2).toLocaleString("es-MX")} m² construcción`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" · ")}
         onChange={onChange}
       />
 
@@ -1057,17 +1123,29 @@ function MediaGenerationPanel({
   images,
   videoUrl,
   tourUrl,
+  title,
+  priceLabel,
+  locationLabel,
+  sizeLabel,
   onChange,
 }: {
   listingId: string | null;
   images: WizardImage[];
   videoUrl: string;
   tourUrl: string;
+  title: string;
+  priceLabel: string;
+  locationLabel: string;
+  sizeLabel: string;
   onChange: (key: WizardField, value: string) => void;
 }) {
   const [isGenerating, startGenerating] = useTransition();
   const [status, setStatus] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [videoStatus, setVideoStatus] = useState<
+    "idle" | "rendering" | "uploading" | "done" | "failed"
+  >("idle");
+  const [videoProgress, setVideoProgress] = useState(0);
   const [outputs, setOutputs] = useState<{
     video_url: string | null;
     video_vertical_url: string | null;
@@ -1076,13 +1154,17 @@ function MediaGenerationPanel({
   } | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
 
-  const isRunning = status === "pending" || status === "processing";
+  const tourRunning = status === "pending" || status === "processing";
+  const videoRunning = videoStatus === "rendering" || videoStatus === "uploading";
+  const isRunning = tourRunning || videoRunning;
+  const tourDone = status === "done";
+  const allDone = tourDone && videoStatus === "done";
 
   // Poll job status while the worker is running. Stops after ~3 minutes
   // (45 polls × 4s) so a stuck job can't leave the spinner running forever.
   const MAX_POLLS = 45;
   useEffect(() => {
-    if (!listingId || !isRunning) return;
+    if (!listingId || !tourRunning) return;
     let polls = 0;
     const timer = setInterval(async () => {
       polls += 1;
@@ -1098,24 +1180,21 @@ function MediaGenerationPanel({
       setProgress(res.data.progress);
       if (res.data.status === "done") {
         setOutputs(res.data.outputs);
-        if (res.data.outputs.video_url && !videoUrl) {
-          onChange("video_url", res.data.outputs.video_url);
-        }
         if (res.data.outputs.tour_url && !tourUrl) {
           onChange("tour_360_url", res.data.outputs.tour_url);
         }
       }
       if (res.data.status === "failed") {
-        setGenError(res.data.error_message || "La generación falló. Intenta de nuevo.");
+        setGenError(res.data.error_message || "La generación del tour falló. Intenta de nuevo.");
       }
       if (polls >= MAX_POLLS && (res.data.status === "pending" || res.data.status === "processing")) {
         setStatus("failed");
-        setGenError("La generación tardó demasiado. Intenta de nuevo.");
+        setGenError("La generación del tour tardó demasiado. Intenta de nuevo.");
       }
     }, 4000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listingId, isRunning]);
+  }, [listingId, tourRunning]);
 
   const handleGenerate = () => {
     if (!listingId) {
@@ -1128,7 +1207,7 @@ function MediaGenerationPanel({
     }
     setGenError(null);
     startGenerating(async () => {
-      // Persist current images first so the edge function reads fresh data.
+      // Persist current images first so the worker reads fresh data.
       const saveRes = await saveWizardStep(listingId, 4, {
         images: images.map((image) => image.url),
         tour_360_url: tourUrl.trim() || null,
@@ -1138,7 +1217,10 @@ function MediaGenerationPanel({
         setGenError(saveRes.error);
         return;
       }
-      const res = await generateListingMedia(listingId, "all");
+
+      // Tour 360° se genera en el servidor; el video se renderiza aquí mismo
+      // en el navegador para obtener un archivo real y reproducible.
+      const res = await generateListingMedia(listingId, "tour");
       if (!res.ok) {
         setGenError(res.error);
         return;
@@ -1146,6 +1228,44 @@ function MediaGenerationPanel({
       setStatus("pending");
       setProgress(0);
       setOutputs(null);
+
+      setVideoStatus("rendering");
+      setVideoProgress(0);
+      try {
+        const rendered = await renderPropertyVideo(
+          {
+            imageUrls: images.map((image) => image.url),
+            title: title.trim() || undefined,
+            priceLabel: priceLabel || undefined,
+            locationLabel: locationLabel || undefined,
+            sizeLabel: sizeLabel || undefined,
+          },
+          setVideoProgress,
+        );
+        setVideoStatus("uploading");
+        const form = new FormData();
+        form.set(
+          "video",
+          new File([rendered.blob], `video.${rendered.ext}`, {
+            type: rendered.blob.type,
+          }),
+        );
+        const uploadRes = await uploadGeneratedVideo(form);
+        if (!uploadRes.ok) {
+          setVideoStatus("failed");
+          setGenError(uploadRes.error);
+          return;
+        }
+        onChange("video_url", uploadRes.data.url);
+        setVideoStatus("done");
+      } catch (err) {
+        setVideoStatus("failed");
+        setGenError(
+          err instanceof Error
+            ? err.message
+            : "No se pudo generar el video. Intenta de nuevo.",
+        );
+      }
     });
   };
 
@@ -1187,11 +1307,19 @@ function MediaGenerationPanel({
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-primary transition-all"
-              style={{ width: `${Math.max(progress, 5)}%` }}
+              style={{
+                width: `${Math.max(videoRunning ? videoProgress : progress, 5)}%`,
+              }}
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Procesando tus imágenes… {progress}%
+            {videoStatus === "rendering" &&
+              `Generando video en tu navegador… ${videoProgress}%`}
+            {videoStatus === "uploading" && "Subiendo el video generado…"}
+            {!videoRunning && tourRunning && `Procesando el tour… ${progress}%`}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Mantén esta pestaña visible mientras se genera el video.
           </p>
         </div>
       )}
@@ -1202,23 +1330,25 @@ function MediaGenerationPanel({
         </p>
       )}
 
-      {status === "done" && outputs && (
+      {(tourDone || videoStatus === "done") && (
         <div className="space-y-2">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-green-600">
-            <CircleCheck className="size-3.5" />
-            ¡Listo! Se agregaron las URLs generadas a los campos de abajo.
-          </p>
+          {allDone && (
+            <p className="flex items-center gap-1.5 text-xs font-medium text-green-600">
+              <CircleCheck className="size-3.5" />
+              ¡Listo! Se agregaron las URLs generadas a los campos de abajo.
+            </p>
+          )}
           <div className="grid gap-2 sm:grid-cols-2">
-            {outputs.video_url && (
+            {videoStatus === "done" && videoUrl && (
               <video
-                src={outputs.video_url}
+                src={videoUrl}
                 controls
                 className="w-full rounded-md border"
               />
             )}
-            {outputs.tour_url && (
+            {(outputs?.tour_url || (tourDone && tourUrl)) && (
               <a
-                href={outputs.tour_url}
+                href={outputs?.tour_url ?? tourUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center rounded-md border bg-background px-3 py-6 text-xs font-medium text-primary hover:underline"

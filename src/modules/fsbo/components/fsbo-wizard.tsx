@@ -185,7 +185,7 @@ export function FsboWizard({ cities }: { cities: string[] }) {
         return;
       }
 
-      setDone({ id, slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") });
+      setDone({ id, slug: pub.data.slug });
     });
 
   if (done) {

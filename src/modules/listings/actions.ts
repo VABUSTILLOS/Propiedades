@@ -31,6 +31,9 @@ const USD_TO_MXN_RATE = 17.5;
 const IMAGE_BUCKET = "property-images";
 const MAX_WIZARD_IMAGES = 50;
 const MAX_WIZARD_IMAGE_SIZE = 10 * 1024 * 1024;
+const MEDIA_BUCKET = "property-media";
+const MAX_GENERATED_VIDEO_SIZE = 50 * 1024 * 1024;
+const ALLOWED_GENERATED_VIDEO_TYPES = new Set(["video/mp4", "video/webm"]);
 const ALLOWED_WIZARD_IMAGE_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -420,6 +423,43 @@ export async function uploadWizardImages(
 }
 
 /**
+ * Upload a browser-rendered video (Canvas + MediaRecorder) for a listing.
+ * Stored under property-media/wizard/<uid>/ so the authenticated INSERT
+ * policy applies; returns the public URL to persist in video_url.
+ */
+export async function uploadGeneratedVideo(
+  formData: FormData,
+): Promise<ActionResult<{ url: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const file = formData.get("video");
+  if (!(file instanceof File) || file.size === 0) {
+    return fail("No se recibió el video generado.");
+  }
+  if (!ALLOWED_GENERATED_VIDEO_TYPES.has(file.type)) {
+    return fail("El video generado debe ser MP4 o WebM.");
+  }
+  if (file.size > MAX_GENERATED_VIDEO_SIZE) {
+    return fail("El video generado debe pesar máximo 50 MB.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const ext = file.type === "video/mp4" ? "mp4" : "webm";
+  const path = `wizard/${user.id}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (error) return fail(error.message);
+
+  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+  if (!data.publicUrl) return fail("No se pudo obtener la URL del video.");
+
+  return ok({ url: data.publicUrl });
+}
+
+/**
  * Trigger media generation (video + tour) for a listing from uploaded images.
  * Creates an async job and calls the Edge Function to process in background.
  */
@@ -648,7 +688,7 @@ export async function saveWizardStep(
 export async function setListingStatus(
   listingId: string,
   status: "active" | "archived",
-): Promise<ActionResult<{ id: string }>> {
+): Promise<ActionResult<{ id: string; slug: string }>> {
   const user = await getCurrentUser();
   if (!user) return failAuth();
   const supabase = await createSupabaseServerClient();
@@ -691,7 +731,7 @@ export async function setListingStatus(
     });
 
     if (!full.success) {
-      return fail("Complete all wizard steps before publishing.");
+      return fail("Completa todos los pasos del asistente antes de publicar.");
     }
   }
 
@@ -705,7 +745,7 @@ export async function setListingStatus(
   }
 
   revalidatePath("/my-listings");
-  return ok({ id: listingId });
+  return ok({ id: listingId, slug: listing.slug });
 }
 
 /**
