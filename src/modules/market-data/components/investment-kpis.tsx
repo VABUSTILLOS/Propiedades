@@ -10,13 +10,12 @@ const DEAL_TYPE_CLASSES: Record<PropertyDealType, string> = {
   renta: "bg-violet-600",
 };
 
-export const DEAL_TYPE_BADGES: Record<PropertyDealType, { label: string; className: string }> =
-  Object.fromEntries(
-    (Object.keys(DEAL_TYPE_CLASSES) as PropertyDealType[]).map((dealType) => [
-      dealType,
-      { label: dealTypeLabel(dealType), className: DEAL_TYPE_CLASSES[dealType] },
-    ]),
-  );
+export const DEAL_TYPE_BADGES = Object.fromEntries(
+  (Object.keys(DEAL_TYPE_CLASSES) as PropertyDealType[]).map((dealType) => [
+    dealType,
+    { label: dealTypeLabel(dealType), className: DEAL_TYPE_CLASSES[dealType] },
+  ]),
+) as Record<PropertyDealType, { label: string; className: string }>;
 
 export const DEAL_THRESHOLD_PCT = 25;
 
