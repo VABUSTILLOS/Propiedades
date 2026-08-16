@@ -7,6 +7,7 @@ import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
 import { Em } from "@/components/layout/emphasis";
+import { env } from "@/modules/lib/env";
 import { ListingWizard } from "@/modules/listings/components/listing-wizard";
 
 export const metadata: Metadata = { title: "Publicar una propiedad" };
@@ -18,7 +19,19 @@ type InitialMapCenter = {
   state?: string;
 };
 
-const FALLBACK_CENTER: InitialMapCenter = { lat: 19.4326, lng: -99.1332, city: "Ciudad de México", state: "CDMX" };
+type GoogleGeocodeResponse = {
+  status: string;
+  results?: Array<{
+    geometry?: { location?: { lat?: number; lng?: number } };
+  }>;
+};
+
+const FALLBACK_CENTER: InitialMapCenter = {
+  lat: 19.4326,
+  lng: -99.1332,
+  city: "Ciudad de México",
+  state: "CDMX",
+};
 
 function decodeHeader(value: string | null): string | undefined {
   if (!value) return undefined;
@@ -29,17 +42,61 @@ function decodeHeader(value: string | null): string | undefined {
   }
 }
 
+async function geocodeCityCenter(
+  city?: string,
+  state?: string,
+  countryCode?: string,
+): Promise<Pick<InitialMapCenter, "lat" | "lng"> | null> {
+  const key = env.googleMapsServerKey;
+  if (!key || !city) return null;
+
+  const query = [city, state, countryCode === "MX" ? "México" : countryCode]
+    .filter(Boolean)
+    .join(", ");
+
+  try {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      query,
+    )}&key=${encodeURIComponent(key)}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+
+    const data = (await res.json()) as GoogleGeocodeResponse;
+    const location = data.results?.[0]?.geometry?.location;
+    if (!location || !Number.isFinite(location.lat) || !Number.isFinite(location.lng)) {
+      return null;
+    }
+
+    return { lat: Number(location.lat), lng: Number(location.lng) };
+  } catch {
+    return null;
+  }
+}
+
 async function getInitialMapCenter(): Promise<InitialMapCenter> {
   const headerStore = await headers();
+  const city = decodeHeader(headerStore.get("x-vercel-ip-city"));
+  const state = decodeHeader(headerStore.get("x-vercel-ip-country-region"));
+  const countryCode = decodeHeader(headerStore.get("x-vercel-ip-country"));
   const lat = Number(headerStore.get("x-vercel-ip-latitude"));
   const lng = Number(headerStore.get("x-vercel-ip-longitude"));
+
+  const cityCenter = await geocodeCityCenter(city, state, countryCode);
+  if (cityCenter) {
+    return {
+      ...cityCenter,
+      city,
+      state,
+    };
+  }
+
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return FALLBACK_CENTER;
 
   return {
     lat,
     lng,
-    city: decodeHeader(headerStore.get("x-vercel-ip-city")),
-    state: decodeHeader(headerStore.get("x-vercel-ip-country-region")),
+    city,
+    state,
   };
 }
 
