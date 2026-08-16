@@ -356,10 +356,22 @@ function StepBasics({
           applied++;
         }
       };
+      const applyExtractedDefault = (
+        key: WizardField,
+        val: string | null | undefined,
+        defaultValue: string,
+      ) => {
+        if (val === null || val === undefined || String(val).trim() === "") return;
+        const next = String(val);
+        if (value[key as keyof WizardData] === defaultValue && next !== defaultValue) {
+          onChange(key, next);
+          applied++;
+        }
+      };
       fillIfEmpty("title", d.title);
       fillIfEmpty("description", d.description);
-      fillIfEmpty("category", d.category);
-      fillIfEmpty("dealType", d.deal_type ?? null);
+      applyExtractedDefault("category", d.category, initialData.category);
+      applyExtractedDefault("dealType", d.deal_type ?? null, initialData.dealType);
       fillIfEmpty("address", d.address);
       fillIfEmpty("colonia", d.colonia);
       fillIfEmpty("city", d.city);
