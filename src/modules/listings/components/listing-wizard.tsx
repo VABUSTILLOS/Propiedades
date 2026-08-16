@@ -1078,12 +1078,22 @@ function MediaGenerationPanel({
 
   const isRunning = status === "pending" || status === "processing";
 
-  // Poll job status while the edge function is working.
+  // Poll job status while the worker is running. Stops after ~3 minutes
+  // (45 polls × 4s) so a stuck job can't leave the spinner running forever.
+  const MAX_POLLS = 45;
   useEffect(() => {
     if (!listingId || !isRunning) return;
+    let polls = 0;
     const timer = setInterval(async () => {
+      polls += 1;
       const res = await getMediaJobStatus(listingId);
-      if (!res.ok) return;
+      if (!res.ok) {
+        if (polls >= MAX_POLLS) {
+          setStatus("failed");
+          setGenError("No pudimos consultar el estado de la generación. Intenta de nuevo.");
+        }
+        return;
+      }
       setStatus(res.data.status);
       setProgress(res.data.progress);
       if (res.data.status === "done") {
@@ -1096,7 +1106,11 @@ function MediaGenerationPanel({
         }
       }
       if (res.data.status === "failed") {
-        setGenError("La generación falló. Intenta de nuevo.");
+        setGenError(res.data.error_message || "La generación falló. Intenta de nuevo.");
+      }
+      if (polls >= MAX_POLLS && (res.data.status === "pending" || res.data.status === "processing")) {
+        setStatus("failed");
+        setGenError("La generación tardó demasiado. Intenta de nuevo.");
       }
     }, 4000);
     return () => clearInterval(timer);

@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { getCurrentUser } from "@/modules/auth/session";
 import { chatCompletion } from "@/modules/ai/server";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
+import { createSupabaseServiceClient } from "@/modules/lib/supabase/service";
 import { z } from "zod";
 
 import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
@@ -464,11 +465,13 @@ export async function generateListingMedia(
 
   if (jobError) return fail(jobError.message);
 
-  // Call Edge Function asynchronously (fire and forget)
+  // Dispatch the media-generation worker (Next.js Route Handler) fire-and-forget.
+  // The worker updates the job row itself; if the dispatch fails we must mark
+  // the job failed so the UI stops polling instead of spinning forever.
   const headersList = await headers();
   const host = headersList.get("host");
   const protocol = host?.includes("localhost") ? "http" : "https";
-  const edgeUrl = `${protocol}://${host}/functions/v1/generate-media`;
+  const workerUrl = `${protocol}://${host}/api/generate-media`;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   const payload = {
@@ -491,15 +494,45 @@ export async function generateListingMedia(
     },
   };
 
-  // Fire the edge function in background — don't await
-  fetch(edgeUrl, {
+  const markJobFailed = async (message: string) => {
+    const serviceClient = createSupabaseServiceClient();
+    const finishedAt = new Date().toISOString();
+    await serviceClient
+      .from("media_generation_jobs")
+      .update({
+        status: "failed",
+        error_message: message,
+        completed_at: finishedAt,
+        updated_at: finishedAt,
+      })
+      .eq("id", job.id);
+    await serviceClient
+      .from("properties")
+      .update({
+        media_generation_status: "failed",
+        media_generation_updated_at: finishedAt,
+      })
+      .eq("id", listingId);
+  };
+
+  fetch(workerUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${serviceKey}`,
     },
     body: JSON.stringify(payload),
-  }).catch((err) => console.error("Edge function call failed:", err));
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        await markJobFailed(`El generador respondió ${res.status}: ${body.slice(0, 200)}`);
+      }
+    })
+    .catch(async (err) => {
+      console.error("Media worker dispatch failed:", err);
+      await markJobFailed("No se pudo iniciar la generación de contenido.");
+    });
 
   // Update property status
   await supabase
@@ -523,6 +556,7 @@ export async function getMediaJobStatus(
 ): Promise<ActionResult<{
   status: MediaGenerationJobRow["status"];
   progress: number;
+  error_message: string | null;
   outputs: {
     video_url: string | null;
     video_vertical_url: string | null;
@@ -548,6 +582,7 @@ export async function getMediaJobStatus(
   return ok({
     status: data.status,
     progress: data.progress,
+    error_message: data.error_message,
     outputs: {
       video_url: data.output_video_url,
       video_vertical_url: data.output_video_vertical_url,
