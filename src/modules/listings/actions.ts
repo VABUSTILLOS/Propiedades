@@ -82,10 +82,22 @@ function parseMXN(text: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** Parse "2500 mts" or "2,500 m2" to number. */
+/** Parse "Terreno 2500 mts" or "lote de 2,500 m2" to number for land area. */
 function parseTerrenoM2(text: string): number | null {
   const m = text.match(
-    /(?:terreno|superficie|m2|m²|mts?)\D*(\d+(?:[.,]\d{3})*)/i,
+    /(?:terreno|superficie(?:\s+del\s+terreno)?|lote|solar)\D{0,40}(\d+(?:[.,]\d{3})*)\s*(?:m2|m²|mts?|metros)?/i,
+  );
+  const value = m?.[1];
+  if (!value) return null;
+  const clean = value.replace(/[.,]/g, "");
+  const n = Number(clean);
+  return Number.isFinite(n) && n > 0 && n < 10_000_000 ? n : null;
+}
+
+/** Parse construction area from text, e.g. "Oficina 36 mts con baño". */
+function parseConstruccionM2(text: string): number | null {
+  const m = text.match(
+    /(?:construcci[oó]n|construido|construida|edificaci[oó]n|oficina|local|bodega|nave|casa|departamento)\D{0,40}(\d+(?:[.,]\d{3})*)\s*(?:m2|m²|mts?|metros)/i,
   );
   const value = m?.[1];
   if (!value) return null;
@@ -253,6 +265,7 @@ export async function extractWizardText(
     title: inferTitle(raw),
     price: extractPrice(raw),
     terreno_m2: parseTerrenoM2(raw),
+    construccion_m2: parseConstruccionM2(raw),
     contact_phone: extractPhone(raw),
     contact_whatsapp: extractPhone(raw),
     description: buildDescription(raw, null),
@@ -273,6 +286,8 @@ export async function extractWizardText(
       "No inventes dirección, coordenadas, precio, ciudad ni contacto.",
       "Si un dato no aparece o es ambiguo, usa null.",
       "Normaliza precio a número en MXN: '4.5 millones' => 4500000, '850 mil' => 850000.",
+      "Diferencia áreas: terreno_m2 es el tamaño total del terreno/lote; construccion_m2 es únicamente construcción/oficina/local/casa/bodega. Ejemplo: 'Terreno 2500 mts, Oficina 36 mts' => terreno_m2=2500 y construccion_m2=36.",
+      "No uses distancias de ubicación ('a 100 mts de...') ni alturas/anchos ('barda 3 mts', 'portón 6 mts') como metros de construcción.",
       "type debe ser 'sale' si se vende y 'rent' si se renta.",
       "category: casa | departamento | local | bodega | terreno.",
       "IMPORTANTE: Si el texto menciona 'terreno', 'lote', 'solar', 'barda', 'cerca perimetral', 'portón', 'cisterna', 'tinaco', o solo medidas de terreno (mts, m2, m²) SIN mencionar construcción/vivienda, la categoría ES 'terreno'.",
@@ -343,6 +358,11 @@ export async function extractWizardText(
     merged.category = "terreno";
     merged.type = merged.type ?? "sale"; // default to sale for land
   }
+
+  const parsedTerrenoM2 = parseTerrenoM2(raw);
+  const parsedConstruccionM2 = parseConstruccionM2(raw);
+  if (parsedTerrenoM2 !== null) merged.terreno_m2 = parsedTerrenoM2;
+  if (parsedConstruccionM2 !== null) merged.construccion_m2 = parsedConstruccionM2;
 
   // Post-merge correction for deal_type/type from rent keywords
   const hasRentKeyword = /renta|alquiler|arrenda/.test(t);
