@@ -148,6 +148,13 @@ export type PropertiesRow = {
   missing_fields: string[];
   intake_token: string | null;
   intake_expires_at: string | null;
+  // Media generation (migration 049)
+  generated_video_url: string | null;
+  generated_video_vertical_url: string | null;
+  generated_tour_url: string | null;
+  generated_tour_type: string | null;
+  media_generation_status: string | null;
+  media_generation_updated_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -173,6 +180,25 @@ export type MessagesRow = {
   created_at: string;
   updated_at: string;
 }
+
+export type MediaGenerationJobRow = {
+  id: string;
+  property_id: string;
+  user_id: string;
+  job_type: "video" | "tour" | "social_cuts" | "all";
+  status: "pending" | "processing" | "done" | "failed" | "cancelled";
+  progress: number;
+  input_images: Json;
+  output_video_url: string | null;
+  output_video_vertical_url: string | null;
+  output_tour_url: string | null;
+  output_tour_type: "panorama_360" | "walkthrough" | "none" | null;
+  error_message: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
 
 export type AvailabilitySlotsRow = {
   id: string;
@@ -342,6 +368,7 @@ export type Database = {
       co_shopping_chat: { Row: CoShoppingChatRow; Insert: Insertable<CoShoppingChatRow>; Update: Partial<CoShoppingChatRow>; Relationships: [] };
       whatsapp_messages: { Row: WhatsappMessagesRow; Insert: Insertable<WhatsappMessagesRow>; Update: Partial<WhatsappMessagesRow>; Relationships: [] };
       mortgage_leads: { Row: MortgageLeadsRow; Insert: Insertable<MortgageLeadsRow>; Update: Partial<MortgageLeadsRow>; Relationships: [] };
+      media_generation_jobs: { Row: MediaGenerationJobRow; Insert: Insertable<MediaGenerationJobRow>; Update: Partial<MediaGenerationJobRow>; Relationships: [] };
     };
     Views: Record<string, never>,
     Functions: {

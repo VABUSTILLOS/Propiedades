@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import {
   DndContext,
@@ -20,6 +20,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  CircleCheck,
+  Clapperboard,
   GripVertical,
   Link2,
   Loader2,
@@ -31,6 +33,8 @@ import {
 import {
   createDraft,
   extractWizardText,
+  generateListingMedia,
+  getMediaJobStatus,
   saveWizardStep,
   uploadWizardImages,
 } from "@/modules/listings/actions";
@@ -286,7 +290,12 @@ export function ListingWizard({
           />
         )}
         {step === 4 && (
-          <StepMedia value={data} onChange={updateField} onImagesChange={setImages} />
+          <StepMedia
+            value={data}
+            onChange={updateField}
+            onImagesChange={setImages}
+            listingId={listingId}
+          />
         )}
         {step === 5 && <StepContact value={data} onChange={updateField} />}
 
@@ -817,10 +826,12 @@ function StepMedia({
   value,
   onChange,
   onImagesChange,
+  listingId,
 }: {
   value: WizardData;
   onChange: (key: WizardField, value: string) => void;
   onImagesChange: (updater: (prev: WizardImage[]) => WizardImage[]) => void;
+  listingId: string | null;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -1007,6 +1018,14 @@ function StepMedia({
         </div>
       </div>
 
+      <MediaGenerationPanel
+        listingId={listingId}
+        images={value.images}
+        videoUrl={value.video_url}
+        tourUrl={value.tour_360_url}
+        onChange={onChange}
+      />
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="tour_360_url">URL del tour 360°</Label>
@@ -1029,6 +1048,173 @@ function StepMedia({
           />
         </div>
       </div>
+    </div>
+  );
+}
+
+function MediaGenerationPanel({
+  listingId,
+  images,
+  videoUrl,
+  tourUrl,
+  onChange,
+}: {
+  listingId: string | null;
+  images: WizardImage[];
+  videoUrl: string;
+  tourUrl: string;
+  onChange: (key: WizardField, value: string) => void;
+}) {
+  const [isGenerating, startGenerating] = useTransition();
+  const [status, setStatus] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [outputs, setOutputs] = useState<{
+    video_url: string | null;
+    video_vertical_url: string | null;
+    tour_url: string | null;
+    tour_type: string | null;
+  } | null>(null);
+  const [genError, setGenError] = useState<string | null>(null);
+
+  const isRunning = status === "pending" || status === "processing";
+
+  // Poll job status while the edge function is working.
+  useEffect(() => {
+    if (!listingId || !isRunning) return;
+    const timer = setInterval(async () => {
+      const res = await getMediaJobStatus(listingId);
+      if (!res.ok) return;
+      setStatus(res.data.status);
+      setProgress(res.data.progress);
+      if (res.data.status === "done") {
+        setOutputs(res.data.outputs);
+        if (res.data.outputs.video_url && !videoUrl) {
+          onChange("video_url", res.data.outputs.video_url);
+        }
+        if (res.data.outputs.tour_url && !tourUrl) {
+          onChange("tour_360_url", res.data.outputs.tour_url);
+        }
+      }
+      if (res.data.status === "failed") {
+        setGenError("La generación falló. Intenta de nuevo.");
+      }
+    }, 4000);
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listingId, isRunning]);
+
+  const handleGenerate = () => {
+    if (!listingId) {
+      setGenError("Guarda el paso primero para poder generar el contenido.");
+      return;
+    }
+    if (images.length === 0) {
+      setGenError("Sube al menos una imagen para generar el video y tour.");
+      return;
+    }
+    setGenError(null);
+    startGenerating(async () => {
+      // Persist current images first so the edge function reads fresh data.
+      const saveRes = await saveWizardStep(listingId, 4, {
+        images: images.map((image) => image.url),
+        tour_360_url: tourUrl.trim() || null,
+        video_url: videoUrl.trim() || null,
+      });
+      if (!saveRes.ok) {
+        setGenError(saveRes.error);
+        return;
+      }
+      const res = await generateListingMedia(listingId, "all");
+      if (!res.ok) {
+        setGenError(res.error);
+        return;
+      }
+      setStatus("pending");
+      setProgress(0);
+      setOutputs(null);
+    });
+  };
+
+  return (
+    <div className="space-y-3 rounded-lg border border-dashed bg-muted/30 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <p className="flex items-center gap-2 text-sm font-medium">
+            <Clapperboard className="size-4 text-primary" />
+            Video y tour 360° automáticos
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Generamos un video promocional y un recorrido a partir de tus fotos.
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={isGenerating || isRunning || images.length === 0}
+          onClick={handleGenerate}
+        >
+          {isGenerating || isRunning ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin" />
+              Generando…
+            </>
+          ) : (
+            <>
+              <Sparkles className="size-3.5" />
+              Generar
+            </>
+          )}
+        </Button>
+      </div>
+
+      {isRunning && (
+        <div className="space-y-1.5">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-primary transition-all"
+              style={{ width: `${Math.max(progress, 5)}%` }}
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Procesando tus imágenes… {progress}%
+          </p>
+        </div>
+      )}
+
+      {genError && (
+        <p className="text-xs text-destructive" role="alert">
+          {genError}
+        </p>
+      )}
+
+      {status === "done" && outputs && (
+        <div className="space-y-2">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-green-600">
+            <CircleCheck className="size-3.5" />
+            ¡Listo! Se agregaron las URLs generadas a los campos de abajo.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {outputs.video_url && (
+              <video
+                src={outputs.video_url}
+                controls
+                className="w-full rounded-md border"
+              />
+            )}
+            {outputs.tour_url && (
+              <a
+                href={outputs.tour_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center rounded-md border bg-background px-3 py-6 text-xs font-medium text-primary hover:underline"
+              >
+                Abrir tour generado →
+              </a>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 import { getCurrentUser } from "@/modules/auth/session";
 import { chatCompletion } from "@/modules/ai/server";
@@ -18,7 +19,7 @@ import {
   propertyWizardStep5Schema,
   mortgageLeadSchema,
 } from "@/modules/lib/schemas";
-import type { PropertiesRow } from "@/modules/lib/database.types";
+import type { MediaGenerationJobRow, PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
 import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
@@ -415,6 +416,145 @@ export async function uploadWizardImages(
   }
 
   return ok({ urls });
+}
+
+/**
+ * Trigger media generation (video + tour) for a listing from uploaded images.
+ * Creates an async job and calls the Edge Function to process in background.
+ */
+export async function generateListingMedia(
+  listingId: string,
+  jobType: "video" | "tour" | "social_cuts" | "all" = "all",
+): Promise<ActionResult<{ jobId: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const supabase = await createSupabaseServerClient();
+
+  // Verify ownership and get listing data + images
+  const { data: listing } = await supabase
+    .from("properties")
+    .select("*, images")
+    .eq("id", listingId)
+    .limit(1)
+    .single();
+
+  if (!listing) return fail("Listado no encontrado.");
+  if (listing.owner_id !== user.id) return fail("No eres dueño de este listado.");
+
+  const imageUrls: Array<{ url: string; order: number }> =
+    (listing.images as Array<string> | null)?.map((url, i) => ({ url, order: i })) ?? [];
+
+  if (imageUrls.length === 0) {
+    return fail("Sube al menos una imagen para generar el video y tour.");
+  }
+
+  // Create job record
+  const { data: job, error: jobError } = await supabase
+    .from("media_generation_jobs")
+    .insert({
+      property_id: listingId,
+      user_id: user.id,
+      job_type: jobType,
+      status: "pending",
+      input_images: imageUrls,
+    })
+    .select("id")
+    .single();
+
+  if (jobError) return fail(jobError.message);
+
+  // Call Edge Function asynchronously (fire and forget)
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol = host?.includes("localhost") ? "http" : "https";
+  const edgeUrl = `${protocol}://${host}/functions/v1/generate-media`;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  const payload = {
+    jobId: job.id,
+    propertyId: listingId,
+    userId: user.id,
+    jobType,
+    images: imageUrls,
+    propertyData: {
+      title: listing.title ?? "",
+      price: Number(listing.price) || 0,
+      currency: listing.currency ?? "MXN",
+      terrain_m2: Number(listing.terreno_m2) || 0,
+      construccion_m2: Number(listing.construccion_m2) || 0,
+      city: listing.city ?? "",
+      state: listing.state ?? "",
+      category: listing.category ?? "",
+      deal_type: listing.deal_type ?? "",
+      address: listing.address ?? undefined,
+    },
+  };
+
+  // Fire the edge function in background — don't await
+  fetch(edgeUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${serviceKey}`,
+    },
+    body: JSON.stringify(payload),
+  }).catch((err) => console.error("Edge function call failed:", err));
+
+  // Update property status
+  await supabase
+    .from("properties")
+    .update({
+      media_generation_status: "processing",
+      media_generation_updated_at: new Date().toISOString(),
+    })
+    .eq("id", listingId);
+
+  revalidatePath(`/listings/new`);
+
+  return ok({ jobId: job.id });
+}
+
+/**
+ * Get latest media generation job for a listing.
+ */
+export async function getMediaJobStatus(
+  listingId: string,
+): Promise<ActionResult<{
+  status: MediaGenerationJobRow["status"];
+  progress: number;
+  outputs: {
+    video_url: string | null;
+    video_vertical_url: string | null;
+    tour_url: string | null;
+    tour_type: MediaGenerationJobRow["output_tour_type"];
+  };
+}>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data, error } = await supabase
+    .from("media_generation_jobs")
+    .select("*")
+    .eq("property_id", listingId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) return fail(error.message);
+
+  return ok({
+    status: data.status,
+    progress: data.progress,
+    outputs: {
+      video_url: data.output_video_url,
+      video_vertical_url: data.output_video_vertical_url,
+      tour_url: data.output_tour_url,
+      tour_type: data.output_tour_type,
+    },
+  });
 }
 
 export async function saveWizardStep(
