@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { Fragment, useEffect, useRef, useState, useTransition } from "react";
 
 import {
   DndContext,
@@ -35,8 +35,8 @@ import {
   extractWizardText,
   generateListingMedia,
   getMediaJobStatus,
+  saveWizardAll,
   saveWizardStep,
-  setListingStatus,
   uploadWizardImages,
 } from "@/modules/listings/actions";
 import { renderPropertyVideo } from "@/modules/listings/media/video-renderer";
@@ -56,6 +56,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { PlacesAutocomplete } from "@/modules/maps/components/places-autocomplete";
 import { PropertyLocationPicker } from "@/modules/maps/components/property-location-picker";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
@@ -191,13 +192,15 @@ const initialData: WizardData = {
 };
 
 /**
- * Five-step listing creation wizard.
- * Step 1 creates the draft row; steps 2–5 update it in place.
- * Mutations run through Server Actions (Zod-validated server-side).
+ * Unified single-form listing editor.
+ * All sections (info, pricing, location, media, contact and — for admin
+ * edits — advanced fields) render stacked in one scrollable card and persist
+ * atomically via `saveWizardAll` (which creates the draft row on first
+ * publish). Mutations run through Server Actions (Zod-validated server-side).
  *
  * Pass `initialListing` to edit an existing publication (used by the admin
- * panel): state is seeded from the saved row and step 1 persists in place
- * instead of creating a new draft.
+ * panel): state is seeded from the saved row, the advanced section is shown,
+ * and the admin-chosen status is preserved on save.
  */
 export function ListingWizard({
   initialMapCenter,
@@ -206,7 +209,6 @@ export function ListingWizard({
   initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
   initialListing?: { id: string; slug?: string; data: Partial<WizardData> };
 }) {
-  const [step, setStep] = useState<WizardStep>(1);
   const [listingId, setListingId] = useState<string | null>(
     initialListing?.id ?? null,
   );
@@ -218,6 +220,7 @@ export function ListingWizard({
   const [published, setPublished] = useState<{ id: string; slug: string } | null>(
     null,
   );
+  const [isSubmitting, startSubmit] = useTransition();
 
   const updateField = (key: WizardField, value: string) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -227,153 +230,142 @@ export function ListingWizard({
     setData((prev) => ({ ...prev, images: updater(prev.images) }));
   };
 
-  const handleNext = async () => {
+  const numOrNull = (v: string) => (v.trim() === "" ? null : Number(v));
+  const boolOrNull = (v: string) =>
+    v === "true" ? true : v === "false" ? false : null;
+
+  /**
+   * Persist the draft row on demand. Media generation needs a stored listing
+   * before it can save images, so it calls this when the user hits "Generar"
+   * without having published yet. No-op when a listing already exists.
+   */
+  const ensureListing = async (): Promise<{ id: string | null; error?: string }> => {
+    if (listingId) return { id: listingId };
+    const form = new FormData();
+    form.set("title", data.title);
+    form.set("type", data.type);
+    form.set("category", data.category);
+    form.set("deal_type", data.dealType);
+    if (data.description.trim()) form.set("description", data.description.trim());
+
+    const res = await createDraft(undefined, form);
+    if (!res.ok) return { id: null, error: res.error };
+    setListingId(res.data.id);
+    return { id: res.data.id };
+  };
+
+  /** Full DB-shaped payload covering every rendered section. */
+  const buildFullFields = (): Record<string, unknown> => {
+    const fields: Record<string, unknown> = {
+      // Step 1 — Información básica.
+      title: data.title,
+      type: data.type,
+      category: data.category,
+      deal_type: data.dealType,
+      description: data.description.trim() || undefined,
+      // Step 2 — Precio.
+      price: Number(data.price),
+      currency: data.currency,
+      terreno_m2: Number(data.terreno_m2),
+      construccion_m2: Number(data.construccion_m2),
+      costo_reparacion_estimado:
+        data.costo_reparacion_estimado.trim() === ""
+          ? null
+          : Number(data.costo_reparacion_estimado),
+      valor_post_reparacion_estimado:
+        data.valor_post_reparacion_estimado.trim() === ""
+          ? null
+          : Number(data.valor_post_reparacion_estimado),
+      institucion_bancaria:
+        data.institucion_bancaria.trim() === ""
+          ? null
+          : data.institucion_bancaria.trim(),
+      fecha_remate:
+        data.fecha_remate.trim() === "" ? null : data.fecha_remate.trim(),
+      condiciones_traspaso:
+        data.condiciones_traspaso.trim() === ""
+          ? null
+          : data.condiciones_traspaso.trim(),
+      // Step 3 — Ubicación.
+      address: data.address,
+      colonia: data.colonia,
+      city: data.city,
+      state: data.state,
+      zip_code: data.zip_code.trim() || undefined,
+      lat: Number(data.lat),
+      lng: Number(data.lng),
+      // Step 4 — Multimedia.
+      images: data.images.map((image) => image.url),
+      tour_360_url: data.tour_360_url.trim() || null,
+      video_url: data.video_url.trim() || null,
+      // Step 5 — Contacto.
+      contact_name: data.contact_name.trim() || null,
+      contact_type: data.contact_type || null,
+      contact_phone: data.contact_phone.trim() || null,
+      contact_whatsapp: data.contact_whatsapp.trim() || null,
+      contact_email: data.contact_email.trim() || null,
+    };
+
+    // Step 6 — "Campos avanzados" (admin edit surface only). The status is
+    // persisted directly; publishing must not clobber the admin-chosen status.
+    if (initialListing) {
+      fields.recamaras = numOrNull(data.recamaras);
+      fields.banos = numOrNull(data.banos);
+      fields.estacionamientos = numOrNull(data.estacionamientos);
+      fields.antiguedad = numOrNull(data.antiguedad);
+      fields.precio_m2_const = numOrNull(data.precio_m2_const);
+      fields.precio_m2_terreno = numOrNull(data.precio_m2_terreno);
+      fields.valor_avaluo = numOrNull(data.valor_avaluo);
+      fields.porcentaje_descuento_avaluo = numOrNull(
+        data.porcentaje_descuento_avaluo,
+      );
+      fields.estimated_monthly_rent = numOrNull(data.estimated_monthly_rent);
+      fields.cap_rate_projected = numOrNull(data.cap_rate_projected);
+      fields.hoa_fee = numOrNull(data.hoa_fee);
+      fields.predial_anual = numOrNull(data.predial_anual);
+      fields.property_score = numOrNull(data.property_score);
+      fields.noise_score = numOrNull(data.noise_score);
+      fields.flood_risk_level = data.flood_risk_level.trim() || null;
+      fields.is_top = boolOrNull(data.is_top);
+      fields.is_mls = boolOrNull(data.is_mls);
+      fields.commission_split = data.commission_split.trim() || null;
+      fields.private_notes = data.private_notes.trim() || null;
+      fields.source_url = data.source_url.trim() || null;
+      fields.amenidades =
+        data.amenidades.trim() === ""
+          ? null
+          : data.amenidades
+              .split(",")
+              .map((a) => a.trim())
+              .filter(Boolean);
+      fields.status = data.status;
+    }
+
+    return fields;
+  };
+
+  const handleSubmit = () => {
     setError(null);
-
-    if (step === 1) {
-      if (listingId) {
-        // Edit mode: persist step 1 in place instead of creating a draft.
-        const res = await saveWizardStep(listingId, 1, {
-          title: data.title,
-          type: data.type,
-          category: data.category,
-          deal_type: data.dealType,
-          description: data.description.trim() || undefined,
-        });
-        if (!res.ok) {
-          setError(res.error);
-          return;
-        }
-        setStep(2);
-        return;
-      }
-
-      const form = new FormData();
-      form.set("title", data.title);
-      form.set("type", data.type);
-      form.set("category", data.category);
-      form.set("deal_type", data.dealType);
-      if (data.description.trim()) form.set("description", data.description.trim());
-
-      const res = await createDraft(undefined, form);
+    startSubmit(async () => {
+      const res = await saveWizardAll({
+        listingId,
+        // New listings always publish on save; admin edits persist the status
+        // chosen in the advanced section.
+        publish: !initialListing,
+        fields: buildFullFields(),
+      });
       if (!res.ok) {
         setError(res.error);
         return;
       }
-      setListingId(res.data.id);
-      setStep(2);
-      return;
-    }
-
-    if (!listingId) return;
-
-    const numOrNull = (v: string) => (v.trim() === "" ? null : Number(v));
-    const boolOrNull = (v: string) =>
-      v === "true" ? true : v === "false" ? false : null;
-
-    const stepPayload: Record<WizardStep, Record<string, unknown>> = {
-      1: {},
-      2: {
-        price: Number(data.price),
-        currency: data.currency,
-        terreno_m2: Number(data.terreno_m2),
-        construccion_m2: Number(data.construccion_m2),
-        costo_reparacion_estimado:
-          data.costo_reparacion_estimado.trim() === ""
-            ? null
-            : Number(data.costo_reparacion_estimado),
-        valor_post_reparacion_estimado:
-          data.valor_post_reparacion_estimado.trim() === ""
-            ? null
-            : Number(data.valor_post_reparacion_estimado),
-        institucion_bancaria:
-          data.institucion_bancaria.trim() === ""
-            ? null
-            : data.institucion_bancaria.trim(),
-        fecha_remate: data.fecha_remate.trim() === "" ? null : data.fecha_remate.trim(),
-        condiciones_traspaso:
-          data.condiciones_traspaso.trim() === ""
-            ? null
-            : data.condiciones_traspaso.trim(),
-      },
-      3: {
-        address: data.address,
-        colonia: data.colonia,
-        city: data.city,
-        state: data.state,
-        zip_code: data.zip_code.trim() || undefined,
-        lat: Number(data.lat),
-        lng: Number(data.lng),
-      },
-      4: {
-        images: data.images.map((image) => image.url),
-        tour_360_url: data.tour_360_url.trim() || null,
-        video_url: data.video_url.trim() || null,
-      },
-      5: {
-        contact_name: data.contact_name.trim() || null,
-        contact_type: data.contact_type || null,
-        contact_phone: data.contact_phone.trim() || null,
-        contact_whatsapp: data.contact_whatsapp.trim() || null,
-        contact_email: data.contact_email.trim() || null,
-      },
-      6: {
-        recamaras: numOrNull(data.recamaras),
-        banos: numOrNull(data.banos),
-        estacionamientos: numOrNull(data.estacionamientos),
-        antiguedad: numOrNull(data.antiguedad),
-        precio_m2_const: numOrNull(data.precio_m2_const),
-        precio_m2_terreno: numOrNull(data.precio_m2_terreno),
-        valor_avaluo: numOrNull(data.valor_avaluo),
-        porcentaje_descuento_avaluo: numOrNull(data.porcentaje_descuento_avaluo),
-        estimated_monthly_rent: numOrNull(data.estimated_monthly_rent),
-        cap_rate_projected: numOrNull(data.cap_rate_projected),
-        hoa_fee: numOrNull(data.hoa_fee),
-        predial_anual: numOrNull(data.predial_anual),
-        property_score: numOrNull(data.property_score),
-        noise_score: numOrNull(data.noise_score),
-        flood_risk_level: data.flood_risk_level.trim() || null,
-        is_top: boolOrNull(data.is_top),
-        is_mls: boolOrNull(data.is_mls),
-        commission_split: data.commission_split.trim() || null,
-        private_notes: data.private_notes.trim() || null,
-        source_url: data.source_url.trim() || null,
-        amenidades:
-          data.amenidades.trim() === ""
-            ? null
-            : data.amenidades
-                .split(",")
-                .map((a) => a.trim())
-                .filter(Boolean),
-        status: data.status,
-      },
-    };
-
-    const res = await saveWizardStep(listingId, step, stepPayload[step]);
-    if (!res.ok) {
-      setError(res.error);
-      return;
-    }
-
-    // Step 6 (master-user edit) persists the admin-chosen status directly, so
-    // publishing must not clobber it with setListingStatus("active").
-    if (step === 6) {
-      setPublished({ id: listingId, slug: initialListing?.slug ?? "" });
-      return;
-    }
-
-    if (step === 5 && !initialListing) {
-      const pub = await setListingStatus(listingId, "active");
-      if (!pub.ok) {
-        setError(pub.error);
-        return;
-      }
-      setPublished({ id: listingId, slug: pub.data.slug });
-      return;
-    }
-
-    setStep((Math.min(step + 1, initialListing ? 6 : 5) as WizardStep));
+      setPublished({
+        id: res.data.id,
+        slug: res.data.slug ?? initialListing?.slug ?? "",
+      });
+    });
   };
+
+  const sections = STEPS.filter(({ step: s }) => initialListing || s !== 6);
 
   if (published) {
     return (
@@ -413,31 +405,6 @@ export function ListingWizard({
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      {/* Step indicator */}
-      <ol className="mb-8 flex items-center gap-2">
-        {STEPS.filter(({ step: s }) => initialListing || s !== 6).map(
-          ({ step: s, label }, index) => (
-            <li key={s} className="flex flex-1 flex-col gap-1.5">
-              <div
-                className={cn(
-                  "h-1.5 rounded-full",
-                  s <= step ? "bg-primary" : "bg-muted",
-                )}
-              />
-              <span
-                className={cn(
-                  "text-xs font-medium",
-                  s === step ? "text-foreground" : "text-muted-foreground",
-                )}
-              >
-                <span className="mr-1 text-muted-foreground">{index + 1}.</span>
-                {label}
-              </span>
-            </li>
-          ),
-        )}
-      </ol>
-
       {error && (
         <div
           role="alert"
@@ -448,52 +415,72 @@ export function ListingWizard({
       )}
 
       <form
-        action={() => void handleNext()}
-        className="space-y-6 rounded-lg border bg-card p-6 shadow-sm"
+        action={() => void handleSubmit()}
+        className="space-y-8 rounded-lg border bg-card p-6 shadow-sm"
       >
-        {step === 1 && <StepBasics value={data} onChange={updateField} />}
-        {step === 2 && <StepPricing value={data} onChange={updateField} />}
-        {step === 3 && (
-          <StepLocation
-            value={data}
-            onChange={updateField}
-            initialMapCenter={initialMapCenter}
-          />
-        )}
-        {step === 4 && (
-          <StepMedia
-            value={data}
-            onChange={updateField}
-            onImagesChange={setImages}
-            listingId={listingId}
-          />
-        )}
-        {step === 5 && <StepContact value={data} onChange={updateField} />}
-        {step === 6 && <StepAdvanced value={data} onChange={updateField} />}
+        {sections.map(({ step: s, label }, index) => (
+          <Fragment key={s}>
+            <section className="space-y-4">
+              <SectionHeading step={s} label={label} />
+              {s === 1 && <StepBasics value={data} onChange={updateField} />}
+              {s === 2 && <StepPricing value={data} onChange={updateField} />}
+              {s === 3 && (
+                <StepLocation
+                  value={data}
+                  onChange={updateField}
+                  initialMapCenter={initialMapCenter}
+                />
+              )}
+              {s === 4 && (
+                <StepMedia
+                  value={data}
+                  onChange={updateField}
+                  onImagesChange={setImages}
+                  listingId={listingId}
+                  onEnsureListing={ensureListing}
+                />
+              )}
+              {s === 5 && <StepContact value={data} onChange={updateField} />}
+              {s === 6 && <StepAdvanced value={data} onChange={updateField} />}
+            </section>
+            {index < sections.length - 1 && <Separator />}
+          </Fragment>
+        ))}
 
-        <div className="flex items-center justify-between pt-2">
-          {step > 1 ? (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setStep((step - 1) as WizardStep)}
-            >
-              Atrás
-            </Button>
-          ) : (
-            <span />
-          )}
-
-          <Button type="submit">
-            {step === 6 || (step === 5 && !initialListing)
-              ? "Terminar"
-              : step === 1 && !initialListing
-                ? "Crear borrador"
-                : "Guardar y continuar"}
+        {/* Sticky submit bar keeps the single long form usable while scrolling. */}
+        <div className="sticky bottom-0 -mx-6 -mb-6 flex items-center justify-between gap-4 rounded-b-lg border-t bg-card/95 px-6 py-4 backdrop-blur">
+          <p className="text-xs text-muted-foreground">
+            {initialListing
+              ? "Los cambios se guardan directamente en la publicación."
+              : "Al publicar, la propiedad queda visible para todos."}
+          </p>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Guardando…
+              </>
+            ) : initialListing ? (
+              "Guardar cambios"
+            ) : (
+              "Publicar propiedad"
+            )}
           </Button>
         </div>
       </form>
     </div>
+  );
+}
+
+/** Small numbered heading used for each section of the unified form. */
+function SectionHeading({ step, label }: { step: WizardStep; label: string }) {
+  return (
+    <h2 className="flex items-center gap-2 text-base font-semibold">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+        {step}
+      </span>
+      {label}
+    </h2>
   );
 }
 
@@ -999,11 +986,13 @@ function StepMedia({
   onChange,
   onImagesChange,
   listingId,
+  onEnsureListing,
 }: {
   value: WizardData;
   onChange: (key: WizardField, value: string) => void;
   onImagesChange: (updater: (prev: WizardImage[]) => WizardImage[]) => void;
   listingId: string | null;
+  onEnsureListing: () => Promise<{ id: string | null; error?: string }>;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -1195,6 +1184,7 @@ function StepMedia({
 
       <MediaGenerationPanel
         listingId={listingId}
+        onEnsureListing={onEnsureListing}
         images={value.images}
         videoUrl={value.video_url}
         tourUrl={value.tour_360_url}
@@ -1250,6 +1240,7 @@ function StepMedia({
 
 function MediaGenerationPanel({
   listingId,
+  onEnsureListing,
   images,
   videoUrl,
   tourUrl,
@@ -1260,6 +1251,7 @@ function MediaGenerationPanel({
   onChange,
 }: {
   listingId: string | null;
+  onEnsureListing: () => Promise<{ id: string | null; error?: string }>;
   images: WizardImage[];
   videoUrl: string;
   tourUrl: string;
@@ -1330,19 +1322,32 @@ function MediaGenerationPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listingId, tourRunning]);
 
-  const handleGenerate = () => {
-    if (!listingId) {
-      setGenError("Guarda el paso primero para poder generar el contenido.");
-      return;
-    }
+  const handleGenerate = async () => {
     if (images.length === 0) {
       setGenError("Sube al menos una imagen para generar el video y tour.");
       return;
     }
     setGenError(null);
+
+    // Media generation needs a persisted listing. If the user hasn't published
+    // yet, create the draft on the fly so the wizard never loses its images.
+    let id = listingId;
+    if (!id) {
+      const ensured = await onEnsureListing();
+      if (!ensured.id) {
+        setGenError(
+          ensured.error ??
+            "No se pudo guardar el borrador. Escribe el título para poder generar el contenido.",
+        );
+        return;
+      }
+      id = ensured.id;
+    }
+    const targetId = id;
+
     startGenerating(async () => {
       // Persist current images first so the worker reads fresh data.
-      const saveRes = await saveWizardStep(listingId, 4, {
+      const saveRes = await saveWizardStep(targetId, 4, {
         images: images.map((image) => image.url),
         tour_360_url: tourUrl.trim() || null,
         video_url: videoUrl.trim() || null,
@@ -1354,7 +1359,7 @@ function MediaGenerationPanel({
 
       // Tour 360° se genera en el servidor; el video se renderiza aquí mismo
       // en el navegador para obtener un archivo real y reproducible.
-      const res = await generateListingMedia(listingId, "tour");
+      const res = await generateListingMedia(targetId, "tour");
       if (!res.ok) {
         setGenError(res.error);
         return;

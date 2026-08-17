@@ -108,7 +108,7 @@ export default async function NewListingPage() {
       <div className="mx-auto w-full max-w-6xl px-6 py-10">
         <GuestGate
           title="Publica una propiedad"
-          description="El asistente guiado te acompaña paso a paso para crear y publicar tu listado. Crea una cuenta para guardar tu borrador."
+          description="Completa un solo formulario para crear y publicar tu listado. Crea una cuenta para empezar."
           next="/listings/new"
           actionLabel="Crear cuenta y publicar"
         />
@@ -122,7 +122,7 @@ export default async function NewListingPage() {
         eyebrow="Vender"
         icon={Store}
         title={<>Publicar una <Em>propiedad</Em></>}
-        description="Crea un borrador y publícalo cuando cada paso esté completo. Puedes volver a tus borradores en cualquier momento."
+        description="Completa toda la información en una sola ventana y publica tu propiedad en minutos."
         className="mb-8"
       />
 

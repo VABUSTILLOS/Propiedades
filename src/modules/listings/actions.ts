@@ -726,6 +726,113 @@ export async function setListingStatus(
 }
 
 /**
+ * Atomic save for the unified single-form wizard. Validates every section at
+ * once, creates the draft row when `listingId` is absent, and either publishes
+ * (`status: "active"` for new listings) or preserves the admin-chosen status
+ * from the advanced fields (edit flow).
+ *
+ * Edit flow (`publish: false`) validates against the merged steps 1–6 schema so
+ * the admin "Campos avanzados" fields are persisted. New listings validate
+ * against the 5 core steps only — this includes the case where a draft was
+ * auto-created earlier (e.g. by media generation), since the advanced section
+ * is only rendered for admin edits.
+ *
+ * The per-step actions (createDraft/saveWizardStep/setListingStatus) remain
+ * untouched for the FSBO wizard and listing cards.
+ */
+export async function saveWizardAll(input: {
+  listingId?: string | null;
+  publish: boolean;
+  fields: Record<string, unknown>;
+}): Promise<ActionResult<{ id: string; slug?: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const isAdmin = user.role === "admin";
+  const schema = input.publish
+    ? propertyCreateSchema
+    : propertyCreateSchema.merge(propertyWizardStep6Schema);
+
+  const parsed = parseInput(schema, input.fields);
+  if (!parsed.success) {
+    return fail(parsed.error, parsed.fieldErrors);
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  let listingId = input.listingId;
+  let slug: string | undefined;
+
+  if (!listingId) {
+    const newSlug = await buildUniqueSlug(parsed.data.title, async (candidate) => {
+      const { data } = await supabase
+        .from("properties")
+        .select("id")
+        .eq("slug", candidate)
+        .limit(1);
+      return (data?.length ?? 0) > 0;
+    });
+
+    const { data, error } = await supabase
+      .from("properties")
+      .insert({
+        owner_id: user.id,
+        title: parsed.data.title,
+        type: parsed.data.type,
+        category: parsed.data.category,
+        deal_type: parsed.data.deal_type,
+        description: parsed.data.description ?? null,
+        slug: newSlug,
+        status: "draft",
+        current_wizard_step: 1,
+      })
+      .select("id, slug")
+      .single();
+
+    if (error) return fail(error.message);
+    listingId = data.id;
+    slug = data.slug;
+  } else {
+    // Ownership check — defense in depth beyond RLS. Admins (RLS policy 051)
+    // manage any listing, so they bypass the owner check.
+    const { data: existing } = await supabase
+      .from("properties")
+      .select("owner_id, slug")
+      .eq("id", listingId)
+      .limit(1);
+    if (existing?.[0]?.owner_id !== user.id && !isAdmin) {
+      return fail("No eres dueño de este listado.");
+    }
+    slug = existing?.[0]?.slug ?? undefined;
+  }
+
+  const fields: Partial<PropertiesRow> = {
+    ...(parsed.data as Partial<PropertiesRow>),
+    current_wizard_step: 6,
+  };
+  if (input.publish) {
+    // New-listing publish: activate the listing. Edit flow preserves the
+    // admin-chosen status coming from the advanced fields.
+    fields.status = "active";
+  }
+
+  const { error: updateError } = await supabase
+    .from("properties")
+    .update(fields)
+    .eq("id", listingId);
+
+  if (updateError) return fail(updateError.message);
+
+  if (isAdmin) {
+    revalidatePath("/admin/propiedades");
+    revalidatePath("/property/[slug]", "page");
+  }
+  revalidatePath("/my-listings");
+
+  return ok({ id: listingId, slug });
+}
+
+/**
  * Change the category of an existing listing (e.g. from "Mis listados").
  * Only the property owner can mutate (enforced server-side + RLS).
  */

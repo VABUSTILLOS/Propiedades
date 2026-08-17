@@ -19,7 +19,7 @@ export const metadata: Metadata = { title: "Editar propiedad" };
 export const dynamic = "force-dynamic";
 
 /**
- * Master-user edit surface. Hydrates the same five-step wizard the owner
+ * Master-user edit surface. Hydrates the same single-form editor the owner
  * uses, seeded with the saved row so any publication (regardless of owner)
  * can be edited. Server actions allow admins past the owner check, matching
  * the "Admins manage all properties" RLS policy (migration 051).
