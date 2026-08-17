@@ -7,6 +7,7 @@ import { Archive, ArchiveRestore, Loader2, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import {
   bulkModerateProperties,
   permanentDeleteProperties,
@@ -209,6 +210,7 @@ export function AdminPropertiesTable({
               <th className="hidden px-4 py-3 font-medium md:table-cell">
                 Actualizada
               </th>
+              <th className="px-4 py-3 font-medium">Galería</th>
             </tr>
           </thead>
           <tbody>
@@ -254,6 +256,13 @@ export function AdminPropertiesTable({
                 </td>
                 <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                   {formatDate(p.updated_at)}
+                </td>
+                <td className="px-4 py-3">
+                  <AdminGalleryEditor
+                    propertyId={p.id}
+                    propertySlug={p.slug}
+                    initialImages={p.images ?? []}
+                  />
                 </td>
               </tr>
             ))}

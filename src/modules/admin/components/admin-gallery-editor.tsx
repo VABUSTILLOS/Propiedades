@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
 import {
   DndContext,
   closestCenter,
@@ -15,16 +15,15 @@ import {
   arrayMove,
   sortableKeyboardCoordinates,
   rectSortingStrategy,
+  useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  CircleCheck,
   GripVertical,
   Link2,
   Loader2,
   Trash2,
   UploadCloud,
-  X,
 } from "lucide-react";
 
 import {
@@ -58,7 +57,6 @@ type WizardImage = {
 
 export function AdminGalleryEditor({
   propertyId,
-  propertySlug,
   initialImages = [],
 }: {
   propertyId: string;
@@ -105,8 +103,12 @@ export function AdminGalleryEditor({
         url,
       }));
       setImages((prev) => [...prev, ...uploaded]);
+      // Persist the new URLs right away so a dialog close without an explicit
+      // "Guardar orden" still keeps the uploaded images.
+      const persisted = await addPropertyImages(propertyId, res.data.urls);
+      if (!persisted.ok) setUploadError(persisted.error);
     });
-  }, [remainingSlots]);
+  }, [remainingSlots, propertyId]);
 
   const handleDrop = useCallback(
     (event: React.DragEvent<HTMLLabelElement>) => {
@@ -122,20 +124,21 @@ export function AdminGalleryEditor({
     (event: DragEndEvent) => {
       const { active, over } = event;
       if (!over || active.id === over.id) return;
-      setImages((prev) => {
-        const oldIndex = prev.findIndex((img) => img.id === active.id);
-        const newIndex = prev.findIndex((img) => img.id === over.id);
-        if (oldIndex === -1 || newIndex === -1) return prev;
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-      // Persist the new order
+      const oldIndex = images.findIndex((img) => img.id === active.id);
+      const newIndex = images.findIndex((img) => img.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
+      const next = arrayMove(images, oldIndex, newIndex);
+      setImages(next);
+      // Persist the new order automatically on drop.
       startReordering(async () => {
-        const newOrder = images.map((img) => img.url); // use current order
-        // The onDragEnd fires before state update, so we need to compute the new order
-        // from the event result instead. We'll do a second update after state settles.
+        const res = await reorderPropertyImages(
+          propertyId,
+          next.map((img) => img.url),
+        );
+        if (!res.ok) setUploadError(res.error);
       });
     },
-    [images],
+    [images, propertyId],
   );
 
   const removeImage = useCallback((id: string) => {
@@ -178,174 +181,169 @@ export function AdminGalleryEditor({
   }, [images, propertyId]);
 
   return (
-    <>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
           <Button
             size="sm"
             variant="outline"
-            onClick={() => setOpen(true)}
             disabled={isReordering || isRemoving || isUploading}
           >
             Editar galería
           </Button>
         }
       />
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[90vw] lg:max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Editar galería de fotos</DialogTitle>
-            <DialogDescription>
-              Arrastra para reordenar. Los cambios se guardan automáticamente.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            {/* Dropzone */}
-            <label
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={cn(
-                "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 text-center transition-colors",
-                "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
-              )}
+      <DialogContent className="sm:max-w-[90vw] lg:max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Editar galería de fotos</DialogTitle>
+          <DialogDescription>
+            Arrastra para reordenar. Los cambios se guardan automáticamente.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          {/* Dropzone */}
+          <label
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={cn(
+              "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-8 text-center transition-colors",
+              "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
+            )}
+          >
+            <UploadCloud className="size-8 text-muted-foreground" />
+            <p className="text-sm font-medium">
+              Arrastra imágenes aquí o haz clic para subir
+            </p>
+            <p className="text-xs text-muted-foreground">
+              JPG, PNG, WebP o GIF · máx. 10 MB · {remainingSlots} de{" "}
+              {MAX_IMAGES} disponibles
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES}
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files) uploadFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </label>
+
+          {uploadError && (
+            <p className="text-xs text-destructive" role="alert">
+              {uploadError}
+            </p>
+          )}
+
+          {/* Preview grid with drag-to-reorder */}
+          {images.length > 0 && (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleReorder}
             >
-              <UploadCloud className="size-8 text-muted-foreground" />
-              <p className="text-sm font-medium">
-                Arrastra imágenes aquí o haz clic para subir
-              </p>
-              <p className="text-xs text-muted-foreground">
-                JPG, PNG, WebP o GIF · máx. 10 MB · {remainingSlots} de{" "}
-                {MAX_IMAGES} disponibles
-              </p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept={ACCEPTED_IMAGE_TYPES}
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files) uploadFiles(e.target.files);
-                  e.target.value = "";
-                }}
-              />
-            </label>
-
-            {uploadError && (
-              <p className="text-xs text-destructive" role="alert">
-                {uploadError}
-              </p>
-            )}
-
-            {/* Preview grid with drag-to-reorder */}
-            {images.length > 0 && (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleReorder}
+              <SortableContext
+                items={images.map((img) => img.id)}
+                strategy={rectSortingStrategy}
               >
-                <SortableContext
-                  items={images.map((img) => img.id)}
-                  strategy={rectSortingStrategy}
-                >
-                  <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                    {images.map((img, index) => (
-                      <SortableImageCard
-                        key={img.id}
-                        image={img}
-                        index={index}
-                        disabled={isUploading || isRemoving}
-                        onRemove={() => removeImage(img.id)}
-                      />
-                    ))}
-                  </ul>
-                </SortableContext>
-              </DndContext>
-            )}
+                <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                  {images.map((img, index) => (
+                    <SortableImageCard
+                      key={img.id}
+                      image={img}
+                      index={index}
+                      disabled={isUploading || isRemoving}
+                      onRemove={() => removeImage(img.id)}
+                    />
+                  ))}
+                </ul>
+              </SortableContext>
+            </DndContext>
+          )}
 
-            {images.length === 0 && (
-              <p className="text-center text-sm text-muted-foreground py-8">
-                No hay imágenes todavía. Sube la primera.
-              </p>
-            )}
+          {images.length === 0 && (
+            <p className="text-center text-sm text-muted-foreground py-8">
+              No hay imágenes todavía. Sube la primera.
+            </p>
+          )}
 
-            {isUploading && (
-              <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Loader2 className="size-3.5 animate-spin" />
-                Subiendo imágenes…
-              </p>
-            )}
+          {isUploading && (
+            <p className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />
+              Subiendo imágenes…
+            </p>
+          )}
 
-            {/* URL fallback */}
-            <div className="flex items-end gap-2 pt-1">
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="image-url" className="text-xs">
-                  ¿Tienes una URL de imagen?
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Link2 className="size-4 shrink-0 text-muted-foreground" />
-                  <Input
-                    id="image-url"
-                    value={pasteUrl}
-                    onChange={(e) => setPasteUrl(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addPasteUrl();
-                      }
-                    }}
-                    placeholder="https://…/foto.jpg"
-                  />
-                </div>
+          {/* URL fallback */}
+          <div className="flex items-end gap-2 pt-1">
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="image-url" className="text-xs">
+                ¿Tienes una URL de imagen?
+              </Label>
+              <div className="flex items-center gap-2">
+                <Link2 className="size-4 shrink-0 text-muted-foreground" />
+                <Input
+                  id="image-url"
+                  value={pasteUrl}
+                  onChange={(e) => setPasteUrl(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addPasteUrl();
+                    }
+                  }}
+                  placeholder="https://…/foto.jpg"
+                />
               </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addPasteUrl}
+              disabled={isUploading}
+            >
+              Agregar
+            </Button>
+          </div>
+
+          {/* Persist order button (shown when images exist) */}
+          {images.length > 0 && (
+            <div className="pt-2 border-t">
               <Button
-                type="button"
                 variant="outline"
                 size="sm"
-                onClick={addPasteUrl}
-                disabled={isUploading}
+                onClick={persistOrder}
+                disabled={isReordering}
               >
-                Agregar
+                {isReordering ? (
+                  <>
+                    <Loader2 className="size-3.5 animate-spin mr-2" />
+                    Guardando orden…
+                  </>
+                ) : (
+                  "Guardar orden"
+                )}
               </Button>
             </div>
-
-            {/* Persist order button (shown when images exist) */}
-            {images.length > 0 && (
-              <div className="pt-2 border-t">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={persistOrder}
-                  disabled={isReordering}
-                >
-                  {isReordering ? (
-                    <>
-                      <Loader2 className="size-3.5 animate-spin mr-2" />
-                      Guardando orden…
-                    </>
-                  ) : (
-                    "Guardar orden"
-                  )}
-                </Button>
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              disabled={isUploading || isReordering || isRemoving}
-              onClick={() => setOpen(false)}
-            >
-              Cerrar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          )}
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
+            disabled={isUploading || isReordering || isRemoving}
+            onClick={() => setOpen(false)}
+          >
+            Cerrar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-import { useRef } from "react";
 
 function SortableImageCard({
   image,
@@ -392,7 +390,6 @@ function SortableImageCard({
         />
         <div className="absolute inset-0 flex items-start justify-between p-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <span
-            {...attributes}
             className="inline-flex size-6 items-center justify-center cursor-grab rounded-full bg-background/90 text-muted-foreground hover:text-foreground"
             aria-label={`Reordenar imagen ${index + 1}`}
           >
@@ -408,12 +405,10 @@ function SortableImageCard({
             <Trash2 className="size-3.5" />
           </button>
         </div>
-        <span className="absolute right-1 bottom-1 size-5 rounded-full bg-black/50 flex items-center justify-center">
-          <CircleCheck className="size-3 text-white" />
+        <span className="absolute bottom-1 right-1 inline-flex size-5 items-center justify-center rounded-full bg-black/60 text-[10px] font-semibold text-white">
+          {index + 1}
         </span>
       </div>
     </li>
   );
 }
-
-import { useSortable } from "@dnd-kit/sortable";
