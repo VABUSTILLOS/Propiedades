@@ -420,7 +420,10 @@ export function SplitDetailPanel({
           />
         )}
 
-        {showCosts && financiable && (
+        {/* PropertyViewToggle (above) already renders the simulator in its
+            Residencia view; this standalone copy only shows when the panel
+            data failed to load and the toggle is not available. */}
+        {!data && showCosts && financiable && (
           <MortgageCalculator
             propertyId={listing.id}
             propertyTitle={listing.title}
