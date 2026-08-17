@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Archive, CheckSquare, Loader2, Square, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { ListingWithHot } from "@/modules/search/queries";
 import { SearchResultCard } from "@/modules/maps/components/search-result-card";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { CardDetailsToggle } from "@/modules/maps/components/card-details-toggle";
+import { bulkModerateProperties } from "@/modules/admin/actions";
 
 type ApiResponse = {
   items: ListingWithHot[];
@@ -86,6 +88,7 @@ export function InfiniteListings({
   onCardHover,
   onCardSelect,
   from,
+  canModerate = false,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -103,12 +106,53 @@ export function InfiniteListings({
   /** Full URL of the current list/search view, passed on so the detail page
    *  can link back to it. */
   from?: string;
+  /** Master user (admin): enables multi-select + bulk archive/delete. */
+  canModerate?: boolean;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
   const [total, setTotal] = useState(initialTotal);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const router = useRouter();
+  const [selecting, setSelecting] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [moderating, startModeration] = useTransition();
+  const [moderationError, setModerationError] = useState<string | null>(null);
+
+  const toggleSelecting = () => {
+    setSelecting((prev) => !prev);
+    setSelected(new Set());
+    setModerationError(null);
+  };
+
+  const toggleSelected = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const moderate = (action: "archive" | "delete") => {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    startModeration(async () => {
+      setModerationError(null);
+      const res = await bulkModerateProperties(ids, action);
+      if (!res.ok) {
+        setModerationError(res.error);
+        return;
+      }
+      setItems((prev) => prev.filter((item) => !selected.has(item.id)));
+      setTotal((prev) => Math.max(0, prev - selected.size));
+      setSelected(new Set());
+      setSelecting(false);
+      router.refresh();
+    });
+  };
 
   const showDetails = useCardDetailsPref();
 
@@ -166,7 +210,16 @@ export function InfiniteListings({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-2">
+        {canModerate && (
+          <Button
+            variant={selecting ? "default" : "outline"}
+            size="sm"
+            onClick={toggleSelecting}
+          >
+            {selecting ? "Cancelar selección" : "Seleccionar"}
+          </Button>
+        )}
         <CardDetailsToggle show={showDetails} onChange={toggleDetails} />
       </div>
 
@@ -174,11 +227,37 @@ export function InfiniteListings({
         {items.map((item) => (
           <div
             key={item.id}
+            className={
+              selecting
+                ? selected.has(item.id)
+                  ? "relative rounded-2xl ring-2 ring-primary"
+                  : "relative"
+                : undefined
+            }
             onMouseEnter={() => onCardHover?.(item.id)}
             onMouseLeave={() => onCardHover?.(null)}
             onClickCapture={
-              onCardSelect
+              selecting
                 ? (e) => {
+                    // Selection mode: clicking a card toggles its checkbox
+                    // instead of navigating. Interactive children (favorite
+                    // bookmark, …) keep their own behavior.
+                    const target = e.target as Element | null;
+                    if (target && typeof target.closest === "function") {
+                      if (
+                        target.closest(
+                          "button, [role='button'], input, select, textarea",
+                        )
+                      ) {
+                        return;
+                      }
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSelected(item.id);
+                  }
+                : onCardSelect
+                  ? (e) => {
                     // Split view: select the card and let the map zoom to the
                     // property instead of navigating to its listing page. The
                     // capture phase runs before next/link's own click handler,
@@ -210,6 +289,18 @@ export function InfiniteListings({
                 : undefined
             }
           >
+            {selecting && (
+              <span
+                className="absolute left-2 top-2 z-20 rounded-full bg-background/90 p-1 text-primary shadow"
+                aria-hidden="true"
+              >
+                {selected.has(item.id) ? (
+                  <CheckSquare className="size-5" />
+                ) : (
+                  <Square className="size-5" />
+                )}
+              </span>
+            )}
             {card === "property" ? (
               <PropertyCard
                 key={item.id}
@@ -283,6 +374,40 @@ export function InfiniteListings({
         <p className="text-center text-sm text-destructive" role="alert">
           {error}
         </p>
+      )}
+
+      {moderationError && (
+        <p className="text-center text-sm text-destructive" role="alert">
+          {moderationError}
+        </p>
+      )}
+
+      {selecting && selected.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-wrap items-center gap-3 rounded-full border bg-background px-5 py-3 shadow-xl">
+          <span className="text-sm font-medium">
+            {selected.size}{" "}
+            {selected.size === 1 ? "seleccionada" : "seleccionadas"}
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={moderating}
+            onClick={() => moderate("archive")}
+          >
+            <Archive className="size-4" />
+            Archivar
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            disabled={moderating}
+            onClick={() => moderate("delete")}
+          >
+            <Trash2 className="size-4" />
+            Borrar
+          </Button>
+          {moderating && <Loader2 className="size-4 animate-spin" />}
+        </div>
       )}
 
       {!hasMore && (

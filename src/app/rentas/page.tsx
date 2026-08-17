@@ -17,6 +17,7 @@ import {
   type MapBounds,
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
+import { getCurrentUser } from "@/modules/auth/session";
 
 export const metadata: Metadata = { title: "Propiedades en renta" };
 
@@ -33,6 +34,9 @@ export default async function RentasPage({ searchParams }: Props) {
   const bounds: MapBounds | null = parsed.data?.bounds
     ? (parseBoundsString(parsed.data.bounds) ?? null)
     : null;
+
+  const user = await getCurrentUser();
+  const canModerate = user?.role === "admin";
 
   const selectedCategories = parseCategoriesParam(parsed.data?.categories);
 
@@ -112,6 +116,7 @@ export default async function RentasPage({ searchParams }: Props) {
             card="search"
             basePath="/rentas"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
+            canModerate={canModerate}
           />
         )}
       </main>

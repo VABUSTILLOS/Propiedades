@@ -40,6 +40,7 @@ export function SearchResults({
   gridClassName,
   emptyState,
   basePath = "/search",
+  canModerate = false,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -54,6 +55,8 @@ export function SearchResults({
   emptyState?: React.ReactNode;
   /** Base path for `router.push` when toggling view / applying a zone. */
   basePath?: string;
+  /** Master user (admin): enables multi-select moderation on the list. */
+  canModerate?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -112,6 +115,7 @@ export function SearchResults({
       emptyState={emptyState}
       onCardHover={setHoveredId}
       onCardSelect={split ? setSelectedItem : undefined}
+      canModerate={canModerate}
     />
   );
 

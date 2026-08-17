@@ -24,7 +24,8 @@ export type PropertyStatus =
   | "active"
   | "reserved"
   | "sold"
-  | "archived";
+  | "archived"
+  | "deleted";
 export type IntakeStatus = "procesando" | "borrador_incompleto" | "activo";
 export type IntakeChannel = "whatsapp" | "web";
 export type TransactionState =

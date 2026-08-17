@@ -23,6 +23,7 @@ import { tabToFilters } from "@/modules/search/investor-tabs";
 import { toQueryString } from "@/modules/search/query-string";
 import { PageHeader } from "@/components/layout/page-header";
 import { Em } from "@/components/layout/emphasis";
+import { getCurrentUser } from "@/modules/auth/session";
 
 export const metadata: Metadata = { title: "Comprar" };
 
@@ -39,6 +40,9 @@ export default async function SearchPage({ searchParams }: Props) {
   const bounds: MapBounds | null = parsed.data?.bounds
     ? (parseBoundsString(parsed.data.bounds) ?? null)
     : null;
+
+  const user = await getCurrentUser();
+  const canModerate = user?.role === "admin";
 
   // Multi-select property types (`categories` CSV). When present it wins over
   // the legacy single `category` param so both are never applied at once.
@@ -180,6 +184,7 @@ export default async function SearchPage({ searchParams }: Props) {
             initialBounds={bounds}
             card="search"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
+            canModerate={canModerate}
           />
         )}
       </main>

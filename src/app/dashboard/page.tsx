@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  Archive,
   Building2,
   CalendarClock,
   GitCompareArrows,
@@ -11,8 +12,10 @@ import {
   MapPinned,
   Newspaper,
   Settings,
+  ShieldCheck,
   Sparkles,
   Store,
+  Trash2,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -210,6 +213,32 @@ export default async function DashboardPage() {
             icon={Settings}
           />
         </ToolGroup>
+
+        {user.role === "admin" && (
+          <ToolGroup index="05" title="Master">
+            <ToolCard
+              index="01"
+              title="Administrar propiedades"
+              description="Modera todos los listados del sitio: archiva, borra o restaura."
+              href="/admin/propiedades"
+              icon={ShieldCheck}
+            />
+            <ToolCard
+              index="02"
+              title="Propiedades archivadas"
+              description="Listados archivados: restáuralos o mándalos a la papelera."
+              href="/admin/propiedades?estado=archivadas"
+              icon={Archive}
+            />
+            <ToolCard
+              index="03"
+              title="Propiedades borradas"
+              description="Papelera de listados: restáuralos o elimínalos definitivamente."
+              href="/admin/propiedades?estado=borradas"
+              icon={Trash2}
+            />
+          </ToolGroup>
+        )}
       </PageShell>
     </div>
   );

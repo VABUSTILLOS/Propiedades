@@ -60,6 +60,7 @@ const STATUS_LABELS: Record<PropertiesRow["status"], string> = {
   reserved: "Reservado",
   sold: "Vendido",
   archived: "Archivado",
+  deleted: "Borrado",
 };
 
 const STATUS_VARIANTS: Record<
@@ -72,6 +73,7 @@ const STATUS_VARIANTS: Record<
   reserved: "ghost",
   sold: "ghost",
   archived: "ghost",
+  deleted: "destructive",
 };
 
 export function ListingCard({ listing }: { listing: PropertiesRow }) {
