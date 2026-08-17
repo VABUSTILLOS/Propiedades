@@ -229,6 +229,11 @@ export function InfiniteListings({
                 currency={item.currency}
                 type={item.type}
                 image={item.images?.[0] ?? null}
+                videoUrl={
+                  item.video_url ??
+                  item.generated_video_url ??
+                  item.generated_video_vertical_url
+                }
                 score={item.property_score}
                 hotScore={item.hotScore}
                 discountPct={item.discountPct}

@@ -9,6 +9,7 @@ import {
   BedDouble,
   MapPin,
   Ruler,
+  Video,
 } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
@@ -64,6 +65,10 @@ export function PropertyCard({
 
   const precioM2Const = getPrecioM2Const(listing) ?? 0;
   const precioM2Terreno = getPrecioM2Terreno(listing) ?? 0;
+  const cardVideoUrl =
+    listing.video_url ??
+    listing.generated_video_url ??
+    listing.generated_video_vertical_url;
 
   const href = from
     ? `/property/${listing.slug}?from=${encodeURIComponent(from)}`
@@ -72,37 +77,57 @@ export function PropertyCard({
   return (
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={href} className="block">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
-        {listing.images?.[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            loading="lazy"
-            decoding="async"
-            src={listing.images[0]}
-            alt={listing.title}
-            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
-            Sin foto
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
+          {cardVideoUrl ? (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={listing.images?.[0] ?? undefined}
+              src={cardVideoUrl}
+              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : listing.images?.[0] ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              loading="lazy"
+              decoding="async"
+              src={listing.images[0]}
+              alt={listing.title}
+              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
+              Sin foto
+            </div>
+          )}
+          {cardVideoUrl && (
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+          )}
+          <div className="absolute left-3 top-3 flex gap-2">
+            <Badge className="rounded-full shadow-sm">{typeLabel}</Badge>
+            {cardVideoUrl && (
+              <Badge variant="secondary" className="rounded-full shadow-sm">
+                <Video className="size-3.5" aria-hidden="true" />
+                Video
+              </Badge>
+            )}
           </div>
-        )}
-        <div className="absolute left-3 top-3 flex gap-2">
-          <Badge className="rounded-full shadow-sm">{typeLabel}</Badge>
-        </div>
         <ScoreBadge
           score={listing.property_score}
           solid
           className="absolute right-3 top-3 rounded-full"
         />
-        <div className="absolute bottom-3 right-3">
-          <CardFavoriteButton
-            propertyId={listing.id}
-            propertySlug={listing.slug}
-            initialSaved={saved}
-          />
+          <div className="absolute bottom-3 right-3">
+            <CardFavoriteButton
+              propertyId={listing.id}
+              propertySlug={listing.slug}
+              initialSaved={saved}
+            />
+          </div>
         </div>
-      </div>
 
       <div className="space-y-1.5 pt-3">
         <h3 className="line-clamp-1 font-semibold leading-snug group-hover:underline">

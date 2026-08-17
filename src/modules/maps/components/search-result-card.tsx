@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Video } from "lucide-react";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
   DealTypeBadge,
@@ -38,6 +38,7 @@ export function SearchResultCard({
   currency,
   type,
   image,
+  videoUrl = null,
   score,
   hotScore = null,
   discountPct = null,
@@ -55,6 +56,7 @@ export function SearchResultCard({
   currency: string;
   type: "sale" | "rent";
   image: string | null;
+  videoUrl?: string | null;
   score: number | null;
   /** Hotness 0–100 for the traffic-light gauge (only when showDetails). */
   hotScore?: number | null;
@@ -87,7 +89,18 @@ export function SearchResultCard({
     <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={href} className="block">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
-          {image ? (
+          {videoUrl ? (
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={image ?? undefined}
+              src={videoUrl}
+              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               loading="lazy"
@@ -101,10 +114,19 @@ export function SearchResultCard({
               Sin foto
             </div>
           )}
+          {videoUrl && (
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+          )}
           <div className="absolute left-3 top-3 flex gap-2">
             <Badge className="rounded-full shadow-sm">
               {propertyTypeLabel(type)}
             </Badge>
+            {videoUrl && (
+              <Badge variant="secondary" className="rounded-full shadow-sm">
+                <Video className="size-3.5" aria-hidden="true" />
+                Video
+              </Badge>
+            )}
           </div>
           <ScoreBadge
             score={score}
