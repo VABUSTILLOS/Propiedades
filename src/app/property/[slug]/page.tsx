@@ -14,12 +14,14 @@ import {
   Compass,
   LandPlot,
   ListPlus,
+  Pencil,
   PlayCircle,
   type LucideIcon,
 } from "lucide-react";
 
 import { getListingBySlug } from "@/modules/listings/queries";
 import { getCurrentUser } from "@/modules/auth/session";
+import { isEditorMode } from "@/modules/admin/editor-mode";
 import { isFavoriteSaved } from "@/modules/favorites/queries";
 import { getMyLists, getListsContainingProperty } from "@/modules/favorites/lists-queries";
 import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
@@ -35,6 +37,7 @@ import { InquireButton } from "@/modules/transactions/components/inquire-button"
 import { SimilarProperties } from "@/modules/listings/components/similar-properties";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyModerationActions } from "@/modules/admin/components/property-moderation-actions";
+import { EditorModeToggle } from "@/modules/admin/components/editor-mode-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
 import { PannellumViewer } from "@/modules/flyers/components/pannellum-viewer";
@@ -99,6 +102,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
       : "/search";
 
   const user = await getCurrentUser();
+  const editorMode = await isEditorMode();
   const canInquire = user?.id !== listing.owner_id;
   const isSaved = user ? await isFavoriteSaved(user.id, listing.id) : false;
   const lists = user ? await getMyLists(user.id) : [];
@@ -163,10 +167,25 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
             <p className="text-sm font-medium text-muted-foreground">
               Moderación (usuario master)
             </p>
-            <PropertyModerationActions
-              propertyId={listing.id}
-              status={listing.status}
-            />
+            <div className="flex items-center gap-2">
+              <EditorModeToggle active={editorMode} />
+              <PropertyModerationActions
+                propertyId={listing.id}
+                status={listing.status}
+              />
+              {editorMode && (
+                <Link
+                  href={`/admin/propiedades/${listing.id}/editar`}
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "sm" }),
+                    "gap-1.5",
+                  )}
+                >
+                  <Pencil className="size-4" />
+                  Editar propiedad
+                </Link>
+              )}
+            </div>
           </div>
         )}
 

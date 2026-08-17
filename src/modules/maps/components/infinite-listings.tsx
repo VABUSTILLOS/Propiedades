@@ -15,6 +15,7 @@ import {
   ModerationToggleButton,
   SelectableCardShell,
 } from "@/modules/admin/components/moderation-controls";
+import { EditorModeToggle } from "@/modules/admin/components/editor-mode-toggle";
 
 type ApiResponse = {
   items: ListingWithHot[];
@@ -94,6 +95,7 @@ export function InfiniteListings({
   onCardSelect,
   from,
   canModerate = false,
+  canEdit = false,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -113,6 +115,8 @@ export function InfiniteListings({
   from?: string;
   /** Master user (admin): enables multi-select + bulk archive/delete. */
   canModerate?: boolean;
+  /** Master user (admin) with editor mode on: adds "Editar" pills on cards. */
+  canEdit?: boolean;
 }) {
   const [items, setItems] = useState<ListingWithHot[]>(initialItems);
   const [total, setTotal] = useState(initialTotal);
@@ -222,6 +226,7 @@ export function InfiniteListings({
             onToggle={toggleSelecting}
           />
         )}
+        {canEdit && <EditorModeToggle active />}
         <CardDetailsToggle show={showDetails} onChange={toggleDetails} />
       </div>
 
@@ -276,6 +281,11 @@ export function InfiniteListings({
                 discountPct={item.discountPct}
                 showDetails={showDetails}
                 from={from}
+                editHref={
+                  canEdit
+                    ? `/admin/propiedades/${item.id}/editar`
+                    : undefined
+                }
               />
             ) : (
               <SearchResultCard
@@ -299,6 +309,11 @@ export function InfiniteListings({
                 terrenoM2={item.terreno_m2}
                 showDetails={showDetails}
                 from={from}
+                editHref={
+                  canEdit
+                    ? `/admin/propiedades/${item.id}/editar`
+                    : undefined
+                }
                 dealType={item.deal_type}
                 investmentKpis={{
                   dealType: item.deal_type,

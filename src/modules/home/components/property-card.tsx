@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
+import { PropertyEditLink } from "@/modules/admin/components/edit-link";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
   estimateEscrituracion,
@@ -40,6 +41,7 @@ export function PropertyCard({
   discountPct = null,
   showDetails = false,
   from,
+  editHref,
 }: {
   listing: PropertiesRow;
   /** Whether the current user already saved this property as a favorite. */
@@ -52,6 +54,8 @@ export function PropertyCard({
   showDetails?: boolean;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
+  /** Master-user editor mode: link to the admin edit wizard. */
+  editHref?: string;
 }) {
   const price =
     listing.price > 0
@@ -75,7 +79,7 @@ export function PropertyCard({
     : `/property/${listing.slug}`;
 
   return (
-    <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
+    <div className="group relative block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={href} className="block">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
           {cardVideoUrl ? (
@@ -229,6 +233,7 @@ export function PropertyCard({
         )}
       </div>
       </Link>
+      {editHref && <PropertyEditLink href={editHref} />}
 
     </div>
   );

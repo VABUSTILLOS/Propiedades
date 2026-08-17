@@ -18,13 +18,14 @@ import {
   propertyWizardStep3Schema,
   propertyWizardStep4Schema,
   propertyWizardStep5Schema,
+  propertyWizardStep6Schema,
   mortgageLeadSchema,
 } from "@/modules/lib/schemas";
 import type { MediaGenerationJobRow, PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
 import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
-type WizardStep = 1 | 2 | 3 | 4 | 5;
+type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** Fixed exchange rate used to convert USD-denominated prices to MXN. */
 const USD_TO_MXN_RATE = 17.5;
@@ -609,6 +610,7 @@ export async function saveWizardStep(
     3: propertyWizardStep3Schema,
     4: propertyWizardStep4Schema,
     5: propertyWizardStep5Schema,
+    6: propertyWizardStep6Schema,
   };
 
   const parsed = parseInput(schemaMap[step], input);
@@ -630,7 +632,7 @@ export async function saveWizardStep(
     return fail("No eres dueño de este listado.");
   }
 
-  const nextStep = (Math.min(step + 1, 5) as WizardStep);
+  const nextStep = (Math.min(step + 1, 6) as WizardStep);
   const { error } = await supabase
     .from("properties")
     .update({

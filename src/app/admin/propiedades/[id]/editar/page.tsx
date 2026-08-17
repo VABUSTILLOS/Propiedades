@@ -58,7 +58,11 @@ export default async function AdminEditPropertyPage({
 
       <div className="mt-8">
         <ListingWizard
-          initialListing={{ id: property.id, data: toWizardData(property) }}
+          initialListing={{
+            id: property.id,
+            slug: property.slug,
+            data: toWizardData(property),
+          }}
         />
       </div>
     </PageShell>
@@ -103,5 +107,36 @@ function toWizardData(p: AdminPropertyRow) {
     contact_phone: p.contact_phone ?? "",
     contact_whatsapp: p.contact_whatsapp ?? "",
     contact_email: p.contact_email ?? "",
+    // Step 6 — "Campos avanzados".
+    recamaras: p.recamaras != null ? String(p.recamaras) : "",
+    banos: p.banos != null ? String(p.banos) : "",
+    estacionamientos: p.estacionamientos != null ? String(p.estacionamientos) : "",
+    antiguedad: p.antiguedad != null ? String(p.antiguedad) : "",
+    precio_m2_const: p.precio_m2_const != null ? String(p.precio_m2_const) : "",
+    precio_m2_terreno:
+      p.precio_m2_terreno != null ? String(p.precio_m2_terreno) : "",
+    valor_avaluo: p.valor_avaluo != null ? String(p.valor_avaluo) : "",
+    porcentaje_descuento_avaluo:
+      p.porcentaje_descuento_avaluo != null
+        ? String(p.porcentaje_descuento_avaluo)
+        : "",
+    estimated_monthly_rent:
+      p.estimated_monthly_rent != null ? String(p.estimated_monthly_rent) : "",
+    cap_rate_projected:
+      p.cap_rate_projected != null ? String(p.cap_rate_projected) : "",
+    hoa_fee: p.hoa_fee != null ? String(p.hoa_fee) : "",
+    predial_anual: p.predial_anual != null ? String(p.predial_anual) : "",
+    property_score: p.property_score != null ? String(p.property_score) : "",
+    noise_score: p.noise_score != null ? String(p.noise_score) : "",
+    flood_risk_level: p.flood_risk_level ?? "",
+    is_top: p.is_top == null ? "" : String(p.is_top),
+    is_mls: p.is_mls == null ? "" : String(p.is_mls),
+    commission_split: p.commission_split ?? "",
+    private_notes: p.private_notes ?? "",
+    source_url: p.source_url ?? "",
+    amenidades: Array.isArray(p.amenidades)
+      ? (p.amenidades as unknown[]).filter((a): a is string => typeof a === "string").join(", ")
+      : "",
+    status: p.status,
   };
 }

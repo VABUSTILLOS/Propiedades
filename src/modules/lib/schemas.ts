@@ -366,6 +366,44 @@ export const propertyWizardStep5Schema = z.object({
   contact_email: z.string().trim().email().max(200).nullable().optional(),
 });
 
+/**
+ * Advanced fields editable only by the master user (admin) via the
+ * "Campos avanzados" wizard step. Everything is optional/nullable so an
+ * existing listing can be saved without forcing values, and this schema is
+ * deliberately NOT merged into `propertyCreateSchema` (new listings keep
+ * publishing with just the 5 core steps).
+ */
+export const propertyWizardStep6Schema = z.object({
+  // Dimensional details.
+  recamaras: z.coerce.number().int().min(0).max(50).nullable().optional(),
+  banos: z.coerce.number().int().min(0).max(50).nullable().optional(),
+  estacionamientos: z.coerce.number().int().min(0).max(50).nullable().optional(),
+  antiguedad: z.coerce.number().int().min(0).max(500).nullable().optional(),
+  // Financials / valuation.
+  precio_m2_const: z.coerce.number().min(0).nullable().optional(),
+  precio_m2_terreno: z.coerce.number().min(0).nullable().optional(),
+  valor_avaluo: z.coerce.number().min(0).nullable().optional(),
+  porcentaje_descuento_avaluo: z.coerce.number().min(0).max(100).nullable().optional(),
+  estimated_monthly_rent: z.coerce.number().min(0).nullable().optional(),
+  cap_rate_projected: z.coerce.number().min(0).nullable().optional(),
+  hoa_fee: z.coerce.number().min(0).nullable().optional(),
+  predial_anual: z.coerce.number().min(0).nullable().optional(),
+  // Scoring / risk / listing optics.
+  property_score: z.coerce.number().min(0).max(100).nullable().optional(),
+  noise_score: z.coerce.number().min(0).max(100).nullable().optional(),
+  flood_risk_level: z.string().trim().max(50).nullable().optional(),
+  is_top: z.boolean().nullable().optional(),
+  is_mls: z.boolean().nullable().optional(),
+  // Free text.
+  commission_split: z.string().trim().max(200).nullable().optional(),
+  private_notes: z.string().max(5000).nullable().optional(),
+  source_url: z.string().trim().url().max(2000).nullable().optional(),
+  // Amenities are carried as a comma-separated string in the form and
+  // converted to a JSON string array by the step payload.
+  amenidades: z.array(z.string().trim().min(1).max(100)).max(50).nullable().optional(),
+  status: propertyStatusSchema,
+});
+
 export const propertyCreateSchema = propertyWizardStep1Schema
   .merge(propertyWizardStep2Schema)
   .merge(propertyWizardStep3Schema)

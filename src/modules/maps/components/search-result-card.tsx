@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { ArrowDownRight, ArrowUpRight, Video } from "lucide-react";
+import { PropertyEditLink } from "@/modules/admin/components/edit-link";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
   DealTypeBadge,
@@ -48,6 +49,7 @@ export function SearchResultCard({
   from,
   dealType = null,
   investmentKpis = null,
+  editHref,
 }: {
   title: string;
   slug: string;
@@ -72,6 +74,8 @@ export function SearchResultCard({
   dealType?: PropertyDealType | null;
   /** Investment KPIs rendered below the price when the row carries them. */
   investmentKpis?: InvestmentKpisData | null;
+  /** Master-user editor mode: link to the admin edit wizard. */
+  editHref?: string;
 }) {
   const m2Metrics = {
     price,
@@ -86,7 +90,7 @@ export function SearchResultCard({
     ? `/property/${slug}?from=${encodeURIComponent(from)}`
     : `/property/${slug}`;
   return (
-    <div className="group block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
+    <div className="group relative block motion-safe:transition-all motion-safe:duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-md">
       <Link href={href} className="block">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
           {videoUrl ? (
@@ -218,6 +222,7 @@ export function SearchResultCard({
           )}
         </div>
       </Link>
+      {editHref && <PropertyEditLink href={editHref} />}
     </div>
   );
 }

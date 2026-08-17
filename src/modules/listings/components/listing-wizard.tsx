@@ -58,7 +58,7 @@ import { PlacesAutocomplete } from "@/modules/maps/components/places-autocomplet
 import { PropertyLocationPicker } from "@/modules/maps/components/property-location-picker";
 import { cn } from "@/lib/utils";
 
-type WizardStep = 1 | 2 | 3 | 4 | 5;
+type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** An image managed by the wizard before the listing is persisted. */
 type WizardImage = {
@@ -76,6 +76,7 @@ const STEPS: { step: WizardStep; label: string }[] = [
   { step: 3, label: "Ubicación" },
   { step: 4, label: "Multimedia" },
   { step: 5, label: "Contacto" },
+  { step: 6, label: "Campos avanzados" },
 ];
 
 type WizardField = keyof Omit<WizardData, "images">;
@@ -110,6 +111,29 @@ type WizardData = {
   contact_phone: string;
   contact_whatsapp: string;
   contact_email: string;
+  // Step 6 — "Campos avanzados" (master-user edit surface only).
+  recamaras: string;
+  banos: string;
+  estacionamientos: string;
+  antiguedad: string;
+  precio_m2_const: string;
+  precio_m2_terreno: string;
+  valor_avaluo: string;
+  porcentaje_descuento_avaluo: string;
+  estimated_monthly_rent: string;
+  cap_rate_projected: string;
+  hoa_fee: string;
+  predial_anual: string;
+  property_score: string;
+  noise_score: string;
+  flood_risk_level: string;
+  is_top: string;
+  is_mls: string;
+  commission_split: string;
+  private_notes: string;
+  source_url: string;
+  amenidades: string;
+  status: string;
 };
 
 const initialData: WizardData = {
@@ -142,6 +166,28 @@ const initialData: WizardData = {
   contact_phone: "",
   contact_whatsapp: "",
   contact_email: "",
+  recamaras: "",
+  banos: "",
+  estacionamientos: "",
+  antiguedad: "",
+  precio_m2_const: "",
+  precio_m2_terreno: "",
+  valor_avaluo: "",
+  porcentaje_descuento_avaluo: "",
+  estimated_monthly_rent: "",
+  cap_rate_projected: "",
+  hoa_fee: "",
+  predial_anual: "",
+  property_score: "",
+  noise_score: "",
+  flood_risk_level: "",
+  is_top: "",
+  is_mls: "",
+  commission_split: "",
+  private_notes: "",
+  source_url: "",
+  amenidades: "",
+  status: "draft",
 };
 
 /**
@@ -158,7 +204,7 @@ export function ListingWizard({
   initialListing,
 }: {
   initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
-  initialListing?: { id: string; data: Partial<WizardData> };
+  initialListing?: { id: string; slug?: string; data: Partial<WizardData> };
 }) {
   const [step, setStep] = useState<WizardStep>(1);
   const [listingId, setListingId] = useState<string | null>(
@@ -221,6 +267,10 @@ export function ListingWizard({
 
     if (!listingId) return;
 
+    const numOrNull = (v: string) => (v.trim() === "" ? null : Number(v));
+    const boolOrNull = (v: string) =>
+      v === "true" ? true : v === "false" ? false : null;
+
     const stepPayload: Record<WizardStep, Record<string, unknown>> = {
       1: {},
       2: {
@@ -267,6 +317,36 @@ export function ListingWizard({
         contact_whatsapp: data.contact_whatsapp.trim() || null,
         contact_email: data.contact_email.trim() || null,
       },
+      6: {
+        recamaras: numOrNull(data.recamaras),
+        banos: numOrNull(data.banos),
+        estacionamientos: numOrNull(data.estacionamientos),
+        antiguedad: numOrNull(data.antiguedad),
+        precio_m2_const: numOrNull(data.precio_m2_const),
+        precio_m2_terreno: numOrNull(data.precio_m2_terreno),
+        valor_avaluo: numOrNull(data.valor_avaluo),
+        porcentaje_descuento_avaluo: numOrNull(data.porcentaje_descuento_avaluo),
+        estimated_monthly_rent: numOrNull(data.estimated_monthly_rent),
+        cap_rate_projected: numOrNull(data.cap_rate_projected),
+        hoa_fee: numOrNull(data.hoa_fee),
+        predial_anual: numOrNull(data.predial_anual),
+        property_score: numOrNull(data.property_score),
+        noise_score: numOrNull(data.noise_score),
+        flood_risk_level: data.flood_risk_level.trim() || null,
+        is_top: boolOrNull(data.is_top),
+        is_mls: boolOrNull(data.is_mls),
+        commission_split: data.commission_split.trim() || null,
+        private_notes: data.private_notes.trim() || null,
+        source_url: data.source_url.trim() || null,
+        amenidades:
+          data.amenidades.trim() === ""
+            ? null
+            : data.amenidades
+                .split(",")
+                .map((a) => a.trim())
+                .filter(Boolean),
+        status: data.status,
+      },
     };
 
     const res = await saveWizardStep(listingId, step, stepPayload[step]);
@@ -275,7 +355,14 @@ export function ListingWizard({
       return;
     }
 
-    if (step === 5) {
+    // Step 6 (master-user edit) persists the admin-chosen status directly, so
+    // publishing must not clobber it with setListingStatus("active").
+    if (step === 6) {
+      setPublished({ id: listingId, slug: initialListing?.slug ?? "" });
+      return;
+    }
+
+    if (step === 5 && !initialListing) {
       const pub = await setListingStatus(listingId, "active");
       if (!pub.ok) {
         setError(pub.error);
@@ -285,7 +372,7 @@ export function ListingWizard({
       return;
     }
 
-    setStep((Math.min(step + 1, 5) as WizardStep));
+    setStep((Math.min(step + 1, initialListing ? 6 : 5) as WizardStep));
   };
 
   if (published) {
@@ -328,25 +415,27 @@ export function ListingWizard({
     <div className="mx-auto w-full max-w-2xl">
       {/* Step indicator */}
       <ol className="mb-8 flex items-center gap-2">
-        {STEPS.map(({ step: s, label }, index) => (
-          <li key={s} className="flex flex-1 flex-col gap-1.5">
-            <div
-              className={cn(
-                "h-1.5 rounded-full",
-                s <= step ? "bg-primary" : "bg-muted",
-              )}
-            />
-            <span
-              className={cn(
-                "text-xs font-medium",
-                s === step ? "text-foreground" : "text-muted-foreground",
-              )}
-            >
-              <span className="mr-1 text-muted-foreground">{index + 1}.</span>
-              {label}
-            </span>
-          </li>
-        ))}
+        {STEPS.filter(({ step: s }) => initialListing || s !== 6).map(
+          ({ step: s, label }, index) => (
+            <li key={s} className="flex flex-1 flex-col gap-1.5">
+              <div
+                className={cn(
+                  "h-1.5 rounded-full",
+                  s <= step ? "bg-primary" : "bg-muted",
+                )}
+              />
+              <span
+                className={cn(
+                  "text-xs font-medium",
+                  s === step ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
+                <span className="mr-1 text-muted-foreground">{index + 1}.</span>
+                {label}
+              </span>
+            </li>
+          ),
+        )}
       </ol>
 
       {error && (
@@ -380,6 +469,7 @@ export function ListingWizard({
           />
         )}
         {step === 5 && <StepContact value={data} onChange={updateField} />}
+        {step === 6 && <StepAdvanced value={data} onChange={updateField} />}
 
         <div className="flex items-center justify-between pt-2">
           {step > 1 ? (
@@ -395,7 +485,7 @@ export function ListingWizard({
           )}
 
           <Button type="submit">
-            {step === 5
+            {step === 6 || (step === 5 && !initialListing)
               ? "Terminar"
               : step === 1 && !initialListing
                 ? "Crear borrador"
@@ -1571,6 +1661,251 @@ function StepContact({
           value={value.contact_email}
           onChange={(e) => onChange("contact_email", e.target.value)}
           placeholder="contacto@inmobiliaria.com"
+        />
+      </div>
+    </div>
+  );
+}
+
+const ADVANCED_STATUS_OPTIONS = [
+  { value: "draft", label: "Borrador" },
+  { value: "pending_approval", label: "Pendiente de aprobación" },
+  { value: "active", label: "Activa" },
+  { value: "reserved", label: "Apartada" },
+  { value: "sold", label: "Vendida" },
+  { value: "archived", label: "Archivada" },
+] as const;
+
+/**
+ * Step 6 — "Campos avanzados". Master-user only: every remaining editable
+ * property field. Numeric inputs accept empty values (stored as NULL), the
+ * boolean selects use a "null" sentinel (Radix SelectItem cannot be empty),
+ * and amenidades is edited as a comma-separated list.
+ */
+function StepAdvanced({
+  value,
+  onChange,
+}: {
+  value: WizardData;
+  onChange: (key: WizardField, value: string) => void;
+}) {
+  const numField = (
+    key: WizardField,
+    label: string,
+    opts: { id: string; min?: number; max?: number; placeholder?: string },
+  ) => (
+    <div className="space-y-2">
+      <Label htmlFor={opts.id}>{label}</Label>
+      <Input
+        id={opts.id}
+        name={opts.id}
+        type="number"
+        inputMode="decimal"
+        min={opts.min}
+        max={opts.max}
+        value={value[key] as string}
+        onChange={(e) => onChange(key, e.target.value)}
+        placeholder={opts.placeholder}
+      />
+    </div>
+  );
+
+  const boolSelect = (key: "is_top" | "is_mls", label: string) => (
+    <div className="space-y-2">
+      <Label htmlFor={`${key}-select`}>{label}</Label>
+      <Select
+        value={value[key] || "null"}
+        onValueChange={(v) => onChange(key, v == null || v === "null" ? "" : v)}
+      >
+        <SelectTrigger id={`${key}-select`}>
+          <SelectValue placeholder="Selecciona" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="null">Vacío</SelectItem>
+          <SelectItem value="true">Sí</SelectItem>
+          <SelectItem value="false">No</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="status-select">Estado de la propiedad</Label>
+        <Select
+          value={value.status}
+          onValueChange={(v) => onChange("status", v ?? "draft")}
+        >
+          <SelectTrigger id="status-select">
+            <SelectValue placeholder="Selecciona un estado" />
+          </SelectTrigger>
+          <SelectContent>
+            {ADVANCED_STATUS_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          El estado se guarda directamente; no se re-pública automáticamente.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {numField("recamaras", "Recámaras", {
+          id: "recamaras",
+          min: 0,
+          max: 50,
+          placeholder: "3",
+        })}
+        {numField("banos", "Baños", {
+          id: "banos",
+          min: 0,
+          max: 50,
+          placeholder: "2",
+        })}
+        {numField("estacionamientos", "Estacionamientos", {
+          id: "estacionamientos",
+          min: 0,
+          max: 50,
+          placeholder: "1",
+        })}
+        {numField("antiguedad", "Antigüedad (años)", {
+          id: "antiguedad",
+          min: 0,
+          max: 500,
+          placeholder: "10",
+        })}
+        {boolSelect("is_top", "Destacada (is_top)")}
+        {boolSelect("is_mls", "Publicada en MLS (is_mls)")}
+        {numField("property_score", "Property score (0-100)", {
+          id: "property_score",
+          min: 0,
+          max: 100,
+          placeholder: "85",
+        })}
+        {numField("noise_score", "Noise score (0-100)", {
+          id: "noise_score",
+          min: 0,
+          max: 100,
+          placeholder: "20",
+        })}
+      </div>
+
+      <div className="rounded-md border border-muted p-4">
+        <p className="mb-3 text-xs font-semibold text-muted-foreground">
+          Valuación y finanzas
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {numField("precio_m2_const", "Precio por m² construcción", {
+            id: "precio_m2_const",
+            min: 0,
+            placeholder: "25000",
+          })}
+          {numField("precio_m2_terreno", "Precio por m² terreno", {
+            id: "precio_m2_terreno",
+            min: 0,
+            placeholder: "18000",
+          })}
+          {numField("valor_avaluo", "Valor avalúo", {
+            id: "valor_avaluo",
+            min: 0,
+            placeholder: "3200000",
+          })}
+          {numField("porcentaje_descuento_avaluo", "Descuento vs avalúo (%)", {
+            id: "porcentaje_descuento_avaluo",
+            min: 0,
+            max: 100,
+            placeholder: "10",
+          })}
+          {numField("estimated_monthly_rent", "Renta mensual estimada", {
+            id: "estimated_monthly_rent",
+            min: 0,
+            placeholder: "18000",
+          })}
+          {numField("cap_rate_projected", "Cap rate proyectado (%)", {
+            id: "cap_rate_projected",
+            min: 0,
+            placeholder: "6.5",
+          })}
+          {numField("hoa_fee", "Cuota de mantenimiento (HOA)", {
+            id: "hoa_fee",
+            min: 0,
+            placeholder: "1200",
+          })}
+          {numField("predial_anual", "Predial anual", {
+            id: "predial_anual",
+            min: 0,
+            placeholder: "4500",
+          })}
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="flood_risk_level">Nivel de riesgo de inundación</Label>
+          <Input
+            id="flood_risk_level"
+            name="flood_risk_level"
+            value={value.flood_risk_level}
+            onChange={(e) => onChange("flood_risk_level", e.target.value)}
+            placeholder="Ej. bajo, medio, alto"
+            maxLength={50}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="commission_split">Comisión / split</Label>
+          <Input
+            id="commission_split"
+            name="commission_split"
+            value={value.commission_split}
+            onChange={(e) => onChange("commission_split", e.target.value)}
+            placeholder="Ej. 3% / 50-50"
+            maxLength={200}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="source_url">URL de origen</Label>
+        <Input
+          id="source_url"
+          name="source_url"
+          type="url"
+          value={value.source_url}
+          onChange={(e) => onChange("source_url", e.target.value)}
+          placeholder="https://…"
+          maxLength={2000}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="amenidades">Amenidades</Label>
+        <Textarea
+          id="amenidades"
+          name="amenidades"
+          value={value.amenidades}
+          onChange={(e) => onChange("amenidades", e.target.value)}
+          placeholder="alberca, gimnasio, seguridad 24h"
+          rows={3}
+        />
+        <p className="text-xs text-muted-foreground">
+          Separa cada amenidad con una coma.
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="private_notes">Notas privadas</Label>
+        <Textarea
+          id="private_notes"
+          name="private_notes"
+          value={value.private_notes}
+          onChange={(e) => onChange("private_notes", e.target.value)}
+          placeholder="Anotaciones internas visibles solo para el master user."
+          rows={4}
+          maxLength={5000}
         />
       </div>
     </div>

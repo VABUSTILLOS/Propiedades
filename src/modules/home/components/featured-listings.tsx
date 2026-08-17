@@ -14,6 +14,7 @@ import {
   ModerationToggleButton,
   SelectableCardShell,
 } from "@/modules/admin/components/moderation-controls";
+import { EditorModeToggle } from "@/modules/admin/components/editor-mode-toggle";
 
 export type CityListingGroup = {
   /** Key for the "Todas" tab. */
@@ -31,11 +32,14 @@ export function FeaturedListings({
   groups,
   savedIds,
   canModerate = false,
+  canEdit = false,
 }: {
   groups: CityListingGroup;
   savedIds?: Set<string>;
   /** Master user (admin): enables multi-select + bulk archive/delete. */
   canModerate?: boolean;
+  /** Master user (admin) with editor mode on: adds "Editar" pills on cards. */
+  canEdit?: boolean;
 }) {
   const cityNames = Object.keys(groups.byCity);
   const [activeCity, setActiveCity] = useState<string>("Todas");
@@ -109,6 +113,7 @@ export function FeaturedListings({
                 onToggle={toggleSelecting}
               />
             )}
+            {canEdit && <EditorModeToggle active />}
             <Link
               href="/search"
               className="text-sm font-medium text-primary hover:underline"
@@ -169,6 +174,9 @@ export function FeaturedListings({
               <PropertyCard
                 listing={listing}
                 saved={savedIds?.has(listing.id) ?? false}
+                editHref={
+                  canEdit ? `/admin/propiedades/${listing.id}/editar` : undefined
+                }
               />
             </SelectableCardShell>
           ))}

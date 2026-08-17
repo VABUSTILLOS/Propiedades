@@ -18,6 +18,7 @@ import {
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
 import { getCurrentUser } from "@/modules/auth/session";
+import { isEditorMode } from "@/modules/admin/editor-mode";
 
 export const metadata: Metadata = { title: "Propiedades en renta" };
 
@@ -37,6 +38,7 @@ export default async function RentasPage({ searchParams }: Props) {
 
   const user = await getCurrentUser();
   const canModerate = user?.role === "admin";
+  const canEdit = canModerate && (await isEditorMode());
 
   const selectedCategories = parseCategoriesParam(parsed.data?.categories);
 
@@ -117,6 +119,7 @@ export default async function RentasPage({ searchParams }: Props) {
             basePath="/rentas"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
             canModerate={canModerate}
+            canEdit={canEdit}
           />
         )}
       </main>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getCurrentUser } from "@/modules/auth/session";
+import { isEditorMode } from "@/modules/admin/editor-mode";
 import {
   getFeaturedListings,
   getFeaturedListingsByCity,
@@ -41,6 +42,7 @@ export default async function HomePage() {
   const topCities = stats.cities.slice(0, 3);
   const cityNames = stats.cities.map((city) => city.name);
   const savedIds = await getSavedPropertyIds(user?.id ?? null);
+  const editorMode = await isEditorMode();
 
   // Fetch featured listings per top city for the city-tabbed grid.
   const featuredByCity: Record<string, Awaited<ReturnType<typeof getFeaturedListingsByCity>>> =
@@ -217,6 +219,7 @@ export default async function HomePage() {
             }}
             savedIds={savedIds}
             canModerate={user?.role === "admin"}
+            canEdit={editorMode}
           />
         )}
 

@@ -24,6 +24,7 @@ import { toQueryString } from "@/modules/search/query-string";
 import { PageHeader } from "@/components/layout/page-header";
 import { Em } from "@/components/layout/emphasis";
 import { getCurrentUser } from "@/modules/auth/session";
+import { isEditorMode } from "@/modules/admin/editor-mode";
 
 export const metadata: Metadata = { title: "Comprar" };
 
@@ -43,6 +44,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   const user = await getCurrentUser();
   const canModerate = user?.role === "admin";
+  const canEdit = canModerate && (await isEditorMode());
 
   // Multi-select property types (`categories` CSV). When present it wins over
   // the legacy single `category` param so both are never applied at once.
@@ -186,6 +188,7 @@ export default async function SearchPage({ searchParams }: Props) {
             card="search"
             gridClassName="grid gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
             canModerate={canModerate}
+            canEdit={canEdit}
           />
         )}
       </main>

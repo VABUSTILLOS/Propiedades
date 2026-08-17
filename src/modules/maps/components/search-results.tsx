@@ -41,6 +41,7 @@ export function SearchResults({
   emptyState,
   basePath = "/search",
   canModerate = false,
+  canEdit = false,
 }: {
   initialItems: ListingWithHot[];
   initialTotal: number;
@@ -57,6 +58,8 @@ export function SearchResults({
   basePath?: string;
   /** Master user (admin): enables multi-select moderation on the list. */
   canModerate?: boolean;
+  /** Master user (admin) with editor mode on: adds "Editar" pills on cards. */
+  canEdit?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -116,6 +119,7 @@ export function SearchResults({
       onCardHover={setHoveredId}
       onCardSelect={split ? setSelectedItem : undefined}
       canModerate={canModerate}
+      canEdit={canEdit}
     />
   );
 
