@@ -171,7 +171,10 @@ export function ThemeToggle() {
           );
         })}
       </div>
-      <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-border" />
+      <span
+        aria-hidden="true"
+        className="mx-0.5 h-5 w-px bg-border lg:hidden"
+      />
       <button
         type="button"
         aria-pressed={desktopView}
@@ -179,7 +182,7 @@ export function ThemeToggle() {
         aria-label="Vista de escritorio"
         onClick={() => setDesktopView(!desktopView)}
         className={cn(
-          "inline-flex size-8 items-center justify-center rounded-full transition-colors",
+          "inline-flex size-8 items-center justify-center rounded-full transition-colors lg:hidden",
           desktopView
             ? "bg-background text-foreground shadow-sm"
             : "text-muted-foreground hover:text-foreground",
