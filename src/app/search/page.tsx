@@ -53,9 +53,10 @@ export default async function SearchPage({ searchParams }: Props) {
 
   // Shared refinements (query, price, m², city) apply to every tab so
   // switching tabs keeps context; the cintillo counts react to them too.
+  // "Comprar" page only shows sale listings — rentals live on /rentas.
   const baseFilters: Omit<SearchFilters, "limit" | "sortBy"> = {
     query: parsed.data?.query,
-    type: parsed.data?.type,
+    type: "sale",
     minPrice: parsed.data?.minPrice,
     maxPrice: parsed.data?.maxPrice,
     minBedrooms: parsed.data?.minBedrooms,
@@ -119,7 +120,7 @@ export default async function SearchPage({ searchParams }: Props) {
   // infinite scroll and the map stay in sync with the first server render.
   const filtersQueryString = toQueryString({
     query: parsed.data?.query,
-    type: parsed.data?.type,
+    type: "sale",
     categories: hasTabCategories
       ? activeTabFilter.categories!.join(",")
       : undefined,

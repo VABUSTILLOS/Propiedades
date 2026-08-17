@@ -22,8 +22,27 @@ export default async function ListadosRedirect({ searchParams }: Props) {
 
   const tab = raw.tab;
   if (tab === "venta") params.set("type", "sale");
-  else if (tab === "renta") params.set("type", "rent");
-  else if (tab === "tierra") params.set("tab", "terreno");
+  else if (tab === "renta") {
+    // Rentals live on /rentas, not /search (Comprar). Carry shared filters over.
+    for (const key of [
+      "query",
+      "minPrice",
+      "maxPrice",
+      "city",
+      "colonia",
+      "minM2",
+      "maxM2",
+      "minBedrooms",
+      "sortBy",
+      "bounds",
+      "view",
+      "mapSearch",
+    ]) {
+      forward(key);
+    }
+    const qs = params.toString();
+    permanentRedirect(qs ? `/rentas?${qs}` : "/rentas");
+  } else if (tab === "tierra") params.set("tab", "terreno");
 
   for (const key of [
     "query",
