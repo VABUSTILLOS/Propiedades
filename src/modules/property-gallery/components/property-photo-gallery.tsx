@@ -113,7 +113,7 @@ export function PropertyPhotoGallery({ images, title }: Props) {
               }
               className={cn(
                 "group relative aspect-[4/3] w-full cursor-pointer overflow-hidden rounded-lg bg-muted",
-                i === 0 && "col-span-2 row-span-2 aspect-auto sm:h-full",
+                i === 0 && "col-span-2 row-span-2",
               )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
