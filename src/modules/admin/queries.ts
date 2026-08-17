@@ -62,3 +62,27 @@ export async function getAdminProperties(
     };
   });
 }
+
+/**
+ * Single property for the admin edit surface (`/admin/propiedades/[id]/editar`).
+ * Admin RLS policy (migration 051) permits reading any row.
+ */
+export async function getAdminPropertyById(
+  id: string,
+): Promise<AdminPropertyRow | null> {
+  const supabase = await createSupabaseServerClient();
+  const { data: row } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle<PropertiesRow>();
+
+  if (!row) return null;
+
+  return {
+    ...row,
+    images: row.images ?? null,
+    owner_email: "",
+    owner_name: "",
+  };
+}

@@ -34,6 +34,7 @@ import {
 import { InquireButton } from "@/modules/transactions/components/inquire-button";
 import { SimilarProperties } from "@/modules/listings/components/similar-properties";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
+import { PropertyModerationActions } from "@/modules/admin/components/property-moderation-actions";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
 import { PannellumViewer } from "@/modules/flyers/components/pannellum-viewer";
@@ -156,6 +157,18 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
             />
           </div>
         </div>
+
+        {user?.role === "admin" && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card/50 px-4 py-3">
+            <p className="text-sm font-medium text-muted-foreground">
+              Moderación (usuario master)
+            </p>
+            <PropertyModerationActions
+              propertyId={listing.id}
+              status={listing.status}
+            />
+          </div>
+        )}
 
         <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[1fr_320px]">
           <section className="min-w-0 space-y-8">

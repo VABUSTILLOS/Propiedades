@@ -441,7 +441,10 @@ export async function generateListingMedia(
     .single();
 
   if (!listing) return fail("Listado no encontrado.");
-  if (listing.owner_id !== user.id) return fail("No eres dueño de este listado.");
+  // Admins (RLS policy 051) manage any listing, so they bypass the owner check.
+  if (listing.owner_id !== user.id && user.role !== "admin") {
+    return fail("No eres dueño de este listado.");
+  }
 
   const imageUrls: Array<{ url: string; order: number }> =
     (listing.images as Array<string> | null)?.map((url, i) => ({ url, order: i })) ?? [];
@@ -615,13 +618,15 @@ export async function saveWizardStep(
 
   const supabase = await createSupabaseServerClient();
 
-  // Ownership check — defense in depth beyond RLS.
+  // Ownership check — defense in depth beyond RLS. Admins (RLS policy 051)
+  // manage any listing, so they bypass the owner check.
+  const isAdmin = user.role === "admin";
   const { data: existing } = await supabase
     .from("properties")
     .select("owner_id")
     .eq("id", listingId)
     .limit(1);
-  if (existing?.[0]?.owner_id !== user.id) {
+  if (existing?.[0]?.owner_id !== user.id && !isAdmin) {
     return fail("No eres dueño de este listado.");
   }
 
@@ -636,6 +641,11 @@ export async function saveWizardStep(
 
   if (error) {
     return fail(error.message);
+  }
+
+  if (isAdmin) {
+    revalidatePath("/admin/propiedades");
+    revalidatePath("/property/[slug]");
   }
 
   return ok({ id: listingId });
@@ -664,7 +674,9 @@ export async function setListingStatus(
   if (!listing) {
     return fail("Listado no encontrado.");
   }
-  if (listing.owner_id !== user.id) {
+  // Admins (RLS policy 051) manage any listing, so they bypass the owner check.
+  const isAdmin = user.role === "admin";
+  if (listing.owner_id !== user.id && !isAdmin) {
     return fail("No eres dueño de este listado.");
   }
 
@@ -704,6 +716,9 @@ export async function setListingStatus(
     return fail(error.message);
   }
 
+  if (isAdmin) {
+    revalidatePath("/admin/propiedades");
+  }
   revalidatePath("/my-listings");
   return ok({ id: listingId, slug: listing.slug });
 }

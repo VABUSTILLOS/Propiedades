@@ -3,10 +3,10 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Archive, ArchiveRestore, Loader2, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Loader2, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import {
   bulkModerateProperties,
@@ -211,6 +211,7 @@ export function AdminPropertiesTable({
                 Actualizada
               </th>
               <th className="px-4 py-3 font-medium">Galería</th>
+              <th className="px-4 py-3 font-medium">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -263,6 +264,17 @@ export function AdminPropertiesTable({
                     propertySlug={p.slug}
                     initialImages={p.images ?? []}
                   />
+                </td>
+                <td className="px-4 py-3">
+                  {p.status !== "deleted" && (
+                    <Link
+                      href={`/admin/propiedades/${p.id}/editar`}
+                      className={buttonVariants({ variant: "outline", size: "sm" })}
+                    >
+                      <Pencil className="size-4" />
+                      Editar
+                    </Link>
+                  )}
                 </td>
               </tr>
             ))}

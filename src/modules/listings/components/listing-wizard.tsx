@@ -148,16 +148,27 @@ const initialData: WizardData = {
  * Five-step listing creation wizard.
  * Step 1 creates the draft row; steps 2–5 update it in place.
  * Mutations run through Server Actions (Zod-validated server-side).
+ *
+ * Pass `initialListing` to edit an existing publication (used by the admin
+ * panel): state is seeded from the saved row and step 1 persists in place
+ * instead of creating a new draft.
  */
 export function ListingWizard({
   initialMapCenter,
+  initialListing,
 }: {
   initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
+  initialListing?: { id: string; data: Partial<WizardData> };
 }) {
   const [step, setStep] = useState<WizardStep>(1);
-  const [listingId, setListingId] = useState<string | null>(null);
+  const [listingId, setListingId] = useState<string | null>(
+    initialListing?.id ?? null,
+  );
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<WizardData>(initialData);
+  const [data, setData] = useState<WizardData>(() => ({
+    ...initialData,
+    ...(initialListing?.data ?? {}),
+  }));
   const [published, setPublished] = useState<{ id: string; slug: string } | null>(
     null,
   );
@@ -174,6 +185,23 @@ export function ListingWizard({
     setError(null);
 
     if (step === 1) {
+      if (listingId) {
+        // Edit mode: persist step 1 in place instead of creating a draft.
+        const res = await saveWizardStep(listingId, 1, {
+          title: data.title,
+          type: data.type,
+          category: data.category,
+          deal_type: data.dealType,
+          description: data.description.trim() || undefined,
+        });
+        if (!res.ok) {
+          setError(res.error);
+          return;
+        }
+        setStep(2);
+        return;
+      }
+
       const form = new FormData();
       form.set("title", data.title);
       form.set("type", data.type);
@@ -282,6 +310,14 @@ export function ListingWizard({
             >
               Ir a mis listados
             </a>
+            {initialListing && (
+              <a
+                href="/admin/propiedades"
+                className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-muted"
+              >
+                Volver al panel de administración
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -361,7 +397,7 @@ export function ListingWizard({
           <Button type="submit">
             {step === 5
               ? "Terminar"
-              : step === 1
+              : step === 1 && !initialListing
                 ? "Crear borrador"
                 : "Guardar y continuar"}
           </Button>
