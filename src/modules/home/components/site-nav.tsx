@@ -32,7 +32,7 @@ function isActive(pathname: string, href: string): boolean {
 export function DesktopNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Navegación principal" className="hidden items-center gap-1 md:flex">
+    <nav aria-label="Navegación principal" className="hidden items-center gap-1 md:ml-8 md:flex">
       {NAV_LINKS.map((link) => {
         const active = isActive(pathname, link.href);
         return (
