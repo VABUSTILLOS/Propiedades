@@ -1184,7 +1184,11 @@ function MediaGenerationPanel({
       setProgress(res.data.progress);
       if (res.data.status === "done") {
         setOutputs(res.data.outputs);
-        if (res.data.outputs.tour_url && !tourUrl) {
+        if (
+          res.data.outputs.tour_url &&
+          res.data.outputs.tour_type === "panorama_360" &&
+          !tourUrl
+        ) {
           onChange("tour_360_url", res.data.outputs.tour_url);
         }
       }

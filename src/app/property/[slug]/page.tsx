@@ -112,8 +112,15 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
     listing.video_url ??
     listing.generated_video_url ??
     listing.generated_video_vertical_url;
-  const tourUrl = listing.tour_360_url ?? listing.generated_tour_url;
+  const tourUrl =
+    listing.tour_360_url &&
+    (listing.tour_360_url !== listing.generated_tour_url ||
+      listing.generated_tour_type === "panorama_360")
+      ? listing.tour_360_url
+      : null;
   const hasMedia = Boolean(videoUrl || tourUrl);
+  const mediaSectionTitle =
+    videoUrl && tourUrl ? "Video y tour 360" : videoUrl ? "Video" : "Tour 360";
 
   const showCosts = listing.type === "sale" && listing.price > 0;
   const financiable = isFinanciable(listing.deal_type);
@@ -199,7 +206,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
 
             {hasMedia && (
               <section className="space-y-4">
-                <h2 className="text-lg font-semibold">Video y tour 360</h2>
+                <h2 className="text-lg font-semibold">{mediaSectionTitle}</h2>
                 <div className="grid gap-4 lg:grid-cols-2">
                   {videoUrl && (
                     <Card className="rounded-2xl">
