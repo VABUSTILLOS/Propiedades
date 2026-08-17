@@ -645,7 +645,7 @@ export async function saveWizardStep(
 
   if (isAdmin) {
     revalidatePath("/admin/propiedades");
-    revalidatePath("/property/[slug]");
+    revalidatePath("/property/[slug]", "page");
   }
 
   return ok({ id: listingId });
@@ -760,7 +760,7 @@ export async function updateListingCategory(
   }
 
   revalidatePath("/my-listings");
-  revalidatePath("/property/[slug]");
+  revalidatePath("/property/[slug]", "page");
   return ok({ id: listingId });
 }
 
@@ -801,7 +801,7 @@ export async function updateListingContact(
   }
 
   revalidatePath("/my-listings");
-  revalidatePath("/property/[slug]");
+  revalidatePath("/property/[slug]", "page");
   return ok({ id: listingId });
 }
 

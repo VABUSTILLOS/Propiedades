@@ -163,7 +163,7 @@ export async function reorderPropertyImages(
   if (error) return fail(error.message);
 
   revalidatePath("/admin/propiedades");
-  revalidatePath(`/property/[slug]`);
+  revalidatePath(`/property/[slug]`, "page");
   return ok({ images: next });
 }
 
@@ -203,7 +203,7 @@ export async function addPropertyImages(
   if (error) return fail(error.message);
 
   revalidatePath("/admin/propiedades");
-  revalidatePath(`/property/[slug]`);
+  revalidatePath(`/property/[slug]`, "page");
   return ok({ images: combined });
 }
 
@@ -241,7 +241,7 @@ export async function removePropertyImage(
   if (error) return fail(error.message);
 
   revalidatePath("/admin/propiedades");
-  revalidatePath(`/property/[slug]`);
+  revalidatePath(`/property/[slug]`, "page");
   return ok({ images: filtered });
 }
 
