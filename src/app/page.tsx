@@ -216,6 +216,7 @@ export default async function HomePage() {
               byCity: featuredByCity,
             }}
             savedIds={savedIds}
+            canModerate={user?.role === "admin"}
           />
         )}
 

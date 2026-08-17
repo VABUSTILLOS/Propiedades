@@ -1,12 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { handleTabListKeyDown } from "@/lib/a11y";
+import { bulkModerateProperties } from "@/modules/admin/actions";
+import {
+  ModerationActionBar,
+  ModerationToggleButton,
+  SelectableCardShell,
+} from "@/modules/admin/components/moderation-controls";
 
 export type CityListingGroup = {
   /** Key for the "Todas" tab. */
@@ -23,19 +30,62 @@ export type CityListingGroup = {
 export function FeaturedListings({
   groups,
   savedIds,
+  canModerate = false,
 }: {
   groups: CityListingGroup;
   savedIds?: Set<string>;
+  /** Master user (admin): enables multi-select + bulk archive/delete. */
+  canModerate?: boolean;
 }) {
   const cityNames = Object.keys(groups.byCity);
   const [activeCity, setActiveCity] = useState<string>("Todas");
 
+  const router = useRouter();
+  const [selecting, setSelecting] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
+  const [moderating, startModeration] = useTransition();
+  const [moderationError, setModerationError] = useState<string | null>(null);
+
+  const toggleSelecting = () => {
+    setSelecting((prev) => !prev);
+    setSelected(new Set());
+    setModerationError(null);
+  };
+
+  const toggleSelected = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const moderate = (action: "archive" | "delete") => {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    startModeration(async () => {
+      setModerationError(null);
+      const res = await bulkModerateProperties(ids, action);
+      if (!res.ok) {
+        setModerationError(res.error);
+        return;
+      }
+      setHiddenIds((prev) => new Set([...prev, ...ids]));
+      setSelected(new Set());
+      setSelecting(false);
+      router.refresh();
+    });
+  };
+
   const listings = useMemo(
     () =>
-      activeCity === "Todas"
+      (activeCity === "Todas"
         ? groups.all
-        : groups.byCity[activeCity] ?? [],
-    [activeCity, groups],
+        : groups.byCity[activeCity] ?? []
+      ).filter((listing) => !hiddenIds.has(listing.id)),
+    [activeCity, groups, hiddenIds],
   );
 
   const tabs = ["Todas", ...cityNames];
@@ -52,12 +102,20 @@ export function FeaturedListings({
               Lo más reciente del mercado, listo para explorar.
             </p>
           </div>
-          <Link
-            href="/search"
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            Ver todas las propiedades →
-          </Link>
+          <div className="flex items-center gap-3">
+            {canModerate && (
+              <ModerationToggleButton
+                selecting={selecting}
+                onToggle={toggleSelecting}
+              />
+            )}
+            <Link
+              href="/search"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Ver todas las propiedades →
+            </Link>
+          </div>
         </div>
 
         <div
@@ -102,13 +160,33 @@ export function FeaturedListings({
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {listings.map((listing) => (
-            <PropertyCard
+            <SelectableCardShell
               key={listing.id}
-              listing={listing}
-              saved={savedIds?.has(listing.id) ?? false}
-            />
+              selecting={selecting}
+              selected={selected.has(listing.id)}
+              onToggle={() => toggleSelected(listing.id)}
+            >
+              <PropertyCard
+                listing={listing}
+                saved={savedIds?.has(listing.id) ?? false}
+              />
+            </SelectableCardShell>
           ))}
         </motion.div>
+
+        {moderationError && (
+          <p className="mt-4 text-sm text-destructive" role="alert">
+            {moderationError}
+          </p>
+        )}
+
+        {selecting && (
+          <ModerationActionBar
+            count={selected.size}
+            moderating={moderating}
+            onAction={moderate}
+          />
+        )}
       </div>
     </section>
   );

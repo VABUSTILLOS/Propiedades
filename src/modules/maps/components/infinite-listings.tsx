@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Archive, CheckSquare, Loader2, Square, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { ListingWithHot } from "@/modules/search/queries";
@@ -10,6 +10,11 @@ import { SearchResultCard } from "@/modules/maps/components/search-result-card";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { CardDetailsToggle } from "@/modules/maps/components/card-details-toggle";
 import { bulkModerateProperties } from "@/modules/admin/actions";
+import {
+  ModerationActionBar,
+  ModerationToggleButton,
+  SelectableCardShell,
+} from "@/modules/admin/components/moderation-controls";
 
 type ApiResponse = {
   items: ListingWithHot[];
@@ -212,52 +217,26 @@ export function InfiniteListings({
     <div className="space-y-6">
       <div className="flex items-center justify-end gap-2">
         {canModerate && (
-          <Button
-            variant={selecting ? "default" : "outline"}
-            size="sm"
-            onClick={toggleSelecting}
-          >
-            {selecting ? "Cancelar selección" : "Seleccionar"}
-          </Button>
+          <ModerationToggleButton
+            selecting={selecting}
+            onToggle={toggleSelecting}
+          />
         )}
         <CardDetailsToggle show={showDetails} onChange={toggleDetails} />
       </div>
 
       <div className={gridClassName}>
         {items.map((item) => (
-          <div
+          <SelectableCardShell
             key={item.id}
-            className={
-              selecting
-                ? selected.has(item.id)
-                  ? "relative rounded-2xl ring-2 ring-primary"
-                  : "relative"
-                : undefined
-            }
+            selecting={selecting}
+            selected={selected.has(item.id)}
+            onToggle={() => toggleSelected(item.id)}
             onMouseEnter={() => onCardHover?.(item.id)}
             onMouseLeave={() => onCardHover?.(null)}
-            onClickCapture={
-              selecting
+            onCardClickCapture={
+              onCardSelect
                 ? (e) => {
-                    // Selection mode: clicking a card toggles its checkbox
-                    // instead of navigating. Interactive children (favorite
-                    // bookmark, …) keep their own behavior.
-                    const target = e.target as Element | null;
-                    if (target && typeof target.closest === "function") {
-                      if (
-                        target.closest(
-                          "button, [role='button'], input, select, textarea",
-                        )
-                      ) {
-                        return;
-                      }
-                    }
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleSelected(item.id);
-                  }
-                : onCardSelect
-                  ? (e) => {
                     // Split view: select the card and let the map zoom to the
                     // property instead of navigating to its listing page. The
                     // capture phase runs before next/link's own click handler,
@@ -289,18 +268,6 @@ export function InfiniteListings({
                 : undefined
             }
           >
-            {selecting && (
-              <span
-                className="absolute left-2 top-2 z-20 rounded-full bg-background/90 p-1 text-primary shadow"
-                aria-hidden="true"
-              >
-                {selected.has(item.id) ? (
-                  <CheckSquare className="size-5" />
-                ) : (
-                  <Square className="size-5" />
-                )}
-              </span>
-            )}
             {card === "property" ? (
               <PropertyCard
                 key={item.id}
@@ -347,7 +314,7 @@ export function InfiniteListings({
                 }}
               />
             )}
-          </div>
+          </SelectableCardShell>
         ))}
       </div>
 
@@ -382,32 +349,12 @@ export function InfiniteListings({
         </p>
       )}
 
-      {selecting && selected.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-wrap items-center gap-3 rounded-full border bg-background px-5 py-3 shadow-xl">
-          <span className="text-sm font-medium">
-            {selected.size}{" "}
-            {selected.size === 1 ? "seleccionada" : "seleccionadas"}
-          </span>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={moderating}
-            onClick={() => moderate("archive")}
-          >
-            <Archive className="size-4" />
-            Archivar
-          </Button>
-          <Button
-            size="sm"
-            variant="destructive"
-            disabled={moderating}
-            onClick={() => moderate("delete")}
-          >
-            <Trash2 className="size-4" />
-            Borrar
-          </Button>
-          {moderating && <Loader2 className="size-4 animate-spin" />}
-        </div>
+      {selecting && (
+        <ModerationActionBar
+          count={selected.size}
+          moderating={moderating}
+          onAction={moderate}
+        />
       )}
 
       {!hasMore && (
