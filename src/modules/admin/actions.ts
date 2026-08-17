@@ -4,6 +4,11 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getCurrentUser } from "@/modules/auth/session";
+import {
+  addImageUrls,
+  removeImageUrl,
+  reorderImageUrls,
+} from "@/modules/admin/image-list";
 import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import type { PropertyStatus } from "@/modules/lib/database.types";
@@ -135,16 +140,31 @@ export async function reorderPropertyImages(
   if (!parsed.success) return fail(parsed.error);
 
   const supabase = await createSupabaseServerClient();
+  const { data: existing, error: fetchError } = await supabase
+    .from("properties")
+    .select("images")
+    .eq("id", propertyId)
+    .single();
+
+  if (fetchError) return fail(fetchError.message);
+
+  // Lenient keep-existing filter: only URLs already on the property are kept,
+  // so a stale client or injected array can never add foreign URLs.
+  const next = reorderImageUrls(
+    (existing?.images as string[] | null) ?? [],
+    parsed.data,
+  );
+
   const { error } = await supabase
     .from("properties")
-    .update({ images: parsed.data })
+    .update({ images: next })
     .eq("id", propertyId);
 
   if (error) return fail(error.message);
 
   revalidatePath("/admin/propiedades");
   revalidatePath(`/property/[slug]`);
-  return ok({ images: parsed.data });
+  return ok({ images: next });
 }
 
 /**
@@ -171,7 +191,9 @@ export async function addPropertyImages(
   if (fetchError) return fail(fetchError.message);
 
   const current = (existing?.images as string[] | null) ?? [];
-  const combined = [...current, ...parsed.data].slice(0, MAX_WIZARD_IMAGES);
+  // De-dupe and cap at MAX_WIZARD_IMAGES so re-adding an existing URL never
+  // produces duplicate gallery entries.
+  const combined = addImageUrls(current, parsed.data);
 
   const { error } = await supabase
     .from("properties")
@@ -209,7 +231,7 @@ export async function removePropertyImage(
   if (fetchError) return fail(fetchError.message);
 
   const current = (existing?.images as string[] | null) ?? [];
-  const filtered = current.filter((u) => u !== parsed.data);
+  const filtered = removeImageUrl(current, parsed.data);
 
   const { error } = await supabase
     .from("properties")
