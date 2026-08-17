@@ -8,6 +8,7 @@ export type AdminPropertyFilter = "all" | "archived" | "deleted";
 export type AdminPropertyRow = PropertiesRow & {
   owner_email: string;
   owner_name: string;
+  images: string[] | null;
 };
 
 /**
@@ -55,6 +56,7 @@ export async function getAdminProperties(
     const owner = p.owner_id ? ownerById.get(p.owner_id) : undefined;
     return {
       ...p,
+      images: p.images ?? null,
       owner_email: owner?.email ?? "",
       owner_name: owner?.full_name ?? "",
     };
