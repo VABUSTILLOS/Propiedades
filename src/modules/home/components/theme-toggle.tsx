@@ -13,11 +13,25 @@ const THEME_OPTIONS: { value: Theme; label: string; icon: typeof Sun }[] = [
 ];
 
 /** Desktop viewport width used to render the desktop layout on small screens. */
-const DESKTOP_VIEWPORT = "width=1280";
+const DESKTOP_WIDTH = 1280;
 /** The viewport content Next.js renders from the `viewport` export in layout.tsx. */
 const ORIGINAL_VIEWPORT =
   "width=device-width, initial-scale=1, viewport-fit=cover";
 const VIEWPORT_SELECTOR = 'meta[name="viewport"]';
+
+/**
+ * Viewport content that locks the layout to a desktop width and scales it to
+ * fit. Browsers only auto-scale a bare `width=1280` until a reload; an explicit
+ * initial-scale of deviceWidth/1280 keeps the desktop view zoomed-to-fit across
+ * reloads and client-side navigations.
+ */
+function desktopViewportContent(): string {
+  const scale = Math.min(window.screen.width / DESKTOP_WIDTH, 1);
+  return (
+    `width=${DESKTOP_WIDTH}, initial-scale=${scale}, ` +
+    `maximum-scale=${scale}, minimum-scale=${scale}, user-scalable=no`
+  );
+}
 
 const listeners = new Set<() => void>();
 let originalViewport = "";
@@ -80,11 +94,11 @@ function applyDesktopView(on: boolean) {
       const saved = viewport.getAttribute("data-original-viewport");
       originalViewport =
         saved ||
-        (viewport.content === DESKTOP_VIEWPORT
+        (viewport.content === desktopViewportContent()
           ? ORIGINAL_VIEWPORT
           : viewport.content);
     }
-    viewport.setAttribute("content", on ? DESKTOP_VIEWPORT : originalViewport);
+    viewport.setAttribute("content", on ? desktopViewportContent() : originalViewport);
   }
   document.documentElement.classList.toggle("desktop-view", on);
 }
@@ -134,7 +148,7 @@ export function ThemeToggle() {
         VIEWPORT_SELECTOR,
       );
       if (!viewport) return;
-      const target = on ? DESKTOP_VIEWPORT : originalViewport;
+      const target = on ? desktopViewportContent() : originalViewport;
       if (viewport.content !== target) applyDesktopView(on);
     });
     observer.observe(document.head, { childList: true });
@@ -173,7 +187,10 @@ export function ThemeToggle() {
       </div>
       <span
         aria-hidden="true"
-        className="mx-0.5 h-5 w-px bg-border lg:hidden"
+        className={cn(
+          "mx-0.5 h-5 w-px bg-border lg:hidden",
+          desktopView && "lg:block",
+        )}
       />
       <button
         type="button"
@@ -183,6 +200,7 @@ export function ThemeToggle() {
         onClick={() => setDesktopView(!desktopView)}
         className={cn(
           "inline-flex size-8 items-center justify-center rounded-full transition-colors lg:hidden",
+          desktopView && "lg:inline-flex",
           desktopView
             ? "bg-background text-foreground shadow-sm"
             : "text-muted-foreground hover:text-foreground",

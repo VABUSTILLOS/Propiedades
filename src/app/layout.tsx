@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}if(localStorage.getItem('desktopView')==='true'){document.documentElement.classList.add('desktop-view');var m=document.querySelector('meta[name=\"viewport\"]');if(m){m.setAttribute('data-original-viewport',m.content);m.setAttribute('content','width=1280')}}}catch(e){}",
+              "try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}if(localStorage.getItem('desktopView')==='true'){document.documentElement.classList.add('desktop-view');var m=document.querySelector('meta[name=\"viewport\"]');if(m){m.setAttribute('data-original-viewport',m.content);var s=Math.min(screen.width/1280,1);m.setAttribute('content','width=1280, initial-scale='+s+', maximum-scale='+s+', minimum-scale='+s+', user-scalable=no')}}}catch(e){}",
           }}
         />
       </head>
