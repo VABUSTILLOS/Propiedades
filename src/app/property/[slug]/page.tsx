@@ -11,8 +11,10 @@ import {
   Calculator,
   CalendarClock,
   Car,
+  Compass,
   LandPlot,
   ListPlus,
+  PlayCircle,
   type LucideIcon,
 } from "lucide-react";
 
@@ -34,6 +36,7 @@ import { SimilarProperties } from "@/modules/listings/components/similar-propert
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
+import { PannellumViewer } from "@/modules/flyers/components/pannellum-viewer";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
@@ -105,6 +108,12 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
   const hotScore = toHotScore(discountPct, listing);
+  const videoUrl =
+    listing.video_url ??
+    listing.generated_video_url ??
+    listing.generated_video_vertical_url;
+  const tourUrl = listing.tour_360_url ?? listing.generated_tour_url;
+  const hasMedia = Boolean(videoUrl || tourUrl);
 
   const showCosts = listing.type === "sale" && listing.price > 0;
   const financiable = isFinanciable(listing.deal_type);
@@ -187,6 +196,47 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
                 address={listing.address}
               />
             </div>
+
+            {hasMedia && (
+              <section className="space-y-4">
+                <h2 className="text-lg font-semibold">Video y tour 360</h2>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {videoUrl && (
+                    <Card className="rounded-2xl">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <PlayCircle className="size-5 text-primary" />
+                          Video
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <video
+                          src={videoUrl}
+                          controls
+                          preload="metadata"
+                          playsInline
+                          className="aspect-video w-full rounded-xl border bg-black"
+                        />
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {tourUrl && (
+                    <Card className="rounded-2xl">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <Compass className="size-5 text-primary" />
+                          Tour 360°
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <PannellumViewer url={tourUrl} title={listing.title} />
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </section>
+            )}
 
             <PropertyViewToggle
               property={listing}
