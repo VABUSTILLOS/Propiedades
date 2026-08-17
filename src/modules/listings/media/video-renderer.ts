@@ -23,8 +23,8 @@ export type RenderedVideo = {
 const WIDTH = 1280;
 const HEIGHT = 720;
 const FPS = 30;
-const MAX_TOTAL_SECONDS = 45;
-const SECONDS_PER_IMAGE = 3.5;
+const MAX_TOTAL_SECONDS = 30;
+const SECONDS_PER_IMAGE = 2.8;
 const CROSSFADE_SECONDS = 0.5;
 const TITLE_SECONDS = 3;
 
@@ -132,7 +132,7 @@ function drawOverlays(
 
 /**
  * Render the video and return the recorded blob.
- * Runs in real time (~images × 3.5s, capped at 45s); keep the tab visible.
+ * Runs in real time (~images × 2.8s, capped at 30s); keep the tab visible.
  */
 export async function renderPropertyVideo(
   input: VideoRenderInput,
@@ -169,7 +169,7 @@ export async function renderPropertyVideo(
   const stream = canvas.captureStream(FPS);
   const recorder = new MediaRecorder(stream, {
     mimeType: picked.mime,
-    videoBitsPerSecond: 5_000_000,
+    videoBitsPerSecond: 2_000_000,
   });
   const chunks: BlobPart[] = [];
   recorder.ondataavailable = (event) => {

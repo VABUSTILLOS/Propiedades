@@ -37,10 +37,11 @@ import {
   getMediaJobStatus,
   saveWizardStep,
   setListingStatus,
-  uploadGeneratedVideo,
   uploadWizardImages,
 } from "@/modules/listings/actions";
 import { renderPropertyVideo } from "@/modules/listings/media/video-renderer";
+import { compressImageForUpload } from "@/modules/listings/media/image-compression";
+import { createSupabaseBrowserClient } from "@/modules/lib/supabase/browser";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -900,8 +901,11 @@ function StepMedia({
     }
     setUploadError(null);
     startUploading(async () => {
+      // Comprimir a WebP (máx 1920px) en el navegador antes de subir:
+      // fotos de 5-10 MB bajan a ~150-500 KB y la subida es mucho más rápida.
+      const compressed = await Promise.all(list.map(compressImageForUpload));
       const formData = new FormData();
-      for (const file of list) formData.append("images", file);
+      for (const file of compressed) formData.append("images", file);
       const res = await uploadWizardImages(formData);
       if (!res.ok) {
         setUploadError(res.error);
@@ -1243,20 +1247,42 @@ function MediaGenerationPanel({
           setVideoProgress,
         );
         setVideoStatus("uploading");
-        const form = new FormData();
-        form.set(
-          "video",
-          new File([rendered.blob], `video.${rendered.ext}`, {
-            type: rendered.blob.type,
-          }),
-        );
-        const uploadRes = await uploadGeneratedVideo(form);
-        if (!uploadRes.ok) {
+        // Subida directa navegador → Supabase Storage. No pasa por una Server
+        // Action: en Vercel las funciones limitan el body a ~4.5 MB y un video
+        // siempre lo excede. La policy INSERT de la migración 050 autoriza
+        // property-media/wizard/<uid>/ para usuarios autenticados.
+        const supabase = createSupabaseBrowserClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
           setVideoStatus("failed");
-          setGenError(uploadRes.error);
+          setGenError("Tu sesión expiró. Vuelve a iniciar sesión.");
           return;
         }
-        onChange("video_url", uploadRes.data.url);
+        const videoPath = `wizard/${user.id}/${crypto.randomUUID()}.${rendered.ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("property-media")
+          .upload(videoPath, rendered.blob, {
+            contentType: rendered.blob.type,
+            upsert: false,
+          });
+        if (uploadError) {
+          setVideoStatus("failed");
+          setGenError(
+            `No se pudo subir el video: ${uploadError.message}. Intenta de nuevo.`,
+          );
+          return;
+        }
+        const { data: publicUrlData } = supabase.storage
+          .from("property-media")
+          .getPublicUrl(videoPath);
+        if (!publicUrlData.publicUrl) {
+          setVideoStatus("failed");
+          setGenError("No se pudo obtener la URL del video.");
+          return;
+        }
+        onChange("video_url", publicUrlData.publicUrl);
         setVideoStatus("done");
       } catch (err) {
         setVideoStatus("failed");
