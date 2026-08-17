@@ -205,9 +205,12 @@ const initialData: WizardData = {
 export function ListingWizard({
   initialMapCenter,
   initialListing,
+  adminPanelHref,
 }: {
   initialMapCenter?: { lat: number; lng: number; city?: string; state?: string };
   initialListing?: { id: string; slug?: string; data: Partial<WizardData> };
+  /** When set, the success screen links back to this admin panel page. */
+  adminPanelHref?: string;
 }) {
   const [listingId, setListingId] = useState<string | null>(
     initialListing?.id ?? null,
@@ -389,9 +392,9 @@ export function ListingWizard({
             >
               Ir a mis listados
             </a>
-            {initialListing && (
+            {adminPanelHref && (
               <a
-                href="/admin/propiedades"
+                href={adminPanelHref}
                 className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-muted"
               >
                 Volver al panel de administración

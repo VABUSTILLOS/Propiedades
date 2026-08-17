@@ -148,7 +148,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               {listing.address} · {listing.colonia}, {listing.city}, {listing.state}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge
               variant={listing.type === "rent" ? "secondary" : "default"}
               className="rounded-full shadow-sm"
@@ -159,6 +159,18 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               score={listing.property_score}
               className="rounded-full shadow-sm"
             />
+            {user?.id === listing.owner_id && user.role !== "admin" && (
+              <Link
+                href={`/listings/${listing.id}/editar`}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "gap-1.5",
+                )}
+              >
+                <Pencil className="size-4" />
+                Editar propiedad
+              </Link>
+            )}
           </div>
         </div>
 
@@ -175,7 +187,7 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
               />
               {editorMode && (
                 <Link
-                  href={`/admin/propiedades/${listing.id}/editar`}
+                  href={`/listings/${listing.id}/editar`}
                   className={cn(
                     buttonVariants({ variant: "default", size: "sm" }),
                     "gap-1.5",
