@@ -12,6 +12,7 @@ import {
 import { fail, failAuth, ok, parseInput, type ActionResult } from "@/modules/lib/action-result";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import type { PropertyStatus } from "@/modules/lib/database.types";
+import { saveWizardAll } from "@/modules/listings/actions";
 
 const bulkModerationSchema = z.object({
   ids: z.array(z.string().uuid()).min(1).max(200),
@@ -291,4 +292,23 @@ export async function uploadAdminImages(
   }
 
   return ok({ urls });
+}
+
+/**
+ * Master-user inline save from the property detail page. Delegates to
+ * saveWizardAll (publish: false), so validation uses the exact same merged
+ * schema as the admin wizard, the admin bypasses the ownership check, and the
+ * detail page, /admin/propiedades and /my-listings are revalidated.
+ */
+export async function savePropertyInline(
+  listingId: string,
+  fields: Record<string, unknown>,
+): Promise<ActionResult<{ id: string }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+  if (user.role !== "admin") {
+    return fail("Solo el usuario master puede editar propiedades.");
+  }
+
+  return saveWizardAll({ listingId, publish: false, fields });
 }

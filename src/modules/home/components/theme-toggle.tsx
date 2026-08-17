@@ -35,6 +35,8 @@ function desktopViewportContent(): string {
 
 const listeners = new Set<() => void>();
 let originalViewport = "";
+/** Desktop view is session-only: never persisted, resets on every page load. */
+let desktopViewEnabled = false;
 
 function systemIsDark(): boolean {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -57,7 +59,7 @@ function getThemeSnapshot(): Theme {
 const getThemeServerSnapshot = (): Theme => "light";
 
 function getDesktopViewSnapshot(): boolean {
-  return localStorage.getItem("desktopView") === "true";
+  return desktopViewEnabled;
 }
 
 const getDesktopViewServerSnapshot = (): boolean => false;
@@ -104,7 +106,7 @@ function applyDesktopView(on: boolean) {
 }
 
 function setDesktopView(on: boolean) {
-  localStorage.setItem("desktopView", on ? "true" : "false");
+  desktopViewEnabled = on;
   applyDesktopView(on);
   notify();
 }
@@ -113,9 +115,9 @@ function setDesktopView(on: boolean) {
  * Theme switcher plus a "desktop view" toggle. The sun/moon buttons pick the
  * color scheme (clicking the active one restores the OS preference); the
  * monitor button locks the viewport to a desktop width so mobile and tablet
- * screens render the desktop layout scaled to fit. Both choices persist in
- * localStorage. The initial classes are applied by an inline script in the
- * root layout so there is no flash of the wrong theme.
+ * screens render the desktop layout scaled to fit. The theme persists in
+ * localStorage; the desktop view is session-only and resets on every load so
+ * mobile and tablet always start in their device layout.
  */
 export function ThemeToggle() {
   const theme = useSyncExternalStore(
@@ -143,7 +145,7 @@ export function ThemeToggle() {
   // viewport meta appears with the wrong content.
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      const on = localStorage.getItem("desktopView") === "true";
+      const on = desktopViewEnabled;
       const viewport = document.querySelector<HTMLMetaElement>(
         VIEWPORT_SELECTOR,
       );
