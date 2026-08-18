@@ -27,7 +27,17 @@ const instrument = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
+// Bump when the social share image content changes. Next hashes the
+// opengraph-image URL from the route file (which only re-exports), so changing
+// the generated image alone does not change the URL — platforms like WhatsApp,
+// Facebook and X cache by exact URL and keep serving the stale image. The
+// explicit ?v= version forces them to re-scrape.
+const SOCIAL_IMAGE_VERSION = "3";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.100casas.mx",
+  ),
   title: {
     default: "100Casas — Marketplace inmobiliario de México",
     template: "%s | 100Casas",
@@ -44,12 +54,22 @@ export const metadata: Metadata = {
     title: "100Casas.mx — Solo lo que vale la pena",
     description:
       "No listamos todo, solo lo que vale la pena. Aquí encuentras las 100 mejores oportunidades de tu ciudad, listadas a la vez, para que descubras la mejor casa para ti. 🏠✨",
+    images: [
+      {
+        url: `/opengraph-image?v=${SOCIAL_IMAGE_VERSION}`,
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "100Casas.mx — Solo lo que vale la pena",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "100Casas.mx — Solo lo que vale la pena",
     description:
       "No listamos todo, solo lo que vale la pena. Aquí encuentras las 100 mejores oportunidades de tu ciudad, listadas a la vez, para que descubras la mejor casa para ti. 🏠✨",
+    images: [`/opengraph-image?v=${SOCIAL_IMAGE_VERSION}`],
   },
 };
 

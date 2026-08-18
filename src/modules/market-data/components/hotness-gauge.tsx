@@ -7,7 +7,7 @@ function hotnessLabel(score: number): string {
 }
 
 /**
- * Opportunity traffic-light bar. Green (cold, 0) → yellow → red (hot, 100).
+ * Opportunity traffic-light bar. Blue (cold, 0) → yellow → red (hot, 100).
  * The marker sits at the property's hotness score; a null score renders a
  * neutral "Sin dato" state. Always paired with text so the signal is not
  * color-only.
@@ -39,7 +39,7 @@ export function HotnessGauge({
       className={cn("space-y-1", className)}
       aria-label={`Oportunidad ${clamped} de 100 (${label})`}
     >
-      <div className="relative h-2 w-full rounded-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-red-500">
+      <div className="relative h-2 w-full rounded-full bg-gradient-to-r from-blue-500 via-yellow-400 to-red-500">
         <div
           className="absolute top-1/2 h-3.5 w-1.5 -translate-y-1/2 rounded-full bg-foreground shadow-sm ring-1 ring-white/70"
           style={{ left: `${clamped}%` }}
