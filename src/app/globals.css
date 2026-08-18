@@ -63,7 +63,7 @@
 
 /* Registry ticker — ambient loop for the live activity strip on the homepage. */
 @theme {
-  --animate-ticker: ticker-scroll 42s linear infinite;
+  --animate-ticker: ticker-scroll 90s linear infinite;
 
   /* Readability floor: raise the smallest utility sizes so no UI text
      renders below 13px, with line-heights tuned for legibility. */
@@ -232,7 +232,7 @@
 }
 
 .ticker-track {
-  animation: ticker-scroll 42s linear infinite;
+  animation: ticker-scroll 90s linear infinite;
 }
 
 /* Accessibility: honor reduced-motion preference */
@@ -250,6 +250,6 @@
      that the site owner explicitly wants always in motion (teleprompter
      effect). Restore its animation after the global freeze above. */
   .ticker-track {
-    animation: ticker-scroll 42s linear infinite !important;
+    animation: ticker-scroll 90s linear infinite !important;
   }
 }
