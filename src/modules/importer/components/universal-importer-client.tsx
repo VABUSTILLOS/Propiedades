@@ -221,7 +221,7 @@ export function UniversalImporterClient() {
         </div>
 
         <AnimatePresence>
-          {showFacebookHelper && phase === "idle" && (
+          {showPasteHelper && phase === "idle" && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -234,7 +234,7 @@ export function UniversalImporterClient() {
                   <div className="flex-1 space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-semibold">
-                        Importar desde Facebook Marketplace
+                        ¿El sitio bloquea la importación?
                       </p>
                       <Button
                         type="button"
@@ -247,14 +247,15 @@ export function UniversalImporterClient() {
                       </Button>
                     </div>
                     <p className="text-xs leading-relaxed text-muted-foreground">
-                      Facebook bloquea el acceso automático a los anuncios. Para
-                      que la IA lea los datos reales, copia el contenido del
-                      anuncio desde tu navegador (con tu sesión de Facebook
-                      iniciada) y pégalo aquí.
+                      Algunos portales (Facebook Marketplace, Vivanuncios, …)
+                      bloquean el acceso automático a los anuncios. Si la
+                      importación falla, copia el contenido del anuncio desde
+                      tu navegador y pégalo aquí para que la IA lea los datos
+                      reales.
                     </p>
                     <ol className="list-decimal space-y-1 pl-4 text-xs text-muted-foreground">
                       <li>
-                        Abre el anuncio en Facebook y selecciona todo el
+                        Abre el anuncio en tu navegador y selecciona todo el
                         contenido (⌘A / Ctrl+A) y cópialo (⌘C / Ctrl+C).
                       </li>
                       <li>Pega el contenido en el cuadro de abajo.</li>
@@ -263,7 +264,7 @@ export function UniversalImporterClient() {
                     <textarea
                       value={fbContent}
                       onChange={(e) => setFbContent(e.target.value)}
-                      placeholder="Pega aquí el contenido del anuncio de Facebook…"
+                      placeholder="Pega aquí el contenido del anuncio…"
                       rows={5}
                       className="w-full rounded-lg border bg-background p-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                     />

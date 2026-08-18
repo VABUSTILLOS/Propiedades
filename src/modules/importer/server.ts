@@ -252,10 +252,13 @@ function isValidImageUrl(value: unknown): value is string {
 export async function extractPropertyFromMarkdown(
   markdown: string,
 ): Promise<ExtractedProperty | null> {
+  // Reasoning models (e.g. deepseek-v4-flash) spend a large share of the
+  // completion budget on hidden reasoning tokens before emitting the JSON,
+  // so the extraction budget needs ample headroom beyond the output itself.
   const result = await chatCompletion({
     jsonMode: true,
     temperature: 0.1,
-    maxTokens: 1500,
+    maxTokens: 6000,
     system:
       'You extract real-estate listing data from scraped web pages for the Mexican market. Respond ONLY with a JSON object, no markdown, no commentary. Schema:\n{\n  "title": string (short listing title, Spanish),\n  "price": number (integer sale price as listed on the page, 0 if unknown),\n  "currency": "MXN" or "USD" (ISO-4217 currency of the listed price),\n  "category": one of "casa","departamento","local","bodega","terreno" (property kind; infer from title/description),\n  "deal_type": one of "venta_directa","remate_bancario","flipping","traspaso" (default "venta_directa"; use "remate_bancario" for bank foreclosures/subastas/judicial, "flipping" for fixer-upper/reparar/renovar, "traspaso" for contract transfers/traspasos; "casa" if unclear),\n  "costo_reparacion_estimado": number|null (MXN, expected repair budget for flipping, else null),\n  "valor_post_reparacion_estimado": number|null (MXN, after-repair value / ARV for flipping, else null),\n  "institucion_bancaria": string|null (bank or institution for remate_bancario, else null),\n  "fecha_remate": string|null (auction date YYYY-MM-DD for remate_bancario, else null),\n  "condiciones_traspaso": string|null (transfer terms for traspaso, else null),\n  "terreno_m2": number (land area m2, 0 if unknown),\n  "construccion_m2": number (built area m2, 0 if unknown),\n  "recamaras": number (bedrooms, 0 if unknown),\n  "banos": number (bathrooms — count "medio baño" as 1, 0 if unknown),\n  "estacionamientos": number (parking spaces, 0 if unknown),\n  "antiguedad": number (property age in years, 0 if unknown),\n  "description": string (2-4 sentence Spanish description),\n  "address_text": string (street + number if present),\n  "colonia": string,\n  "city": string,\n  "images": array of absolute https image URLs (extract from og:image, img tags, or JSON-LD; max 20; only https),\n  "bento_highlights": array of 3-6 short Spanish highlight phrases (e.g. "A 5 min del metro", "Vista panorámica")\n}',
     user: `Extract the listing data from this page content:\n\n${markdown.slice(0, 18000)}`,
@@ -512,7 +515,7 @@ export async function importPropertyFromContent(
   if (!content.trim()) {
     return {
       ok: false,
-      error: "El contenido capturado está vacío. Copia el anuncio completo de Facebook y vuelve a intentarlo.",
+      error:       "El contenido capturado está vacío. Copia el anuncio completo desde tu navegador y vuelve a intentarlo.",
       status: 422,
     };
   }
