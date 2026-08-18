@@ -29,11 +29,14 @@ const instrument = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: {
-    default: "Propiedades — Marketplace inmobiliario de México",
-    template: "%s | Propiedades",
+    default: "100Casas — Marketplace inmobiliario de México",
+    template: "%s | 100Casas",
   },
   description:
     "Compra, renta, invierte y vende propiedades en México con valuaciones, tours, ofertas digitales y procesos transparentes.",
+  icons: {
+    icon: [{ url: "/favicon.webp", type: "image/webp", sizes: "180x180" }],
+  },
 };
 
 export const viewport: Viewport = {
