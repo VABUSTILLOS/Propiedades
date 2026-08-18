@@ -17,7 +17,7 @@ export async function resolveTenant(): Promise<ResolvedTenant> {
   const headerStore = await headers();
   const host = headerStore.get("host") ?? "";
 
-  const rawApex = process.env.NEXT_PUBLIC_SITE_URL ?? "propiedades.mx";
+  const rawApex = process.env.NEXT_PUBLIC_SITE_URL ?? "100casas.mx";
   const apex = rawApex.startsWith("http")
     ? new URL(rawApex).hostname
     : rawApex.replace(/:\d+$/, "").toLowerCase();

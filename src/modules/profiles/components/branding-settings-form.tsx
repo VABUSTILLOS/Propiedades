@@ -77,7 +77,7 @@ export function BrandingSettingsForm({
               className="font-mono"
             />
             <span className="text-sm text-muted-foreground">
-              .{process.env.NEXT_PUBLIC_SITE_URL ?? "tuportal.com"}
+              .{process.env.NEXT_PUBLIC_SITE_URL ?? "100casas.mx"}
             </span>
           </div>
         </div>

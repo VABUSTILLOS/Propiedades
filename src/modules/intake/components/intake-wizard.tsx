@@ -536,7 +536,7 @@ function SuccessScreen({
           ¡Tu propiedad está <em className="font-display italic">activa</em>! 🎉
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Ya aparece en el feed público de propiedades-brown.
+          Ya aparece en el feed público de 100Casas.
         </p>
 
         {data.opportunityScore !== null && (

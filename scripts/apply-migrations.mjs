@@ -111,7 +111,7 @@ async function main() {
       "dashboard → Settings → API, then add to Vercel:\n" +
       "  npx vercel env add NEXT_PUBLIC_SUPABASE_URL <project-url>\n" +
       "  npx vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY <anon-key>\n" +
-      "  npx vercel env add NEXT_PUBLIC_SITE_URL https://vabustillos-scaling-potato.vercel.app\n" +
+      "  npx vercel env add NEXT_PUBLIC_SITE_URL https://www.100casas.mx\n" +
       "Then redeploy: npx vercel --prod --yes",
   );
 }

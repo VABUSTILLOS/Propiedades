@@ -87,8 +87,8 @@ fallback — no extra setup is required.
 
 In the dashboard (`Auth → URL Configuration`):
 
-- **Site URL**: `https://vabustillos-scaling-potato.vercel.app`
-- **Redirect URLs**: `https://vabustillos-scaling-potato.vercel.app/**`, `http://localhost:3000/**`
+- **Site URL**: `https://www.100casas.mx`
+- **Redirect URLs**: `https://www.100casas.mx/**`, `http://localhost:3000/**`
 
 Demo credentials (seeded via SQL — verified working):
 
@@ -148,7 +148,7 @@ Password reset is supported: the email links to `/auth/update-password` (PKCE fl
 npx -y vercel --prod --yes
 ```
 
-Production: https://vabustillos-scaling-potato.vercel.app
+Production: https://www.100casas.mx
 
 ## Project layout
 
