@@ -2,7 +2,29 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition, type ReactNode } from "react";
+import {
+  useRef,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -14,10 +36,14 @@ import {
   CalendarClock,
   Car,
   ChevronDown,
+  GripVertical,
   LandPlot,
+  Link2,
   Loader2,
   Pencil,
   Save,
+  Trash2,
+  UploadCloud,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -38,6 +64,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { savePropertyInline } from "@/modules/admin/actions";
+import { uploadWizardImages } from "@/modules/listings/actions";
+import { compressImageForUpload } from "@/modules/listings/media/image-compression";
 import { EditorModeToggle } from "@/modules/admin/components/editor-mode-toggle";
 import { PropertyModerationActions } from "@/modules/admin/components/property-moderation-actions";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
@@ -110,6 +138,8 @@ export type InlineListingData = {
   condiciones_traspaso: string | null;
 };
 
+const MAX_INLINE_IMAGES = 50;
+
 const STATUS_OPTIONS: { value: PropertyStatus; label: string }[] = [
   { value: "draft", label: "Borrador" },
   { value: "pending_approval", label: "Pendiente de aprobación" },
@@ -166,6 +196,7 @@ type InlineFormValues = {
   institucion_bancaria: string;
   fecha_remate: string;
   condiciones_traspaso: string;
+  images: string[];
 };
 
 function boolToTri(value: boolean | null): "" | "true" | "false" {
@@ -225,6 +256,7 @@ function toInlineFormValues(listing: InlineListingData): InlineFormValues {
     institucion_bancaria: listing.institucion_bancaria ?? "",
     fecha_remate: listing.fecha_remate ?? "",
     condiciones_traspaso: listing.condiciones_traspaso ?? "",
+    images: listing.images ?? [],
   };
 }
 
@@ -250,8 +282,8 @@ function urlOrNull(value: string): string | null {
  * Mirror of the wizard's `buildFullFields()`: converts the form state back to
  * the field map validated by `propertyCreateSchema` + `propertyWizardStep6Schema`
  * in saveWizardAll. Empty strings become null/undefined and non-editable
- * columns (type, category, deal_type, lat/lng, images) pass through from the
- * listing unchanged.
+ * columns (type, category, deal_type, lat/lng) pass through from the listing
+ * unchanged. `images` (order + additions/removals) comes from the form state.
  */
 function buildInlineFields(
   form: InlineFormValues,
@@ -276,7 +308,7 @@ function buildInlineFields(
     zip_code: form.zip_code.trim() || undefined,
     lat: listing.lat,
     lng: listing.lng,
-    images: listing.images,
+    images: form.images,
     recamaras: numOrNull(form.recamaras),
     banos: numOrNull(form.banos),
     estacionamientos: numOrNull(form.estacionamientos),
@@ -1184,7 +1216,19 @@ export function PropertyInlineEditor({
 
         <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[1fr_320px]">
           <section className="min-w-0 space-y-8">
-            {gallery}
+            {editing ? (
+              <PhotoManager
+                images={form.images}
+                onChange={(updater) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    images: updater(prev.images),
+                  }))
+                }
+              />
+            ) : (
+              gallery
+            )}
             {editing ? (
               <div className="space-y-2">
                 <Label htmlFor="description">Descripción</Label>
@@ -1269,4 +1313,295 @@ function formatPhoneDisplay(phone: string) {
   const digits = phone.replace(/\D/g, "");
   if (digits.length !== 10) return phone;
   return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+}
+
+/**
+ * Inline photo manager for the master user's edit mode: drag-to-reorder,
+ * upload (dropzone + paste URL) and delete. Mirrors the wizard's StepMedia
+ * behavior; removal only drops the URL from the array (storage object stays,
+ * same as the wizard). The first image is the cover.
+ */
+function PhotoManager({
+  images,
+  onChange,
+}: {
+  images: string[];
+  onChange: (updater: (prev: string[]) => string[]) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, startUploading] = useTransition();
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [pasteUrl, setPasteUrl] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const remainingSlots = MAX_INLINE_IMAGES - images.length;
+
+  const uploadFiles = (files: FileList | File[]) => {
+    const list = Array.from(files).filter((f) => f.size > 0);
+    if (list.length === 0) return;
+    if (list.length > remainingSlots) {
+      setUploadError(
+        `Solo puedes agregar ${remainingSlots} imagen(es) más (límite ${MAX_INLINE_IMAGES}).`,
+      );
+      return;
+    }
+    setUploadError(null);
+    startUploading(async () => {
+      const compressed = await Promise.all(
+        list.map(compressImageForUpload),
+      );
+      const formData = new FormData();
+      for (const file of compressed) formData.append("images", file);
+      const res = await uploadWizardImages(formData);
+      if (!res.ok) {
+        setUploadError(res.error);
+        return;
+      }
+      onChange((prev) => [...prev, ...res.data.urls]);
+    });
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    if (event.dataTransfer.files.length > 0) {
+      uploadFiles(event.dataTransfer.files);
+    }
+  };
+
+  const handleReorder = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    onChange((prev) => {
+      const oldIndex = prev.indexOf(String(active.id));
+      const newIndex = prev.indexOf(String(over.id));
+      if (oldIndex === -1 || newIndex === -1) return prev;
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  };
+
+  const removeImage = (url: string) => {
+    onChange((prev) => prev.filter((img) => img !== url));
+  };
+
+  const addPasteUrl = () => {
+    const url = pasteUrl.trim();
+    if (!url) return;
+    if (remainingSlots <= 0) {
+      setUploadError(
+        `Has alcanzado el límite de ${MAX_INLINE_IMAGES} imágenes.`,
+      );
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      setUploadError("Pega una URL válida que empiece con http:// o https://");
+      return;
+    }
+    setUploadError(null);
+    onChange((prev) => [...prev, url]);
+    setPasteUrl("");
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <Label>Fotografías de la propiedad</Label>
+          <span className="text-xs text-muted-foreground">
+            La primera foto es la portada
+          </span>
+        </div>
+
+        {images.length === 0 && !isUploading && (
+          <p className="text-sm text-muted-foreground">
+            Aún no hay fotografías. Sube imágenes o pega una URL.
+          </p>
+        )}
+
+        {/* Dropzone */}
+        <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={cn(
+            "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-6 text-center transition-colors",
+            isDragging
+              ? "border-primary bg-primary/5"
+              : "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
+          )}
+        >
+          <UploadCloud className="size-7 text-muted-foreground" />
+          <p className="text-sm font-medium">
+            Arrastra imágenes aquí o haz clic para subir
+          </p>
+          <p className="text-xs text-muted-foreground">
+            JPG, PNG, WebP o GIF · máx. 10 MB · {remainingSlots} de{" "}
+            {MAX_INLINE_IMAGES} disponibles
+          </p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files) uploadFiles(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
+
+        {uploadError && (
+          <p className="text-xs text-destructive" role="alert">
+            {uploadError}
+          </p>
+        )}
+
+        {/* Sortable grid */}
+        {images.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleReorder}
+          >
+            <SortableContext
+              items={images}
+              strategy={rectSortingStrategy}
+            >
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {images.map((url, index) => (
+                  <SortableInlineImage
+                    key={url}
+                    url={url}
+                    index={index}
+                    disabled={isUploading}
+                    onRemove={() => removeImage(url)}
+                  />
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
+        )}
+
+        {isUploading && (
+          <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Loader2 className="size-3.5 animate-spin" />
+            Subiendo imágenes…
+          </p>
+        )}
+
+        {/* URL fallback */}
+        <div className="flex items-end gap-2 pt-1">
+          <div className="flex-1 space-y-1">
+            <Label htmlFor="inline-image-url" className="text-xs">
+              ¿Tienes una URL de imagen?
+            </Label>
+            <div className="flex items-center gap-2">
+              <Link2 className="size-4 shrink-0 text-muted-foreground" />
+              <Input
+                id="inline-image-url"
+                value={pasteUrl}
+                onChange={(e) => setPasteUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addPasteUrl();
+                  }
+                }}
+                placeholder="https://…/foto.jpg"
+              />
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addPasteUrl}
+          >
+            Agregar
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SortableInlineImage({
+  url,
+  index,
+  disabled,
+  onRemove,
+}: {
+  url: string;
+  index: number;
+  disabled: boolean;
+  onRemove: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: url });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={cn(
+        "group relative aspect-square overflow-hidden rounded-lg border bg-muted",
+        isDragging && "z-10 opacity-90 shadow-lg ring-2 ring-primary",
+      )}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={url}
+        alt={`Imagen ${index + 1}`}
+        className="size-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+
+      {index === 0 && (
+        <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-[10px]">
+          Portada
+        </Badge>
+      )}
+
+      <button
+        type="button"
+        className="absolute right-1.5 top-1.5 inline-flex size-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-destructive group-hover:opacity-100"
+        onClick={onRemove}
+        disabled={disabled}
+        aria-label={`Quitar imagen ${index + 1}`}
+      >
+        <Trash2 className="size-4" />
+      </button>
+
+      <button
+        type="button"
+        aria-label={`Reordenar imagen ${index + 1}`}
+        className="absolute bottom-1.5 right-1.5 inline-flex size-7 cursor-grab touch-none items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-4" />
+      </button>
+
+      <span className="pointer-events-none absolute bottom-1.5 left-1.5 inline-flex size-6 items-center justify-center rounded-full bg-black/60 text-xs font-semibold text-white">
+        {index + 1}
+      </span>
+    </li>
+  );
 }
