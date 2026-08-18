@@ -348,7 +348,7 @@ function HotBarMini({ score }: { score: number | null }) {
           height: 6,
           borderRadius: 9999,
           background:
-            "linear-gradient(to right, #10B981 0%, #F59E0B 50%, #EF4444 100%)",
+            "linear-gradient(to right, #3B82F6 0%, #FACC15 50%, #EF4444 100%)",
         }}
       >
         {clamped != null && (

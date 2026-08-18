@@ -32,7 +32,7 @@ const instrument = Instrument_Serif({
 // the generated image alone does not change the URL — platforms like WhatsApp,
 // Facebook and X cache by exact URL and keep serving the stale image. The
 // explicit ?v= version forces them to re-scrape.
-const SOCIAL_IMAGE_VERSION = "3";
+const SOCIAL_IMAGE_VERSION = "4";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
