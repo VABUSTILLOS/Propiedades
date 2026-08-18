@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Building2 } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import type { AuthUser } from "@/modules/auth/session";
@@ -15,13 +15,15 @@ export function SiteHeader({ user }: { user: AuthUser | null }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-copper to-copper-deep text-white shadow-sm">
-            <Building2 className="size-[18px]" />
-          </span>
-          <span className="hidden text-lg font-bold tracking-tight min-[360px]:inline">
-            Propiedades
-          </span>
+        <Link href="/" className="flex min-w-0 items-center">
+          <Image
+            src="/brand/logo-100casas-horizontal.webp"
+            alt="100Casas — Inicio"
+            width={480}
+            height={120}
+            priority
+            className="h-9 w-auto sm:h-10"
+          />
         </Link>
 
         <DesktopNav />
