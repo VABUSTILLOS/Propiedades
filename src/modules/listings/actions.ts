@@ -915,6 +915,63 @@ export async function updateListingContact(
 }
 
 /**
+ * Bulk archive or delete listings owned by the current user (from
+ * "Mis listados" multi-select). Ownership is enforced by filtering to
+ * `owner_id = user.id` before mutating — RLS is a second layer.
+ */
+export async function bulkUpdateMyListings(
+  listingIds: string[],
+  action: "archive" | "delete",
+): Promise<ActionResult<{ count: number }>> {
+  const user = await getCurrentUser();
+  if (!user) return failAuth();
+
+  const ids = Array.isArray(listingIds)
+    ? listingIds
+        .filter((id) => typeof id === "string" && id.length > 0)
+        .slice(0, 100)
+    : [];
+  if (ids.length === 0) {
+    return fail("No hay listados seleccionados.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: owned } = await supabase
+    .from("properties")
+    .select("id")
+    .in("id", ids)
+    .eq("owner_id", user.id)
+    .returns<{ id: string }[]>();
+
+  const ownedIds = (owned ?? []).map((row) => row.id);
+  if (ownedIds.length === 0) {
+    return fail("No se encontraron listados tuyos para actualizar.");
+  }
+
+  if (action === "archive") {
+    const { error } = await supabase
+      .from("properties")
+      .update({ status: "archived" })
+      .in("id", ownedIds);
+    if (error) {
+      return fail(error.message);
+    }
+  } else {
+    const { error } = await supabase
+      .from("properties")
+      .delete()
+      .in("id", ownedIds);
+    if (error) {
+      return fail(error.message);
+    }
+  }
+
+  revalidatePath("/my-listings");
+  return ok({ count: ownedIds.length });
+}
+
+/**
  * Hard-delete a draft (soft-archive is preferred for live listings).
  */
 export async function deleteListing(listingId: string): Promise<ActionResult<undefined>> {

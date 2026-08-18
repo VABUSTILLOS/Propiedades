@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/modules/auth/session";
 import { GuestGate } from "@/modules/auth/components/guest-gate";
 import { getMyListings } from "@/modules/listings/queries";
-import { ListingCard } from "@/modules/listings/components/listing-card";
+import { MyListingsGrid } from "@/modules/listings/components/my-listings-grid";
 import { buttonVariants } from "@/components/ui/button";
 import { PageShell } from "@/components/layout/page-shell";
 import { PageHeader } from "@/components/layout/page-header";
@@ -57,11 +57,7 @@ export default async function MyListingsPage() {
           }
         />
       ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
+        <MyListingsGrid listings={listings} />
       )}
     </PageShell>
   );
