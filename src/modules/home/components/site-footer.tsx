@@ -46,7 +46,7 @@ export function SiteFooter() {
                 <Building2 className="size-[18px]" />
               </span>
               <span className="text-lg font-bold tracking-tight">
-                Propiedades
+                100Casas
               </span>
             </div>
             <p className="mt-3 max-w-xs text-sm text-white/70">
@@ -84,7 +84,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 font-mono text-xs text-white/65 sm:flex-row sm:items-center">
-          <span>© {new Date().getFullYear()} Propiedades — Hecho con ❤️</span>
+          <span>© {new Date().getFullYear()} 100Casas — Hecho con ❤️</span>
           <span className="uppercase tracking-[0.18em]">
             Compra · Renta · Invierte · Vende
           </span>
