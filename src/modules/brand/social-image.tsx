@@ -186,7 +186,6 @@ export default async function BrandSocialImage() {
     ),
     {
       ...size,
-      alt,
       fonts,
     },
   );

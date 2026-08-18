@@ -189,7 +189,7 @@ function CheckCard({
   children: React.ReactNode;
 }) {
   const Icon = tone === "live" ? Check : X;
-  const toneClass = tone === "live" ? "text-live" : "text-destructive";
+  const toneClass = tone === "live" ? "text-live-foreground" : "text-destructive";
   return (
     <Card>
       <CardContent className="pt-5">

@@ -15,7 +15,7 @@ export function VoiceCard({ example }: { example: VoiceExample }) {
           </p>
         </div>
         <div className="flex gap-2.5">
-          <Check className="mt-0.5 size-4 shrink-0 text-live" aria-hidden />
+          <Check className="mt-0.5 size-4 shrink-0 text-live-foreground" aria-hidden />
           <p className="text-sm font-medium leading-relaxed">{example.good}</p>
         </div>
       </div>

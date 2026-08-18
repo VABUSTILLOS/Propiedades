@@ -174,7 +174,7 @@ export default async function SearchPage({ searchParams }: Props) {
         {total === 0 ? (
           <div className="rounded-2xl border border-dashed px-6 py-16 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay propiedades que coincidan con esta vista.
+              No hay nada que valga la pena con esa vista. ¿Relajamos la búsqueda?
             </p>
           </div>
         ) : (

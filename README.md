@@ -2,6 +2,10 @@
 
 Real estate SaaS & marketplace portal — two-sided marketplace (buyers/investors ↔ agents/FSBO owners) built with **Next.js App Router** + **Supabase** (PostgreSQL, RLS, Realtime), inspired by Sharetribe's marketplace UX.
 
+## Brand kit
+
+Identidad visual y de voz: paleta **copper sobre cream**, Plus Jakarta Sans + Instrument Serif y el criterio de marca *"Solo lo que vale la pena"*. Ver los lineamientos en [`docs/brand-kit.md`](docs/brand-kit.md), la página visual en `/brand` y los logotipos SVG en [`public/brand/`](public/brand/).
+
 ## Stack
 
 - **Framework**: Next.js 16 App Router (RSC, Server Actions, Route Handlers), React 19, TypeScript strict (zero `any`)

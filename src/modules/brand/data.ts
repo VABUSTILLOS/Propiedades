@@ -28,7 +28,7 @@ export const brandColorGroups: BrandColorGroup[] = [
       "El color de la marca. Gradiente cálido que va del cobre brillante al teja profundo: energía, confianza y calidez mexicana.",
     colors: [
       { name: "Copper soft", hex: "#FFB36B", token: "--color-copper-soft", usage: "Acentos sobre fondos claros e ilustración." },
-      { name: "Copper bright", hex: "#E89252", token: "--color-copper-bright", usage: "Primary en dark mode, hovers sobre cobre." },
+      { name: "Copper bright", hex: "#E89252", token: "--color-copper-bright", usage: "Primary en dark mode, hover de enlaces en fondos ink." },
       { name: "Copper", hex: "#D67E3C", token: "--color-copper", usage: "Ring de foco, gradientes y detalle decorativo." },
       { name: "Copper deep", hex: "#A83810", token: "--color-copper-deep", usage: "Extremo profundo del gradiente de marca." },
       { name: "Copper ink", hex: "#8F2E0F", token: "--color-copper-ink", usage: "Texto decorativo sobre cobre profundo." },

@@ -27,6 +27,7 @@
   --color-copper-soft: var(--copper-soft);
   --color-copper-dark: var(--copper-dark);
   --color-live: var(--live);
+  --color-live-foreground: var(--live-foreground);
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-deep: var(--whatsapp-deep);
   --color-whatsapp-hover: var(--whatsapp-hover);
@@ -126,6 +127,7 @@
   --copper-soft: #FFB36B;
   --copper-dark: #6E1D00;
   --live: #7BC796;
+  --live-foreground: #1E7A45;
   --whatsapp: #0A6035;
   --whatsapp-deep: #064227;
   --whatsapp-hover: #074F2B;
@@ -174,6 +176,7 @@
   --copper-soft: #FFB36B;
   --copper-dark: #6E1D00;
   --live: #7BC796;
+  --live-foreground: #1E7A45;
   --whatsapp: #0A6035;
   --whatsapp-deep: #064227;
   --whatsapp-hover: #074F2B;

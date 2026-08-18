@@ -43,7 +43,7 @@ export function ColorSwatch({ color }: { color: BrandColor }) {
         <span
           className={cn(
             "text-muted-foreground transition-colors",
-            copied && "text-live",
+            copied && "text-live-foreground",
             !copied && "opacity-0 group-hover:opacity-100"
           )}
         >
