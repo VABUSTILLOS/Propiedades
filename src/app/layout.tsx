@@ -27,11 +27,10 @@ const instrument = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
-// Bump when the social share image content changes. Next hashes the
-// opengraph-image URL from the route file (which only re-exports), so changing
-// the generated image alone does not change the URL — platforms like WhatsApp,
-// Facebook and X cache by exact URL and keep serving the stale image. The
-// explicit ?v= version forces them to re-scrape.
+// Bump when the social share image content changes. The image is served by
+// the /opengraph-image route handler, addressed here with this explicit ?v=
+// version. Platforms like WhatsApp, Facebook and X cache by exact URL, so a
+// new version forces them to re-scrape the updated image.
 const SOCIAL_IMAGE_VERSION = "4";
 
 export const metadata: Metadata = {
