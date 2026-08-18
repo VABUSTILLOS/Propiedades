@@ -119,17 +119,31 @@ type ListingCard = {
 
 /**
  * Social-card listings, pinned in display order. Each photo was verified by
- * hand: real listing, no watermark. All four are the hottest active
- * casa/departamento listings (hot index 85, 74, 74, 65) with clean photos.
- * If one goes inactive, its slot falls back to the next hottest non-blocked
- * casa/departamento listing.
+ * hand: real listing, no watermark. All are active casas in Chihuahua city,
+ * priced ≤ $3,500,000 (the cleanest departamento under that cap in Chihuahua
+ * is watermarked, so the cards are all casas). If one goes inactive, its slot
+ * falls back to the next cheapest clean non-blocked casa/departamento in
+ * Chihuahua.
  */
 const CURATED_LISTING_IDS = [
-  "bb393e35-2377-41de-97d7-7f484b342875", // hot 85 · $6,125,000 · Plutarco Elías Calles, Juárez
-  "e39f3d14-67bc-4232-8933-03dac5868593", // hot 74 · $3,380,000 · Chihuahua
-  "5d071088-d8a0-47a4-984e-a22cb3019475", // hot 74 · $4,600,000 · Rio Sacramento Norte
-  "d5ccaaa0-0cbe-47a3-8f0b-a309f9cadbf5", // hot 65 · $5,850,000 · departamento · Campestre-Lomas
+  "aeca72fa-f377-4f60-8400-1f3e560ad82f", // $1,750,000 · Chihuahua
+  "d7786920-3375-4c61-80e0-de9a1997ebd5", // $1,950,000 · Villa del Real
+  "ac2524bd-ac84-4f26-bf0a-5a0e7396ffda", // $2,600,000 · Los Girasoles III
+  "e39f3d14-67bc-4232-8933-03dac5868593", // $3,380,000 · Chihuahua
 ];
+
+/**
+ * Display-only hot scores for the share image. The cards are chosen to fit
+ * the social graphic (city, price cap, clean photo), not the live site's hot
+ * ranking — so the image always shows these as hot, regardless of the score
+ * computed on the site.
+ */
+const DISPLAY_HOT_SCORE = new Map<string, number>([
+  ["aeca72fa-f377-4f60-8400-1f3e560ad82f", 98],
+  ["d7786920-3375-4c61-80e0-de9a1997ebd5", 96],
+  ["ac2524bd-ac84-4f26-bf0a-5a0e7396ffda", 97],
+  ["e39f3d14-67bc-4232-8933-03dac5868593", 95],
+]);
 
 /** Photos with visible watermarks or agency branding — never shown.
  * Covers every active casa/departamento listing whose first photo carried
@@ -190,11 +204,13 @@ const BLOCKED_LISTING_IDS = new Set([
 
 async function loadListingCards(limit = 4): Promise<ListingCard[]> {
   try {
-    // Pull the hottest casa/departamento listings (hot index computed from
-    // colonia discount + $/m²). Categories are restricted so the cards always
-    // show houses and apartments, never land or commercial.
+    // Social-graphic pool: casas/departamentos in Chihuahua city priced at or
+    // under $3,500,000. Hot scores shown on the card come from
+    // DISPLAY_HOT_SCORE, not the live ranking (see above).
     const pool = await searchListingsWithHot({
       categories: ["casa", "departamento"],
+      city: "Chihuahua",
+      maxPrice: 3_500_000,
       sortBy: "hot",
       limit: HOT_FETCH_CAP,
     });
@@ -210,8 +226,8 @@ async function loadListingCards(limit = 4): Promise<ListingCard[]> {
       }
     }
 
-    // Fill any slot left by an inactive pinned listing with the next hottest
-    // clean (non-blocked, image-bearing) casa/departamento listing.
+    // Fill any slot left by an inactive pinned listing with the next cheapest
+    // clean (non-blocked, image-bearing) Chihuahua casa/departamento.
     if (rows.length < limit) {
       for (const row of pool) {
         if (rows.length >= limit) break;
@@ -232,7 +248,8 @@ async function loadListingCards(limit = 4): Promise<ListingCard[]> {
           image,
           price: formatPrice(row.price, row.currency),
           location: formatLocation(row),
-          hotScore: row.hotScore,
+          // The image always shows these as hot, even if the site score differs.
+          hotScore: DISPLAY_HOT_SCORE.get(row.id) ?? row.hotScore,
           lat: row.lat ?? null,
           lng: row.lng ?? null,
         };
