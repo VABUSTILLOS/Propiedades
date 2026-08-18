@@ -2,15 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { PROPERTY_CATEGORIES } from "@/modules/lib/schemas";
+import { CATEGORY_LABELS } from "@/modules/lib/real-estate";
 import type { PropertyCategory } from "@/modules/lib/database.types";
-
-const CATEGORY_LABELS: Record<PropertyCategory, string> = {
-  casa: "Casa",
-  departamento: "Departamento",
-  local: "Local",
-  bodega: "Bodega",
-  terreno: "Terreno",
-};
 
 /** Property-type options shown as togglable pills in both search modes. */
 export const CATEGORY_OPTIONS = PROPERTY_CATEGORIES.map((value) => ({

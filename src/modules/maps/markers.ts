@@ -99,9 +99,11 @@ export function createMarker(
         marker.map = m;
       },
       addListener: (eventName, handler) => {
-        marker.addEventListener(eventName, handler);
+        // AdvancedMarkerElement consumes DOM "click" and re-emits "gmp-click".
+        const event = eventName === "click" ? "gmp-click" : eventName;
+        marker.addEventListener(event, handler);
         return {
-          remove: () => marker.removeEventListener(eventName, handler),
+          remove: () => marker.removeEventListener(event, handler),
         };
       },
       getMarker: () => marker,

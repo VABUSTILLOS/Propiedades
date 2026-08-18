@@ -1,20 +1,69 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { createPortal } from "react-dom";
 import { MarkerClusterer, type Cluster } from "@googlemaps/markerclusterer";
 import { X } from "lucide-react";
 
-import { GOOGLE_MAPS_AVAILABLE, useGoogleMaps } from "@/modules/maps/hooks";
+import {
+  GOOGLE_MAPS_AVAILABLE,
+  useGoogleMaps,
+  type GoogleMaps,
+} from "@/modules/maps/hooks";
 import {
   createMap,
   createMarker,
   type MapMarkerHandle,
 } from "@/modules/maps/markers";
+import { MapPropertyPopup } from "@/modules/maps/components/map-property-popup";
 import type { PropertyMapMarker } from "@/modules/search/queries";
 import type { MapBounds } from "@/modules/lib/schemas";
 import { formatCompactPrice } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
+
+/**
+ * OverlayView subclass (created per map) that anchors a plain DOM container
+ * above a pin. React content is rendered into it via `createPortal`, so the
+ * popup keeps full Tailwind styling while tracking pan/zoom.
+ */
+function buildPopupOverlayClass(
+  google: GoogleMaps,
+  onAttach: (container: HTMLDivElement | null) => void,
+) {
+  return class extends google.maps.OverlayView {
+    readonly container = document.createElement("div");
+    private position: google.maps.LatLng | null = null;
+    override onAdd() {
+      this.container.style.position = "absolute";
+      this.container.style.pointerEvents = "auto";
+      this.getPanes()?.overlayMouseTarget.appendChild(this.container);
+      onAttach(this.container);
+    }
+    override onRemove() {
+      this.container.parentNode?.removeChild(this.container);
+      onAttach(null);
+    }
+    setPinPosition(position: google.maps.LatLng | null) {
+      this.position = position;
+      this.draw();
+    }
+    override draw() {
+      if (!this.position) return;
+      const projection = this.getProjection();
+      if (!projection) return;
+      const point = projection.fromLatLngToDivPixel(this.position);
+      if (!point) return;
+      this.container.style.left = `${point.x}px`;
+      this.container.style.top = `${point.y}px`;
+      // Bottom-center of the popup sits exactly on the pin.
+      this.container.style.transform = "translate(-50%, -100%)";
+    }
+  };
+}
+
+type PinPopupOverlay = InstanceType<
+  ReturnType<typeof buildPopupOverlayClass>
+>;
 
 /** Min viewport delta (degrees) before a new "show in this area" suggestion. */
 const EPSILON = 1e-4;
@@ -33,7 +82,7 @@ function inBounds(bounds: MapBounds, marker: PropertyMapMarker): boolean {
  * - Price pills on every matching listing (advanced markers, legacy fallback)
  * - Clustering with click-to-zoom-in
  * - Pan/zoom idle → "Mostrar N propiedades en esta zona" pill
- * - Click pin → bottom card → property page
+ * - Click pin → floating popup card (carousel + specs) → property page
  *
  * The map is fully controlled: the parent owns which filters/bounds are
  * applied, and `initialBounds` (re)centers it on navigation.
@@ -85,14 +134,16 @@ export function PropertiesMap({
   const pillElsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const markersRef = useRef<PropertyMapMarker[]>(markers);
   const lastEmittedRef = useRef<MapBounds | null>(null);
+  const popupOverlayRef = useRef<PinPopupOverlay | null>(null);
 
   const [pinSelectedId, setPinSelectedId] = useState<string | null>(null);
+  const [popupTarget, setPopupTarget] = useState<HTMLDivElement | null>(null);
   const [suggest, setSuggest] = useState<{
     bounds: MapBounds;
     count: number;
   } | null>(null);
 
-  // The compact bottom card is driven by either a pin click (internal) or a
+  // The floating popup is driven by either a pin click (internal) or a
   // listing chosen from the list in split view (parent-controlled).
   const selectedId = selectionId ?? pinSelectedId;
   const selected = markers.find((m) => m.id === selectedId) ?? null;
@@ -107,6 +158,12 @@ export function PropertiesMap({
       zoom: 11,
     });
     mapRef.current = map;
+
+    const PopupOverlay = buildPopupOverlayClass(google, setPopupTarget);
+    popupOverlayRef.current = new PopupOverlay();
+
+    // Clicking the map background dismisses the pin popup.
+    google.maps.event.addListener(map, "click", () => setPinSelectedId(null));
 
     google.maps.event.addListener(map, "idle", () => {
       const bounds = map.getBounds();
@@ -135,6 +192,8 @@ export function PropertiesMap({
     });
 
     return () => {
+      popupOverlayRef.current?.setMap(null);
+      popupOverlayRef.current = null;
       mapRef.current = null;
     };
   }, [google]);
@@ -258,6 +317,38 @@ export function PropertiesMap({
     map.setZoom(Math.max(map.getZoom() ?? 11, minZoom));
   }, [google, markers, focusId, focusPosition]);
 
+  // Anchor the floating popup to the selected pin. The overlay lives in the
+  // map's mouse-target pane so React can portal into it and the card tracks
+  // pan/zoom automatically (OverlayView.draw repositions on every frame).
+  useEffect(() => {
+    const map = mapRef.current;
+    const overlay = popupOverlayRef.current;
+    if (!google || !map || !overlay) return;
+
+    if (!selected) {
+      overlay.setMap(null);
+      return;
+    }
+
+    overlay.setPinPosition(new google.maps.LatLng(selected.lat, selected.lng));
+    overlay.setMap(map);
+
+    // Nudge the pin below center so the popup (drawn above the pin) fits.
+    map.panTo({ lat: selected.lat, lng: selected.lng });
+    map.panBy(0, -120);
+  }, [google, selected]);
+
+  // Escape dismisses a pin-click popup (split-view selection is closed by
+  // the parent that owns `selectionId`).
+  useEffect(() => {
+    if (!pinSelectedId) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPinSelectedId(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [pinSelectedId]);
+
   // Highlight the selected/hovered pill via direct DOM (avoids rebuilding markers).
   useEffect(() => {
     pillElsRef.current.forEach((el, id) => {
@@ -321,47 +412,26 @@ export function PropertiesMap({
         </div>
       )}
 
-      {selected && (
-        <div className="absolute inset-x-3 bottom-3 z-10">
-          <div className="flex items-center gap-3 rounded-2xl bg-background/95 p-3 shadow-lg backdrop-blur">
-            <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-muted">
-              {selected.images?.[0] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  loading="lazy"
-                  decoding="async"
-                  src={selected.images[0]}
-                  alt={selected.title}
-                  className="size-full object-cover"
-                />
-              ) : (
-                <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
-                  Sin foto
-                </div>
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold leading-snug">{selected.title}</p>
-              <p className="truncate text-sm text-muted-foreground">
-                {[selected.colonia, selected.city].filter(Boolean).join(", ")}
-              </p>
-              <p className="text-sm font-bold">
-                ${selected.price.toLocaleString()}{" "}
-                <span className="text-xs font-normal text-muted-foreground">
-                  {selected.currency} ·{" "}
-                  {selected.type === "rent" ? "renta" : "venta"}
-                </span>
-              </p>
-            </div>
-            <Link
-              href={from ? `/property/${selected.slug}?from=${encodeURIComponent(from)}` : `/property/${selected.slug}`}
-              className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-copper-deep"
-            >
-              Ver propiedad
-            </Link>
-          </div>
-        </div>
-      )}
+      {popupTarget &&
+        selected &&
+        createPortal(
+          <div
+            className="relative pb-3"
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <MapPropertyPopup
+              marker={selected}
+              from={from}
+              onClose={() => setPinSelectedId(null)}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute bottom-1.5 left-1/2 size-3 -translate-x-1/2 rotate-45 border-b border-r bg-background"
+            />
+          </div>,
+          popupTarget,
+        )}
     </div>
   );
 }

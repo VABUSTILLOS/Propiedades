@@ -42,14 +42,7 @@ import type {
   PropertiesRow,
   PropertyCategory,
 } from "@/modules/lib/database.types";
-
-const CATEGORY_LABELS: Record<PropertyCategory, string> = {
-  casa: "Casa",
-  departamento: "Departamento",
-  local: "Local",
-  bodega: "Bodega",
-  terreno: "Terreno",
-};
+import { CATEGORY_LABELS } from "@/modules/lib/real-estate";
 
 const CATEGORY_VALUES = Object.keys(CATEGORY_LABELS) as PropertyCategory[];
 

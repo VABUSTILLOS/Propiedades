@@ -43,10 +43,31 @@ declare global {
       constructor(el: HTMLElement, opts?: MapOptions);
       setCenter(center: LatLng | LatLngLiteral): void;
       panTo(latLng: LatLng | LatLngLiteral): void;
+      panBy(x: number, y: number): void;
       setZoom(zoom: number): void;
       getZoom(): number | undefined;
       fitBounds(bounds: LatLngBounds): void;
       getBounds(): LatLngBounds | null;
+    }
+
+    interface MapCanvasProjection {
+      fromLatLngToDivPixel(
+        latLng: LatLng | LatLngLiteral,
+      ): { x: number; y: number } | null;
+    }
+
+    interface MapPanes {
+      overlayMouseTarget: HTMLElement;
+      [paneName: string]: HTMLElement;
+    }
+
+    class OverlayView {
+      onAdd(): void;
+      onRemove(): void;
+      draw(): void;
+      getPanes(): MapPanes | null;
+      getProjection(): MapCanvasProjection;
+      setMap(map: Map | null): void;
     }
 
     class Size {

@@ -58,7 +58,13 @@ export type PropertyMapMarker = {
   price: number;
   currency: string;
   type: "sale" | "rent";
+  category: PropertyCategory;
   images: string[] | null;
+  recamaras: number | null;
+  banos: number | null;
+  estacionamientos: number | null;
+  construccion_m2: number;
+  terreno_m2: number;
   lat: number;
   lng: number;
 };
@@ -473,7 +479,7 @@ export async function getListingMarkers(
   const query = applyFilters(
     supabase
       .from("properties")
-      .select("id,title,slug,city,colonia,price,currency,type,images,lat,lng"),
+      .select("id,title,slug,city,colonia,price,currency,type,category,images,recamaras,banos,estacionamientos,construccion_m2,terreno_m2,lat,lng"),
     filters,
   );
 

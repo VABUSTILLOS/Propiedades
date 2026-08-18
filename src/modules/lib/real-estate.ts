@@ -1,4 +1,17 @@
-import type { PropertiesRow, PropertyDealType } from "@/modules/lib/database.types";
+import type {
+  PropertiesRow,
+  PropertyCategory,
+  PropertyDealType,
+} from "@/modules/lib/database.types";
+
+/** Human label for a property category (casa/departamento/local/…). */
+export const CATEGORY_LABELS: Record<PropertyCategory, string> = {
+  casa: "Casa",
+  departamento: "Departamento",
+  local: "Local",
+  bodega: "Bodega",
+  terreno: "Terreno",
+};
 
 /** Estimated annual property tax (predial) as a fraction of sale price. */
 export const PREDIAL_RATE = 0.00265;
@@ -104,8 +117,7 @@ export function propertyTypeLabel(
   return isLand ? "Tierra" : type === "rent" ? "Renta" : "Venta";
 }
 
-/** Human label for a deal type (remate/flipping/traspaso/renta/venta directa). */
-export function dealTypeLabel(
+/** Human label for a deal type (remate/flipping/traspaso/renta/venta directa). */export function dealTypeLabel(
   dealType: PropertiesRow["deal_type"] | null | undefined,
 ): string {
   switch (dealType) {
