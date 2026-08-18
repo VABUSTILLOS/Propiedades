@@ -5,12 +5,14 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { formatMxn } from "@/modules/lib/real-estate";
 import type { ListingWithHot } from "@/modules/search/queries";
+import { HeroPhotoCarousel } from "@/modules/home/components/hero-photo-carousel";
 
 /**
  * "Deal of the week" spotlight floating in the hero's right column. Shows
  * the #1 opportunity with the proof portals never publish: the colonia
  * benchmark price struck through next to the real price, the exact %
- * advantage and the opportunity gauge. Server-safe (no state).
+ * advantage and the opportunity gauge. The photo is a client carousel
+ * (arrows, dots, swipe); the rest stays server-safe.
  */
 export function HeroDealCard({ listing }: { listing: ListingWithHot }) {
   const discount =
@@ -27,13 +29,8 @@ export function HeroDealCard({ listing }: { listing: ListingWithHot }) {
       className="group relative block overflow-hidden rounded-[2rem] bg-card text-card-foreground shadow-2xl shadow-black/50 transition-transform duration-300 hover:-translate-y-1"
     >
       <div className="relative aspect-[16/10] bg-muted">
-        {listing.images?.[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={listing.images[0]}
-            alt={listing.title}
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
+        {listing.images && listing.images.length > 0 ? (
+          <HeroPhotoCarousel images={listing.images} title={listing.title} />
         ) : (
           <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
             Sin foto

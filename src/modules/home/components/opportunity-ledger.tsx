@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Image as ImageIcon } from "lucide-react";
 
 import { formatMxn } from "@/modules/lib/real-estate";
 import type { ListingWithHot } from "@/modules/search/queries";
@@ -42,10 +42,31 @@ export function OpportunityLedger({ items }: { items: ListingWithHot[] }) {
             <li key={listing.id} className="border-b border-border last:border-b-0">
               <Link
                 href={`/property/${listing.slug}`}
-                className="group grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 py-4 transition-colors hover:bg-muted/70 sm:grid-cols-[3.5rem_minmax(0,1fr)_9.5rem_8.5rem_1.5rem] sm:gap-6 sm:py-5"
+                className="group grid grid-cols-[2.25rem_3rem_minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-2 py-4 transition-colors hover:bg-muted/70 sm:grid-cols-[3.5rem_4.5rem_minmax(0,1fr)_9.5rem_8.5rem_1.5rem] sm:gap-6 sm:py-5"
               >
                 <span className="font-mono text-lg text-muted-foreground transition-colors group-hover:text-primary sm:text-2xl">
                   {String(i + 1).padStart(2, "0")}
+                </span>
+
+                {/* Thumbnail of the property's main photo */}
+                <span className="block size-12 shrink-0 overflow-hidden rounded-lg bg-muted sm:size-14">
+                  {listing.images?.[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      loading="lazy"
+                      decoding="async"
+                      src={listing.images[0]}
+                      alt=""
+                      className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <span className="flex size-full items-center justify-center">
+                      <ImageIcon
+                        className="size-4 text-muted-foreground"
+                        aria-hidden
+                      />
+                    </span>
+                  )}
                 </span>
 
                 <span className="min-w-0">
