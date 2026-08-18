@@ -222,6 +222,19 @@
   }
 }
 
+/* Teleprompter loop for the live activity strip. Declared with a literal
+   animation value (instead of var() inside the animation shorthand) so the
+   movement also runs in browsers that don't resolve variables there. */
+@keyframes ticker-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker-scroll 42s linear infinite;
+}
+
 /* Accessibility: honor reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -231,5 +244,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Exception: the hero ticker is a slow, linear, non-flashing text loop
+     that the site owner explicitly wants always in motion (teleprompter
+     effect). Restore its animation after the global freeze above. */
+  .ticker-track {
+    animation: ticker-scroll 42s linear infinite !important;
   }
 }

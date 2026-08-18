@@ -203,11 +203,11 @@ export default async function HomePage() {
                 </div>
               ))}
             </dl>
-
-            {/* Cintillo en movimiento — actividad en vivo */}
-            <MarketTicker items={tickerItems} />
           </div>
         </section>
+
+        {/* Cintillo en movimiento — actividad en vivo, a todo lo ancho al final del hero */}
+        <MarketTicker items={tickerItems} />
 
         <OpportunityLedger items={opportunities} />
 
