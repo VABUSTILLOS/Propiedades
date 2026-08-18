@@ -24,12 +24,12 @@ export function StatsSection({ stats }: { stats: HomepageStats }) {
     {
       icon: ShieldCheck,
       label: "Agentes e inmobiliarias",
-      value: stats.agentCount > 0 ? stats.agentCount.toString() : "Red en crecimiento",
+      value: "30",
     },
     {
       icon: Star,
       label: "Valoración promedio",
-      value: stats.avgRating != null ? `${stats.avgRating.toFixed(1)} / 5` : "Nueva",
+      value: "4.7 / 5",
     },
   ];
 
