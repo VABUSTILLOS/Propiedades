@@ -398,14 +398,14 @@ export function PropertiesMap({
       )}
 
       {suggest && suggest.count > 0 && !selected && (
-        <div className="absolute inset-x-0 top-3 z-10 flex justify-center">
+        <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center">
           <button
             type="button"
             onClick={() => {
               onApplyBounds?.(suggest.bounds);
               setSuggest(null);
             }}
-            className="rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-lg transition-transform hover:scale-[1.03]"
+            className="pointer-events-auto rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-lg transition-transform hover:scale-[1.03]"
           >
             Mostrar {suggest.count}{" "}
             {suggest.count === 1 ? "propiedad" : "propiedades"} en esta zona
