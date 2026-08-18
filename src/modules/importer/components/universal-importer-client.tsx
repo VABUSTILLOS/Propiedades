@@ -40,23 +40,21 @@ const STEPS = [
 
 const STEP_MS = 900;
 
-const FB_COPY_INSTRUCTIONS = `Abre el anuncio de Facebook Marketplace en tu navegador (debes estar con sesión iniciada en Facebook). Pulsa ⌘A (Mac) o Ctrl+A (Windows) para seleccionar todo el contenido del anuncio y pulsa ⌘C / Ctrl+C para copiarlo. Luego pégalo en el cuadro de abajo.`;
+const MANUAL_COPY_INSTRUCTIONS = `Abre el anuncio en tu navegador (con sesión iniciada si el sitio lo requiere, como Facebook Marketplace). Pulsa ⌘A (Mac) o Ctrl+A (Windows) para seleccionar todo el contenido del anuncio y pulsa ⌘C / Ctrl+C para copiarlo. Luego pégalo en el cuadro de abajo.`;
 
-const isFacebookUrl = (value: string) => {
-  try {
-    const host = new URL(value).hostname;
-    return host === "facebook.com" || host.endsWith(".facebook.com");
-  } catch {
-    return false;
-  }
-};
+/**
+ * Some portals (Facebook Marketplace, Vivanuncios, …) block server-side
+ * scraping. For those, the user pastes the listing content copied from their
+ * own browser and it is sent alongside the URL.
+ */
+const showManualPasteHelper = (value: string) => value.trim().length > 0;
 
 /**
  * Universal Property Importer: paste any listing URL (Facebook Marketplace,
  * Inmuebles24, Mercado Libre, …) and get a pre-filled draft with a draggable
- * map pin, ready to save. Facebook Marketplace blocks server-side scraping, so
- * for Facebook URLs the user pastes the listing content copied from their own
- * logged-in browser and it is sent alongside the URL.
+ * map pin, ready to save. Some portals block server-side scraping, so the
+ * user can paste the listing content copied from their own browser and it is
+ * sent alongside the URL.
  */
 export function UniversalImporterClient() {
   const router = useRouter();
@@ -79,7 +77,7 @@ export function UniversalImporterClient() {
   const [isSaving, startSaving] = useTransition();
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  const showFacebookHelper = isFacebookUrl(url);
+  const showPasteHelper = showManualPasteHelper(url);
 
   // Micro-animation: advance the loader step while the pipeline runs.
   useEffect(() => {
@@ -92,7 +90,7 @@ export function UniversalImporterClient() {
 
   const copyInstructions = async () => {
     try {
-      await navigator.clipboard.writeText(FB_COPY_INSTRUCTIONS);
+      await navigator.clipboard.writeText(MANUAL_COPY_INSTRUCTIONS);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {

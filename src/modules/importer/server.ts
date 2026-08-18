@@ -12,6 +12,57 @@ import type { ImportedPropertyDraft } from "@/modules/importer/schemas";
 
 const JINA_API_KEY = process.env.JINA_API_KEY ?? "";
 
+/**
+ * Listing portals where the path alone identifies the ad and the query string
+ * is pure tracking noise (n_*, utm_*, …). Keeping those params makes reader
+ * proxies treat the URL as a new page and serve CAPTCHA walls instead of the
+ * cached listing, so we strip the query entirely for these domains.
+ */
+const TRACKING_ONLY_QUERY_HOSTS = [
+  "vivanuncios.com.mx",
+  "inmuebles24.com",
+  "propiedades.com",
+  "lamudi.com.mx",
+  "century21mexico.com",
+];
+
+/**
+ * Remove tracking query params from known listing-portal URLs so downstream
+ * fetches hit the canonical ad page. Returns the input unchanged when the URL
+ * is unparseable or the host is not in the known-portal list.
+ */
+export function canonicalizeListingUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    if (TRACKING_ONLY_QUERY_HOSTS.some((h) => host === h || host.endsWith(`.${h}`))) {
+      parsed.search = "";
+      parsed.hash = "";
+      return parsed.toString();
+    }
+    return url;
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Markers that indicate the fetched page is a bot/CAPTCHA wall rather than
+ * the actual listing content.
+ */
+const BLOCKED_PAGE_MARKERS = [
+  "Just a moment",
+  "requiring CAPTCHA",
+  "Attention Required! | Cloudflare",
+  "cf-chl",
+];
+
+/** True when the fetched text looks like a CAPTCHA/bot wall, not a listing. */
+function isBlockedPage(text: string): boolean {
+  if (text.trim().length < 200) return true;
+  return BLOCKED_PAGE_MARKERS.some((marker) => text.includes(marker));
+}
+
 export type ExtractedProperty = {
   title: string;
   price: number;
@@ -38,29 +89,52 @@ export type ExtractedProperty = {
 };
 
 /**
- * Fetch a listing page's content as text, preferring the Jina AI Reader
- * (which returns readable markdown) and falling back to a raw HTML fetch.
+ * Fetch a page through the Jina AI Reader, optionally authenticated. Returns
+ * the markdown text, or null when Jina fails or serves a bot wall.
  */
-export async function fetchPageContent(url: string): Promise<string | null> {
+async function fetchViaJina(url: string, useApiKey: boolean): Promise<string | null> {
   try {
     const jinaRes = await fetch(`https://r.jina.ai/${url}`, {
       headers: {
         Accept: "text/plain",
         "X-Return-Format": "markdown",
-        ...(JINA_API_KEY ? { Authorization: `Bearer ${JINA_API_KEY}` } : {}),
+        ...(useApiKey && JINA_API_KEY
+          ? { Authorization: `Bearer ${JINA_API_KEY}` }
+          : {}),
       },
       cache: "no-store",
     });
     if (jinaRes.ok) {
       const text = await jinaRes.text();
-      if (text.trim()) return text;
+      if (text.trim() && !isBlockedPage(text)) return text;
     }
   } catch {
-    // fall through to plain fetch
+    // fall through
+  }
+  return null;
+}
+
+/**
+ * Fetch a listing page's content as text, preferring the Jina AI Reader
+ * (which returns readable markdown) and falling back to a raw HTML fetch.
+ * When the authenticated Jina call fails (e.g. an expired or out-of-balance
+ * JINA_API_KEY), it retries through Jina's free tier without the key.
+ */
+export async function fetchPageContent(url: string): Promise<string | null> {
+  const canonicalUrl = canonicalizeListingUrl(url);
+
+  const viaKey = await fetchViaJina(canonicalUrl, true);
+  if (viaKey) return viaKey;
+
+  // The API key may be invalid or out of balance (Jina returns 402); the
+  // unauthenticated free tier can still serve the page.
+  if (JINA_API_KEY) {
+    const viaFreeTier = await fetchViaJina(canonicalUrl, false);
+    if (viaFreeTier) return viaFreeTier;
   }
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(canonicalUrl, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -407,7 +481,8 @@ export async function importPropertyFromUrl(url: string): Promise<ImportResult> 
   if (!content) {
     return {
       ok: false,
-      error: "No se pudo leer el contenido de la página (puede estar bloqueada).",
+      error:
+        "El sitio bloqueó la lectura automática del anuncio. Copia el contenido del anuncio desde tu navegador, pégalo en el cuadro de abajo y vuelve a intentarlo.",
       status: 422,
     };
   }
