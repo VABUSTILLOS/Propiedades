@@ -1,10 +1,15 @@
+import Link from "next/link";
+
+export type TickerItem = { label: string; href: string };
+
 /**
  * Live activity ticker — ambient proof that the registry keeps moving.
- * Real listings in mono uppercase; the loop pauses on hover and collapses
- * to a static strip under reduced-motion (global accessibility rule).
+ * Real listings in mono uppercase, each linked to its property page; the
+ * loop pauses on hover (so items stay clickable) and collapses to a static
+ * strip under reduced-motion (global accessibility rule).
  * Server-safe: items arrive pre-formatted from the page.
  */
-export function MarketTicker({ items }: { items: string[] }) {
+export function MarketTicker({ items }: { items: TickerItem[] }) {
   if (items.length === 0) return null;
 
   const half = (duplicate: boolean) => (
@@ -14,7 +19,13 @@ export function MarketTicker({ items }: { items: string[] }) {
     >
       {items.map((item, i) => (
         <span key={`${duplicate ? "b" : "a"}-${i}`} className="flex items-center">
-          <span className="px-6">{item}</span>
+          <Link
+            href={item.href}
+            tabIndex={duplicate ? -1 : undefined}
+            className="px-6 underline-offset-4 transition-colors hover:text-white hover:underline"
+          >
+            {item.label}
+          </Link>
           <span className="text-copper" aria-hidden>
             ◆
           </span>

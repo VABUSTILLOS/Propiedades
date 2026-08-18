@@ -100,7 +100,10 @@ export default async function HomePage() {
       item.discountPct != null && item.discountPct > 0
         ? `−${item.discountPct.toFixed(0)}% vs colonia`
         : formatMxn(item.price);
-    return `${item.title} — ${place} — ${delta}`;
+    return {
+      label: `${item.title} — ${place} — ${delta}`,
+      href: `/property/${item.slug}`,
+    };
   });
 
   return (
