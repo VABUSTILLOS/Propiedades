@@ -211,6 +211,8 @@ declare global {
       draggable?: boolean;
       content?: HTMLElement | string;
       zIndex?: number;
+      /** Whether the marker emits `gmp-click`. Do not rely on the beta default. */
+      gmpClickable?: boolean;
     }
 
     class AdvancedMarkerElement {

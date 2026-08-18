@@ -33,6 +33,12 @@ type MarkerOptions = {
   content?: HTMLElement;
   /** Text label fallback used when advanced markers are unavailable. */
   label?: string;
+  /**
+   * Makes an advanced marker emit `gmp-click`. Must be set explicitly: the
+   * beta-channel default can resolve to `false`, which silently swallows
+   * clicks (no `gmp-click`, no popup).
+   */
+  clickable?: boolean;
 };
 
 /**
@@ -66,7 +72,7 @@ export function createMarker(
   google: GoogleMaps,
   options: MarkerOptions,
 ): MapMarkerHandle {
-  const { map, position, title, draggable, color, iconUrl, content, label } =
+  const { map, position, title, draggable, color, iconUrl, content, label, clickable } =
     options;
 
   if (
@@ -89,6 +95,7 @@ export function createMarker(
       title,
       draggable,
       content: pinContent,
+      gmpClickable: Boolean(clickable),
     });
     return {
       setPosition: (pos) => {

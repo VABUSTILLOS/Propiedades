@@ -274,6 +274,7 @@ export function PropertiesMap({
         title: marker.title,
         content: pill,
         label: formatCompactPrice(marker.price, marker.type),
+        clickable: true,
       });
       handle.addListener("click", () => setPinSelectedId(marker.id));
       handlesRef.current.set(marker.id, handle);
