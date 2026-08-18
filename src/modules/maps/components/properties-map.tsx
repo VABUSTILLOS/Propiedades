@@ -467,6 +467,7 @@ export function PropertiesMap({
         createPortal(
           <div
             className="relative pb-3"
+            onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
           >
@@ -483,9 +484,9 @@ export function PropertiesMap({
                 e.stopPropagation();
                 if (prevNeighbor) selectPin(prevNeighbor.id);
               }}
-              className="absolute -left-12 top-1/2 -translate-y-1/2 rounded-full bg-background/95 p-1.5 shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-background disabled:pointer-events-none disabled:opacity-0"
+              className="absolute -left-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0"
             >
-              <ChevronLeft className="size-4" aria-hidden="true" />
+              <ChevronLeft className="size-6" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -495,9 +496,9 @@ export function PropertiesMap({
                 e.stopPropagation();
                 if (nextNeighbor) selectPin(nextNeighbor.id);
               }}
-              className="absolute -right-12 top-1/2 -translate-y-1/2 rounded-full bg-background/95 p-1.5 shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-background disabled:pointer-events-none disabled:opacity-0"
+              className="absolute -right-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0"
             >
-              <ChevronRight className="size-4" aria-hidden="true" />
+              <ChevronRight className="size-6" aria-hidden="true" />
             </button>
             <div
               aria-hidden="true"

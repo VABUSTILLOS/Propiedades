@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Bath,
@@ -8,6 +8,7 @@ import {
   Car,
   ChevronLeft,
   ChevronRight,
+  ListPlus,
   MapPin,
   Ruler,
   X,
@@ -15,7 +16,17 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { CATEGORY_LABELS } from "@/modules/lib/real-estate";
+import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
+import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
+import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
 import type { PropertyMapMarker } from "@/modules/search/queries";
+
+/** Subset of `/api/properties/[slug]/panel` the popup actions need. */
+type PopupPanelData = {
+  isSaved: boolean;
+  lists: FavoriteListWithMeta[];
+  containingListIds: string[];
+};
 
 /**
  * Vivanuncios-style mini listing card anchored above a map pin: photo
@@ -35,6 +46,41 @@ export function MapPropertyPopup({
   const images = marker.images ?? [];
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [slide, setSlide] = useState(0);
+  const [panelResult, setPanelResult] = useState<
+    | { slug: string; data: PopupPanelData }
+    | { slug: string; failed: true }
+    | null
+  >(null);
+
+  // Favorite/list membership is user-specific — fetch it lazily from the
+  // same panel endpoint the split detail view uses. Keyed by slug so a
+  // stale result from a previously selected property is never shown.
+  useEffect(() => {
+    const slug = marker.slug;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await fetch(`/api/properties/${slug}/panel`, {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        const json = (await res.json()) as PopupPanelData;
+        if (!cancelled) setPanelResult({ slug, data: json });
+      } catch {
+        if (!cancelled) setPanelResult({ slug, failed: true });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [marker.slug]);
+
+  const panel =
+    panelResult && "data" in panelResult && panelResult.slug === marker.slug
+      ? panelResult.data
+      : null;
+  const panelFailed =
+    !!panelResult && "failed" in panelResult && panelResult.slug === marker.slug;
 
   const href = from
     ? `/property/${marker.slug}?from=${encodeURIComponent(from)}`
@@ -194,6 +240,42 @@ export function MapPropertyPopup({
           </div>
         )}
       </Link>
+
+      {/* Favorite / list actions — outside the Link so they don't navigate. */}
+      {!panelFailed ? (
+        <div className="flex items-center justify-end gap-2 px-3 pb-3">
+          {panel ? (
+            <>
+              <CardFavoriteButton
+                propertyId={marker.id}
+                propertySlug={marker.slug}
+                initialSaved={panel.isSaved}
+              />
+              <AddToListDialog
+                propertyId={marker.id}
+                propertySlug={marker.slug}
+                lists={panel.lists}
+                containingListIds={panel.containingListIds}
+                trigger={
+                  <button
+                    type="button"
+                    aria-label="Guardar en una lista"
+                    title="Guardar en una lista"
+                    className="flex size-9 items-center justify-center rounded-full bg-white/90 shadow-sm ring-1 ring-black/5 transition hover:bg-white"
+                  >
+                    <ListPlus className="size-4 text-muted-foreground" />
+                  </button>
+                }
+              />
+            </>
+          ) : (
+            <>
+              <span className="size-9 animate-pulse rounded-full bg-muted" />
+              <span className="size-9 animate-pulse rounded-full bg-muted" />
+            </>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 }
