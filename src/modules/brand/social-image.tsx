@@ -3,7 +3,8 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
-export const alt = "Propiedades — Marketplace inmobiliario de México";
+export const alt =
+  "100Casas.mx — No listamos todo, solo lo que vale la pena. Las 100 mejores oportunidades de tu ciudad, listadas a la vez.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -126,12 +127,12 @@ export default async function BrandSocialImage() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Propiedades
+              100Casas.mx
             </div>
           </div>
 
           {/* Headline */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div
               style={{
                 fontSize: 22,
@@ -141,7 +142,7 @@ export default async function BrandSocialImage() {
                 color: "#A83810",
               }}
             >
-              Marketplace inmobiliario · México
+              No listamos todo
             </div>
             <div
               style={{
@@ -165,6 +166,16 @@ export default async function BrandSocialImage() {
             >
               vale la pena.
             </div>
+            <div
+              style={{
+                fontSize: 26,
+                color: "#6B5446",
+                lineHeight: 1.45,
+                maxWidth: 940,
+              }}
+            >
+              Por eso, aquí solo encuentras las 100 mejores oportunidades, listadas a la vez, para que descubras la mejor casa para ti de tu ciudad.
+            </div>
           </div>
 
           {/* Footer */}
@@ -178,7 +189,7 @@ export default async function BrandSocialImage() {
               }}
             />
             <div style={{ fontSize: 20, color: "#6B5446" }}>
-              Compra · Renta · Invierte — valuaciones, tours y procesos transparentes
+              100Casas.mx — las 100 mejores oportunidades de tu ciudad
             </div>
           </div>
         </div>

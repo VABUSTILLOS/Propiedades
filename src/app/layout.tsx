@@ -33,9 +33,23 @@ export const metadata: Metadata = {
     template: "%s | 100Casas",
   },
   description:
-    "Compra, renta, invierte y vende propiedades en México con valuaciones, tours, ofertas digitales y procesos transparentes.",
+    "No listamos todo, solo lo que vale la pena. Aquí encuentras las 100 mejores oportunidades de tu ciudad, listadas a la vez, para que descubras la mejor casa para ti. 🏠✨",
   icons: {
     icon: [{ url: "/favicon.webp", type: "image/webp", sizes: "180x180" }],
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "100Casas.mx",
+    title: "100Casas.mx — Solo lo que vale la pena",
+    description:
+      "No listamos todo, solo lo que vale la pena. Aquí encuentras las 100 mejores oportunidades de tu ciudad, listadas a la vez, para que descubras la mejor casa para ti. 🏠✨",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "100Casas.mx — Solo lo que vale la pena",
+    description:
+      "No listamos todo, solo lo que vale la pena. Aquí encuentras las 100 mejores oportunidades de tu ciudad, listadas a la vez, para que descubras la mejor casa para ti. 🏠✨",
   },
 };
 
