@@ -162,6 +162,13 @@ export function SearchResults({
       focusId={selectedItem?.id ?? null}
       focusPosition={focusPosition}
       selectionId={selectedItem?.id ?? null}
+      onSelectPin={(id) => {
+        // Split view: navigating with the popup arrows (or clicking a pin)
+        // opens that listing in the detail pane when it's in the list;
+        // otherwise the pane clears so the clicked pin owns the popup.
+        const item = initialItems.find((l) => l.id === id);
+        setSelectedItem(item ?? null);
+      }}
       heightClass={heightClass}
       from={fromUrl}
     />

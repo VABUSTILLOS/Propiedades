@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MarkerClusterer, type Cluster } from "@googlemaps/markerclusterer";
-import { X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 import {
   GOOGLE_MAPS_AVAILABLE,
@@ -78,6 +78,32 @@ function inBounds(bounds: MapBounds, marker: PropertyMapMarker): boolean {
 }
 
 /**
+ * Nearest pin strictly to the left/right of `selected` (ties broken by
+ * vertical proximity). Co-located pins (same lng) are excluded so a stack
+ * of duplicates never navigates "sideways" into itself.
+ */
+function findDirectionalNeighbor(
+  markers: PropertyMapMarker[],
+  selected: PropertyMapMarker,
+  direction: "left" | "right",
+): PropertyMapMarker | null {
+  const EPS_LNG = 1e-7;
+  let best: PropertyMapMarker | null = null;
+  let bestScore = Infinity;
+  for (const m of markers) {
+    if (m.id === selected.id) continue;
+    const dlng = m.lng - selected.lng;
+    if (direction === "right" ? dlng <= EPS_LNG : dlng >= -EPS_LNG) continue;
+    const score = Math.abs(dlng) + Math.abs(m.lat - selected.lat) * 0.5;
+    if (score < bestScore) {
+      bestScore = score;
+      best = m;
+    }
+  }
+  return best;
+}
+
+/**
  * Airbnb-style interactive city map:
  * - Price pills on every matching listing (advanced markers, legacy fallback)
  * - Clustering with click-to-zoom-in
@@ -98,6 +124,7 @@ export function PropertiesMap({
   focusId = null,
   focusPosition = null,
   selectionId = null,
+  onSelectPin,
   from,
 }: {
   markers: PropertyMapMarker[];
@@ -123,6 +150,9 @@ export function PropertiesMap({
   focusPosition?: { lat: number; lng: number; approximate?: boolean } | null;
   /** Listing selected from the list — shows the compact bottom card (like a pin click). */
   selectionId?: string | null;
+  /** Notified when a pin gets selected (click or popup nav arrows) so the
+   *  parent can sync its own state (e.g. the split detail pane). */
+  onSelectPin?: (id: string) => void;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
 }) {
@@ -143,10 +173,29 @@ export function PropertiesMap({
     count: number;
   } | null>(null);
 
+  // Latest callback so marker click listeners never capture a stale parent.
+  const onSelectPinRef = useRef(onSelectPin);
+  useEffect(() => {
+    onSelectPinRef.current = onSelectPin;
+  }, [onSelectPin]);
+
   // The floating popup is driven by either a pin click (internal) or a
   // listing chosen from the list in split view (parent-controlled).
   const selectedId = selectionId ?? pinSelectedId;
   const selected = markers.find((m) => m.id === selectedId) ?? null;
+
+  const selectPin = (id: string) => {
+    setPinSelectedId(id);
+    onSelectPinRef.current?.(id);
+  };
+
+  // Slideshow-style neighbors: nearest pin strictly left/right of the popup.
+  const prevNeighbor = selected
+    ? findDirectionalNeighbor(markers, selected, "left")
+    : null;
+  const nextNeighbor = selected
+    ? findDirectionalNeighbor(markers, selected, "right")
+    : null;
 
   // Create the map once and listen for pan/zoom idle.
   useEffect(() => {
@@ -276,7 +325,7 @@ export function PropertiesMap({
         label: formatCompactPrice(marker.price, marker.type),
         clickable: true,
       });
-      handle.addListener("click", () => setPinSelectedId(marker.id));
+      handle.addListener("click", () => selectPin(marker.id));
       handlesRef.current.set(marker.id, handle);
       return handle;
     });
@@ -426,6 +475,30 @@ export function PropertiesMap({
               from={from}
               onClose={() => setPinSelectedId(null)}
             />
+            <button
+              type="button"
+              aria-label="Propiedad anterior a la izquierda"
+              disabled={!prevNeighbor}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (prevNeighbor) selectPin(prevNeighbor.id);
+              }}
+              className="absolute -left-12 top-1/2 -translate-y-1/2 rounded-full bg-background/95 p-1.5 shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-background disabled:pointer-events-none disabled:opacity-0"
+            >
+              <ChevronLeft className="size-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label="Siguiente propiedad a la derecha"
+              disabled={!nextNeighbor}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (nextNeighbor) selectPin(nextNeighbor.id);
+              }}
+              className="absolute -right-12 top-1/2 -translate-y-1/2 rounded-full bg-background/95 p-1.5 shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-background disabled:pointer-events-none disabled:opacity-0"
+            >
+              <ChevronRight className="size-4" aria-hidden="true" />
+            </button>
             <div
               aria-hidden="true"
               className="absolute bottom-1.5 left-1/2 size-3 -translate-x-1/2 rotate-45 border-b border-r bg-background"
