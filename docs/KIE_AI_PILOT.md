@@ -24,6 +24,8 @@ to this repo's structure and conventions.
 | `src/app/api/admin/kie-ai/music/route.ts` | `POST` → start music task, returns `{ taskId }`. |
 | `src/app/api/admin/kie-ai/chat/route.ts` | `POST` synchronous LLM chat, returns `{ content }`. |
 | `src/app/api/admin/kie-ai/status/route.ts` | `GET ?taskId=` → current task record. |
+| `src/lib/ai/kie-ai-admin.ts` | SERVER-ONLY wrapper over the admin routes (forwards the session cookie). |
+| `scripts/test-kie-ai.sh` | Smoke test (chat → image → status polling) against the admin routes. |
 | `docs/KIE_AI_PILOT.md` | This document. |
 
 ## Setup
@@ -201,3 +203,60 @@ be aware of:
 
 The API key stays on the server — routes only proxy it to `api.kie.ai` and
 never return it. Endpoints require an authenticated `admin` session.
+
+## Invocar desde tu código (server-side)
+
+Para llamar a las rutas admin desde el servidor (una Server Action, un route
+handler o un server component) sin exponer `KIEAI_API_KEY` al cliente usa
+`src/lib/ai/kie-ai-admin.ts`. Este wrapper es **server-only**: no habla con
+`api.kie.ai` ni lee la API key; reenvía la cookie de sesión actual
+(`cookies()` de `next/headers`) a las rutas admin, que autentican al usuario
+(`guard.ts`) y hacen el proxy. La URL base se toma de `NEXT_PUBLIC_SITE_URL`
+(fallback `http://localhost:3000`).
+
+Funciones exportadas (todas lanzan `Error` en español si la ruta falla):
+
+| Función | Llamada admin | Devuelve |
+| --- | --- | --- |
+| `kieChat(messages, model?)` | `POST /chat` | `{ content }` — `model` es obligatorio |
+| `kieImage(prompt, size?)` | `POST /image` | `{ taskId }` |
+| `kieVideo(prompt, model?, aspectRatio?)` | `POST /video` | `{ taskId }` |
+| `kieMusic(prompt, opts?)` | `POST /music` | `{ taskId }` — `opts.callBackUrl` opcional (la ruta cae al env) |
+| `kieStatus(taskId)` | `GET /status` | el `record` directamente |
+| `kieWaitForTask(taskId, timeoutMs?)` | polling cada 2 s | el `record` final (`success`/`fail`) |
+
+Ejemplo en una Server Action (`"use server"`): genera una imagen y espera el
+resultado:
+
+```ts
+import {
+  kieChat,
+  kieImage,
+  kieWaitForTask,
+} from "@/lib/ai/kie-ai-admin";
+
+export async function generarImagenKie(prompt: string) {
+  const { taskId } = await kieImage(prompt, "1:1");
+  const record = await kieWaitForTask(taskId, 120_000);
+  // record.state === "success" → record.resultUrls / record.resultJson
+  // record.state === "fail"     → record.failMsg
+}
+
+export async function chatKie(pregunta: string) {
+  const { content } = await kieChat(
+    [{ role: "user", content: pregunta }],
+    "gemini-2.5-flash",
+  );
+  return content;
+}
+```
+
+También puedes probar el flujo completo contra un servidor local con el script
+`scripts/test-kie-ai.sh` (CHAT → IMAGEN → polling de STATUS). Guarda antes la
+cookie de admin de DevTools → Application → Cookies (`sb-<ref>-auth-token` como
+`nombre=valor`) y ejecuta:
+
+```bash
+BASE=http://localhost:3000 COOKIE_FILE=/tmp/kie-cookie.txt ./scripts/test-kie-ai.sh
+```
+
