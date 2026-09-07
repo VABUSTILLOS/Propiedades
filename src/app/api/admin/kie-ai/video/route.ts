@@ -11,9 +11,14 @@ import {
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+const VIDEO_ASPECT_RATIOS = ["16:9", "9:16", "1:1"] as const;
+
 const VideoRequestSchema = z.object({
   prompt: z.string().trim().min(1, "El prompt es obligatorio.").max(4000),
+  // Veo endpoint requires a model (default "veo3_fast" — validated against the
+  // real API) plus an aspect ratio (docs default "16:9").
   model: z.string().trim().min(1).optional(),
+  aspect_ratio: z.enum(VIDEO_ASPECT_RATIOS).optional(),
 });
 
 /**
@@ -41,10 +46,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const { prompt, model } = parsed.data;
+  const { prompt, model, aspect_ratio } = parsed.data;
 
   try {
-    const task = await createVideoTask(model ? { prompt, model } : { prompt });
+    const task = await createVideoTask({
+      prompt,
+      model: model ?? "veo3_fast",
+      aspect_ratio: aspect_ratio ?? "16:9",
+    });
     return NextResponse.json({ taskId: task.taskId });
   } catch (err) {
     return kieAiErrorResponse(err);

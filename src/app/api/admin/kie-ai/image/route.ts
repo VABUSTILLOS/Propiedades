@@ -11,9 +11,12 @@ import {
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+const IMAGE_SIZES = ["1:1", "3:2", "2:3"] as const;
+
 const ImageRequestSchema = z.object({
   prompt: z.string().trim().min(1, "El prompt es obligatorio.").max(4000),
-  model: z.string().trim().min(1).optional(),
+  // gpt4o-image requires size (1:1 | 3:2 | 2:3); "model" is NOT part of the schema.
+  size: z.enum(IMAGE_SIZES).optional(),
 });
 
 /**
@@ -41,10 +44,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const { prompt, model } = parsed.data;
+  const { prompt, size } = parsed.data;
 
   try {
-    const task = await createImageTask(model ? { prompt, model } : { prompt });
+    const task = await createImageTask({ prompt, size: size ?? "1:1" });
     return NextResponse.json({ taskId: task.taskId });
   } catch (err) {
     return kieAiErrorResponse(err);

@@ -34,7 +34,12 @@ to this repo's structure and conventions.
    ```bash
    KIEAI_API_KEY=your-key
    # KIEAI_MODEL=gemini-2.5-flash   # optional, used by the existing chat fallback
+   # KIEAI_CALLBACK_URL=https://your-app.example.com/kie-ai/music-callback
    ```
+
+   `KIEAI_CALLBACK_URL` is only required for **music** generation (the Suno
+   endpoint demands a `callBackUrl`). You can instead pass `callBackUrl` per
+   request in the music route body.
 
    > This repo already used `KIEAI_API_KEY` (no underscore) for the Kie.ai chat
    > fallback in `src/modules/ai/server.ts`. The pilot reuses that same key —
@@ -51,11 +56,20 @@ to this repo's structure and conventions.
 
 ### Create an image (async → taskId)
 
+`POST /api/v1/gpt4o-image/generate` — the real endpoint requires `size`
+(`1:1` default here, or `3:2` / `2:3`); `model` is **not** part of the 4o-image
+schema.
+
 ```bash
 curl -s -X POST http://localhost:3000/api/admin/kie-ai/image \
   -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
   -d '{"prompt":"Modern penthouse terrace at sunset in Mexico City, photorealistic"}'
 # → {"taskId":"..."}
+
+# Optional: override aspect ratio
+curl -s -X POST http://localhost:3000/api/admin/kie-ai/image \
+  -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
+  -d '{"prompt":"...","size":"3:2"}'
 ```
 
 ### Poll task status
@@ -63,28 +77,55 @@ curl -s -X POST http://localhost:3000/api/admin/kie-ai/image \
 ```bash
 curl -s "http://localhost:3000/api/admin/kie-ai/status?taskId=TASK_ID" \
   -H "Cookie: $COOKIE"
-# → { "taskId": "...", "state": "success", "resultJson": "..." }
+# → { "taskId": "...", "state": "success", "resultUrls": ["https://..."], ... }
 ```
 
 `state` transitions through `waiting` / `queuing` / `generating` to
 `success` or `fail`. The client also ships `pollTaskUntilComplete(taskId)` for
 server-side blocking (not exposed as a route).
 
-### Video and music
+### Video (Veo)
 
-Same shape as image, different model endpoints:
+`POST /api/v1/veo/generate` — requires `model` (`veo3_fast` default here,
+overridable) and `aspect_ratio` (`16:9` default).
 
 ```bash
 curl -s -X POST http://localhost:3000/api/admin/kie-ai/video \
   -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
   -d '{"prompt":"Aerial drone tour of a colonial villa in San Miguel de Allende"}'
 
+# Optional: override model / aspect ratio
+curl -s -X POST http://localhost:3000/api/admin/kie-ai/video \
+  -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
+  -d '{"prompt":"...","model":"veo3","aspect_ratio":"9:16"}'
+```
+
+### Music (Suno)
+
+`POST /api/v1/generate` (NOT `/api/v1/suno/generate`) — the Suno schema
+requires `customMode`, `instrumental`, `model` and `callBackUrl`. The route
+defaults `customMode`/`instrumental` to `false` and `model` to `V4_5`;
+`callBackUrl` falls back to the `KIEAI_CALLBACK_URL` env var, or 400s if
+neither is present. Valid models: `V3_5 | V4 | V4_5 | V4_5PLUS | V4_5ALL |
+V5 | V5_5`.
+
+```bash
 curl -s -X POST http://localhost:3000/api/admin/kie-ai/music \
   -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
   -d '{"prompt":"Soft acoustic chillhop, 60 BPM"}'
+# → {"taskId":"..."}   (uses KIEAI_CALLBACK_URL when set)
+
+# If KIEAI_CALLBACK_URL is not configured, pass it per request:
+curl -s -X POST http://localhost:3000/api/admin/kie-ai/music \
+  -H "Cookie: $COOKIE" -H "Content-Type: application/json" \
+  -d '{"prompt":"...","model":"V5","instrumental":true,"callBackUrl":"https://your-app.example.com/kie-ai/music-callback"}'
 ```
 
 ### Chat (synchronous)
+
+`POST /v1/chat/completions` — the real Kie.ai LLM path is **not**
+`/api/v1/chat/completions` (404). Model goes in the request body, exactly like
+the existing chat fallback in `src/modules/ai/server.ts`.
 
 ```bash
 curl -s -X POST http://localhost:3000/api/admin/kie-ai/chat \
@@ -98,32 +139,35 @@ curl -s -X POST http://localhost:3000/api/admin/kie-ai/chat \
 ```ts
 import {
   createImageTask,
+  createVideoTask,
+  createMusicTask,
   pollTaskUntilComplete,
   chatCompletion,
-  listModels,
   isKieAiConfigured,
 } from "@/lib/ai/kie-ai";
 
 if (isKieAiConfigured()) {
-  const { taskId } = await createImageTask({ prompt: "…" });
+  const { taskId } = await createImageTask({ prompt: "…", size: "1:1" });
   const done = await pollTaskUntilComplete(taskId, { timeoutMs: 60_000 });
-  // done.resultJson / done.failMsg
+  // done.resultUrls / done.failMsg
 }
 ```
 
-## Model paths (⚠️ verify per docs)
+## Real endpoints (validated live against the Kie.ai API)
 
-The client's default generation endpoints are placeholders copied from the
-pilot. Confirm the correct per-model route for your account in the
-[docs.kie.ai](https://docs.kie.ai/) model reference and override if needed:
+The client defaults below were validated against `api.kie.ai` and replace the
+pilot's placeholder paths:
 
-```ts
-createImageTask({ prompt }, "/api/v1/<your-image-model>/generate");
-```
+| Operation | HTTP | Path | Notes |
+| --- | --- | --- | --- |
+| Image (4o) | `POST` | `/api/v1/gpt4o-image/generate` | Requires `size` (`1:1` default in the route); no `model` field. |
+| Video (Veo) | `POST` | `/api/v1/veo/generate` | Requires `model` (`veo3_fast` default in the route) + `aspect_ratio` (`16:9` default). |
+| Music (Suno) | `POST` | `/api/v1/generate` | NOT `/api/v1/suno/generate`. Requires `customMode`, `instrumental`, `model`, `callBackUrl`. |
+| Chat (LLM) | `POST` | `/v1/chat/completions` | NOT `/api/v1/chat/completions` (404). OpenAI-compatible, sync. |
+| Status | `GET` | `/api/v1/jobs/recordInfo?taskId=...` | Poll until terminal state; success returns `resultUrls`. |
 
-Every create helper accepts an optional `modelPath` as its second argument, and
-the routes accept an optional `model` field that is forwarded into the request
-body.
+Each create helper still accepts an optional `modelPath` second argument if a
+future model needs a different route.
 
 ## Notes & differences vs the hustlealliance pilot
 
@@ -145,7 +189,8 @@ fallback behind DeepSeek, using the **same `KIEAI_API_KEY`** and
 be aware of:
 
 - Its Kie.ai URL is `https://api.kie.ai/<model>/v1/chat/completions`
-  (per-model path), whereas the pilot client posts to `/api/v1/chat/completions`.
+  (per-model path), whereas the pilot client posts to `/v1/chat/completions`
+  (per the model name sent in the body).
 - The pilot client (`src/lib/ai/kie-ai.ts`) throws `KieAiError`; the existing
   module degrades to `null`.
 - Both coexist without symbol or env conflicts; the new media routes live under

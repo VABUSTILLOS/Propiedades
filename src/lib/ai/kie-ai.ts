@@ -86,23 +86,6 @@ async function kieFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return json as T;
 }
 
-// ─── Models ──────────────────────────────────────────────────────────────
-
-export interface KieAiModel {
-  id: string;
-  name?: string;
-  type?: string;
-  [key: string]: unknown;
-}
-
-/** GET /api/v1/models — list available models across image/video/music/LLM. */
-export async function listModels(): Promise<KieAiModel[]> {
-  const data = await kieFetch<{ data?: KieAiModel[]; models?: KieAiModel[] }>(
-    "/api/v1/models",
-  );
-  return data.data ?? data.models ?? [];
-}
-
 // ─── Async generation tasks (image / video / music) ───────────────────────
 
 export interface CreateTaskResponse {
@@ -149,10 +132,15 @@ export function createVideoTask(
   return createGenerationTask(modelPath, input);
 }
 
-/** Starts a music generation task. `modelPath` defaults to the general music generation endpoint. */
+/**
+ * Starts a music generation task. `modelPath` defaults to the real Kie.ai
+ * music endpoint. The music schema additionally requires `customMode`,
+ * `instrumental`, `model` (Suno enum) and `callBackUrl` — the caller builds
+ * the full body (see `src/app/api/admin/kie-ai/music/route.ts`).
+ */
 export function createMusicTask(
   input: { prompt: string; model?: string; [key: string]: unknown },
-  modelPath = "/api/v1/suno/generate",
+  modelPath = "/api/v1/generate",
 ) {
   return createGenerationTask(modelPath, input);
 }
@@ -223,7 +211,13 @@ export interface KieAiChatResult {
   raw: unknown;
 }
 
-/** POST /api/v1/chat/completions — synchronous, OpenAI chat-completions-compatible call. */
+/**
+ * POST /v1/chat/completions — synchronous, OpenAI-chat-completions-compatible
+ * call. NOTE: the real Kie.ai LLM path is `/v1/chat/completions` (absolute
+ * path under the `https://api.kie.ai` base), NOT `/api/v1/chat/completions`
+ * (which returns 404). Model is sent in the body, exactly like the existing
+ * chat fallback in `src/modules/ai/server.ts`.
+ */
 export async function chatCompletion(params: {
   model: string;
   messages: KieAiChatMessage[];
@@ -231,7 +225,7 @@ export async function chatCompletion(params: {
 }): Promise<KieAiChatResult> {
   const data = await kieFetch<{
     choices?: { message?: { content?: string } }[];
-  }>("/api/v1/chat/completions", {
+  }>("/v1/chat/completions", {
     method: "POST",
     body: JSON.stringify(params),
   });
