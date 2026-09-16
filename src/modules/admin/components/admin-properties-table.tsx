@@ -3,7 +3,14 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Archive, ArchiveRestore, Loader2, Pencil, Trash2 } from "lucide-react";
+import {
+  Archive,
+  ArchiveRestore,
+  ImageOff,
+  Loader2,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -58,6 +65,42 @@ function formatDate(iso: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+/**
+ * Row thumbnail so the master user can visually identify a property at a
+ * glance. Falls back to a placeholder when the property has no images yet.
+ */
+function PropertyThumbnail({
+  url,
+  title,
+}: {
+  url: string | null;
+  title: string;
+}) {
+  return (
+    <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md border bg-muted">
+      {url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={url}
+          alt=""
+          title={title}
+          loading="lazy"
+          decoding="async"
+          className="size-full object-cover"
+        />
+      ) : (
+        <div
+          className="flex size-full items-center justify-center text-muted-foreground"
+          title="Sin foto"
+        >
+          <ImageOff className="size-4" aria-hidden />
+          <span className="sr-only">Sin foto</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -234,12 +277,25 @@ export function AdminPropertiesTable({
                   />
                 </td>
                 <td className="max-w-64 px-4 py-3">
-                  <Link
-                    href={`/property/${p.slug}`}
-                    className="line-clamp-2 font-medium hover:underline"
-                  >
-                    {p.title}
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <PropertyThumbnail
+                      url={p.images?.[0] || null}
+                      title={p.title}
+                    />
+                    <div className="min-w-0">
+                      <Link
+                        href={`/property/${p.slug}`}
+                        className="line-clamp-2 font-medium hover:underline"
+                      >
+                        {p.title}
+                      </Link>
+                      <p className="text-xs text-muted-foreground">
+                        {p.images?.length
+                          ? `${p.images.length} ${p.images.length === 1 ? "foto" : "fotos"}`
+                          : "Sin fotos"}
+                      </p>
+                    </div>
+                  </div>
                 </td>
                 <td className="px-4 py-3 font-mono tabular-nums">
                   {formatPrice(p.price, p.currency)}
