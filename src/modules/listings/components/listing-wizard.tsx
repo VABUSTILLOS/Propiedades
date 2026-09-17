@@ -40,7 +40,11 @@ import {
   uploadWizardImages,
 } from "@/modules/listings/actions";
 import { renderPropertyVideo } from "@/modules/listings/media/video-renderer";
-import { compressImageForUpload } from "@/modules/listings/media/image-compression";
+import {
+  ACCEPTED_IMAGE_INPUT,
+  compressImageForUpload,
+  isHeicLikeFile,
+} from "@/modules/listings/media/image-compression";
 import { createSupabaseBrowserClient } from "@/modules/lib/supabase/browser";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -69,7 +73,9 @@ type WizardImage = {
 };
 
 const MAX_WIZARD_IMAGES = 50;
-const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp,image/gif";
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const NO_IMAGES_ERROR =
+  "No encontramos imágenes en lo que soltaste. Arrastra archivos de foto (JPG, PNG, WebP, GIF o HEIC).";
 
 const STEPS: { step: WizardStep; label: string }[] = [
   { step: 1, label: "Información básica" },
@@ -998,6 +1004,8 @@ function StepMedia({
   onEnsureListing: () => Promise<{ id: string | null; error?: string }>;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadingRef = useRef(false);
+  const dragDepthRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, startUploading] = useTransition();
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -1010,39 +1018,101 @@ function StepMedia({
 
   const remainingSlots = MAX_WIZARD_IMAGES - value.images.length;
 
+  // Soltar un archivo fuera de la zona de carga hace que el navegador abra la
+  // imagen y se pierda el formulario: bloqueamos ese comportamiento por defecto.
+  useEffect(() => {
+    const isFileDrag = (event: DragEvent) =>
+      Array.from(event.dataTransfer?.types ?? []).includes("Files");
+    const onDragOver = (event: DragEvent) => {
+      if (isFileDrag(event)) event.preventDefault();
+    };
+    const onDrop = (event: DragEvent) => {
+      if (!isFileDrag(event)) return;
+      event.preventDefault();
+      dragDepthRef.current = 0;
+      setIsDragging(false);
+    };
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("drop", onDrop);
+    return () => {
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("drop", onDrop);
+    };
+  }, []);
+
   const uploadFiles = (files: FileList | File[]) => {
-    const list = Array.from(files).filter((f) => f.size > 0);
-    if (list.length === 0) return;
+    if (uploadingRef.current) {
+      setUploadError("Espera a que termine la subida en curso e inténtalo de nuevo.");
+      return;
+    }
+    const list = Array.from(files).filter((file) => file.size > 0);
+    if (list.length === 0) {
+      setUploadError(NO_IMAGES_ERROR);
+      return;
+    }
+    const oversized = list.find((file) => file.size > MAX_IMAGE_BYTES);
+    if (oversized) {
+      setUploadError(
+        `"${oversized.name}" pesa más de 10 MB. Reduce su tamaño e inténtalo de nuevo.`,
+      );
+      return;
+    }
     if (list.length > remainingSlots) {
-      setUploadError(`Solo puedes agregar ${remainingSlots} imagen(es) más.`);
+      setUploadError(
+        `Solo puedes agregar ${remainingSlots} imagen(es) más (límite de ${MAX_WIZARD_IMAGES}).`,
+      );
       return;
     }
     setUploadError(null);
+    uploadingRef.current = true;
     startUploading(async () => {
-      // Comprimir a WebP (máx 1920px) en el navegador antes de subir:
-      // fotos de 5-10 MB bajan a ~150-500 KB y la subida es mucho más rápida.
-      const compressed = await Promise.all(list.map(compressImageForUpload));
-      const formData = new FormData();
-      for (const file of compressed) formData.append("images", file);
-      const res = await uploadWizardImages(formData);
-      if (!res.ok) {
-        setUploadError(res.error);
-        return;
+      try {
+        // Comprimir a WebP (máx 1920px) en el navegador antes de subir: fotos de
+        // 5-10 MB bajan a ~150-500 KB y la subida es mucho más rápida. Las fotos
+        // HEIC del iPhone se convierten aquí para que sí se puedan subir.
+        const compressed = await Promise.all(list.map(compressImageForUpload));
+        const unconvertible = compressed.find(isHeicLikeFile);
+        if (unconvertible) {
+          setUploadError(
+            `No pudimos convertir "${unconvertible.name}" (formato HEIC del iPhone). Abre la foto y expórtala como JPG, o súbela desde Safari o Chrome actualizado.`,
+          );
+          return;
+        }
+        const formData = new FormData();
+        for (const file of compressed) formData.append("images", file);
+        const res = await uploadWizardImages(formData);
+        if (!res.ok) {
+          setUploadError(res.error);
+          return;
+        }
+        const uploaded: WizardImage[] = res.data.urls.map((url) => ({
+          id: crypto.randomUUID(),
+          url,
+        }));
+        onImagesChange((prev) => [...prev, ...uploaded]);
+      } finally {
+        uploadingRef.current = false;
       }
-      const uploaded: WizardImage[] = res.data.urls.map((url) => ({
-        id: crypto.randomUUID(),
-        url,
-      }));
-      onImagesChange((prev) => [...prev, ...uploaded]);
     });
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
+    dragDepthRef.current = 0;
     setIsDragging(false);
     if (event.dataTransfer.files.length > 0) {
       uploadFiles(event.dataTransfer.files);
+      return;
     }
+    // Arrastrar una imagen desde otra pestaña entrega una URL, no un archivo.
+    const droppedUrl =
+      event.dataTransfer.getData("text/uri-list") ||
+      event.dataTransfer.getData("text/plain");
+    if (droppedUrl) {
+      addImageUrl(droppedUrl);
+      return;
+    }
+    setUploadError(NO_IMAGES_ERROR);
   };
 
   const handleReorder = (event: DragEndEvent) => {
@@ -1060,20 +1130,28 @@ function StepMedia({
     onImagesChange((prev) => prev.filter((img) => img.id !== id));
   };
 
-  const addPasteUrl = () => {
-    const url = pasteUrl.trim();
-    if (!url) return;
+  const addImageUrl = (rawUrl: string): boolean => {
+    const url =
+      rawUrl
+        .split(/[\r\n]+/)
+        .map((line) => line.trim())
+        .find((line) => line && !line.startsWith("#")) ?? "";
+    if (!url) return false;
     if (remainingSlots <= 0) {
       setUploadError(`Has alcanzado el límite de ${MAX_WIZARD_IMAGES} imágenes.`);
-      return;
+      return false;
     }
     if (!/^https?:\/\//i.test(url)) {
       setUploadError("Pega una URL válida que empiece con http:// o https://");
-      return;
+      return false;
     }
     setUploadError(null);
     onImagesChange((prev) => [...prev, { id: crypto.randomUUID(), url }]);
-    setPasteUrl("");
+    return true;
+  };
+
+  const addPasteUrl = () => {
+    if (addImageUrl(pasteUrl)) setPasteUrl("");
   };
 
   return (
@@ -1083,11 +1161,20 @@ function StepMedia({
 
         {/* Dropzone */}
         <label
-          onDragOver={(e) => {
+          onDragEnter={(e) => {
             e.preventDefault();
+            dragDepthRef.current += 1;
             setIsDragging(true);
           }}
-          onDragLeave={() => setIsDragging(false)}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "copy";
+            if (!isDragging) setIsDragging(true);
+          }}
+          onDragLeave={() => {
+            dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
+            if (dragDepthRef.current === 0) setIsDragging(false);
+          }}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={cn(
@@ -1102,13 +1189,13 @@ function StepMedia({
             Arrastra tus imágenes aquí o haz clic para subir
           </p>
           <p className="text-xs text-muted-foreground">
-            JPG, PNG, WebP o GIF · máx. 10 MB · {remainingSlots} de{" "}
+            JPG, PNG, WebP, GIF o HEIC (iPhone) · máx. 10 MB · {remainingSlots} de{" "}
             {MAX_WIZARD_IMAGES} disponibles
           </p>
           <input
             ref={fileInputRef}
             type="file"
-            accept={ACCEPTED_IMAGE_TYPES}
+            accept={ACCEPTED_IMAGE_INPUT}
             multiple
             className="hidden"
             onChange={(e) => {

@@ -1,16 +1,34 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { BadgePercent, CheckCircle2, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { BadgePercent, CheckCircle2, Loader2, Sparkles, UploadCloud, X } from "lucide-react";
 
-import { createDraft, saveWizardStep, setListingStatus } from "@/modules/listings/actions";
+import {
+  createDraft,
+  saveWizardStep,
+  setListingStatus,
+  uploadWizardImages,
+} from "@/modules/listings/actions";
 import { estimateFsboValue } from "@/modules/fsbo/actions";
+import {
+  ACCEPTED_IMAGE_INPUT,
+  compressImageForUpload,
+  isHeicLikeFile,
+} from "@/modules/listings/media/image-compression";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PlacesAutocomplete } from "@/modules/maps/components/places-autocomplete";
+import { cn } from "@/lib/utils";
+
+// Mismos límites que valida la server action `uploadWizardImages`.
+const MAX_IMAGES = 50;
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const NO_IMAGES_ERROR =
+  "No encontramos imágenes en lo que soltaste. Arrastra archivos de foto (JPG, PNG, WebP, GIF o HEIC).";
 
 type WizardData = {
   title: string;
@@ -60,12 +78,19 @@ const initialData: WizardData = {
  * FSBO quick-load wizard: one page, AVM auto-valuation shown live, publishes
  * the listing directly on save (no draft step).
  */
-export function FsboWizard({ cities }: { cities: string[] }) {
+export function FsboWizard({ cities, canUpload }: { cities: string[]; canUpload: boolean }) {
   const router = useRouter();
   const [data, setData] = useState<WizardData>(initialData);
   const [error, setError] = useState<string | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [done, setDone] = useState<{ id: string; slug: string } | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isUploading, startUploading] = useTransition();
+  const [isDragging, setIsDragging] = useState(false);
+  const [pasteUrl, setPasteUrl] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadingRef = useRef(false);
+  const dragDepthRef = useRef(0);
   const [avm, setAvm] = useState<{
     estimate: number;
     low: number;
@@ -75,6 +100,133 @@ export function FsboWizard({ cities }: { cities: string[] }) {
 
   const update = (key: keyof WizardData, value: string) =>
     setData((prev) => ({ ...prev, [key]: value }));
+
+  const imageUrls = data.images
+    .split(",")
+    .map((url) => url.trim())
+    .filter(Boolean);
+  const remainingSlots = MAX_IMAGES - imageUrls.length;
+
+  const setImageUrls = (urls: string[]) => update("images", urls.join(", "));
+
+  const addImageUrls = (urls: string[]) => {
+    const valid = urls.filter((url) => /^https?:\/\//i.test(url));
+    if (valid.length === 0) {
+      setPhotoError("Pega una URL válida que empiece con http:// o https://");
+      return;
+    }
+    if (remainingSlots <= 0) {
+      setPhotoError(`Has alcanzado el límite de ${MAX_IMAGES} imágenes.`);
+      return;
+    }
+    setPhotoError(null);
+    setImageUrls([...imageUrls, ...valid].slice(0, MAX_IMAGES));
+  };
+
+  // Soltar un archivo fuera de la zona de carga hace que el navegador abra la
+  // imagen y se pierda el formulario: bloqueamos ese comportamiento por defecto.
+  useEffect(() => {
+    const isFileDrag = (event: DragEvent) =>
+      Array.from(event.dataTransfer?.types ?? []).includes("Files");
+    const onDragOver = (event: DragEvent) => {
+      if (isFileDrag(event)) event.preventDefault();
+    };
+    const onDrop = (event: DragEvent) => {
+      if (!isFileDrag(event)) return;
+      event.preventDefault();
+      dragDepthRef.current = 0;
+      setIsDragging(false);
+    };
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("drop", onDrop);
+    return () => {
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("drop", onDrop);
+    };
+  }, []);
+
+  const uploadFiles = (files: FileList | File[]) => {
+    if (uploadingRef.current) {
+      setPhotoError("Espera a que termine la subida en curso e inténtalo de nuevo.");
+      return;
+    }
+    const list = Array.from(files).filter((file) => file.size > 0);
+    if (list.length === 0) {
+      setPhotoError(NO_IMAGES_ERROR);
+      return;
+    }
+    const oversized = list.find((file) => file.size > MAX_IMAGE_BYTES);
+    if (oversized) {
+      setPhotoError(
+        `"${oversized.name}" pesa más de 10 MB. Reduce su tamaño e inténtalo de nuevo.`,
+      );
+      return;
+    }
+    if (list.length > remainingSlots) {
+      setPhotoError(
+        `Solo puedes agregar ${remainingSlots} imagen(es) más (límite de ${MAX_IMAGES}).`,
+      );
+      return;
+    }
+    setPhotoError(null);
+    uploadingRef.current = true;
+    startUploading(async () => {
+      try {
+        // Igual que en el wizard: comprimimos en el navegador y convertimos las
+        // fotos HEIC del iPhone, que de otro modo no se pueden subir.
+        const compressed = await Promise.all(list.map(compressImageForUpload));
+        const unconvertible = compressed.find(isHeicLikeFile);
+        if (unconvertible) {
+          setPhotoError(
+            `No pudimos convertir "${unconvertible.name}" (formato HEIC del iPhone). Abre la foto y expórtala como JPG, o súbela desde Safari o Chrome actualizado.`,
+          );
+          return;
+        }
+        const form = new FormData();
+        for (const file of compressed) form.append("images", file);
+        const res = await uploadWizardImages(form);
+        if (!res.ok) {
+          setPhotoError(
+            res.code === "AUTH_REQUIRED"
+              ? "Inicia sesión para subir fotos desde tu dispositivo. También puedes pegar la URL de la foto."
+              : res.error,
+          );
+          return;
+        }
+        setImageUrls([...imageUrls, ...res.data.urls].slice(0, MAX_IMAGES));
+      } finally {
+        uploadingRef.current = false;
+      }
+    });
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    dragDepthRef.current = 0;
+    setIsDragging(false);
+    if (event.dataTransfer.files.length > 0) {
+      uploadFiles(event.dataTransfer.files);
+      return;
+    }
+    // Arrastrar una imagen desde otra pestaña entrega una URL, no un archivo.
+    const dropped =
+      event.dataTransfer.getData("text/uri-list") || event.dataTransfer.getData("text/plain");
+    if (dropped) {
+      addImageUrls(dropped.split(/[\r\n]+/).map((line) => line.trim()));
+      return;
+    }
+    setPhotoError(NO_IMAGES_ERROR);
+  };
+
+  const addPasteUrl = () => {
+    const pasted = pasteUrl
+      .split(/[\r\n,]+/)
+      .map((url) => url.trim())
+      .filter(Boolean);
+    if (pasted.length === 0) return;
+    addImageUrls(pasted);
+    setPasteUrl("");
+  };
 
   // Live AVM: re-estimate as location + m² change.
   useEffect(() => {
@@ -337,13 +489,127 @@ export function FsboWizard({ cities }: { cities: string[] }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="fsbo-imgs">Fotos (URLs separadas por coma)</Label>
-        <Input
-          id="fsbo-imgs"
-          value={data.images}
-          onChange={(e) => update("images", e.target.value)}
-          placeholder="https://…, https://…"
-        />
+        <Label>Fotos de la propiedad</Label>
+
+        {canUpload ? (
+          <>
+            <label
+              onDragEnter={(e) => {
+                e.preventDefault();
+                dragDepthRef.current += 1;
+                setIsDragging(true);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "copy";
+                if (!isDragging) setIsDragging(true);
+              }}
+              onDragLeave={() => {
+                dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
+                if (dragDepthRef.current === 0) setIsDragging(false);
+              }}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={cn(
+                "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-6 text-center transition-colors",
+                isDragging
+                  ? "border-primary bg-primary/5"
+                  : "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
+              )}
+            >
+              <UploadCloud className="size-8 text-muted-foreground" />
+              <p className="text-sm font-medium">
+                Arrastra tus fotos aquí o haz clic para subirlas
+              </p>
+              <p className="text-xs text-muted-foreground">
+                JPG, PNG, WebP, GIF o HEIC (iPhone) · máx. 10 MB · {remainingSlots} de{" "}
+                {MAX_IMAGES} disponibles
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={ACCEPTED_IMAGE_INPUT}
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) uploadFiles(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            {isUploading && (
+              <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Loader2 className="size-3.5 animate-spin" />
+                Subiendo fotos…
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="rounded-md border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+            <Link href="/sign-up?next=/fsbo" className="font-medium text-primary hover:underline">
+              Inicia sesión
+            </Link>{" "}
+            para arrastrar fotos desde tu dispositivo. Mientras tanto puedes pegar la URL de la
+            foto.
+          </p>
+        )}
+
+        {photoError && (
+          <p className="text-xs text-destructive" role="alert">
+            {photoError}
+          </p>
+        )}
+
+        {imageUrls.length > 0 && (
+          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+            {imageUrls.map((url, index) => (
+              <li
+                key={`${url}-${index}`}
+                className="group relative aspect-square overflow-hidden rounded-lg border bg-muted"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={url}
+                  alt={`Foto ${index + 1}`}
+                  className="size-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <button
+                  type="button"
+                  aria-label={`Quitar foto ${index + 1}`}
+                  onClick={() => setImageUrls(imageUrls.filter((_, i) => i !== index))}
+                  className="absolute right-1.5 top-1.5 rounded-full bg-background/90 p-1 text-muted-foreground opacity-0 transition-opacity hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex items-end gap-2 pt-1">
+          <div className="flex-1 space-y-1">
+            <Label htmlFor="fsbo-imgs" className="text-xs">
+              {canUpload ? "¿O tienes la URL de una foto?" : "URLs de las fotos (una o varias)"}
+            </Label>
+            <Input
+              id="fsbo-imgs"
+              value={pasteUrl}
+              onChange={(e) => setPasteUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addPasteUrl();
+                }
+              }}
+              placeholder="https://…/foto.jpg"
+            />
+          </div>
+          <Button type="button" variant="outline" size="sm" onClick={addPasteUrl}>
+            Agregar
+          </Button>
+        </div>
       </div>
 
       <div className="rounded-md border bg-muted/30 p-4">

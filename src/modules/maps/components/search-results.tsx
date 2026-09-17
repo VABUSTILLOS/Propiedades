@@ -194,9 +194,11 @@ export function SearchResults({
             </div>
             {selectedItem && (
               /* Mobile: full-screen overlay so the panel scrolls within its
-                 own layer instead of growing unbounded in the layout.
-                 Desktop: stays in the left column with a capped height. */
-              <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background lg:static lg:z-auto lg:overflow-visible lg:bg-transparent">
+                 own layer instead of growing unbounded in the layout. It
+                 starts below the sticky site header (h-16) so header actions
+                 like the theme toggle stay reachable. Desktop: stays in the
+                 left column with a capped height. */
+              <div className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto overscroll-contain bg-background lg:static lg:z-auto lg:overflow-visible lg:bg-transparent">
                 <SplitDetailPanel
                   key={selectedItem.id}
                   listing={selectedItem}

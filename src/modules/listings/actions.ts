@@ -23,6 +23,7 @@ import {
 } from "@/modules/lib/schemas";
 import type { MediaGenerationJobRow, PropertiesRow } from "@/modules/lib/database.types";
 import { buildUniqueSlug } from "@/modules/listings/slug";
+import { ACCEPTED_IMAGE_MIME_TYPES } from "@/modules/listings/media/image-compression";
 import { importedPropertyDraftSchema } from "@/modules/importer/schemas";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
@@ -32,12 +33,8 @@ const USD_TO_MXN_RATE = 17.5;
 const IMAGE_BUCKET = "property-images";
 const MAX_WIZARD_IMAGES = 50;
 const MAX_WIZARD_IMAGE_SIZE = 10 * 1024 * 1024;
-const ALLOWED_WIZARD_IMAGE_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-]);
+/** The browser converts HEIC/HEIF (iPhone) photos before uploading. */
+const ALLOWED_WIZARD_IMAGE_TYPES = new Set<string>(ACCEPTED_IMAGE_MIME_TYPES);
 
 const wizardExtractionSchema = z.object({
   title: z.string().trim().min(3).max(200).nullable().optional(),
@@ -394,10 +391,12 @@ export async function uploadWizardImages(
 
   for (const file of files) {
     if (!ALLOWED_WIZARD_IMAGE_TYPES.has(file.type)) {
-      return fail("Solo se aceptan imágenes JPG, PNG, WebP o GIF.");
+      return fail(
+        `"${file.name}" no es una imagen compatible. Usa JPG, PNG, WebP o GIF; si viene de un iPhone en formato HEIC, conviértela a JPG e inténtalo de nuevo.`,
+      );
     }
     if (file.size > MAX_WIZARD_IMAGE_SIZE) {
-      return fail("Cada imagen debe pesar máximo 10 MB.");
+      return fail(`"${file.name}" pesa más de 10 MB. Reduce su tamaño e inténtalo de nuevo.`);
     }
   }
 

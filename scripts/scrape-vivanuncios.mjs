@@ -12,6 +12,7 @@
  *
  * Usage:
  *   node scripts/scrape-vivanuncios.mjs [--pages 3] [--limit 60] [--dry-run]
+ *       [--search-url "https://…p{PAGE}?pr=pesos,1000000,3000000&be=4,"]
  */
 import { createClient } from "@supabase/supabase-js";
 
@@ -56,10 +57,22 @@ const maxListings = parseArg(args, "--limit", 60);
 const dryRun = args.includes("--dry-run");
 const rematesMode = args.includes("--remates");
 const skipDetail = args.includes("--skip-detail");
+// Arbitrary filtered search URL with a {PAGE} placeholder, e.g.
+//   --search-url "https://www.vivanuncios.com.mx/s-casas-en-venta/chihuahua-chih/v1c1293l10163p{PAGE}?pr=pesos,1000000,3000000&be=4,"
+// Query-string filters (price, bedrooms, …) persist across pages because only
+// the p{N} path segment changes. Use the list view (no listado=map).
+const searchUrlArg = parseStringArg(args, "--search-url");
 
 function parseArg(args, name, fallback) {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? Number(args[i + 1]) || fallback : fallback;
+}
+
+function parseStringArg(args, name) {
+  const i = args.indexOf(name);
+  if (i >= 0 && args[i + 1]) return args[i + 1];
+  const eq = args.find((a) => a.startsWith(`${name}=`));
+  return eq ? eq.slice(name.length + 1) : null;
 }
 
 if (!SUPABASE_URL || !SERVICE_ROLE_KEY || !JINA_API_KEY) {
@@ -726,7 +739,11 @@ async function insertProperty(listing, extracted, geocoded, forcedDealType = nul
  * ------------------------------------------------------------------ */
 
 async function main() {
-  const modeLabel = rematesMode ? "remates bancarios" : "venta, precios bajados";
+  const modeLabel = searchUrlArg
+    ? "búsqueda filtrada personalizada"
+    : rematesMode
+      ? "remates bancarios"
+      : "venta, precios bajados";
   console.log(
     `Scraping Vivanuncios Chihuahua (${modeLabel}) — pages=${pageCount} limit=${maxListings} dryRun=${dryRun}`,
   );
@@ -735,8 +752,9 @@ async function main() {
   const seen = new Set();
 
   for (let page = 1; page <= pageCount; page++) {
-    const template =
-      page === 1
+    const template = searchUrlArg
+      ? searchUrlArg
+      : page === 1
         ? rematesMode
           ? REMATES_URL_TEMPLATE
           : SEARCH_URL_TEMPLATE
@@ -779,6 +797,14 @@ async function main() {
     const listing = toImport[i];
     console.log(`\n[${i + 1}/${toImport.length}] ${listing.title} (${listing.publishedLabel || "?"})`);
     console.log(`  ${listing.sourceUrl}`);
+
+    // Cheap idempotency check before the expensive detail/geocoding work, so a
+    // re-run that adds pages doesn't re-fetch and re-extract what's already in.
+    if (!dryRun && (await existsBySourceUrl(listing.sourceUrl))) {
+      console.log(`  skip (ya existe): ${listing.sourceUrl}`);
+      skipped++;
+      continue;
+    }
 
     // Try detail page → DeepSeek extraction. With --skip-detail (remate detail
     // pages are Cloudflare-blocked) skip the retry loop and use tile data.

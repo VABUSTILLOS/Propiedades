@@ -38,7 +38,7 @@ export default async function FsboPage() {
       <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[1fr_320px]">
         <section className="min-w-0">
           <h2 className="mb-4 text-lg font-semibold">Carga rápida</h2>
-          <FsboWizard cities={cities} />
+          <FsboWizard cities={cities} canUpload={Boolean(user)} />
         </section>
 
         <aside className="min-w-0 space-y-4">
