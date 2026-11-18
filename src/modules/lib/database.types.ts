@@ -287,6 +287,40 @@ export type MortgageLeadsRow = {
   created_at: string;
 }
 
+/** Saved Facebook Marketplace listings (migration 052, /admin/guardados). */
+export type MarketplaceSavedCategory = "propiedad" | "auto" | "tecnologia" | "otro";
+export type MarketplaceSavedStatus = "active" | "discarded" | "imported";
+export type MarketplaceListingStatus = "Available" | "Sold" | "Rented";
+
+export type MarketplaceSavedListingsRow = {
+  id: string;
+  listing_id: string;
+  title: string;
+  price: number | null;
+  currency: string;
+  location: string | null;
+  colonia: string | null;
+  city: string | null;
+  category: MarketplaceSavedCategory;
+  is_property: boolean;
+  condition: string | null;
+  listing_status: MarketplaceListingStatus | null;
+  description: string | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  area_m2: number | null;
+  source_url: string | null;
+  primary_photo_url: string | null;
+  photo_urls: string[] | null;
+  saved_order: number | null;
+  listing_created_at: string | null;
+  status: MarketplaceSavedStatus;
+  imported_property_id: string | null;
+  synced_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type WhatsappMessagesRow = {
   id: string;
   wa_message_id: string | null;
@@ -370,6 +404,7 @@ export type Database = {
       whatsapp_messages: { Row: WhatsappMessagesRow; Insert: Insertable<WhatsappMessagesRow>; Update: Partial<WhatsappMessagesRow>; Relationships: [] };
       mortgage_leads: { Row: MortgageLeadsRow; Insert: Insertable<MortgageLeadsRow>; Update: Partial<MortgageLeadsRow>; Relationships: [] };
       media_generation_jobs: { Row: MediaGenerationJobRow; Insert: Insertable<MediaGenerationJobRow>; Update: Partial<MediaGenerationJobRow>; Relationships: [] };
+      marketplace_saved_listings: { Row: MarketplaceSavedListingsRow; Insert: Insertable<MarketplaceSavedListingsRow>; Update: Partial<MarketplaceSavedListingsRow>; Relationships: [] };
     };
     Views: Record<string, never>,
     Functions: {

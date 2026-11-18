@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Archive,
+  Bookmark,
   Building2,
   CalendarClock,
   GitCompareArrows,
@@ -236,6 +237,13 @@ export default async function DashboardPage() {
               description="Papelera de listados: restáuralos o elimínalos definitivamente."
               href="/admin/propiedades?estado=borradas"
               icon={Trash2}
+            />
+            <ToolCard
+              index="04"
+              title="Guardados de Marketplace"
+              description="Tus guardados de Facebook Marketplace: impórtalos como borradores con todas sus fotos."
+              href="/admin/guardados"
+              icon={Bookmark}
             />
           </ToolGroup>
         )}
