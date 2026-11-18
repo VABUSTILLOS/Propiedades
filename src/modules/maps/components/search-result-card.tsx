@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { ArrowDownRight, ArrowUpRight, Video } from "lucide-react";
 import { PropertyEditLink } from "@/modules/admin/components/edit-link";
+import { CardPhotoCarousel } from "@/modules/home/components/card-photo-carousel";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
   DealTypeBadge,
@@ -39,6 +40,7 @@ export function SearchResultCard({
   currency,
   type,
   image,
+  images = [],
   videoUrl = null,
   score,
   hotScore = null,
@@ -58,6 +60,8 @@ export function SearchResultCard({
   currency: string;
   type: "sale" | "rent";
   image: string | null;
+  /** Full gallery; with 2+ photos the cover becomes a swipe carousel. */
+  images?: string[];
   videoUrl?: string | null;
   score: number | null;
   /** Hotness 0–100 for the traffic-light gauge (only when showDetails). */
@@ -104,6 +108,8 @@ export function SearchResultCard({
               src={videoUrl}
               className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
+          ) : images.length > 1 ? (
+            <CardPhotoCarousel images={images} title={title} />
           ) : image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
