@@ -60,14 +60,16 @@ export async function restoreSavedListing(
 }
 
 /**
- * Turn a saved property listing into a draft property, reusing the
- * Universal Importer's createImportedDraft (same validation, slug and
- * draft state as a URL import). On success the saved row is marked
- * 'imported' and linked to the new property.
+ * Turn a saved property listing into a LIVE property on the portal,
+ * reusing the Universal Importer's createImportedDraft for validation
+ * and slug generation, then publishing it in the same request: sales
+ * land in Comprar (/search, type "sale"), rentals in Rentas (type
+ * "rent"). On success the saved row is marked 'imported' and linked
+ * to the new property.
  */
 export async function importSavedListing(
   id: string,
-): Promise<ActionResult<{ propertyId: string; slug: string }>> {
+): Promise<ActionResult<{ propertyId: string; slug: string; section: "Comprar" | "Rentas" }>> {
   const denied = await requireAdmin();
   if (denied) return denied;
 
@@ -94,9 +96,30 @@ export async function importSavedListing(
     return fail("Esta publicación está descartada. Restáurala antes de importarla.");
   }
 
-  const created = await createImportedDraft(buildImportedDraftPayload(row));
+  const payload = buildImportedDraftPayload(row);
+  const created = await createImportedDraft(payload);
   if (!created.ok) {
-    return fail(`No se pudo crear el borrador: ${created.error}`);
+    return fail(`No se pudo crear la propiedad: ${created.error}`);
+  }
+
+  // Publish immediately: imports land live on the portal, not as drafts
+  // waiting for the wizard. createImportedDraft always inserts
+  // status "draft" and type "sale", so set both here — rentals must
+  // carry type "rent" to appear in Rentas instead of Comprar.
+  const isRent = payload.deal_type === "renta";
+  const section = isRent ? "Rentas" : "Comprar";
+  const { error: publishError } = await supabase
+    .from("properties")
+    .update({ status: "active", type: isRent ? "rent" : "sale" })
+    .eq("id", created.data.id);
+
+  if (publishError) {
+    // The property exists as a draft; only publishing failed. Say so
+    // plainly so the admin can publish it from the editor instead of
+    // importing twice.
+    return fail(
+      `La propiedad se creó como borrador (id ${created.data.id}), pero no se pudo publicar: ${publishError.message}`,
+    );
   }
 
   const { error } = await supabase
@@ -109,14 +132,16 @@ export async function importSavedListing(
     .eq("id", row.id);
 
   if (error) {
-    // The draft exists; only the bookkeeping failed. Say so plainly so the
-    // admin can find the draft in /my-listings instead of importing twice.
+    // The property is live; only the bookkeeping failed. Say so plainly
+    // so the admin does not import twice and create a duplicate.
     return fail(
-      `El borrador se creó (id ${created.data.id}), pero no se pudo marcar la publicación como importada: ${error.message}`,
+      `La propiedad se publicó (id ${created.data.id}), pero no se pudo marcar la publicación como importada: ${error.message}`,
     );
   }
 
   revalidatePath("/admin/guardados");
   revalidatePath("/my-listings");
-  return ok({ propertyId: created.data.id, slug: created.data.slug });
+  revalidatePath("/search");
+  revalidatePath("/rentas");
+  return ok({ propertyId: created.data.id, slug: created.data.slug, section });
 }

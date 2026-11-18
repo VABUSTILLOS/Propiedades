@@ -27,7 +27,7 @@ export default async function AdminGuardadosPage() {
             Guardados de <Em>Marketplace</Em>
           </>
         }
-        description="Tus publicaciones guardadas de Facebook Marketplace, sincronizadas con todas sus fotos y su descripción completa. Importa las propiedades como borradores para revisarlas y publicarlas en el portal."
+        description="Tus publicaciones guardadas de Facebook Marketplace, sincronizadas con todas sus fotos y su descripción completa. Publícalas directo en el portal: las de venta aparecen en Comprar y las de renta en Rentas."
       />
 
       <div className="mt-8">

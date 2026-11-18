@@ -117,7 +117,12 @@ function formatNumber(value: number): string {
   return new Intl.NumberFormat("es-MX", { maximumFractionDigits: 1 }).format(value);
 }
 
-type Feedback = { kind: "success" | "error"; message: string; propertyId?: string };
+type Feedback = {
+  kind: "success" | "error";
+  message: string;
+  propertyId?: string;
+  slug?: string;
+};
 
 export function GuardadosClient({
   listings,
@@ -282,8 +287,9 @@ export function GuardadosClient({
         ...prev,
         [row.id]: {
           kind: "success",
-          message: "Borrador creado en Propiedades.",
+          message: `Publicada en ${res.data.section}.`,
           propertyId: res.data.propertyId,
+          slug: res.data.slug,
         },
       }));
     });
@@ -560,12 +566,12 @@ function SavedListingCard({
             )}
             <span>
               {feedback.message}{" "}
-              {feedback.propertyId && (
+              {feedback.slug && (
                 <Link
-                  href={`/listings/${feedback.propertyId}/editar`}
+                  href={`/property/${feedback.slug}`}
                   className="font-medium underline"
                 >
-                  Ver borrador
+                  Ver propiedad
                 </Link>
               )}
             </span>
@@ -580,7 +586,7 @@ function SavedListingCard({
               ) : (
                 <Import className="size-4" aria-hidden />
               )}
-              Importar a propiedades
+              Publicar en el portal
             </Button>
           )}
           {imported && row.imported_property_id && (
@@ -588,7 +594,7 @@ function SavedListingCard({
               href={`/listings/${row.imported_property_id}/editar`}
               className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
-              Ver borrador
+              Editar propiedad
             </Link>
           )}
           <a
