@@ -18,6 +18,7 @@ import {
 } from "@/modules/lib/schemas";
 import { toQueryString } from "@/modules/search/query-string";
 import { getCurrentUser } from "@/modules/auth/session";
+import { getMyFavoriteIds } from "@/modules/favorites/queries";
 import { isEditorMode } from "@/modules/admin/editor-mode";
 
 export const metadata: Metadata = { title: "Propiedades en renta" };
@@ -62,7 +63,14 @@ export default async function RentasPage({ searchParams }: Props) {
     getSearchableColonias("rent"),
   ]);
 
-  const { items: listings, total } = pageResult;
+  const { items: rawListings, total } = pageResult;
+
+  // Mark the cards the current user already saved as favorites (heart state).
+  const savedIds = user ? await getMyFavoriteIds(user.id) : null;
+  const listings = rawListings.map((item) => ({
+    ...item,
+    saved: savedIds?.has(item.id) ?? false,
+  }));
 
   // Mirrors `filters` for the paginated /api/search + markers endpoints so
   // infinite scroll and the map stay in sync with the first server render.
