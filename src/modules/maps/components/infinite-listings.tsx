@@ -297,6 +297,7 @@ export function InfiniteListings({
                 currency={item.currency}
                 type={item.type}
                 image={item.images?.[0] ?? null}
+                images={item.images ?? []}
                 videoUrl={
                   item.video_url ??
                   item.generated_video_url ??
