@@ -32,6 +32,7 @@ import type {
   MarketplaceSavedListingsRow,
 } from "@/modules/lib/database.types";
 import {
+  deleteImportedProperty,
   discardSavedListing,
   importSavedListing,
   restoreSavedListing,
@@ -295,6 +296,26 @@ export function GuardadosClient({
     });
   };
 
+  const handleDeleteProperty = (row: MarketplaceSavedListingsRow) => {
+    setPendingId(row.id);
+    startTransition(async () => {
+      const res = await deleteImportedProperty(row.id);
+      setPendingId(null);
+      if (!res.ok) {
+        setFeedback((prev) => ({
+          ...prev,
+          [row.id]: {
+            kind: "error",
+            message: res.error ?? "No se pudo borrar la propiedad.",
+          },
+        }));
+        return;
+      }
+      // The property is off the portal and out of this list for good.
+      setRows((prev) => prev.filter((r) => r.id !== row.id));
+    });
+  };
+
   return (
     <div>
       {/* Views */}
@@ -431,6 +452,7 @@ export function GuardadosClient({
                 onDiscard={() => handleDiscard(row)}
                 onRestore={() => handleRestore(row)}
                 onImport={() => handleImport(row)}
+                onDeleteProperty={() => handleDeleteProperty(row)}
               />
             ))}
           </div>
@@ -447,6 +469,7 @@ function SavedListingCard({
   onDiscard,
   onRestore,
   onImport,
+  onDeleteProperty,
 }: {
   row: MarketplaceSavedListingsRow;
   pending: boolean;
@@ -454,7 +477,9 @@ function SavedListingCard({
   onDiscard: () => void;
   onRestore: () => void;
   onImport: () => void;
+  onDeleteProperty: () => void;
 }) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const photo = row.primary_photo_url ?? row.photo_urls?.[0] ?? null;
   const photoCount = row.photo_urls?.length ?? 0;
   const locationLabel =
@@ -597,6 +622,19 @@ function SavedListingCard({
               Editar propiedad
             </Link>
           )}
+          {imported && !confirmingDelete && (
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => setConfirmingDelete(true)}
+              disabled={pending}
+              className="ml-auto text-muted-foreground hover:text-destructive"
+            >
+              <Trash2 className="size-4" aria-hidden />
+              Borrar del sitio
+            </Button>
+          )}
           <a
             href={marketplaceUrl}
             target="_blank"
@@ -634,6 +672,40 @@ function SavedListingCard({
             )
           )}
         </div>
+
+        {imported && confirmingDelete && (
+          <div className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <p>
+              Se borrará la propiedad del sitio, con sus fotos, y saldrá de
+              esta lista. No se puede deshacer.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                onClick={onDeleteProperty}
+                disabled={pending}
+              >
+                {pending ? (
+                  <Loader2 className="size-4 animate-spin" aria-hidden />
+                ) : (
+                  <Trash2 className="size-4" aria-hidden />
+                )}
+                Sí, borrar
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setConfirmingDelete(false)}
+                disabled={pending}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </article>
   );
