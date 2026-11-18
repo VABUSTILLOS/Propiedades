@@ -145,3 +145,87 @@ export async function importSavedListing(
   revalidatePath("/rentas");
   return ok({ propertyId: created.data.id, slug: created.data.slug, section });
 }
+
+/**
+ * Permanently remove an imported property from the portal: deletes the
+ * property row (favorites cascade, per the schema), its imported photos
+ * in Storage, and the saved-listing row itself, so the property leaves
+ * Comprar/Rentas and the Guardados list in one step. There is no undo.
+ */
+export async function deleteImportedProperty(
+  id: string,
+): Promise<ActionResult<{ propertyId: string }>> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = parseInput(idSchema, id);
+  if (!parsed.success) return fail(parsed.error);
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("marketplace_saved_listings")
+    .select("*")
+    .eq("id", parsed.data)
+    .limit(1)
+    .returns<MarketplaceSavedListingsRow[]>();
+
+  const row = rows?.[0];
+  if (!row) return fail("No se encontró la publicación guardada.");
+  if (row.status !== "imported" || !row.imported_property_id) {
+    return fail("Esta publicación todavía no está publicada en el portal.");
+  }
+
+  const propertyId = row.imported_property_id;
+
+  // Read the property's images first so its Storage files can be removed
+  // once the row is gone. Only this listing's own imported photos
+  // (marketplace/<listing_id>/…) are ever touched.
+  const { data: props } = await supabase
+    .from("properties")
+    .select("images")
+    .eq("id", propertyId)
+    .limit(1)
+    .returns<{ images: string[] | null }[]>();
+  const imageUrls = props?.[0]?.images ?? row.photo_urls ?? [];
+  const prefix = `marketplace/${row.listing_id}/`;
+  const storagePaths = imageUrls
+    .map((url) => {
+      const marker = "/property-images/";
+      const idx = url.indexOf(marker);
+      return idx >= 0 ? url.slice(idx + marker.length) : null;
+    })
+    .filter((p): p is string => p !== null && p.startsWith(prefix));
+
+  const { error: deleteError } = await supabase
+    .from("properties")
+    .delete()
+    .eq("id", propertyId);
+  if (deleteError) {
+    return fail(`No se pudo borrar la propiedad: ${deleteError.message}`);
+  }
+
+  // Best effort: the property is already off the portal, so a Storage
+  // failure must not fail the action — orphaned files are not visible.
+  if (storagePaths.length > 0) {
+    await supabase.storage.from("property-images").remove(storagePaths);
+  }
+
+  const { error } = await supabase
+    .from("marketplace_saved_listings")
+    .delete()
+    .eq("id", row.id);
+  if (error) {
+    // The property is off the portal; only the bookkeeping failed. Say so
+    // plainly so the admin knows the row may still show in Guardados.
+    return fail(
+      `La propiedad se borró del portal, pero no se pudo quitar de Guardados: ${error.message}`,
+    );
+  }
+
+  revalidatePath("/admin/guardados");
+  revalidatePath("/my-listings");
+  revalidatePath("/search");
+  revalidatePath("/rentas");
+  revalidatePath("/");
+  return ok({ propertyId });
+}
