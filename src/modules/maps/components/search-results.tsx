@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Map as MapIcon } from "lucide-react";
 
@@ -67,6 +67,47 @@ export function SearchResults({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ListingWithHot | null>(null);
 
+  // The split-view detail pane is not a navigation, so without a history
+  // entry of its own the browser/device Back button would skip the results
+  // list entirely and land on whatever came before (often the homepage).
+  // Opening the pane pushes a same-URL history entry; Back (popstate) then
+  // just closes the pane and returns to the list with filters, sort and
+  // scroll position untouched. The pane's own "Volver a resultados" button
+  // replays that same Back step so both paths stay in sync.
+  const selectedRef = useRef<ListingWithHot | null>(null);
+  const panelHistoryRef = useRef(false);
+
+  const openPanel = (item: ListingWithHot) => {
+    if (!selectedRef.current) {
+      window.history.pushState({ propertyPanel: item.id }, "");
+      panelHistoryRef.current = true;
+    }
+    selectedRef.current = item;
+    setSelectedItem(item);
+  };
+
+  const closePanel = () => {
+    if (panelHistoryRef.current) {
+      // The popstate handler below clears the selection.
+      window.history.back();
+    } else {
+      selectedRef.current = null;
+      setSelectedItem(null);
+    }
+  };
+
+  useEffect(() => {
+    const onPopState = () => {
+      if (panelHistoryRef.current) {
+        panelHistoryRef.current = false;
+        selectedRef.current = null;
+        setSelectedItem(null);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   // Full current URL (path + filters) so the property detail page can send
   // users back to the exact listados/search view they came from.
   const currentQuery = searchParams.toString();
@@ -117,7 +158,7 @@ export function SearchResults({
       }
       emptyState={emptyState}
       onCardHover={setHoveredId}
-      onCardSelect={split ? setSelectedItem : undefined}
+      onCardSelect={split ? openPanel : undefined}
       canModerate={canModerate}
       canEdit={canEdit}
     />
@@ -167,7 +208,8 @@ export function SearchResults({
         // opens that listing in the detail pane when it's in the list;
         // otherwise the pane clears so the clicked pin owns the popup.
         const item = initialItems.find((l) => l.id === id);
-        setSelectedItem(item ?? null);
+        if (item) openPanel(item);
+        else if (selectedRef.current) closePanel();
       }}
       heightClass={heightClass}
       from={fromUrl}
@@ -202,7 +244,7 @@ export function SearchResults({
                 <SplitDetailPanel
                   key={selectedItem.id}
                   listing={selectedItem}
-                  onClose={() => setSelectedItem(null)}
+                  onClose={closePanel}
                   from={fromUrl}
                   className="min-h-full rounded-none border-0 lg:min-h-0 lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:rounded-2xl lg:border"
                 />
