@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { PropertiesRow } from "@/modules/lib/database.types";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
+import { CardPhotoCarousel } from "@/modules/home/components/card-photo-carousel";
 import { PropertyEditLink } from "@/modules/admin/components/edit-link";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
@@ -28,7 +29,8 @@ import {
 /**
  * Public property card for the homepage featured grid and the listados
  * grid. Server-safe (no state, no event handlers); the favorite bookmark
- * is a separate client component embedded over the image.
+ * and the multi-photo swipe carousel are separate client components
+ * embedded over the image.
  *
  * `showDetails` reveals the optional financial details (predial est.,
  * escrituración est., barra hot, $/m², % descuento vs colonia) that the
@@ -93,6 +95,8 @@ export function PropertyCard({
               src={cardVideoUrl}
               className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
+          ) : (listing.images?.length ?? 0) > 1 ? (
+            <CardPhotoCarousel images={listing.images ?? []} title={listing.title} />
           ) : listing.images?.[0] ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
