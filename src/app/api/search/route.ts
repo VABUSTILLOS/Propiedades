@@ -1,9 +1,19 @@
 import { apiSearchParamsSchema, parseBoundsString } from "@/modules/lib/schemas";
-import type { SearchFilters } from "@/modules/search/queries";
+import type { ListingWithHot, SearchFilters } from "@/modules/search/queries";
 import { enrichWithHot, searchListingsPage } from "@/modules/search/queries";
 import { searchSemantic } from "@/modules/ai/embeddings";
+import { getCurrentUser } from "@/modules/auth/session";
+import { getMyFavoriteIds } from "@/modules/favorites/queries";
 
 export const dynamic = "force-dynamic";
+
+/** Mark each item with the current user's favorite state (card hearts). */
+async function withSavedFlags(items: ListingWithHot[]): Promise<ListingWithHot[]> {
+  const user = await getCurrentUser();
+  if (!user) return items;
+  const savedIds = await getMyFavoriteIds(user.id);
+  return items.map((item) => ({ ...item, saved: savedIds.has(item.id) }));
+}
 
 /**
  * Paginated listing search backed by the same server query layer as the
@@ -32,7 +42,7 @@ export async function GET(request: Request) {
 
   if (p.query) {
     const rows = await searchSemantic(p.query, limit);
-    const items = await enrichWithHot(rows);
+    const items = await withSavedFlags(await enrichWithHot(rows));
     return Response.json({
       items,
       total: items.length,
@@ -66,7 +76,8 @@ export async function GET(request: Request) {
     limit,
   };
 
-  const { items, total } = await searchListingsPage(filters);
+  const { items: pageItems, total } = await searchListingsPage(filters);
+  const items = await withSavedFlags(pageItems);
   return Response.json({
     items,
     total,

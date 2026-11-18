@@ -26,6 +26,21 @@ export async function getMyFavorites(
 }
 
 /**
+ * The ids of the user's favorite properties — for marking cards in grids.
+ */
+export async function getMyFavoriteIds(userId: string): Promise<Set<string>> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data } = await supabase
+    .from("buyer_favorites")
+    .select("property_id")
+    .eq("user_id", userId)
+    .returns<{ property_id: string }[]>();
+
+  return new Set((data ?? []).map((row) => row.property_id));
+}
+
+/**
  * Whether a specific property is already in the user's favorites.
  */
 export async function isFavoriteSaved(

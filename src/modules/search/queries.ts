@@ -294,6 +294,8 @@ export type ListingWithHot = PropertiesRow & {
   hotScore: number | null;
   /** Percent below (positive) or above (negative) the colonia benchmark. */
   discountPct: number | null;
+  /** Whether the current user saved this property as a favorite (cards). */
+  saved?: boolean;
 };
 
 /**

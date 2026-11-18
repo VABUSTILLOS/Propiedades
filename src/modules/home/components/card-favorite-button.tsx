@@ -2,8 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Bookmark, Loader2 } from "lucide-react";
-
+import { Heart, Loader2 } from "lucide-react";
 import { toggleFavorite } from "@/modules/favorites/actions";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +14,7 @@ type Props = {
 };
 
 /**
- * Compact bookmark toggle overlaying the property card image. Toggling
+ * Compact heart toggle overlaying the property card image. Toggling updates
  * the favorites list; anonymous visitors are sent to sign-up.
  */
 export function CardFavoriteButton({ propertyId, propertySlug, initialSaved }: Props) {
@@ -56,7 +55,7 @@ export function CardFavoriteButton({ propertyId, propertySlug, initialSaved }: P
       {isPending ? (
         <Loader2 className="size-4 animate-spin" />
       ) : (
-        <Bookmark className={cn("size-4", saved && "fill-current")} />
+        <Heart className={cn("size-4", saved && "fill-current")} />
       )}
     </button>
   );

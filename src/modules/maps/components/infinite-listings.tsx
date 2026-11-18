@@ -290,6 +290,8 @@ export function InfiniteListings({
             ) : (
               <SearchResultCard
                 key={item.id}
+                propertyId={item.id}
+                saved={item.saved ?? false}
                 title={item.title}
                 slug={item.slug}
                 city={`${item.colonia}, ${item.city}`}

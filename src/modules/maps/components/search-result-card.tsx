@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { ArrowDownRight, ArrowUpRight, Video } from "lucide-react";
 import { PropertyEditLink } from "@/modules/admin/components/edit-link";
+import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
 import { CardPhotoCarousel } from "@/modules/home/components/card-photo-carousel";
 import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import {
@@ -33,6 +34,8 @@ import type { PropertyDealType } from "@/modules/lib/database.types";
  * listing pages toggle on/off.
  */
 export function SearchResultCard({
+  propertyId,
+  saved = false,
   title,
   slug,
   city,
@@ -53,6 +56,10 @@ export function SearchResultCard({
   investmentKpis = null,
   editHref,
 }: {
+  /** Property id for the favorite heart toggle. */
+  propertyId: string;
+  /** Whether the current user already saved this property as a favorite. */
+  saved?: boolean;
   title: string;
   slug: string;
   city: string;
@@ -143,6 +150,13 @@ export function SearchResultCard({
             solid
             className="absolute right-3 top-3 rounded-full"
           />
+          <div className="absolute bottom-3 right-3">
+            <CardFavoriteButton
+              propertyId={propertyId}
+              propertySlug={slug}
+              initialSaved={saved}
+            />
+          </div>
         </div>
 
         <div className="space-y-1.5 pt-3">
