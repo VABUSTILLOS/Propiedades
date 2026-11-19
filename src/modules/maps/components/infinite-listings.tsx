@@ -10,6 +10,7 @@ import { SearchResultCard } from "@/modules/maps/components/search-result-card";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { CardDetailsToggle } from "@/modules/maps/components/card-details-toggle";
 import { bulkModerateProperties } from "@/modules/admin/actions";
+import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
 import {
   ModerationActionBar,
   ModerationToggleButton,
@@ -331,6 +332,20 @@ export function InfiniteListings({
                   discountAvaluo: item.porcentaje_descuento_avaluo,
                 }}
               />
+            )}
+            {canModerate && !selecting && (
+              <div className="flex justify-end pt-2">
+                <DeletePropertyButton
+                  propertyId={item.id}
+                  onDeleted={() => {
+                    setItems((prev) =>
+                      prev.filter((listing) => listing.id !== item.id),
+                    );
+                    setTotal((prev) => Math.max(0, prev - 1));
+                    router.refresh();
+                  }}
+                />
+              </div>
             )}
           </SelectableCardShell>
         ))}

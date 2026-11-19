@@ -48,6 +48,7 @@ export async function GET(
     discountPct,
     hotScore: toHotScore(discountPct, listing),
     canInquire: user?.id !== listing.owner_id,
+    canModerate: user?.role === "admin",
     isSaved,
     lists,
     containingListIds,

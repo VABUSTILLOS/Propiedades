@@ -9,6 +9,7 @@ import type { PropertiesRow } from "@/modules/lib/database.types";
 import { PropertyCard } from "@/modules/home/components/property-card";
 import { handleTabListKeyDown } from "@/lib/a11y";
 import { bulkModerateProperties } from "@/modules/admin/actions";
+import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
 import {
   ModerationActionBar,
   ModerationToggleButton,
@@ -178,6 +179,17 @@ export function FeaturedListings({
                   canEdit ? `/admin/propiedades/${listing.id}/editar` : undefined
                 }
               />
+              {canModerate && !selecting && (
+                <div className="flex justify-end pt-2">
+                  <DeletePropertyButton
+                    propertyId={listing.id}
+                    onDeleted={() => {
+                      setHiddenIds((prev) => new Set([...prev, listing.id]));
+                      router.refresh();
+                    }}
+                  />
+                </div>
+              )}
             </SelectableCardShell>
           ))}
         </motion.div>

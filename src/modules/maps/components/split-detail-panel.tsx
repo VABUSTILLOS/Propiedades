@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -22,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
 import { WhatsAppInquiryButton } from "@/modules/chat/components/whatsapp-inquiry-button";
 import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
 import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
@@ -54,6 +56,7 @@ type PanelData = {
   discountPct: number | null;
   hotScore: number | null;
   canInquire: boolean;
+  canModerate: boolean;
   isSaved: boolean;
   lists: FavoriteListWithMeta[];
   containingListIds: string[];
@@ -82,6 +85,7 @@ export function SplitDetailPanel({
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
 }) {
+  const router = useRouter();
   const [data, setData] = useState<PanelData | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
 
@@ -357,6 +361,17 @@ export function SplitDetailPanel({
             }}
             className="w-full"
           />
+          {data?.canModerate && (
+            <div className="flex justify-end border-t pt-2">
+              <DeletePropertyButton
+                propertyId={listing.id}
+                onDeleted={() => {
+                  onClose();
+                  router.refresh();
+                }}
+              />
+            </div>
+          )}
         </section>
 
         {listing.contact_name && (
