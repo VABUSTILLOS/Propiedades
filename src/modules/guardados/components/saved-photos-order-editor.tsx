@@ -232,7 +232,9 @@ function SortablePhotoCard({
       <div
         {...listeners}
         className={cn(
-          "group relative aspect-square overflow-hidden rounded-lg border bg-muted",
+          // touch-none is required for dnd-kit drags on touch screens and
+          // draggable=false stops the native image drag on desktop.
+          "group relative aspect-square touch-none overflow-hidden rounded-lg border bg-muted select-none",
           isDragging && "z-10 opacity-90 shadow-lg ring-2 ring-primary",
           disabled && "pointer-events-none opacity-50",
         )}
@@ -241,6 +243,7 @@ function SortablePhotoCard({
         <img
           loading="lazy"
           decoding="async"
+          draggable={false}
           src={photo.url}
           alt={`Foto ${index + 1}`}
           className="size-full object-cover"
