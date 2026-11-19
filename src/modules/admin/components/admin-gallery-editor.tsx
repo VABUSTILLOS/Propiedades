@@ -26,6 +26,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  ChevronLeft,
+  ChevronRight,
   GripVertical,
   Link2,
   Loader2,
@@ -184,6 +186,26 @@ export function AdminGalleryEditor({
     [images, propertyId, notifyChange],
   );
 
+  /** Arrow-button reorder: the reliable alternative to dragging on touch
+   * screens — moves one photo one position and persists right away. */
+  const moveImage = useCallback(
+    (index: number, direction: -1 | 1) => {
+      const target = index + direction;
+      if (target < 0 || target >= images.length) return;
+      const next = arrayMove(images, index, target);
+      setImages(next);
+      startReordering(async () => {
+        const res = await reorderPropertyImages(
+          propertyId,
+          next.map((img) => img.url),
+        );
+        if (!res.ok) setUploadError(res.error);
+        else notifyChange(next.map((img) => img.url));
+      });
+    },
+    [images, propertyId, notifyChange],
+  );
+
   const removeImage = useCallback((id: string) => {
     const urlToRemove = images.find((img) => img.id === id)?.url;
     if (!urlToRemove) return;
@@ -248,7 +270,8 @@ export function AdminGalleryEditor({
         <DialogHeader>
           <DialogTitle>Editar galería de fotos</DialogTitle>
           <DialogDescription>
-            Arrastra para reordenar. Los cambios se guardan automáticamente.
+            Arrastra las fotos o usa las flechas ‹ › para reordenarlas. La
+            primera es la portada. Los cambios se guardan automáticamente.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -306,8 +329,10 @@ export function AdminGalleryEditor({
                       key={img.id}
                       image={img}
                       index={index}
+                      total={images.length}
                       disabled={isUploading || isRemoving}
                       onRemove={() => removeImage(img.id)}
+                      onMove={(direction) => moveImage(index, direction)}
                     />
                   ))}
                 </ul>
@@ -399,13 +424,17 @@ export function AdminGalleryEditor({
 function SortableImageCard({
   image,
   index,
+  total,
   disabled,
   onRemove,
+  onMove,
 }: {
   image: WizardImage;
   index: number;
+  total: number;
   disabled: boolean;
   onRemove: () => void;
+  onMove: (direction: -1 | 1) => void;
 }) {
   const {
     attributes,
@@ -426,7 +455,12 @@ function SortableImageCard({
       <div
         {...listeners}
         className={cn(
-          "group relative aspect-square overflow-hidden rounded-lg border bg-muted",
+          // touch-none is required for dnd-kit drags on touch screens:
+          // without it the browser takes the gesture over for scrolling
+          // and the photo never moves. select-none + draggable=false on
+          // the img stop the native HTML5 image drag from hijacking
+          // mouse drags the same way.
+          "group relative aspect-square touch-none overflow-hidden rounded-lg border bg-muted select-none",
           isDragging && "z-10 opacity-90 shadow-lg ring-2 ring-primary",
           disabled && "opacity-50 pointer-events-none",
         )}
@@ -435,11 +469,12 @@ function SortableImageCard({
         <img
           loading="lazy"
           decoding="async"
+          draggable={false}
           src={image.url}
           alt={`Imagen ${index + 1}`}
-          className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="size-full object-cover"
         />
-        <div className="absolute inset-0 flex items-start justify-between p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between p-1">
           <span
             className="inline-flex size-6 items-center justify-center cursor-grab rounded-full bg-background/90 text-muted-foreground hover:text-foreground"
             aria-label={`Reordenar imagen ${index + 1}`}
@@ -464,6 +499,24 @@ function SortableImageCard({
             Portada
           </span>
         )}
+        <button
+          type="button"
+          onClick={() => onMove(-1)}
+          disabled={disabled || index === 0}
+          aria-label={`Mover imagen ${index + 1} antes`}
+          className="absolute top-1/2 left-1 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 text-foreground shadow transition-colors hover:bg-background disabled:opacity-40"
+        >
+          <ChevronLeft className="size-4" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={() => onMove(1)}
+          disabled={disabled || index === total - 1}
+          aria-label={`Mover imagen ${index + 1} después`}
+          className="absolute top-1/2 right-1 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 text-foreground shadow transition-colors hover:bg-background disabled:opacity-40"
+        >
+          <ChevronRight className="size-4" aria-hidden />
+        </button>
       </div>
     </li>
   );
