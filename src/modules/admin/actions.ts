@@ -32,6 +32,32 @@ function revalidateModerationPaths(): void {
   revalidatePath("/dashboard");
 }
 
+type SupabaseServerClient = Awaited<
+  ReturnType<typeof createSupabaseServerClient>
+>;
+
+/**
+ * Keep the Marketplace saved row that produced this property (if any) in
+ * sync with the property's photo order: Guardados shows the same cover
+ * (first photo) and gallery as the public listings. No-op for properties
+ * that did not come from a saved listing.
+ */
+async function syncSavedListingPhotos(
+  supabase: SupabaseServerClient,
+  propertyId: string,
+  images: string[],
+): Promise<void> {
+  await supabase
+    .from("marketplace_saved_listings")
+    .update({
+      photo_urls: images,
+      primary_photo_url: images[0] ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("imported_property_id", propertyId);
+  revalidatePath("/admin/guardados");
+}
+
 /** Image upload constants (mirror listings/actions.ts for decoupling). */
 const IMAGE_BUCKET = "property-images";
 const MAX_WIZARD_IMAGES = 50;
@@ -163,6 +189,8 @@ export async function reorderPropertyImages(
 
   if (error) return fail(error.message);
 
+  await syncSavedListingPhotos(supabase, propertyId, next);
+
   revalidatePath("/admin/propiedades");
   revalidatePath(`/property/[slug]`, "page");
   return ok({ images: next });
@@ -203,6 +231,8 @@ export async function addPropertyImages(
 
   if (error) return fail(error.message);
 
+  await syncSavedListingPhotos(supabase, propertyId, combined);
+
   revalidatePath("/admin/propiedades");
   revalidatePath(`/property/[slug]`, "page");
   return ok({ images: combined });
@@ -240,6 +270,8 @@ export async function removePropertyImage(
     .eq("id", propertyId);
 
   if (error) return fail(error.message);
+
+  await syncSavedListingPhotos(supabase, propertyId, filtered);
 
   revalidatePath("/admin/propiedades");
   revalidatePath(`/property/[slug]`, "page");
