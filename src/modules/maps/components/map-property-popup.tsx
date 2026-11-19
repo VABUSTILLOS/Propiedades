@@ -45,7 +45,29 @@ export function MapPropertyPopup({
 }) {
   const images = marker.images ?? [];
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const scrollStartRef = useRef(0);
   const [slide, setSlide] = useState(0);
+
+  // Google Maps listens for drags at the map-container level, so a
+  // gesture that starts on the popup would pan the map instead of
+  // scrolling the photo strip. Native listeners on the popup root (they
+  // run before the event reaches the map's own handlers) keep every
+  // gesture that starts on the popup for the popup.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const stop = (e: Event) => e.stopPropagation();
+    const events = ["pointerdown", "touchstart", "touchmove", "wheel"];
+    for (const type of events) {
+      el.addEventListener(type, stop, { passive: true });
+    }
+    return () => {
+      for (const type of events) {
+        el.removeEventListener(type, stop);
+      }
+    };
+  }, []);
   const [panelResult, setPanelResult] = useState<
     | { slug: string; data: PopupPanelData }
     | { slug: string; failed: true }
@@ -108,8 +130,27 @@ export function MapPropertyPopup({
     marker.terreno_m2 > 0;
 
   return (
-    <div className="w-72 overflow-hidden rounded-2xl border bg-background shadow-xl">
-      <div className="relative aspect-[4/3] bg-muted">
+    <div
+      ref={rootRef}
+      className="w-72 overflow-hidden rounded-2xl border bg-background shadow-xl"
+    >
+      <div
+        className="relative aspect-[4/3] bg-muted"
+        onPointerDown={() => {
+          scrollStartRef.current = scrollerRef.current?.scrollLeft ?? 0;
+        }}
+        onClickCapture={(e) => {
+          // A click fired at the end of a photo swipe is not a visit:
+          // the strip scrolled since pointerdown, so swallow it before
+          // the wrapping link navigates to the listing.
+          const scroller = scrollerRef.current;
+          if (!scroller) return;
+          if (Math.abs(scroller.scrollLeft - scrollStartRef.current) > 8) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+      >
         {images.length > 0 ? (
           <>
             <Link href={href} tabIndex={-1} aria-label={marker.title}>

@@ -8,10 +8,16 @@ import { cn } from "@/lib/utils";
 /**
  * Swipeable photo strip for the property card image area. Native
  * scroll-snap provides touch swipe (and trackpad scrolling) with no drag
- * logic; on desktop, hover arrows page through the photos. Dots at the
- * bottom track the visible photo. Clicks on the photos themselves fall
- * through to the card link — only the arrow buttons intercept them, the
- * same pattern as CardFavoriteButton.
+ * logic; arrows page through the photos (always visible on touch
+ * screens, hover-revealed on desktop). Dots at the bottom track the
+ * visible photo.
+ *
+ * The strip sits inside the card's whole-area link, so the click that
+ * some browsers fire at the end of a swipe is swallowed: if the track
+ * scrolled since pointerdown, the gesture was a photo change, not a
+ * visit — without this, trying to browse photos on mobile kept opening
+ * the listing. A clean tap (no scroll) still follows the card link,
+ * and the arrow buttons intercept their own clicks as before.
  */
 export function CardPhotoCarousel({
   images,
@@ -21,6 +27,7 @@ export function CardPhotoCarousel({
   title: string;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollStartRef = useRef(0);
   const [index, setIndex] = useState(0);
 
   const onScroll = () => {
@@ -45,10 +52,23 @@ export function CardPhotoCarousel({
   };
 
   const arrowClass =
-    "absolute top-1/2 z-10 hidden size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-700 opacity-0 shadow-sm backdrop-blur transition-opacity hover:bg-white focus-visible:opacity-100 group-hover/carousel:opacity-100 md:flex";
+    "absolute top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-700 shadow-sm backdrop-blur transition-opacity hover:bg-white focus-visible:opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100";
 
   return (
-    <div className="group/carousel relative size-full">
+    <div
+      className="group/carousel relative size-full"
+      onPointerDown={() => {
+        scrollStartRef.current = trackRef.current?.scrollLeft ?? 0;
+      }}
+      onClickCapture={(e) => {
+        const el = trackRef.current;
+        if (!el) return;
+        if (Math.abs(el.scrollLeft - scrollStartRef.current) > 8) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+    >
       <div
         ref={trackRef}
         onScroll={onScroll}
