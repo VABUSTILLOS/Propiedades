@@ -9,6 +9,7 @@ import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import type { MarketplaceSavedListingsRow } from "@/modules/lib/database.types";
 import { createImportedDraft } from "@/modules/listings/actions";
 import { buildImportedDraftPayload } from "@/modules/guardados/mapping";
+import { reorderImageUrls } from "@/modules/admin/image-list";
 
 const idSchema = z.string().uuid();
 
@@ -228,4 +229,65 @@ export async function deleteImportedProperty(
   revalidatePath("/rentas");
   revalidatePath("/");
   return ok({ propertyId });
+}
+
+/**
+ * Reorder a saved listing's photos (master only). The first photo is the
+ * cover everywhere. Only URLs already stored on the row are kept, in the
+ * given order. When the listing was already imported, the property's
+ * gallery is updated to the same order so Guardados and the public
+ * listings never disagree about the cover.
+ */
+export async function reorderSavedListingPhotos(
+  id: string,
+  orderedUrls: string[],
+): Promise<ActionResult<{ photo_urls: string[] }>> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsedId = parseInput(idSchema, id);
+  if (!parsedId.success) return fail(parsedId.error);
+  const parsedUrls = parseInput(
+    z.array(z.string().url()).max(50),
+    orderedUrls,
+  );
+  if (!parsedUrls.success) return fail(parsedUrls.error);
+
+  const supabase = await createSupabaseServerClient();
+  const { data: row, error: fetchError } = await supabase
+    .from("marketplace_saved_listings")
+    .select("photo_urls, imported_property_id")
+    .eq("id", parsedId.data)
+    .single();
+  if (fetchError) return fail(fetchError.message);
+
+  const current = (row?.photo_urls as string[] | null) ?? [];
+  const next = reorderImageUrls(current, parsedUrls.data);
+  if (current.length > 0 && next.length === 0) {
+    return fail("El orden enviado no coincide con las fotos guardadas.");
+  }
+
+  const { error } = await supabase
+    .from("marketplace_saved_listings")
+    .update({
+      photo_urls: next,
+      primary_photo_url: next[0] ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", parsedId.data);
+  if (error) return fail(error.message);
+
+  if (row?.imported_property_id) {
+    const { error: propertyError } = await supabase
+      .from("properties")
+      .update({ images: next })
+      .eq("id", row.imported_property_id);
+    if (propertyError) return fail(propertyError.message);
+    revalidatePath(`/property/[slug]`, "page");
+    revalidatePath("/search");
+    revalidatePath("/rentas");
+  }
+
+  revalidatePath("/admin/guardados");
+  return ok({ photo_urls: next });
 }

@@ -11,6 +11,7 @@ import { PropertyCard } from "@/modules/home/components/property-card";
 import { CardDetailsToggle } from "@/modules/maps/components/card-details-toggle";
 import { bulkModerateProperties } from "@/modules/admin/actions";
 import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import {
   ModerationActionBar,
   ModerationToggleButton,
@@ -334,7 +335,21 @@ export function InfiniteListings({
               />
             )}
             {canModerate && !selecting && (
-              <div className="flex justify-end pt-2">
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+                <AdminGalleryEditor
+                  propertyId={item.id}
+                  propertySlug={item.slug}
+                  initialImages={item.images ?? []}
+                  onImagesChange={(images) => {
+                    setItems((prev) =>
+                      prev.map((listing) =>
+                        listing.id === item.id
+                          ? { ...listing, images }
+                          : listing,
+                      ),
+                    );
+                  }}
+                />
                 <DeletePropertyButton
                   propertyId={item.id}
                   onDeleted={() => {

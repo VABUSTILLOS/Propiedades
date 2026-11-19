@@ -37,6 +37,7 @@ import {
   importSavedListing,
   restoreSavedListing,
 } from "@/modules/guardados/actions";
+import { SavedPhotosOrderEditor } from "@/modules/guardados/components/saved-photos-order-editor";
 
 type View = "guardados" | "descartados";
 type SortKey = "saved" | "price-asc" | "price-desc" | "date-desc" | "date-asc" | "name";
@@ -251,6 +252,23 @@ export function GuardadosClient({
       "Publicación descartada. Puedes restaurarla desde Descartados.",
     );
 
+  const handlePhotosReordered = (
+    row: MarketplaceSavedListingsRow,
+    photoUrls: string[],
+  ) => {
+    setRows((prev) =>
+      prev.map((r) =>
+        r.id === row.id
+          ? {
+              ...r,
+              photo_urls: photoUrls,
+              primary_photo_url: photoUrls[0] ?? null,
+            }
+          : r,
+      ),
+    );
+  };
+
   const handleRestore = (row: MarketplaceSavedListingsRow) =>
     runAction(
       row,
@@ -453,6 +471,9 @@ export function GuardadosClient({
                 onRestore={() => handleRestore(row)}
                 onImport={() => handleImport(row)}
                 onDeleteProperty={() => handleDeleteProperty(row)}
+                onPhotosReordered={(photoUrls) =>
+                  handlePhotosReordered(row, photoUrls)
+                }
               />
             ))}
           </div>
@@ -470,6 +491,7 @@ function SavedListingCard({
   onRestore,
   onImport,
   onDeleteProperty,
+  onPhotosReordered,
 }: {
   row: MarketplaceSavedListingsRow;
   pending: boolean;
@@ -478,6 +500,7 @@ function SavedListingCard({
   onRestore: () => void;
   onImport: () => void;
   onDeleteProperty: () => void;
+  onPhotosReordered: (photoUrls: string[]) => void;
 }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const photo = row.primary_photo_url ?? row.photo_urls?.[0] ?? null;
@@ -604,6 +627,13 @@ function SavedListingCard({
         )}
 
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
+          {photoCount > 1 && (
+            <SavedPhotosOrderEditor
+              savedId={row.id}
+              initialPhotos={row.photo_urls ?? []}
+              onSaved={onPhotosReordered}
+            />
+          )}
           {row.is_property && row.status === "active" && (
             <Button type="button" size="sm" onClick={onImport} disabled={pending}>
               {pending ? (

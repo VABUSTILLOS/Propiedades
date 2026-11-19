@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useRef, useState, useTransition } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
+import { useRouter } from "next/navigation";
 import {
   DndContext,
   closestCenter,
@@ -58,11 +65,20 @@ type WizardImage = {
 export function AdminGalleryEditor({
   propertyId,
   initialImages = [],
+  onImagesChange,
 }: {
   propertyId: string;
   propertySlug: string;
   initialImages: string[];
+  /**
+   * Called with the new URL order after every successful change, so a
+   * parent holding the images in local state (listing grids, detail
+   * panel) can update its cover/gallery without waiting for a reload.
+   */
+  onImagesChange?: (images: string[]) => void;
 }) {
+  const router = useRouter();
+  const dirtyRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState<WizardImage[]>(
     initialImages.map((url) => ({ id: crypto.randomUUID(), url })),
@@ -80,6 +96,27 @@ export function AdminGalleryEditor({
   );
 
   const remainingSlots = MAX_IMAGES - images.length;
+
+  const imagesRef = useRef(images);
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
+
+  const notifyChange = useCallback(
+    (urls: string[]) => {
+      dirtyRef.current = true;
+      onImagesChange?.(urls);
+    },
+    [onImagesChange],
+  );
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen && dirtyRef.current) {
+      dirtyRef.current = false;
+      router.refresh();
+    }
+  };
 
   const uploadFiles = useCallback((files: FileList | File[]) => {
     const list = Array.from(files).filter((f) => f.size > 0);
@@ -107,8 +144,13 @@ export function AdminGalleryEditor({
       // "Guardar orden" still keeps the uploaded images.
       const persisted = await addPropertyImages(propertyId, res.data.urls);
       if (!persisted.ok) setUploadError(persisted.error);
+      else
+        notifyChange([
+          ...imagesRef.current.map((img) => img.url),
+          ...res.data.urls,
+        ]);
     });
-  }, [remainingSlots, propertyId]);
+  }, [remainingSlots, propertyId, notifyChange]);
 
   const handleDrop = useCallback(
     (event: React.DragEvent<HTMLLabelElement>) => {
@@ -136,9 +178,10 @@ export function AdminGalleryEditor({
           next.map((img) => img.url),
         );
         if (!res.ok) setUploadError(res.error);
+        else notifyChange(next.map((img) => img.url));
       });
     },
-    [images, propertyId],
+    [images, propertyId, notifyChange],
   );
 
   const removeImage = useCallback((id: string) => {
@@ -146,9 +189,13 @@ export function AdminGalleryEditor({
     if (!urlToRemove) return;
     setImages((prev) => prev.filter((img) => img.id !== id));
     startRemoving(async () => {
-      await removePropertyImage(propertyId, urlToRemove);
+      const res = await removePropertyImage(propertyId, urlToRemove);
+      if (res.ok)
+        notifyChange(
+          images.filter((img) => img.id !== id).map((img) => img.url),
+        );
     });
-  }, [images, propertyId]);
+  }, [images, propertyId, notifyChange]);
 
   const addPasteUrl = useCallback(() => {
     const url = pasteUrl.trim();
@@ -166,9 +213,11 @@ export function AdminGalleryEditor({
     setPasteUrl("");
     // Persist
     startUploading(async () => {
-      await addPropertyImages(propertyId, [url]);
+      const res = await addPropertyImages(propertyId, [url]);
+      if (res.ok)
+        notifyChange([...imagesRef.current.map((img) => img.url), url]);
     });
-  }, [pasteUrl, remainingSlots, propertyId]);
+  }, [pasteUrl, remainingSlots, propertyId, notifyChange]);
 
   const persistOrder = useCallback(async () => {
     const urls = images.map((img) => img.url);
@@ -176,12 +225,14 @@ export function AdminGalleryEditor({
       const res = await reorderPropertyImages(propertyId, urls);
       if (!res.ok) {
         setUploadError(res.error);
+      } else {
+        notifyChange(urls);
       }
     });
-  }, [images, propertyId]);
+  }, [images, propertyId, notifyChange]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
         render={
           <Button
@@ -335,7 +386,7 @@ export function AdminGalleryEditor({
           <Button
             variant="outline"
             disabled={isUploading || isReordering || isRemoving}
-            onClick={() => setOpen(false)}
+            onClick={() => handleOpenChange(false)}
           >
             Cerrar
           </Button>
@@ -408,6 +459,11 @@ function SortableImageCard({
         <span className="absolute bottom-1 right-1 inline-flex size-5 items-center justify-center rounded-full bg-black/60 text-[10px] font-semibold text-white">
           {index + 1}
         </span>
+        {index === 0 && (
+          <span className="absolute bottom-1 left-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+            Portada
+          </span>
+        )}
       </div>
     </li>
   );

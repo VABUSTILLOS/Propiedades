@@ -10,6 +10,7 @@ import { PropertyCard } from "@/modules/home/components/property-card";
 import { handleTabListKeyDown } from "@/lib/a11y";
 import { bulkModerateProperties } from "@/modules/admin/actions";
 import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import {
   ModerationActionBar,
   ModerationToggleButton,
@@ -49,6 +50,9 @@ export function FeaturedListings({
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
+  const [imageOverrides, setImageOverrides] = useState<
+    Record<string, string[]>
+  >({});
   const [moderating, startModeration] = useTransition();
   const [moderationError, setModerationError] = useState<string | null>(null);
 
@@ -82,6 +86,11 @@ export function FeaturedListings({
       setSelecting(false);
       router.refresh();
     });
+  };
+
+  const withImageOverride = (listing: PropertiesRow): PropertiesRow => {
+    const override = imageOverrides[listing.id];
+    return override ? { ...listing, images: override } : listing;
   };
 
   const listings = useMemo(
@@ -173,14 +182,27 @@ export function FeaturedListings({
               onToggle={() => toggleSelected(listing.id)}
             >
               <PropertyCard
-                listing={listing}
+                listing={withImageOverride(listing)}
                 saved={savedIds?.has(listing.id) ?? false}
                 editHref={
                   canEdit ? `/admin/propiedades/${listing.id}/editar` : undefined
                 }
               />
               {canModerate && !selecting && (
-                <div className="flex justify-end pt-2">
+                <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+                  <AdminGalleryEditor
+                    propertyId={listing.id}
+                    propertySlug={listing.slug}
+                    initialImages={
+                      imageOverrides[listing.id] ?? listing.images ?? []
+                    }
+                    onImagesChange={(images) => {
+                      setImageOverrides((prev) => ({
+                        ...prev,
+                        [listing.id]: images,
+                      }));
+                    }}
+                  />
                   <DeletePropertyButton
                     propertyId={listing.id}
                     onDeleted={() => {

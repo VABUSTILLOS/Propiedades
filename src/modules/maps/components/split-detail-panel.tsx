@@ -24,6 +24,7 @@ import { ScoreBadge } from "@/components/ui/score-badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeletePropertyButton } from "@/modules/admin/components/delete-property-button";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import { WhatsAppInquiryButton } from "@/modules/chat/components/whatsapp-inquiry-button";
 import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
 import { SaveFavoriteButton } from "@/modules/favorites/components/save-favorite-button";
@@ -88,6 +89,17 @@ export function SplitDetailPanel({
   const router = useRouter();
   const [data, setData] = useState<PanelData | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  // Photo-order override from the gallery editor, keyed to the listing it
+  // belongs to: a different property in the same panel uses its own photos.
+  const [imagesOverride, setImagesOverride] = useState<{
+    id: string;
+    images: string[];
+  } | null>(null);
+
+  const images =
+    imagesOverride?.id === listing.id
+      ? imagesOverride.images
+      : listing.images ?? [];
 
   useEffect(() => {
     let cancelled = false;
@@ -136,7 +148,7 @@ export function SplitDetailPanel({
   return (
     <div className={cn("overflow-hidden rounded-2xl border bg-background", className)}>
       <PropertyPhotoGallery
-        images={listing.images ?? []}
+        images={images}
         title={listing.title}
       />
 
@@ -362,7 +374,15 @@ export function SplitDetailPanel({
             className="w-full"
           />
           {data?.canModerate && (
-            <div className="flex justify-end border-t pt-2">
+            <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-2">
+              <AdminGalleryEditor
+                propertyId={listing.id}
+                propertySlug={listing.slug}
+                initialImages={images}
+                onImagesChange={(next) =>
+                  setImagesOverride({ id: listing.id, images: next })
+                }
+              />
               <DeletePropertyButton
                 propertyId={listing.id}
                 onDeleted={() => {

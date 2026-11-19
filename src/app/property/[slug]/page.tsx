@@ -20,6 +20,7 @@ import { InquireButton } from "@/modules/transactions/components/inquire-button"
 import { SimilarProperties } from "@/modules/listings/components/similar-properties";
 import { PropertyViewToggle } from "@/modules/market-data/components/property-view-toggle";
 import { PropertyPhotoGallery } from "@/modules/property-gallery/components/property-photo-gallery";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import { PropertyLocationMap } from "@/modules/maps/components/property-location-map";
 import { PannellumViewer } from "@/modules/flyers/components/pannellum-viewer";
 import { buttonVariants } from "@/components/ui/button";
@@ -124,6 +125,15 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
             images={listing.images ?? []}
             title={listing.title}
           />
+          {canEdit && (
+            <div className="flex justify-end">
+              <AdminGalleryEditor
+                propertyId={listing.id}
+                propertySlug={listing.slug}
+                initialImages={listing.images ?? []}
+              />
+            </div>
+          )}
           {listing.source_url && (
             <p className="text-sm text-muted-foreground">
               Fotos obtenidas de{" "}
