@@ -46,18 +46,98 @@ export function computeHotScore(input: {
 }
 
 /**
- * Derive the hotness score for a property row from the cost per constructed
- * m² only. Terrenos (category "terreno") are excluded entirely — they have no
- * constructed area (sometimes a little), so ranking them by any per-m² price
- * would make land plots dominate the opportunity bar. Returns null so they
- * sort last in every "hot"/opportunity ordering.
+ * % below (positive) or above (negative) the colonia land benchmark for a
+ * property's price per land m² — the land counterpart of the construction
+ * discount from `compute_colonia_discount`. Null when either side is
+ * missing or non-positive.
+ */
+export function computeLandDiscountPct(
+  benchmark: Pick<MarketBenchmarksRow, "avg_price_m2_land"> | null,
+  precioM2Terreno: number | null,
+): number | null {
+  if (!benchmark || benchmark.avg_price_m2_land <= 0) return null;
+  if (precioM2Terreno == null || precioM2Terreno <= 0) return null;
+  return (
+    ((benchmark.avg_price_m2_land - precioM2Terreno) /
+      benchmark.avg_price_m2_land) *
+    100
+  );
+}
+
+/**
+ * Land discounts for a whole row set in one benchmarks query (the batch
+ * RPC only covers the construction discount). Returns a property id →
+ * land discount map; ids with no usable benchmark or land price are
+ * absent (callers resolve them to null).
+ */
+export async function getLandDiscounts(
+  rows: Array<{
+    id: string;
+    city: string | null;
+    colonia: string | null;
+    precio_m2_terreno: number | null;
+  }>,
+): Promise<Map<string, number>> {
+  const discounts = new Map<string, number>();
+  const candidates = rows.filter(
+    (r) =>
+      r.precio_m2_terreno != null &&
+      r.precio_m2_terreno > 0 &&
+      r.city &&
+      r.colonia,
+  );
+  if (candidates.length === 0) return discounts;
+
+  const supabase = await createSupabaseServerClient();
+  const colonias = [
+    ...new Set(
+      candidates
+        .map((r) => r.colonia)
+        .filter((c): c is string => Boolean(c)),
+    ),
+  ];
+  const { data } = await supabase
+    .from("market_benchmarks")
+    .select("city,colonia,avg_price_m2_land")
+    .in("colonia", colonias)
+    .returns<
+      Pick<MarketBenchmarksRow, "city" | "colonia" | "avg_price_m2_land">[]
+    >();
+
+  const byPair = new Map(
+    (data ?? []).map((b) => [`${b.city}|${b.colonia}`, b]),
+  );
+  for (const row of candidates) {
+    const pct = computeLandDiscountPct(
+      byPair.get(`${row.city}|${row.colonia}`) ?? null,
+      row.precio_m2_terreno,
+    );
+    if (pct != null) discounts.set(row.id, pct);
+  }
+  return discounts;
+}
+
+/**
+ * Derive the hotness score for a property row. Construction-based signals
+ * (discount vs the colonia construction benchmark + cost per constructed
+ * m²) are primary. When a property has no constructed area on record, its
+ * land discount (price per land m² vs the colonia land benchmark) stands
+ * in as the discount component. Terrenos are scored on that land discount
+ * alone — they have no construction to rank, and comparing them on land
+ * price against their own colonia keeps them from dominating the bar.
  */
 export function toHotScore(
   discountPct: number | null,
   row: Pick<PropertiesRow, "category" | "precio_m2_const">,
+  landDiscountPct: number | null = null,
 ): number | null {
-  if (row.category === "terreno") return null;
-  return computeHotScore({ discountPct, m2: row.precio_m2_const });
+  if (row.category === "terreno") {
+    return computeHotScore({ discountPct: landDiscountPct, m2: null });
+  }
+  return computeHotScore({
+    discountPct: discountPct ?? landDiscountPct,
+    m2: row.precio_m2_const,
+  });
 }
 
 /**

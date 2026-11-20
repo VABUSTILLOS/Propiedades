@@ -12,6 +12,7 @@ import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dial
 import { ShareWhatsAppButton } from "@/modules/chat/components/share-whatsapp-button";
 import { WhatsAppInquiryButton } from "@/modules/chat/components/whatsapp-inquiry-button";
 import {
+  computeLandDiscountPct,
   getBenchmark,
   getColoniaDiscount,
   toHotScore,
@@ -90,7 +91,11 @@ export default async function PropertyDetailPage({ params, searchParams }: Props
 
   const benchmark = await getBenchmark(listing.city, listing.colonia);
   const discountPct = await getColoniaDiscount(listing.id);
-  const hotScore = toHotScore(discountPct, listing);
+  const hotScore = toHotScore(
+    discountPct,
+    listing,
+    computeLandDiscountPct(benchmark, listing.precio_m2_terreno),
+  );
   const videoUrl =
     listing.video_url ??
     listing.generated_video_url ??
