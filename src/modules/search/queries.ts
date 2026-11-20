@@ -3,6 +3,7 @@ import "server-only";
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
 import {
   getColoniaDiscounts,
+  getLandDiscounts,
   toHotScore,
 } from "@/modules/market-data/queries";
 import type {
@@ -310,10 +311,21 @@ export type ListingWithHot = PropertiesRow & {
 export async function enrichWithHot(
   rows: PropertiesRow[],
 ): Promise<ListingWithHot[]> {
-  const discounts = await getColoniaDiscounts(rows.map((row) => row.id));
+  const [discounts, landDiscounts] = await Promise.all([
+    getColoniaDiscounts(rows.map((row) => row.id)),
+    getLandDiscounts(rows),
+  ]);
   return rows.map((row) => {
     const discountPct = discounts.get(row.id) ?? null;
-    return { ...row, hotScore: toHotScore(discountPct, row), discountPct };
+    return {
+      ...row,
+      hotScore: toHotScore(
+        discountPct,
+        row,
+        landDiscounts.get(row.id) ?? null,
+      ),
+      discountPct,
+    };
   });
 }
 
@@ -483,7 +495,7 @@ export async function getListingMarkers(
   const query = applyFilters(
     supabase
       .from("properties")
-      .select("id,title,slug,city,colonia,price,currency,type,category,images,recamaras,banos,estacionamientos,construccion_m2,terreno_m2,precio_m2_const,lat,lng"),
+      .select("id,title,slug,city,colonia,price,currency,type,category,images,recamaras,banos,estacionamientos,construccion_m2,terreno_m2,precio_m2_const,precio_m2_terreno,lat,lng"),
     filters,
   );
 
@@ -496,6 +508,7 @@ export async function getListingMarkers(
           lat: number | null;
           lng: number | null;
           precio_m2_const: number | null;
+          precio_m2_terreno: number | null;
         }
       >
     >();
@@ -511,16 +524,24 @@ export async function getListingMarkers(
 
   // Same batch discount RPC the listing cards use, so the popup's score
   // bar matches the score everywhere else.
-  const discounts = await getColoniaDiscounts(located.map((r) => r.id));
+  const [discounts, landDiscounts] = await Promise.all([
+    getColoniaDiscounts(located.map((r) => r.id)),
+    getLandDiscounts(located),
+  ]);
 
   return located.map((r) => {
-    const { precio_m2_const, ...marker } = r;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- precio_m2_terreno is stripped from the marker payload; the land discounts were already computed from the full rows above.
+    const { precio_m2_const, precio_m2_terreno, ...marker } = r;
     return {
       ...marker,
-      hotScore: toHotScore(discounts.get(r.id) ?? null, {
-        category: r.category,
-        precio_m2_const,
-      }),
+      hotScore: toHotScore(
+        discounts.get(r.id) ?? null,
+        {
+          category: r.category,
+          precio_m2_const,
+        },
+        landDiscounts.get(r.id) ?? null,
+      ),
       lat: r.lat as number,
       lng: r.lng as number,
     };

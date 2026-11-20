@@ -6,6 +6,7 @@ import {
   getListsContainingProperty,
 } from "@/modules/favorites/lists-queries";
 import {
+  computeLandDiscountPct,
   getBenchmark,
   getColoniaDiscount,
   toHotScore,
@@ -46,7 +47,11 @@ export async function GET(
   return Response.json({
     benchmark,
     discountPct,
-    hotScore: toHotScore(discountPct, listing),
+    hotScore: toHotScore(
+      discountPct,
+      listing,
+      computeLandDiscountPct(benchmark, listing.precio_m2_terreno),
+    ),
     canInquire: user?.id !== listing.owner_id,
     canModerate: user?.role === "admin",
     isSaved,
