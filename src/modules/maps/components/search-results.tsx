@@ -297,7 +297,15 @@ export function SearchResults({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      {/* In mobile split view the stage below becomes a fixed,
+          full-viewport layer that would cover this row, so the toggle
+          moves inside the stage there (rendered in the split branch). */}
+      <div
+        className={cn(
+          "flex justify-end",
+          view === "split" && "max-lg:hidden",
+        )}
+      >
         <MapViewToggle
           view={view}
           onChange={(next) => updateParam({ view: next })}
@@ -308,8 +316,11 @@ export function SearchResults({
       {view === "split" ? (
         <div
           ref={stageRef}
-          className="relative h-[calc(100dvh-12rem)] lg:grid lg:h-auto lg:grid-cols-2 lg:gap-6"
+          className="relative max-lg:fixed max-lg:inset-x-0 max-lg:top-16 max-lg:bottom-0 max-lg:z-30 lg:grid lg:grid-cols-2 lg:gap-6"
         >
+          {/* The view toggle lives in the sheet header on mobile (the
+              compact icon-only variant below); the in-flow toggle row is
+              hidden in mobile split because the fixed stage covers it. */}
           {/* Map: fills the whole stage behind the sheet on mobile;
               sticky right column on desktop. */}
           <div className="absolute inset-0 min-w-0 lg:static lg:order-2 lg:sticky lg:top-6 lg:self-start">
@@ -341,26 +352,34 @@ export function SearchResults({
                 className="h-1.5 w-10 rounded-full bg-muted-foreground/30"
               />
               {!selectedItem && (
-                <div className="flex w-full items-center justify-between">
-                  <p className="text-sm font-semibold">
+                <div className="flex w-full items-center justify-between gap-2">
+                  <p className="text-sm font-semibold whitespace-nowrap">
                     {initialTotal} propiedad{initialTotal === 1 ? "" : "es"}
                   </p>
-                  <button
-                    type="button"
-                    aria-label={
-                      sheetSnap === 2 ? "Ver más mapa" : "Ver más resultados"
-                    }
-                    onClick={() => setSheetSnap(sheetSnap === 2 ? 1 : 2)}
-                    className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    <ChevronUp
-                      className={cn(
-                        "size-5 transition-transform duration-300",
-                        sheetSnap === 2 && "rotate-180",
-                      )}
-                      aria-hidden="true"
+                  <div className="flex items-center gap-1">
+                    <MapViewToggle
+                      view={view}
+                      onChange={(next) => updateParam({ view: next })}
+                      count={initialTotal}
+                      compact
                     />
-                  </button>
+                    <button
+                      type="button"
+                      aria-label={
+                        sheetSnap === 2 ? "Ver más mapa" : "Ver más resultados"
+                      }
+                      onClick={() => setSheetSnap(sheetSnap === 2 ? 1 : 2)}
+                      className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    >
+                      <ChevronUp
+                        className={cn(
+                          "size-5 transition-transform duration-300",
+                          sheetSnap === 2 && "rotate-180",
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
