@@ -93,6 +93,7 @@ export function PropertiesMap({
   focusPosition = null,
   selectionId = null,
   onSelectPin,
+  onClosePopup,
   from,
 }: {
   markers: PropertyMapMarker[];
@@ -127,6 +128,10 @@ export function PropertiesMap({
   /** Notified when a pin gets selected (click or popup nav arrows) so the
    *  parent can sync its own state (e.g. the split detail pane). */
   onSelectPin?: (id: string) => void;
+  /** Notified when the popup's close button is pressed, so a parent that
+   *  drives the selection (selectionId) can clear it too — otherwise the
+   *  popup would stay open because the parent's selection wins. */
+  onClosePopup?: () => void;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
 }) {
@@ -526,7 +531,10 @@ export function PropertiesMap({
               key={selected.id}
               marker={selected}
               from={from}
-              onClose={() => setPinSelectedId(null)}
+              onClose={() => {
+                setPinSelectedId(null);
+                onClosePopup?.();
+              }}
             />
             <button
               type="button"

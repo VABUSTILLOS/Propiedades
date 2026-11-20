@@ -68,6 +68,12 @@ export function SearchResults({
   const [markers, setMarkers] = useState<PropertyMapMarker[] | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ListingWithHot | null>(null);
+  // The house currently shown in the map popup when browsing pin to pin
+  // (clicks and the popup's orange arrows). Kept separate from
+  // selectedItem (the split-view detail pane, opened from list cards):
+  // browsing houses on the map must never swap the pane, resize the page
+  // or move the scroll — the layout stays exactly as it was.
+  const [mapPinId, setMapPinId] = useState<string | null>(null);
 
   // The split-view detail pane is not a navigation, so without a history
   // entry of its own the browser/device Back button would skip the results
@@ -109,6 +115,26 @@ export function SearchResults({
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  // While a full-screen map stage is on screen (map view at any size, or
+  // split view on phones, whose stage is fixed too), the page behind it
+  // must not scroll at all: arrow keys, the wheel or a stray touch could
+  // otherwise drag the page down to the footer while the user is only
+  // browsing houses. Desktop split keeps page scroll — its list column
+  // scrolls with the page.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const apply = () => {
+      const lock = view === "map" || (view === "split" && mq.matches);
+      document.body.style.overflow = lock ? "hidden" : "";
+    };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => {
+      mq.removeEventListener("change", apply);
+      document.body.style.overflow = "";
+    };
+  }, [view]);
 
   // --- Mobile split view: draggable bottom sheet over a full map -------
   // On phones there is no room for side-by-side columns, so split view
@@ -279,17 +305,25 @@ export function SearchResults({
         updateParam({ bounds: boundsToString(bounds) })
       }
       onResetBounds={() => updateParam({ bounds: null })}
-      highlightedId={selectedItem?.id ?? hoveredId}
+      highlightedId={selectedItem?.id ?? mapPinId ?? hoveredId}
       focusId={selectedItem?.id ?? null}
       focusPosition={focusPosition}
-      selectionId={selectedItem?.id ?? null}
+      selectionId={selectedItem?.id ?? mapPinId ?? null}
       onSelectPin={(id) => {
-        // Split view: navigating with the popup arrows (or clicking a pin)
-        // opens that listing in the detail pane when it's in the list;
-        // otherwise the pane clears so the clicked pin owns the popup.
-        const item = initialItems.find((l) => l.id === id);
-        if (item) openPanel(item);
-        else if (selectedRef.current) closePanel();
+        // Browsing pin to pin (clicks or the popup arrows) only moves the
+        // map popup. It deliberately does NOT open the split-view detail
+        // pane: swapping the pane on every hop resized the page and yanked
+        // the scroll around (the user could land on the footer). The pane
+        // opens from the list cards, as before. If the pane is open for a
+        // different house, it closes so the clicked pin owns the popup.
+        setMapPinId(id);
+        if (selectedRef.current && selectedRef.current.id !== id) {
+          closePanel();
+        }
+      }}
+      onClosePopup={() => {
+        setMapPinId(null);
+        if (selectedRef.current) closePanel();
       }}
       heightClass={heightClass}
       from={fromUrl}
