@@ -54,15 +54,28 @@ export function MapPropertyPopup({
   // scrolling the photo strip. Native listeners on the popup root (they
   // run before the event reaches the map's own handlers) keep every
   // gesture that starts on the popup for the popup.
+  //
+  // The pointerdown handler also records the strip's scroll position:
+  // because it stops propagation natively, React's own onPointerDown
+  // (dispatched from the root listener) never fires — recording the
+  // swipe start here is the only reliable place. Without it the
+  // click-after-swipe guard below compared against a stale 0 and ate
+  // every arrow click after the first photo change.
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
     const stop = (e: Event) => e.stopPropagation();
-    const events = ["pointerdown", "touchstart", "touchmove", "wheel"];
+    const onPointerDown = (e: Event) => {
+      scrollStartRef.current = scrollerRef.current?.scrollLeft ?? 0;
+      stop(e);
+    };
+    el.addEventListener("pointerdown", onPointerDown, { passive: true });
+    const events = ["touchstart", "touchmove", "wheel"];
     for (const type of events) {
       el.addEventListener(type, stop, { passive: true });
     }
     return () => {
+      el.removeEventListener("pointerdown", onPointerDown);
       for (const type of events) {
         el.removeEventListener(type, stop);
       }
@@ -136,9 +149,6 @@ export function MapPropertyPopup({
     >
       <div
         className="relative aspect-[4/3] bg-muted"
-        onPointerDown={() => {
-          scrollStartRef.current = scrollerRef.current?.scrollLeft ?? 0;
-        }}
         onClickCapture={(e) => {
           // A click fired at the end of a photo swipe is not a visit:
           // the strip scrolled since pointerdown, so swallow it before

@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Map as MapIcon } from "lucide-react";
+import { ChevronUp, Map as MapIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 import {
   MapViewToggle,
@@ -107,6 +109,83 @@ export function SearchResults({
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  // --- Mobile split view: draggable bottom sheet over a full map -------
+  // On phones there is no room for side-by-side columns, so split view
+  // follows the established map-app pattern (Zillow / Google Maps): the
+  // map fills the stage and the results live in a bottom sheet with
+  // three snap points — peek (handle + count), half (map + list share
+  // the screen), full (list/detail take over). Dragging the sheet's
+  // header moves between snaps; opening a property swaps the sheet
+  // content to the detail pane at full height, so map, list and detail
+  // are all reachable without a page navigation. Desktop (lg+) keeps
+  // the classic two-column split and none of this applies.
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [stageH, setStageH] = useState(0);
+  const [sheetSnap, setSheetSnap] = useState(1);
+  const [sheetDragH, setSheetDragH] = useState<number | null>(null);
+  const sheetDragRef = useRef<{ startY: number; startH: number } | null>(
+    null,
+  );
+  const sheetDragHRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const measure = () => setStageH(el.clientHeight);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const SHEET_PEEK_H = 74;
+  const stagePx = stageH || 560;
+  const snapHeights = [
+    SHEET_PEEK_H,
+    Math.round(stagePx * 0.55),
+    Math.round(stagePx * 0.96),
+  ];
+  const sheetH = selectedItem
+    ? (snapHeights[2] ?? stagePx)
+    : (sheetDragH ?? snapHeights[sheetSnap] ?? Math.round(stagePx * 0.55));
+  const sheetContentHidden =
+    !selectedItem && sheetDragH == null && sheetSnap === 0;
+
+  const onSheetPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (selectedItem) return;
+    sheetDragRef.current = { startY: e.clientY, startH: sheetH };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const onSheetPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = sheetDragRef.current;
+    if (!drag) return;
+    const stage = stageRef.current?.clientHeight || 560;
+    const next = Math.max(
+      56,
+      Math.min(stage * 0.98, drag.startH + drag.startY - e.clientY),
+    );
+    sheetDragHRef.current = next;
+    setSheetDragH(next);
+  };
+  const onSheetPointerUp = () => {
+    if (!sheetDragRef.current) return;
+    sheetDragRef.current = null;
+    const dragged = sheetDragHRef.current;
+    sheetDragHRef.current = null;
+    setSheetDragH(null);
+    if (dragged == null) return;
+    let best = 0;
+    let bestDist = Number.POSITIVE_INFINITY;
+    snapHeights.forEach((h, i) => {
+      const dist = Math.abs(h - dragged);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    setSheetSnap(best);
+  };
 
   // Full current URL (path + filters) so the property detail page can send
   // users back to the exact listados/search view they came from.
@@ -227,20 +306,80 @@ export function SearchResults({
       </div>
 
       {view === "split" ? (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="min-w-0 lg:order-1">
-            {/* Keep the list mounted so infinite-scroll state survives; swap
-                it for the compact detail pane while a card is selected. */}
-            <div className={selectedItem ? "hidden" : undefined}>
-              {list(true)}
+        <div
+          ref={stageRef}
+          className="relative h-[calc(100dvh-12rem)] lg:grid lg:h-auto lg:grid-cols-2 lg:gap-6"
+        >
+          {/* Map: fills the whole stage behind the sheet on mobile;
+              sticky right column on desktop. */}
+          <div className="absolute inset-0 min-w-0 lg:static lg:order-2 lg:sticky lg:top-6 lg:self-start">
+            {map("h-full lg:h-[calc(100vh-11rem)]")}
+          </div>
+
+          {/* Results: draggable bottom sheet on mobile (see the sheet
+              state above), classic left column on desktop. */}
+          <div
+            className={cn(
+              "absolute inset-x-0 bottom-0 z-20 flex h-[var(--sheet-h)] min-w-0 flex-col overflow-hidden rounded-t-3xl border-t bg-background shadow-[0_-10px_36px_rgba(0,0,0,0.22)] lg:static lg:order-1 lg:block lg:h-auto lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:shadow-none",
+              sheetDragH == null &&
+                "transition-[height] duration-300 ease-out",
+            )}
+            style={{ "--sheet-h": `${sheetH}px` } as React.CSSProperties}
+          >
+            {/* Sheet drag header (mobile only): handle + result count.
+                Dragging it snaps the sheet between peek / half / full;
+                the chevron toggles half ⇄ full with a tap. */}
+            <div
+              className="flex shrink-0 touch-none flex-col items-center gap-1 px-4 pt-2.5 pb-2 select-none lg:hidden"
+              onPointerDown={onSheetPointerDown}
+              onPointerMove={onSheetPointerMove}
+              onPointerUp={onSheetPointerUp}
+              onPointerCancel={onSheetPointerUp}
+            >
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-10 rounded-full bg-muted-foreground/30"
+              />
+              {!selectedItem && (
+                <div className="flex w-full items-center justify-between">
+                  <p className="text-sm font-semibold">
+                    {initialTotal} propiedad{initialTotal === 1 ? "" : "es"}
+                  </p>
+                  <button
+                    type="button"
+                    aria-label={
+                      sheetSnap === 2 ? "Ver más mapa" : "Ver más resultados"
+                    }
+                    onClick={() => setSheetSnap(sheetSnap === 2 ? 1 : 2)}
+                    className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <ChevronUp
+                      className={cn(
+                        "size-5 transition-transform duration-300",
+                        sheetSnap === 2 && "rotate-180",
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              )}
             </div>
-            {selectedItem && (
-              /* Mobile: full-screen overlay so the panel scrolls within its
-                 own layer instead of growing unbounded in the layout. It
-                 starts below the sticky site header (h-16) so header actions
-                 like the theme toggle stay reachable. Desktop: stays in the
-                 left column with a capped height. */
-              <div className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto overscroll-contain bg-background lg:static lg:z-auto lg:overflow-visible lg:bg-transparent">
+
+            <div
+              className={cn(
+                "min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pt-1 lg:overflow-visible lg:px-0 lg:pt-0",
+                sheetContentHidden && "hidden lg:block",
+              )}
+            >
+              {/* Keep the list mounted so infinite-scroll state survives;
+                  swap it for the compact detail pane while a card is
+                  selected. On mobile the pane fills the sheet (which
+                  jumps to full height); on desktop it keeps its capped
+                  column height. */}
+              <div className={selectedItem ? "hidden" : undefined}>
+                {list(true)}
+              </div>
+              {selectedItem && (
                 <SplitDetailPanel
                   key={selectedItem.id}
                   listing={selectedItem}
@@ -248,11 +387,8 @@ export function SearchResults({
                   from={fromUrl}
                   className="min-h-full rounded-none border-0 lg:min-h-0 lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:rounded-2xl lg:border"
                 />
-              </div>
-            )}
-          </div>
-          <div className="lg:order-2 lg:sticky lg:top-6 lg:self-start">
-            {map("h-[40vh] lg:h-[calc(100vh-11rem)]")}
+              )}
+            </div>
           </div>
         </div>
       ) : view === "map" ? (
