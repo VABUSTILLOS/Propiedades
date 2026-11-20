@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import { CATEGORY_LABELS } from "@/modules/lib/real-estate";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
 import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
 import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
@@ -30,18 +32,28 @@ type PopupPanelData = {
 
 /**
  * Vivanuncios-style mini listing card anchored above a map pin: photo
- * carousel (arrows + swipe + counter) plus the essential facts. Everything
- * except the carousel controls and the close button links to the listing.
+ * carousel (arrows + swipe + counter) plus the essential facts. The
+ * listing opens ONLY from a deliberate press in the middle of the photo:
+ * while browsing house to house, swipes and taps on the photo's edges or
+ * on the text must never yank the user out of the map flow.
  */
 export function MapPropertyPopup({
   marker,
   from,
   onClose,
+  canModerate = false,
+  onImagesChange,
 }: {
   marker: PropertyMapMarker;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
   onClose: () => void;
+  /** Master user: show the gallery editor so the cover photo and the
+   *  photo order can be fixed right from the map card. */
+  canModerate?: boolean;
+  /** Keeps the map marker (and this card's carousel) in sync with the
+   *  gallery editor's changes. */
+  onImagesChange?: (images: string[]) => void;
 }) {
   const images = marker.images ?? [];
   const scrollerRef = useRef<HTMLDivElement | null>(null);
@@ -154,8 +166,22 @@ export function MapPropertyPopup({
           // the strip scrolled since pointerdown, so swallow it before
           // the wrapping link navigates to the listing.
           const scroller = scrollerRef.current;
-          if (!scroller) return;
-          if (Math.abs(scroller.scrollLeft - scrollStartRef.current) > 8) {
+          if (
+            scroller &&
+            Math.abs(scroller.scrollLeft - scrollStartRef.current) > 8
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+          // Buttons (carousel arrows, close) handle their own clicks.
+          if ((e.target as HTMLElement).closest("button")) return;
+          // Only a deliberate press in the middle of the photo opens the
+          // listing; taps on the edges while browsing stay on the map.
+          const rect = e.currentTarget.getBoundingClientRect();
+          const fx = (e.clientX - rect.left) / rect.width;
+          const fy = (e.clientY - rect.top) / rect.height;
+          if (fx < 0.25 || fx > 0.75 || fy < 0.25 || fy > 0.75) {
             e.preventDefault();
             e.stopPropagation();
           }
@@ -236,12 +262,9 @@ export function MapPropertyPopup({
             )}
           </>
         ) : (
-          <Link
-            href={href}
-            className="flex size-full items-center justify-center text-xs text-muted-foreground"
-          >
+          <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
             Sin foto
-          </Link>
+          </div>
         )}
         <button
           type="button"
@@ -260,7 +283,9 @@ export function MapPropertyPopup({
         </Badge>
       </div>
 
-      <Link href={href} className="block space-y-1 p-3">
+      {/* Facts are plain text now: the only way into the listing is the
+          deliberate press in the middle of the photo above. */}
+      <div className="block space-y-1 p-3">
         <p className="font-bold">
           ${marker.price.toLocaleString()}{" "}
           <span className="text-xs font-normal text-muted-foreground">
@@ -310,9 +335,28 @@ export function MapPropertyPopup({
             )}
           </div>
         )}
-      </Link>
+      </div>
 
-      {/* Favorite / list actions — outside the Link so they don't navigate. */}
+      {/* Opportunity score bar — the same one the cards and the full
+          listing show; "Sin dato" when there is no score yet. */}
+      <div className="px-3 pb-2">
+        <HotnessGauge score={marker.hotScore ?? null} />
+      </div>
+
+      {/* Master only: fix the cover photo / gallery order right here,
+          without leaving the map browsing flow. */}
+      {canModerate && (
+        <div className="flex items-center justify-end px-3 pb-2">
+          <AdminGalleryEditor
+            propertyId={marker.id}
+            propertySlug={marker.slug}
+            initialImages={marker.images ?? []}
+            onImagesChange={onImagesChange}
+          />
+        </div>
+      )}
+
+      {/* Favorite / list actions. */}
       {!panelFailed ? (
         <div className="flex items-center justify-end gap-2 px-3 pb-3">
           {panel ? (
