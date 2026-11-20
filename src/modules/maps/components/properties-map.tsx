@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { MarkerClusterer, type Cluster } from "@googlemaps/markerclusterer";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 import {
   GOOGLE_MAPS_AVAILABLE,
   useGoogleMaps,
-  type GoogleMaps,
 } from "@/modules/maps/hooks";
 import {
   createMap,
@@ -22,60 +20,15 @@ import { formatCompactPrice } from "@/modules/lib/real-estate";
 import { cn } from "@/lib/utils";
 
 /**
- * OverlayView subclass (created per map) that anchors a plain DOM container
- * above a pin. React content is rendered into it via `createPortal`, so the
- * popup keeps full Tailwind styling while tracking pan/zoom.
+ * The pin popup is NOT positioned through Google's OverlayView projection:
+ * `fromLatLngToDivPixel` proved unreliable in this layout (it returned
+ * points hundreds of pixels away from where the marker actually renders,
+ * leaving the card parked against the map's corner on mobile and desktop
+ * alike). Instead the popup is rendered in a layer over the map and, while
+ * open, a rAF loop positions it from the pin pill's own
+ * `getBoundingClientRect()` — the exact spot the user sees — clamped
+ * inside the map with an 8px margin.
  */
-function buildPopupOverlayClass(
-  google: GoogleMaps,
-  onAttach: (container: HTMLDivElement | null) => void,
-) {
-  return class extends google.maps.OverlayView {
-    readonly container = document.createElement("div");
-    private position: google.maps.LatLng | null = null;
-    override onAdd() {
-      this.container.style.position = "absolute";
-      this.container.style.pointerEvents = "auto";
-      this.getPanes()?.overlayMouseTarget.appendChild(this.container);
-      onAttach(this.container);
-    }
-    override onRemove() {
-      this.container.parentNode?.removeChild(this.container);
-      onAttach(null);
-    }
-    setPinPosition(position: google.maps.LatLng | null) {
-      this.position = position;
-      this.draw();
-    }
-    override draw() {
-      if (!this.position) return;
-      const projection = this.getProjection();
-      if (!projection) return;
-      const point = projection.fromLatLngToDivPixel(this.position);
-      if (!point) return;
-      // Clamp horizontally so the popup never hangs off the map's sides
-      // (on phones a pin near the edge pushed half the card — and its
-      // photo arrows — off-screen). The popup is centered on the pin via
-      // the transform below, so keep at least half its width plus a
-      // margin inside the map.
-      let x = point.x;
-      const popupW = this.container.offsetWidth;
-      const mapW = this.container.parentElement?.clientWidth ?? 0;
-      if (popupW > 0 && mapW > popupW) {
-        const half = popupW / 2 + 8;
-        x = Math.max(half, Math.min(mapW - half, x));
-      }
-      this.container.style.left = `${x}px`;
-      this.container.style.top = `${point.y}px`;
-      // Bottom-center of the popup sits exactly on the pin.
-      this.container.style.transform = "translate(-50%, -100%)";
-    }
-  };
-}
-
-type PinPopupOverlay = InstanceType<
-  ReturnType<typeof buildPopupOverlayClass>
->;
 
 /** Min viewport delta (degrees) before a new "show in this area" suggestion. */
 const EPSILON = 1e-4;
@@ -176,10 +129,9 @@ export function PropertiesMap({
   const pillElsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const markersRef = useRef<PropertyMapMarker[]>(markers);
   const lastEmittedRef = useRef<MapBounds | null>(null);
-  const popupOverlayRef = useRef<PinPopupOverlay | null>(null);
+  const popupPosRef = useRef<HTMLDivElement | null>(null);
 
   const [pinSelectedId, setPinSelectedId] = useState<string | null>(null);
-  const [popupTarget, setPopupTarget] = useState<HTMLDivElement | null>(null);
   const [suggest, setSuggest] = useState<{
     bounds: MapBounds;
     count: number;
@@ -220,9 +172,6 @@ export function PropertiesMap({
     });
     mapRef.current = map;
 
-    const PopupOverlay = buildPopupOverlayClass(google, setPopupTarget);
-    popupOverlayRef.current = new PopupOverlay();
-
     // Clicking the map background dismisses the pin popup.
     google.maps.event.addListener(map, "click", () => setPinSelectedId(null));
 
@@ -253,8 +202,6 @@ export function PropertiesMap({
     });
 
     return () => {
-      popupOverlayRef.current?.setMap(null);
-      popupOverlayRef.current = null;
       mapRef.current = null;
     };
   }, [google]);
@@ -379,28 +326,64 @@ export function PropertiesMap({
     map.setZoom(Math.max(map.getZoom() ?? 11, minZoom));
   }, [google, markers, focusId, focusPosition]);
 
-  // Anchor the floating popup to the selected pin. The overlay lives in the
-  // map's mouse-target pane so React can portal into it and the card tracks
-  // pan/zoom automatically (OverlayView.draw repositions on every frame).
+  // Bring the selected pin into view, nudged below center so the popup
+  // (drawn above the pin) fits. Phones get a bigger nudge: the popup is
+  // tall relative to a small viewport and its top was getting clipped.
   useEffect(() => {
     const map = mapRef.current;
-    const overlay = popupOverlayRef.current;
-    if (!google || !map || !overlay) return;
+    if (!google || !map || !selected) return;
 
-    if (!selected) {
-      overlay.setMap(null);
-      return;
-    }
-
-    overlay.setPinPosition(new google.maps.LatLng(selected.lat, selected.lng));
-    overlay.setMap(map);
-
-    // Nudge the pin below center so the popup (drawn above the pin)
-    // fits. Phones get a bigger nudge: the popup is tall relative to a
-    // small viewport and its top was getting clipped.
     map.panTo({ lat: selected.lat, lng: selected.lng });
     map.panBy(0, window.innerWidth < 1024 ? -180 : -120);
   }, [google, selected]);
+
+  // Track the popup to its pin while it is open. Every frame, read the
+  // pill's real on-screen rect and place the popup's bottom-center on it,
+  // clamped inside the map (8px margin). The pill rect is ground truth —
+  // it is exactly where the user sees the pin — so the card stays glued
+  // to the pin through pan/zoom animations and layout shifts alike. If
+  // the pill is not in the DOM (legacy marker, or the pin is clustered),
+  // fall back to centering the card at the top of the map: the pan above
+  // already brought the pin to the middle of the view.
+  useEffect(() => {
+    if (!selected) return;
+    let raf = 0;
+    const tick = () => {
+      const el = popupPosRef.current;
+      const mapEl = containerRef.current;
+      if (el && mapEl) {
+        const mapRect = mapEl.getBoundingClientRect();
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        if (w > 0 && h > 0 && mapRect.width > 0) {
+          const pill = pillElsRef.current.get(selected.id);
+          const pillRect = pill?.getBoundingClientRect();
+          let x: number;
+          let y: number;
+          if (pillRect && pillRect.width > 0) {
+            const anchorX =
+              pillRect.left + pillRect.width / 2 - mapRect.left;
+            const anchorY = pillRect.bottom - mapRect.top;
+            x = anchorX - w / 2;
+            y = anchorY - h;
+          } else {
+            x = (mapRect.width - w) / 2;
+            y = 8;
+          }
+          if (mapRect.width > w) {
+            x = Math.max(8, Math.min(mapRect.width - w - 8, x));
+          }
+          y = Math.max(8, y);
+          el.style.left = `${x}px`;
+          el.style.top = `${y}px`;
+          el.style.visibility = "visible";
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [selected]);
 
   // Escape dismisses a pin-click popup (split-view selection is closed by
   // the parent that owns `selectionId`).
@@ -476,9 +459,13 @@ export function PropertiesMap({
         </div>
       )}
 
-      {popupTarget &&
-        selected &&
-        createPortal(
+      {selected && (
+        <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+          <div
+            ref={popupPosRef}
+            className="pointer-events-auto absolute"
+            style={{ left: 0, top: 0, visibility: "hidden" }}
+          >
           <div
             className="relative pb-3"
             onClick={(e) => e.stopPropagation()}
@@ -518,9 +505,10 @@ export function PropertiesMap({
               aria-hidden="true"
               className="absolute bottom-1.5 left-1/2 size-3 -translate-x-1/2 rotate-45 border-b border-r bg-background"
             />
-          </div>,
-          popupTarget,
-        )}
+          </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
