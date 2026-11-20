@@ -170,16 +170,36 @@ export function MapPropertyPopup({
                 className="flex size-full snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               >
                 {images.map((src, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <div
                     key={src}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    src={src}
-                    alt={`${marker.title} — foto ${i + 1}`}
-                    draggable={false}
-                    className="size-full shrink-0 snap-center object-cover"
-                  />
+                    className="relative size-full shrink-0 snap-center overflow-hidden"
+                  >
+                    {/* Blurred fill behind the photo: the same image,
+                        cover-cropped and blurred, so the space around
+                        the full photo looks intentional instead of flat
+                        letterbox bars. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      decoding="async"
+                      draggable={false}
+                      className="absolute inset-0 size-full scale-110 object-cover opacity-60 blur-md"
+                    />
+                    {/* The photo itself is shown whole (object-contain),
+                        never cropped, whatever its aspect ratio. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      src={src}
+                      alt={`${marker.title} — foto ${i + 1}`}
+                      draggable={false}
+                      className="absolute inset-0 size-full object-contain"
+                    />
+                  </div>
                 ))}
               </div>
             </Link>
