@@ -498,7 +498,11 @@ export function PropertiesMap({
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
           >
+            {/* Keyed by property so browsing with the orange arrows
+                remounts the card and its carousel starts at photo 1
+                instead of keeping the previous property's slide. */}
             <MapPropertyPopup
+              key={selected.id}
               marker={selected}
               from={from}
               onClose={() => setPinSelectedId(null)}
