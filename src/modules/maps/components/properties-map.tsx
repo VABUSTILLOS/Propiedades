@@ -43,55 +43,31 @@ function inBounds(bounds: MapBounds, marker: PropertyMapMarker): boolean {
 }
 
 /**
- * Nearest pin strictly to the left/right of `selected` (ties broken by
- * vertical proximity). Co-located pins (same lng) are excluded so a stack
- * of duplicates never navigates "sideways" into itself. When no pin lies
- * further in that direction, navigation loops to the opposite extreme,
- * so the popup arrows are always available while there is more than one
- * property on the map.
+ * Next/previous property in a fixed west→east sequence (longitude, then
+ * latitude, then id), wrapping around at both ends. A sequence — rather
+ * than "nearest pin to the side" — is what guarantees every property is
+ * reachable with the popup arrows: most imported listings share the
+ * exact same fallback coordinates downtown, and a nearest-side search
+ * can never step into a stack of co-located pins, so browsing used to
+ * cycle through the same few geocoded properties and repeat. In the
+ * sequence, stacked properties are visited one by one (the map stays
+ * put, the card changes), then the walk continues to the next location.
  */
 function findDirectionalNeighbor(
   markers: PropertyMapMarker[],
   selected: PropertyMapMarker,
   direction: "left" | "right",
 ): PropertyMapMarker | null {
-  const EPS_LNG = 1e-7;
-  let best: PropertyMapMarker | null = null;
-  let bestScore = Infinity;
-  for (const m of markers) {
-    if (m.id === selected.id) continue;
-    const dlng = m.lng - selected.lng;
-    if (direction === "right" ? dlng <= EPS_LNG : dlng >= -EPS_LNG) continue;
-    const score = Math.abs(dlng) + Math.abs(m.lat - selected.lat) * 0.5;
-    if (score < bestScore) {
-      bestScore = score;
-      best = m;
-    }
-  }
-  if (best) return best;
-
-  // Loop: at the far end there is no pin further in this direction, so
-  // wrap to the opposite extreme (right → the leftmost pin, left → the
-  // rightmost). The arrows never dead-end and every property stays
-  // reachable by browsing. Among pins stacked on the extreme longitude,
-  // pick the one nearest in latitude.
-  const others = markers.filter((m) => m.id !== selected.id);
-  if (others.length === 0) return null;
-  const extremeLng =
-    direction === "right"
-      ? Math.min(...others.map((m) => m.lng))
-      : Math.max(...others.map((m) => m.lng));
-  let wrap: PropertyMapMarker | null = null;
-  let wrapScore = Infinity;
-  for (const m of others) {
-    if (Math.abs(m.lng - extremeLng) > EPS_LNG) continue;
-    const score = Math.abs(m.lat - selected.lat);
-    if (score < wrapScore) {
-      wrapScore = score;
-      wrap = m;
-    }
-  }
-  return wrap;
+  if (markers.length < 2) return null;
+  const sequence = [...markers].sort(
+    (a, b) =>
+      a.lng - b.lng || b.lat - a.lat || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
+  );
+  const index = sequence.findIndex((m) => m.id === selected.id);
+  if (index < 0) return null;
+  const n = sequence.length;
+  const next = direction === "right" ? (index + 1) % n : (index - 1 + n) % n;
+  return sequence[next] ?? null;
 }
 
 /**
@@ -111,6 +87,7 @@ export function PropertiesMap({
   onApplyBounds,
   onResetBounds,
   heightClass = "h-[70vh]",
+  popupTopInset = 8,
   highlightedId = null,
   focusId = null,
   focusPosition = null,
@@ -126,6 +103,12 @@ export function PropertiesMap({
   onApplyBounds?: (bounds: MapBounds) => void;
   onResetBounds?: () => void;
   heightClass?: string;
+  /**
+   * Minimum distance (px) from the map's top edge to the popup. Map view
+   * raises it so the floating Lista/Mapa/Dividido toggle never covers
+   * the popup's photo.
+   */
+  popupTopInset?: number;
   /** Card hovered in the list — scales its price pill (Airbnb-style sync). */
   highlightedId?: string | null;
   /** Listing opened in the split detail pane — pans/zooms to its pin. */
@@ -394,12 +377,12 @@ export function PropertiesMap({
             y = anchorY - h;
           } else {
             x = (mapRect.width - w) / 2;
-            y = 8;
+            y = popupTopInset;
           }
           if (mapRect.width > w) {
             x = Math.max(8, Math.min(mapRect.width - w - 8, x));
           }
-          y = Math.max(8, y);
+          y = Math.max(popupTopInset, y);
           el.style.left = `${x}px`;
           el.style.top = `${y}px`;
           el.style.visibility = "visible";
@@ -409,7 +392,7 @@ export function PropertiesMap({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [selected]);
+  }, [selected, popupTopInset]);
 
   // Escape dismisses a pin-click popup (split-view selection is closed by
   // the parent that owns `selectionId`).
