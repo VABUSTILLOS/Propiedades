@@ -45,7 +45,10 @@ function inBounds(bounds: MapBounds, marker: PropertyMapMarker): boolean {
 /**
  * Nearest pin strictly to the left/right of `selected` (ties broken by
  * vertical proximity). Co-located pins (same lng) are excluded so a stack
- * of duplicates never navigates "sideways" into itself.
+ * of duplicates never navigates "sideways" into itself. When no pin lies
+ * further in that direction, navigation loops to the opposite extreme,
+ * so the popup arrows are always available while there is more than one
+ * property on the map.
  */
 function findDirectionalNeighbor(
   markers: PropertyMapMarker[],
@@ -65,7 +68,30 @@ function findDirectionalNeighbor(
       best = m;
     }
   }
-  return best;
+  if (best) return best;
+
+  // Loop: at the far end there is no pin further in this direction, so
+  // wrap to the opposite extreme (right → the leftmost pin, left → the
+  // rightmost). The arrows never dead-end and every property stays
+  // reachable by browsing. Among pins stacked on the extreme longitude,
+  // pick the one nearest in latitude.
+  const others = markers.filter((m) => m.id !== selected.id);
+  if (others.length === 0) return null;
+  const extremeLng =
+    direction === "right"
+      ? Math.min(...others.map((m) => m.lng))
+      : Math.max(...others.map((m) => m.lng));
+  let wrap: PropertyMapMarker | null = null;
+  let wrapScore = Infinity;
+  for (const m of others) {
+    if (Math.abs(m.lng - extremeLng) > EPS_LNG) continue;
+    const score = Math.abs(m.lat - selected.lat);
+    if (score < wrapScore) {
+      wrapScore = score;
+      wrap = m;
+    }
+  }
+  return wrap;
 }
 
 /**
