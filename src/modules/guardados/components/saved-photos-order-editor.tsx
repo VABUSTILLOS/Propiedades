@@ -133,7 +133,7 @@ export function SavedPhotosOrderEditor({
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-[90vw] lg:max-w-4xl">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[90vw] lg:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Orden de fotos</DialogTitle>
           <DialogDescription>
@@ -232,9 +232,7 @@ function SortablePhotoCard({
       <div
         {...listeners}
         className={cn(
-          // touch-none is required for dnd-kit drags on touch screens and
-          // draggable=false stops the native image drag on desktop.
-          "group relative aspect-square touch-none overflow-hidden rounded-lg border bg-muted select-none",
+          "group relative aspect-square overflow-hidden rounded-lg border bg-muted",
           isDragging && "z-10 opacity-90 shadow-lg ring-2 ring-primary",
           disabled && "pointer-events-none opacity-50",
         )}
@@ -243,7 +241,6 @@ function SortablePhotoCard({
         <img
           loading="lazy"
           decoding="async"
-          draggable={false}
           src={photo.url}
           alt={`Foto ${index + 1}`}
           className="size-full object-cover"
