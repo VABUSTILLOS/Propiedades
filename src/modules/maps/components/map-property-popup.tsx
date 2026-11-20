@@ -145,7 +145,7 @@ export function MapPropertyPopup({
   return (
     <div
       ref={rootRef}
-      className="w-72 overflow-hidden rounded-2xl border bg-background shadow-xl"
+      className="w-[min(18rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border bg-background shadow-xl"
     >
       <div
         className="relative aspect-[4/3] bg-muted"

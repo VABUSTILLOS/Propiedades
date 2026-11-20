@@ -53,7 +53,19 @@ function buildPopupOverlayClass(
       if (!projection) return;
       const point = projection.fromLatLngToDivPixel(this.position);
       if (!point) return;
-      this.container.style.left = `${point.x}px`;
+      // Clamp horizontally so the popup never hangs off the map's sides
+      // (on phones a pin near the edge pushed half the card — and its
+      // photo arrows — off-screen). The popup is centered on the pin via
+      // the transform below, so keep at least half its width plus a
+      // margin inside the map.
+      let x = point.x;
+      const popupW = this.container.offsetWidth;
+      const mapW = this.container.parentElement?.clientWidth ?? 0;
+      if (popupW > 0 && mapW > popupW) {
+        const half = popupW / 2 + 8;
+        x = Math.max(half, Math.min(mapW - half, x));
+      }
+      this.container.style.left = `${x}px`;
       this.container.style.top = `${point.y}px`;
       // Bottom-center of the popup sits exactly on the pin.
       this.container.style.transform = "translate(-50%, -100%)";
@@ -383,9 +395,11 @@ export function PropertiesMap({
     overlay.setPinPosition(new google.maps.LatLng(selected.lat, selected.lng));
     overlay.setMap(map);
 
-    // Nudge the pin below center so the popup (drawn above the pin) fits.
+    // Nudge the pin below center so the popup (drawn above the pin)
+    // fits. Phones get a bigger nudge: the popup is tall relative to a
+    // small viewport and its top was getting clipped.
     map.panTo({ lat: selected.lat, lng: selected.lng });
-    map.panBy(0, -120);
+    map.panBy(0, window.innerWidth < 1024 ? -180 : -120);
   }, [google, selected]);
 
   // Escape dismisses a pin-click popup (split-view selection is closed by
@@ -484,9 +498,9 @@ export function PropertiesMap({
                 e.stopPropagation();
                 if (prevNeighbor) selectPin(prevNeighbor.id);
               }}
-              className="absolute -left-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0"
+              className="absolute -left-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0 max-lg:-left-2 max-lg:p-2"
             >
-              <ChevronLeft className="size-6" aria-hidden="true" />
+              <ChevronLeft className="size-6 max-lg:size-5" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -496,9 +510,9 @@ export function PropertiesMap({
                 e.stopPropagation();
                 if (nextNeighbor) selectPin(nextNeighbor.id);
               }}
-              className="absolute -right-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0"
+              className="absolute -right-14 top-1/2 -translate-y-1/2 rounded-full bg-[#C4571D] p-2.5 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#A83810] disabled:pointer-events-none disabled:opacity-0 max-lg:-right-2 max-lg:p-2"
             >
-              <ChevronRight className="size-6" aria-hidden="true" />
+              <ChevronRight className="size-6 max-lg:size-5" aria-hidden="true" />
             </button>
             <div
               aria-hidden="true"
