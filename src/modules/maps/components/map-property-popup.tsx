@@ -30,8 +30,10 @@ type PopupPanelData = {
 
 /**
  * Vivanuncios-style mini listing card anchored above a map pin: photo
- * carousel (arrows + swipe + counter) plus the essential facts. Everything
- * except the carousel controls and the close button links to the listing.
+ * carousel (arrows + swipe + counter) plus the essential facts. The
+ * listing opens ONLY from a deliberate press in the middle of the photo:
+ * while browsing house to house, swipes and taps on the photo's edges or
+ * on the text must never yank the user out of the map flow.
  */
 export function MapPropertyPopup({
   marker,
@@ -154,8 +156,22 @@ export function MapPropertyPopup({
           // the strip scrolled since pointerdown, so swallow it before
           // the wrapping link navigates to the listing.
           const scroller = scrollerRef.current;
-          if (!scroller) return;
-          if (Math.abs(scroller.scrollLeft - scrollStartRef.current) > 8) {
+          if (
+            scroller &&
+            Math.abs(scroller.scrollLeft - scrollStartRef.current) > 8
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+          // Buttons (carousel arrows, close) handle their own clicks.
+          if ((e.target as HTMLElement).closest("button")) return;
+          // Only a deliberate press in the middle of the photo opens the
+          // listing; taps on the edges while browsing stay on the map.
+          const rect = e.currentTarget.getBoundingClientRect();
+          const fx = (e.clientX - rect.left) / rect.width;
+          const fy = (e.clientY - rect.top) / rect.height;
+          if (fx < 0.25 || fx > 0.75 || fy < 0.25 || fy > 0.75) {
             e.preventDefault();
             e.stopPropagation();
           }
@@ -236,12 +252,9 @@ export function MapPropertyPopup({
             )}
           </>
         ) : (
-          <Link
-            href={href}
-            className="flex size-full items-center justify-center text-xs text-muted-foreground"
-          >
+          <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
             Sin foto
-          </Link>
+          </div>
         )}
         <button
           type="button"
@@ -260,7 +273,9 @@ export function MapPropertyPopup({
         </Badge>
       </div>
 
-      <Link href={href} className="block space-y-1 p-3">
+      {/* Facts are plain text now: the only way into the listing is the
+          deliberate press in the middle of the photo above. */}
+      <div className="block space-y-1 p-3">
         <p className="font-bold">
           ${marker.price.toLocaleString()}{" "}
           <span className="text-xs font-normal text-muted-foreground">
@@ -310,9 +325,9 @@ export function MapPropertyPopup({
             )}
           </div>
         )}
-      </Link>
+      </div>
 
-      {/* Favorite / list actions — outside the Link so they don't navigate. */}
+      {/* Favorite / list actions. */}
       {!panelFailed ? (
         <div className="flex items-center justify-end gap-2 px-3 pb-3">
           {panel ? (

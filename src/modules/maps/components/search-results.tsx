@@ -150,9 +150,13 @@ export function SearchResults({
   const [stageH, setStageH] = useState(0);
   const [sheetSnap, setSheetSnap] = useState(1);
   const [sheetDragH, setSheetDragH] = useState<number | null>(null);
-  const sheetDragRef = useRef<{ startY: number; startH: number } | null>(
-    null,
-  );
+  const sheetDragRef = useRef<{
+    startY: number;
+    startH: number;
+    /** True when the drag started with the detail pane open: releasing
+     *  below full height then dismisses the pane (swipe-down-to-close). */
+    panelOpen: boolean;
+  } | null>(null);
   const sheetDragHRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -172,15 +176,23 @@ export function SearchResults({
     Math.round(stagePx * 0.55),
     Math.round(stagePx * 0.96),
   ];
-  const sheetH = selectedItem
-    ? (snapHeights[2] ?? stagePx)
-    : (sheetDragH ?? snapHeights[sheetSnap] ?? Math.round(stagePx * 0.55));
+  const sheetH =
+    sheetDragH ??
+    (selectedItem
+      ? (snapHeights[2] ?? stagePx)
+      : (snapHeights[sheetSnap] ?? Math.round(stagePx * 0.55)));
   const sheetContentHidden =
     !selectedItem && sheetDragH == null && sheetSnap === 0;
 
   const onSheetPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (selectedItem) return;
-    sheetDragRef.current = { startY: e.clientY, startH: sheetH };
+    // The handle stays draggable with the detail pane open too, so the
+    // pane can be dismissed with a downward swipe on the sheet's edge,
+    // not only with its back button.
+    sheetDragRef.current = {
+      startY: e.clientY,
+      startH: sheetH,
+      panelOpen: !!selectedItem,
+    };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onSheetPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -195,7 +207,8 @@ export function SearchResults({
     setSheetDragH(next);
   };
   const onSheetPointerUp = () => {
-    if (!sheetDragRef.current) return;
+    const drag = sheetDragRef.current;
+    if (!drag) return;
     sheetDragRef.current = null;
     const dragged = sheetDragHRef.current;
     sheetDragHRef.current = null;
@@ -210,6 +223,16 @@ export function SearchResults({
         best = i;
       }
     });
+    if (drag.panelOpen) {
+      // Dragging the open pane's edge down to (or past) the half snap
+      // dismisses it and lands the sheet on that snap; a short drag
+      // springs back to the full-height pane.
+      if (best < 2) {
+        setSheetSnap(best);
+        closePanel();
+      }
+      return;
+    }
     setSheetSnap(best);
   };
 
