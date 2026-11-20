@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronUp, Map as MapIcon } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -297,13 +297,14 @@ export function SearchResults({
 
   return (
     <div className="space-y-6">
-      {/* In mobile split view the stage below becomes a fixed,
-          full-viewport layer that would cover this row, so the toggle
-          moves inside the stage there (rendered in the split branch). */}
+      {/* In mobile split view and in map view the stage below becomes a
+          fixed, full-viewport layer that would cover this row, so the
+          toggle moves inside the stage there (rendered in those branches). */}
       <div
         className={cn(
           "flex justify-end",
           view === "split" && "max-lg:hidden",
+          view === "map" && "hidden",
         )}
       >
         <MapViewToggle
@@ -411,17 +412,20 @@ export function SearchResults({
           </div>
         </div>
       ) : view === "map" ? (
-        <div className="space-y-8">
-          {map("h-[60vh]")}
-
-          <section className="space-y-4" aria-label="Propiedades en esta zona">
-            <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <MapIcon className="size-5 text-primary" aria-hidden="true" />
-              {initialTotal} propiedad{initialTotal === 1 ? "" : "es"} en esta
-              zona
-            </h2>
-            {list()}
-          </section>
+        // Map view is a fixed, full-viewport stage under the header — the
+        // same pattern as mobile split — so the map is always completely
+        // visible and never needs the page scrolled or adjusted to square
+        // it up. The view toggle floats over the map's top-right corner;
+        // the property list itself lives in the Lista/Dividida views.
+        <div className="fixed inset-x-0 top-16 bottom-0 z-30">
+          {map("h-full")}
+          <div className="absolute top-3 right-3 z-20 rounded-full bg-background shadow-lg ring-1 ring-border">
+            <MapViewToggle
+              view={view}
+              onChange={(next) => updateParam({ view: next })}
+              count={initialTotal}
+            />
+          </div>
         </div>
       ) : (
         list()
