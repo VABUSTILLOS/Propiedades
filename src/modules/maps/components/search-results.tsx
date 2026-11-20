@@ -348,6 +348,14 @@ export function SearchResults({
         setMapPinId(null);
         if (selectedRef.current) closePanel();
       }}
+      canModerate={canModerate}
+      onMarkerImagesChange={(id, images) =>
+        setMarkers((prev) =>
+          prev
+            ? prev.map((m) => (m.id === id ? { ...m, images } : m))
+            : prev,
+        )
+      }
       heightClass={heightClass}
       from={fromUrl}
     />

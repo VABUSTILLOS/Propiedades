@@ -490,35 +490,36 @@ export function PropertyInlineEditor({
           </dl>
         )}
 
-        {hotScore != null && (
-          <div className="mt-4 rounded-xl border bg-card p-3">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="text-sm font-semibold">Oportunidad</p>
-              <span className="text-xs font-medium text-muted-foreground">
-                {hotScore}/100
-              </span>
-            </div>
-            <HotnessGauge score={hotScore} />
-            <dl className="mt-3 space-y-1 border-t pt-2 text-xs text-muted-foreground">
-              <div className="flex justify-between">
-                <dt>Ahorro vs. colonia (50%)</dt>
-                <dd className="font-medium text-foreground">
-                  {discountPct != null ? `${discountPct.toFixed(1)}%` : "Sin dato"}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>$/m² construido (50%)</dt>
-                <dd className="font-medium text-foreground">
-                  {listing.precio_m2_const != null
-                    ? `$${listing.precio_m2_const.toLocaleString()}`
-                    : listing.precio_m2_terreno != null
-                      ? `$${listing.precio_m2_terreno.toLocaleString()}`
-                      : "Sin dato"}
-                </dd>
-              </div>
-            </dl>
+        {/* The score bar is always present — with no data the gauge
+            renders its neutral "Sin dato" state instead of the whole
+            card disappearing. */}
+        <div className="mt-4 rounded-xl border bg-card p-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-semibold">Oportunidad</p>
+            <span className="text-xs font-medium text-muted-foreground">
+              {hotScore != null ? `${hotScore}/100` : "Sin dato"}
+            </span>
           </div>
-        )}
+          <HotnessGauge score={hotScore} />
+          <dl className="mt-3 space-y-1 border-t pt-2 text-xs text-muted-foreground">
+            <div className="flex justify-between">
+              <dt>Ahorro vs. colonia (50%)</dt>
+              <dd className="font-medium text-foreground">
+                {discountPct != null ? `${discountPct.toFixed(1)}%` : "Sin dato"}
+              </dd>
+            </div>
+            <div className="flex justify-between">
+              <dt>$/m² construido (50%)</dt>
+              <dd className="font-medium text-foreground">
+                {listing.precio_m2_const != null
+                  ? `$${listing.precio_m2_const.toLocaleString()}`
+                  : listing.precio_m2_terreno != null
+                    ? `$${listing.precio_m2_terreno.toLocaleString()}`
+                    : "Sin dato"}
+              </dd>
+            </div>
+          </dl>
+        </div>
 
         {financiable && listing.type === "sale" && listing.price > 0 && (
           <a

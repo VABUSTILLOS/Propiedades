@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { AdminGalleryEditor } from "@/modules/admin/components/admin-gallery-editor";
 import { CATEGORY_LABELS } from "@/modules/lib/real-estate";
+import { HotnessGauge } from "@/modules/market-data/components/hotness-gauge";
 import { CardFavoriteButton } from "@/modules/home/components/card-favorite-button";
 import { AddToListDialog } from "@/modules/favorites/components/add-to-list-dialog";
 import type { FavoriteListWithMeta } from "@/modules/favorites/lists-queries";
@@ -39,11 +41,19 @@ export function MapPropertyPopup({
   marker,
   from,
   onClose,
+  canModerate = false,
+  onImagesChange,
 }: {
   marker: PropertyMapMarker;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
   onClose: () => void;
+  /** Master user: show the gallery editor so the cover photo and the
+   *  photo order can be fixed right from the map card. */
+  canModerate?: boolean;
+  /** Keeps the map marker (and this card's carousel) in sync with the
+   *  gallery editor's changes. */
+  onImagesChange?: (images: string[]) => void;
 }) {
   const images = marker.images ?? [];
   const scrollerRef = useRef<HTMLDivElement | null>(null);
@@ -326,6 +336,25 @@ export function MapPropertyPopup({
           </div>
         )}
       </div>
+
+      {/* Opportunity score bar — the same one the cards and the full
+          listing show; "Sin dato" when there is no score yet. */}
+      <div className="px-3 pb-2">
+        <HotnessGauge score={marker.hotScore ?? null} />
+      </div>
+
+      {/* Master only: fix the cover photo / gallery order right here,
+          without leaving the map browsing flow. */}
+      {canModerate && (
+        <div className="flex items-center justify-end px-3 pb-2">
+          <AdminGalleryEditor
+            propertyId={marker.id}
+            propertySlug={marker.slug}
+            initialImages={marker.images ?? []}
+            onImagesChange={onImagesChange}
+          />
+        </div>
+      )}
 
       {/* Favorite / list actions. */}
       {!panelFailed ? (

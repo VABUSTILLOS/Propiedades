@@ -65,6 +65,8 @@ export type PropertyMapMarker = {
   estacionamientos: number | null;
   construccion_m2: number;
   terreno_m2: number;
+  /** Opportunity score (0–100) so the map popup can show the score bar. */
+  hotScore: number | null;
   lat: number;
   lng: number;
 };
@@ -481,7 +483,7 @@ export async function getListingMarkers(
   const query = applyFilters(
     supabase
       .from("properties")
-      .select("id,title,slug,city,colonia,price,currency,type,category,images,recamaras,banos,estacionamientos,construccion_m2,terreno_m2,lat,lng"),
+      .select("id,title,slug,city,colonia,price,currency,type,category,images,recamaras,banos,estacionamientos,construccion_m2,terreno_m2,precio_m2_const,lat,lng"),
     filters,
   );
 
@@ -490,18 +492,37 @@ export async function getListingMarkers(
     .limit(500)
     .returns<
       Array<
-        Omit<PropertyMapMarker, "lat" | "lng"> & { lat: number | null; lng: number | null }
+        Omit<PropertyMapMarker, "lat" | "lng" | "hotScore"> & {
+          lat: number | null;
+          lng: number | null;
+          precio_m2_const: number | null;
+        }
       >
     >();
 
-  return (rows ?? [])
-    .filter(
-      (r) =>
-        r.lat != null &&
-        r.lng != null &&
-        // (0,0) is the placeholder for rows that were never geocoded — keep
-        // them out of the map so pins don't pile up in the ocean.
-        (r.lat !== 0 || r.lng !== 0),
-    )
-    .map((r) => ({ ...r, lat: r.lat as number, lng: r.lng as number }));
+  const located = (rows ?? []).filter(
+    (r) =>
+      r.lat != null &&
+      r.lng != null &&
+      // (0,0) is the placeholder for rows that were never geocoded — keep
+      // them out of the map so pins don't pile up in the ocean.
+      (r.lat !== 0 || r.lng !== 0),
+  );
+
+  // Same batch discount RPC the listing cards use, so the popup's score
+  // bar matches the score everywhere else.
+  const discounts = await getColoniaDiscounts(located.map((r) => r.id));
+
+  return located.map((r) => {
+    const { precio_m2_const, ...marker } = r;
+    return {
+      ...marker,
+      hotScore: toHotScore(discounts.get(r.id) ?? null, {
+        category: r.category,
+        precio_m2_const,
+      }),
+      lat: r.lat as number,
+      lng: r.lng as number,
+    };
+  });
 }

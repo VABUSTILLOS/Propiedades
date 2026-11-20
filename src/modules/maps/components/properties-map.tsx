@@ -94,6 +94,8 @@ export function PropertiesMap({
   selectionId = null,
   onSelectPin,
   onClosePopup,
+  canModerate = false,
+  onMarkerImagesChange,
   from,
 }: {
   markers: PropertyMapMarker[];
@@ -132,6 +134,12 @@ export function PropertiesMap({
    *  drives the selection (selectionId) can clear it too — otherwise the
    *  popup would stay open because the parent's selection wins. */
   onClosePopup?: () => void;
+  /** Master user: the popup offers the gallery editor (cover photo and
+   *  photo order) right on the map card. */
+  canModerate?: boolean;
+  /** The popup's gallery editor changed a marker's photos; the parent
+   *  patches its marker state so the card updates in place. */
+  onMarkerImagesChange?: (id: string, images: string[]) => void;
   /** Full URL of the current list/search view so the detail page can link back. */
   from?: string;
 }) {
@@ -535,6 +543,12 @@ export function PropertiesMap({
                 setPinSelectedId(null);
                 onClosePopup?.();
               }}
+              canModerate={canModerate}
+              onImagesChange={
+                onMarkerImagesChange
+                  ? (images) => onMarkerImagesChange(selected.id, images)
+                  : undefined
+              }
             />
             <button
               type="button"
