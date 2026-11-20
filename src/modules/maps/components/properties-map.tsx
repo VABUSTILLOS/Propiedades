@@ -353,6 +353,37 @@ export function PropertiesMap({
     map.panBy(0, window.innerWidth < 1024 ? -180 : -120);
   }, [google, selected, focusPosition]);
 
+  // Desktop: the keyboard arrows browse property to property, the same
+  // actions as the orange popup buttons. Active only while a popup is
+  // open, and never while typing in a form field. Capture phase: the
+  // map itself swallows arrow keys to pan when it has focus (the usual
+  // case right after clicking a pin), so the listener must run before
+  // Google's own handler — with a popup open, arrows mean "next house",
+  // not "pan the map".
+  useEffect(() => {
+    if (!selected) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      const neighbor = e.key === "ArrowLeft" ? prevNeighbor : nextNeighbor;
+      if (!neighbor) return;
+      e.preventDefault();
+      e.stopPropagation();
+      selectPin(neighbor.id);
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
+  }, [selected, prevNeighbor, nextNeighbor, selectPin]);
+
   // Track the popup to its pin while it is open. Every frame, read the
   // pill's real on-screen rect and place the popup's bottom-center on it,
   // clamped inside the map (8px margin). The pill rect is ground truth —
