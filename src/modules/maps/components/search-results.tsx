@@ -269,8 +269,9 @@ export function SearchResults({
     };
   }, [selectedItem, markers]);
 
-  const map = (heightClass: string) => (
+  const map = (heightClass: string, popupTopInset?: number) => (
     <PropertiesMap
+      popupTopInset={popupTopInset}
       markers={markers ?? NO_MARKERS}
       initialBounds={initialBounds}
       activeBounds={initialBounds}
@@ -418,13 +419,26 @@ export function SearchResults({
         // it up. The view toggle floats over the map's top-right corner;
         // the property list itself lives in the Lista/Dividida views.
         <div className="fixed inset-x-0 top-16 bottom-0 z-30">
-          {map("h-full")}
+          {map("h-full", 76)}
           <div className="absolute top-3 right-3 z-20 rounded-full bg-background shadow-lg ring-1 ring-border">
-            <MapViewToggle
-              view={view}
-              onChange={(next) => updateParam({ view: next })}
-              count={initialTotal}
-            />
+            {/* Compact (icons only) on phones so the bar covers as
+                little of the map — and of the popup's photo — as
+                possible; full labels on desktop. */}
+            <div className="lg:hidden">
+              <MapViewToggle
+                view={view}
+                onChange={(next) => updateParam({ view: next })}
+                count={initialTotal}
+                compact
+              />
+            </div>
+            <div className="hidden lg:block">
+              <MapViewToggle
+                view={view}
+                onChange={(next) => updateParam({ view: next })}
+                count={initialTotal}
+              />
+            </div>
           </div>
         </div>
       ) : (
