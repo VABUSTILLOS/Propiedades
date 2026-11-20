@@ -338,13 +338,20 @@ export function PropertiesMap({
   // Bring the selected pin into view, nudged below center so the popup
   // (drawn above the pin) fits. Phones get a bigger nudge: the popup is
   // tall relative to a small viewport and its top was getting clipped.
+  // Also zoom in to colonia level: at the city-wide fit-bounds zoom the
+  // house's surroundings could not be made out while browsing pin to
+  // pin. Never zoom back out when the user is already closer. The split
+  // detail pane drives its own camera via the focus effect above.
   useEffect(() => {
     const map = mapRef.current;
     if (!google || !map || !selected) return;
 
     map.panTo({ lat: selected.lat, lng: selected.lng });
+    if (!focusPosition) {
+      map.setZoom(Math.max(map.getZoom() ?? 11, 15));
+    }
     map.panBy(0, window.innerWidth < 1024 ? -180 : -120);
-  }, [google, selected]);
+  }, [google, selected, focusPosition]);
 
   // Track the popup to its pin while it is open. Every frame, read the
   // pill's real on-screen rect and place the popup's bottom-center on it,
