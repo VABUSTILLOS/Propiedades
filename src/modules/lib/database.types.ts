@@ -288,7 +288,7 @@ export type MortgageLeadsRow = {
 }
 
 /** Saved Facebook Marketplace listings (migration 052, /admin/guardados). */
-export type MarketplaceSavedCategory = "propiedad" | "auto" | "tecnologia" | "otro";
+export type MarketplaceSavedCategory = "propiedad" | "otro";
 export type MarketplaceSavedStatus = "active" | "discarded" | "imported";
 export type MarketplaceListingStatus = "Available" | "Sold" | "Rented";
 

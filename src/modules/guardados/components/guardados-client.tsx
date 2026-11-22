@@ -63,8 +63,6 @@ function readMenuPreference(): boolean {
 const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
   { value: "all", label: "Todos" },
   { value: "propiedad", label: "Propiedades" },
-  { value: "auto", label: "Autos" },
-  { value: "tecnologia", label: "Tecnología" },
   { value: "otro", label: "Otros" },
 ];
 
@@ -98,8 +96,6 @@ const LISTING_STATUS_CLASS: Record<MarketplaceListingStatus, string> = {
 
 const CATEGORY_LABEL: Record<MarketplaceSavedCategory, string> = {
   propiedad: "Propiedad",
-  auto: "Auto",
-  tecnologia: "Tecnología",
   otro: "Otro",
 };
 
