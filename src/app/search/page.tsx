@@ -24,7 +24,10 @@ import { toQueryString } from "@/modules/search/query-string";
 import { PageHeader } from "@/components/layout/page-header";
 import { Em } from "@/components/layout/emphasis";
 import { getCurrentUser } from "@/modules/auth/session";
-import { getMyFavoriteIds } from "@/modules/favorites/queries";
+import {
+  getMyFavoriteIds,
+  getOwnerFavoriteIds,
+} from "@/modules/favorites/queries";
 import { isEditorMode } from "@/modules/admin/editor-mode";
 
 export const metadata: Metadata = { title: "Comprar" };
@@ -77,11 +80,13 @@ export default async function SearchPage({ searchParams }: Props) {
 
   // «Favoritas» tab (Victor's ask, 2026-11-22): favorites behave like one
   // more property-type filter over the normal listings — same 3 views,
-  // filters and map — not a separate section. The restriction is the
-  // signed-in user's favorite ids; anonymous users get an empty set, so
-  // the tab matches nothing instead of leaking the whole catalog.
+  // filters and map — not a separate section. Signed-in users see their
+  // own favorites; visitors see the site owner's (admin's) favorites, so
+  // anyone can open the tab and see the curated set.
   const savedIds = user ? await getMyFavoriteIds(user.id) : null;
-  const favoriteIds: string[] = savedIds ? [...savedIds] : [];
+  const favoriteIds: string[] = savedIds
+    ? [...savedIds]
+    : await getOwnerFavoriteIds();
   tabFiltersMap.favoritas = {
     ...tabFiltersMap.favoritas,
     favoriteIds,
@@ -208,7 +213,7 @@ export default async function SearchPage({ searchParams }: Props) {
               {activeTab === "favoritas"
                 ? user
                   ? "Aún no tienes favoritas en venta. Toca el corazón en una propiedad para agregarla aquí."
-                  : "Inicia sesión para ver tus favoritas."
+                  : "Todavía no hay propiedades favoritas en venta."
                 : "No hay nada que valga la pena con esa vista. ¿Relajamos la búsqueda?"}
             </p>
           </div>

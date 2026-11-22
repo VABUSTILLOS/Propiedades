@@ -1,6 +1,10 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/modules/lib/supabase/server";
+import {
+  createSupabaseServiceClient,
+  serviceRoleConfigured,
+} from "@/modules/lib/supabase/service";
 import type { BuyerFavoritesRow, PropertiesRow } from "@/modules/lib/database.types";
 
 export type FavoriteWithProperty = BuyerFavoritesRow & {
@@ -38,6 +42,38 @@ export async function getMyFavoriteIds(userId: string): Promise<Set<string>> {
     .returns<{ property_id: string }[]>();
 
   return new Set((data ?? []).map((row) => row.property_id));
+}
+
+/**
+ * The site owner's (admin's) favorite property ids — the public
+ * «Favoritas» set that visitors who are not signed in see (Victor's
+ * ask, 2026-11-22: any visitor can see the favorites). Read with the
+ * service client because an anonymous session cannot read another
+ * user's buyer_favorites rows under RLS; only the ids are exposed,
+ * and they only ever point at public active listings.
+ */
+export async function getOwnerFavoriteIds(): Promise<string[]> {
+  if (!serviceRoleConfigured()) return [];
+
+  const supabase = createSupabaseServiceClient();
+
+  const { data: admins } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("role", "admin")
+    .limit(1)
+    .returns<{ id: string }[]>();
+
+  const ownerId = admins?.[0]?.id;
+  if (!ownerId) return [];
+
+  const { data } = await supabase
+    .from("buyer_favorites")
+    .select("property_id")
+    .eq("user_id", ownerId)
+    .returns<{ property_id: string }[]>();
+
+  return (data ?? []).map((row) => row.property_id);
 }
 
 /**
