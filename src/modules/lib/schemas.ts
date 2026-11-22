@@ -183,6 +183,7 @@ export function parseCategoriesParam(
 // --- Investor dashboard (opportunity tabs) -------------------------------------
 export const investorTabSchema = z.enum([
   "todos",
+  "favoritas",
   "remate",
   "flipping",
   "traspaso",
@@ -225,6 +226,8 @@ export const apiSearchParamsSchema = searchParamsSchema
     limit: z.coerce.number().int().min(1).max(100).default(24),
     isLand: z.enum(["true", "false"]).optional(),
     categories: z.string().optional(),
+    /** "true" restricts results to the signed-in user's favorite properties. */
+    favorites: z.enum(["true", "false"]).optional(),
   });
 export type ApiSearchParams = z.infer<typeof apiSearchParamsSchema>;
 

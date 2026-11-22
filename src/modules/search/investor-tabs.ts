@@ -7,6 +7,7 @@ import type { InvestorTab } from "@/modules/lib/schemas";
 
 export const TAB_LABELS: Record<InvestorTab, string> = {
   todos: "todas las oportunidades",
+  favoritas: "tus favoritas",
   remate: "remates bancarios",
   flipping: "propiedades para reparar",
   traspaso: "traspasos inmobiliarios",
@@ -58,6 +59,13 @@ export function tabToFilters(
     todos: {
       ...baseFilters,
       categories: tabCategories("todos", selectedCategories),
+    },
+    favoritas: {
+      // The id restriction itself is injected by the caller (page/API),
+      // which knows the signed-in user's favorites; the tab adds no
+      // deal_type or implicit categories of its own.
+      ...baseFilters,
+      categories: tabCategories("favoritas", selectedCategories),
     },
     remate: {
       ...baseFilters,

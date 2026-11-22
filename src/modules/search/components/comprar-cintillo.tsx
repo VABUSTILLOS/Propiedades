@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   Banknote,
   Hammer,
+  Heart,
   Repeat,
   Store,
   Tractor,
@@ -21,6 +22,7 @@ const TAB_DEFS: {
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
   { value: "todos", label: "Todos", icon: Store },
+  { value: "favoritas", label: "Favoritas", icon: Heart },
   { value: "remate", label: "Remates", icon: Hammer },
   { value: "flipping", label: "Flipping", icon: Wrench },
   { value: "traspaso", label: "Traspasos", icon: Repeat },

@@ -30,6 +30,9 @@ function applyCountFilters<Q extends CountableQuery<Q>>(
   // cover photo (relaxed from 2+ on 2026-11-22, see search/queries.ts).
   q = q.gte("image_count", 1);
 
+  if (filters.favoriteIds !== undefined) {
+    q = q.in("id", filters.favoriteIds);
+  }
   if (filters.type) {
     q = q.eq("type", filters.type);
   }
