@@ -3,7 +3,10 @@ import type { ListingWithHot, SearchFilters } from "@/modules/search/queries";
 import { enrichWithHot, searchListingsPage } from "@/modules/search/queries";
 import { searchSemantic } from "@/modules/ai/embeddings";
 import { getCurrentUser } from "@/modules/auth/session";
-import { getMyFavoriteIds } from "@/modules/favorites/queries";
+import {
+  getMyFavoriteIds,
+  getOwnerFavoriteIds,
+} from "@/modules/favorites/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -40,13 +43,15 @@ export async function GET(request: Request) {
   const offset = p.offset ?? 0;
   const limit = p.limit ?? 24;
 
-  // «Favoritas» tab: restrict to the signed-in user's favorite ids.
-  // Anonymous callers get an empty set, which matches nothing.
+  // «Favoritas» tab: restrict to the signed-in user's favorite ids;
+  // visitors get the site owner's (admin's) favorites instead.
   const favoritesOnly = p.favorites === "true";
   let favoriteIds: string[] | undefined;
   if (favoritesOnly) {
     const user = await getCurrentUser();
-    favoriteIds = user ? [...(await getMyFavoriteIds(user.id))] : [];
+    favoriteIds = user
+      ? [...(await getMyFavoriteIds(user.id))]
+      : await getOwnerFavoriteIds();
   }
 
   if (p.query) {
