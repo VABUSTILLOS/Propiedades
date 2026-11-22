@@ -173,6 +173,22 @@ export function InfiniteListings({
   // filters/bounds, so state always starts from the latest server render.
   const hasMore = items.length < total;
 
+  // Keep the URL's `loaded` param in sync with how many items are on
+  // screen (Victor's ask, 2026-11-22): opening a property and coming
+  // back — browser Back, or the detail page's back link, whose `from`
+  // is built from the live URL — re-renders the list with everything
+  // already loaded instead of paginating in again from the first page.
+  // replaceState adds no history entry, and Next keeps useSearchParams
+  // in sync so the cards' `from` hrefs pick the param up too.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const current = url.searchParams.get("loaded");
+    if (current === String(items.length)) return;
+    if (current === null && items.length <= 24) return;
+    url.searchParams.set("loaded", String(items.length));
+    window.history.replaceState(null, "", url);
+  }, [items.length]);
+
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
     setLoading(true);

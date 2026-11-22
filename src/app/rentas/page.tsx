@@ -55,7 +55,9 @@ export default async function RentasPage({ searchParams }: Props) {
     minBedrooms: parsed.data?.minBedrooms,
     bounds: bounds ?? undefined,
     sortBy: parsed.data?.sortBy,
-    limit: 24,
+    // Returning from a property page, `loaded` re-renders everything the
+    // user had already paged in (24 by default, capped at 500).
+    limit: Math.min(Math.max(parsed.data?.loaded ?? 24, 24), 500),
   };
 
   const [pageResult, colonias] = await Promise.all([

@@ -95,6 +95,10 @@ export default async function SearchPage({ searchParams }: Props) {
   const activeTabFilter = tabFiltersMap[activeTab];
   const hasTabCategories = Boolean(activeTabFilter.categories?.length);
 
+  // Returning from a property page, `loaded` re-renders everything the
+  // user had already paged in (24 by default, capped at 500).
+  const initialLimit = Math.min(Math.max(parsed.data?.loaded ?? 24, 24), 500);
+
   const filters: SearchFilters = {
     ...activeTabFilter,
     // Legacy single category only when the tab has no implicit/user categories.
@@ -104,14 +108,14 @@ export default async function SearchPage({ searchParams }: Props) {
         ? undefined
         : parsed.data?.category,
     sortBy: parsed.data?.sortBy,
-    limit: 24,
+    limit: initialLimit,
   };
 
   const [pageResult, cities, counts] = await Promise.all([
     // Natural-language queries go through semantic search when embeddings
     // are configured; otherwise it falls back to the keyword path.
     parsed.data?.query
-      ? searchSemantic(parsed.data.query, 24)
+      ? searchSemantic(parsed.data.query, initialLimit)
           .then(enrichWithHot)
           .then((items) => {
             // Semantic results carry no structured filters; on the
