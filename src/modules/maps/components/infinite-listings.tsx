@@ -312,7 +312,7 @@ export function InfiniteListings({
                 saved={item.saved ?? false}
                 title={item.title}
                 slug={item.slug}
-                city={`${item.colonia}, ${item.city}`}
+                city={[item.colonia, item.city].filter(Boolean).join(", ")}
                 price={item.price}
                 currency={item.currency}
                 type={item.type}
