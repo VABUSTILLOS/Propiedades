@@ -24,7 +24,9 @@ import { toQueryString } from "@/modules/search/query-string";
 import { PageHeader } from "@/components/layout/page-header";
 import { Em } from "@/components/layout/emphasis";
 import { getCurrentUser } from "@/modules/auth/session";
-import { getMyFavoriteIds } from "@/modules/favorites/queries";
+import { getMyFavoriteIds, getMyFavorites } from "@/modules/favorites/queries";
+import { FavoritesSection } from "@/modules/search/components/favorites-section";
+import type { PropertiesRow } from "@/modules/lib/database.types";
 import { isEditorMode } from "@/modules/admin/editor-mode";
 
 export const metadata: Metadata = { title: "Comprar" };
@@ -117,6 +119,26 @@ export default async function SearchPage({ searchParams }: Props) {
     saved: savedIds?.has(item.id) ?? false,
   }));
 
+  // «Favoritas» section (Victor's ask, 2026-11-22): the user's hearted
+  // properties get their own section at the top of Comprar, in their
+  // tier order, independent of the current tab/filters. Only active
+  // sale properties belong on this page (rentals live on Rentas).
+  const favoriteRows: PropertiesRow[] = user
+    ? (await getMyFavorites(user.id))
+        .map((f) => f.property)
+        .filter(
+          (p): p is PropertiesRow =>
+            p !== null && p.status === "active" && p.type === "sale",
+        )
+    : [];
+  const favoriteItems =
+    favoriteRows.length > 0
+      ? (await enrichWithHot(favoriteRows)).map((item) => ({
+          ...item,
+          saved: true,
+        }))
+      : [];
+
   const countByTab: Record<InvestorTab, number> = {
     todos: counts[0],
     remate: counts[1],
@@ -178,6 +200,10 @@ export default async function SearchPage({ searchParams }: Props) {
         <div className="mb-8">
           <SearchFiltersForm cities={cities} />
         </div>
+
+        {favoriteItems.length > 0 && (
+          <FavoritesSection items={favoriteItems} />
+        )}
 
         {total === 0 ? (
           <div className="rounded-2xl border border-dashed px-6 py-16 text-center">

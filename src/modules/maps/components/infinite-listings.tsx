@@ -70,7 +70,7 @@ function setCardDetailsPref(next: boolean): void {
  * useSyncExternalStore so it persists across navigation and remounts without
  * hydration mismatches or setState-in-effect warnings.
  */
-function useCardDetailsPref(): boolean {
+export function useCardDetailsPref(): boolean {
   return useSyncExternalStore(
     subscribeCardDetails,
     getCardDetailsSnapshot,
