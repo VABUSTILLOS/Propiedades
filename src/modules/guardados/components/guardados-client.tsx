@@ -33,6 +33,7 @@ import type {
 } from "@/modules/lib/database.types";
 import {
   addSavedListingToComprar,
+  deleteDiscardedSavedListing,
   deleteImportedProperty,
   discardSavedListing,
   restoreSavedListing,
@@ -319,6 +320,27 @@ export function GuardadosClient({
     });
   };
 
+  const handleDeleteDiscarded = (row: SavedListingWithPortalState) => {
+    setPendingId(row.id);
+    startTransition(async () => {
+      const res = await deleteDiscardedSavedListing(row.id);
+      setPendingId(null);
+      if (!res.ok) {
+        setFeedback((prev) => ({
+          ...prev,
+          [row.id]: {
+            kind: "error",
+            message: res.error ?? "No se pudo borrar la publicación.",
+          },
+        }));
+        return;
+      }
+      // Gone from Guardados for good (the sync baseline lives outside
+      // the table, so it will not be re-imported on the next sync).
+      setRows((prev) => prev.filter((r) => r.id !== row.id));
+    });
+  };
+
   const handleDeleteProperty = (row: MarketplaceSavedListingsRow) => {
     setPendingId(row.id);
     startTransition(async () => {
@@ -476,6 +498,7 @@ export function GuardadosClient({
                 onRestore={() => handleRestore(row)}
                 onAddToComprar={() => handleAddToComprar(row)}
                 onDeleteProperty={() => handleDeleteProperty(row)}
+                onDeleteDiscarded={() => handleDeleteDiscarded(row)}
                 onPhotosReordered={(photoUrls) =>
                   handlePhotosReordered(row, photoUrls)
                 }
@@ -496,6 +519,7 @@ function SavedListingCard({
   onRestore,
   onAddToComprar,
   onDeleteProperty,
+  onDeleteDiscarded,
   onPhotosReordered,
 }: {
   row: SavedListingWithPortalState;
@@ -505,6 +529,7 @@ function SavedListingCard({
   onRestore: () => void;
   onAddToComprar: () => void;
   onDeleteProperty: () => void;
+  onDeleteDiscarded: () => void;
   onPhotosReordered: (photoUrls: string[]) => void;
 }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -686,17 +711,32 @@ function SavedListingCard({
             Marketplace
           </a>
           {row.status === "discarded" ? (
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={onRestore}
-              disabled={pending}
-              className="ml-auto"
-            >
-              <RotateCcw className="size-4" aria-hidden />
-              Restaurar
-            </Button>
+            <>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={onRestore}
+                disabled={pending}
+                className="ml-auto"
+              >
+                <RotateCcw className="size-4" aria-hidden />
+                Restaurar
+              </Button>
+              {!confirmingDelete && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setConfirmingDelete(true)}
+                  disabled={pending}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="size-4" aria-hidden />
+                  Borrar
+                </Button>
+              )}
+            </>
           ) : (
             !imported && (
               <Button
@@ -726,6 +766,40 @@ function SavedListingCard({
                 size="sm"
                 variant="destructive"
                 onClick={onDeleteProperty}
+                disabled={pending}
+              >
+                {pending ? (
+                  <Loader2 className="size-4 animate-spin" aria-hidden />
+                ) : (
+                  <Trash2 className="size-4" aria-hidden />
+                )}
+                Sí, borrar
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setConfirmingDelete(false)}
+                disabled={pending}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {row.status === "discarded" && confirmingDelete && (
+          <div className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <p>
+              Se borrará de Guardados para siempre y no volverá en la
+              próxima sincronización. No se puede deshacer.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                onClick={onDeleteDiscarded}
                 disabled={pending}
               >
                 {pending ? (
