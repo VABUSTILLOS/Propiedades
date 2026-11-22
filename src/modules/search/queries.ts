@@ -172,8 +172,11 @@ function applyFilters<Q extends FilterableQuery<Q>>(
 ): Q {
   let q = query.eq("status", "active");
 
-  // Only show listings with 2+ photos ("varias fotos") in the public catalog.
-  q = q.gt("image_count", 1);
+  // Public catalog: a listing needs at least its cover photo to show.
+  // (Was 2+ photos until 2026-11-22, which kept single-photo houses —
+  // e.g. Marketplace flyer listings — out of Comprar entirely; Victor
+  // asked for them to be addable from Guardados.)
+  q = q.gte("image_count", 1);
 
   if (filters.type) {
     q = q.eq("type", filters.type);

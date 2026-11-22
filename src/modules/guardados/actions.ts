@@ -60,43 +60,20 @@ export async function restoreSavedListing(
   return setSavedListingStatus(id, "active");
 }
 
+type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
 /**
- * Turn a saved property listing into a LIVE property on the portal,
- * reusing the Universal Importer's createImportedDraft for validation
- * and slug generation, then publishing it in the same request: sales
- * land in Comprar (/search, type "sale"), rentals in Rentas (type
- * "rent"). On success the saved row is marked 'imported' and linked
- * to the new property.
+ * The import itself, shared by importSavedListing and
+ * addSavedListingToComprar: build the draft via the Universal
+ * Importer's createImportedDraft (validation + slug), publish it in
+ * the same request — sales land in Comprar (/search, type "sale"),
+ * rentals in Rentas (type "rent") — and mark the saved row 'imported'
+ * linked to the new property.
  */
-export async function importSavedListing(
-  id: string,
+async function importRowToPortal(
+  supabase: SupabaseServerClient,
+  row: MarketplaceSavedListingsRow,
 ): Promise<ActionResult<{ propertyId: string; slug: string; section: "Comprar" | "Rentas" }>> {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
-  const parsed = parseInput(idSchema, id);
-  if (!parsed.success) return fail(parsed.error);
-
-  const supabase = await createSupabaseServerClient();
-  const { data: rows } = await supabase
-    .from("marketplace_saved_listings")
-    .select("*")
-    .eq("id", parsed.data)
-    .limit(1)
-    .returns<MarketplaceSavedListingsRow[]>();
-
-  const row = rows?.[0];
-  if (!row) return fail("No se encontró la publicación guardada.");
-  if (!row.is_property) {
-    return fail("Solo las publicaciones de propiedades se pueden importar al portal.");
-  }
-  if (row.status === "imported") {
-    return fail("Esta publicación ya fue importada a propiedades.");
-  }
-  if (row.status === "discarded") {
-    return fail("Esta publicación está descartada. Restáurala antes de importarla.");
-  }
-
   const payload = buildImportedDraftPayload(row);
   const created = await createImportedDraft(payload);
   if (!created.ok) {
@@ -145,6 +122,117 @@ export async function importSavedListing(
   revalidatePath("/search");
   revalidatePath("/rentas");
   return ok({ propertyId: created.data.id, slug: created.data.slug, section });
+}
+
+/**
+ * Turn a saved property listing into a LIVE property on the portal.
+ * Discarded listings must be restored first (see
+ * addSavedListingToComprar for the one-click version).
+ */
+export async function importSavedListing(
+  id: string,
+): Promise<ActionResult<{ propertyId: string; slug: string; section: "Comprar" | "Rentas" }>> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = parseInput(idSchema, id);
+  if (!parsed.success) return fail(parsed.error);
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("marketplace_saved_listings")
+    .select("*")
+    .eq("id", parsed.data)
+    .limit(1)
+    .returns<MarketplaceSavedListingsRow[]>();
+
+  const row = rows?.[0];
+  if (!row) return fail("No se encontró la publicación guardada.");
+  if (!row.is_property) {
+    return fail("Solo las publicaciones de propiedades se pueden importar al portal.");
+  }
+  if (row.status === "imported") {
+    return fail("Esta publicación ya fue importada a propiedades.");
+  }
+  if (row.status === "discarded") {
+    return fail("Esta publicación está descartada. Restáurala antes de importarla.");
+  }
+
+  return importRowToPortal(supabase, row);
+}
+
+/**
+ * One-click «Agregar a Comprar» for a saved house, whatever state it is
+ * in: a pending listing is imported and published, a discarded one is
+ * restored and imported, and an already-imported property that never
+ * went live (draft) or was soft-deleted is published again. Sales land
+ * in Comprar, rentals in Rentas, exactly like a normal import.
+ */
+export async function addSavedListingToComprar(
+  id: string,
+): Promise<ActionResult<{ propertyId: string; slug: string; section: "Comprar" | "Rentas" }>> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = parseInput(idSchema, id);
+  if (!parsed.success) return fail(parsed.error);
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("marketplace_saved_listings")
+    .select("*")
+    .eq("id", parsed.data)
+    .limit(1)
+    .returns<MarketplaceSavedListingsRow[]>();
+
+  const row = rows?.[0];
+  if (!row) return fail("No se encontró la publicación guardada.");
+  if (!row.is_property) {
+    return fail("Solo las publicaciones de propiedades se pueden agregar al portal.");
+  }
+
+  if (row.status === "imported" && row.imported_property_id) {
+    const { data: props } = await supabase
+      .from("properties")
+      .select("id, slug, status, type")
+      .eq("id", row.imported_property_id)
+      .limit(1)
+      .returns<{ id: string; slug: string; status: string; type: string }[]>();
+    const prop = props?.[0];
+    if (!prop) return fail("La propiedad importada ya no existe.");
+
+    const isRent = buildImportedDraftPayload(row).deal_type === "renta";
+    const section = isRent ? "Rentas" : "Comprar";
+    if (prop.status === "active") {
+      return fail(`Esta casa ya está en ${section}.`);
+    }
+    const { error } = await supabase
+      .from("properties")
+      .update({ status: "active", type: isRent ? "rent" : "sale" })
+      .eq("id", prop.id);
+    if (error) {
+      return fail(`No se pudo publicar la propiedad: ${error.message}`);
+    }
+    revalidatePath("/admin/guardados");
+    revalidatePath("/my-listings");
+    revalidatePath("/search");
+    revalidatePath("/rentas");
+    revalidatePath("/");
+    return ok({ propertyId: prop.id, slug: prop.slug, section });
+  }
+
+  if (row.status === "discarded") {
+    const { error } = await supabase
+      .from("marketplace_saved_listings")
+      .update({ status: "active", updated_at: new Date().toISOString() })
+      .eq("id", row.id);
+    if (error) {
+      return fail(`No se pudo restaurar la publicación: ${error.message}`);
+    }
+    return importRowToPortal(supabase, { ...row, status: "active" });
+  }
+
+  return importRowToPortal(supabase, row);
 }
 
 /**
