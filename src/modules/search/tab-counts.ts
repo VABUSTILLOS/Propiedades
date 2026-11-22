@@ -18,7 +18,7 @@ type CountableQuery<Q> = {
  * Same structured predicates as `applyFilters` in search/queries.ts, minus the
  * keyword query. The photo rule is included so the cintillo badges match what
  * the listing grid actually shows: every tab counts only active listings with
- * more than one photo (`image_count > 1`).
+ * at least one photo (`image_count >= 1`).
  */
 function applyCountFilters<Q extends CountableQuery<Q>>(
   query: Q,
@@ -26,9 +26,9 @@ function applyCountFilters<Q extends CountableQuery<Q>>(
 ): Q {
   let q = query.eq("status", "active");
 
-  // Same public-catalog photo rule as the listing grid ("varias fotos"):
-  // only show/count listings with 2+ photos.
-  q = q.gt("image_count", 1);
+  // Same public-catalog photo rule as the listing grid: at least the
+  // cover photo (relaxed from 2+ on 2026-11-22, see search/queries.ts).
+  q = q.gte("image_count", 1);
 
   if (filters.type) {
     q = q.eq("type", filters.type);

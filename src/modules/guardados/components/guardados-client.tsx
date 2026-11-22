@@ -12,12 +12,12 @@ import {
   ChevronUp,
   ExternalLink,
   ImageOff,
-  Import,
   Loader2,
   MapPin,
   RotateCcw,
   Ruler,
   Search,
+  ShoppingBag,
   SlidersHorizontal,
   Trash2,
 } from "lucide-react";
@@ -32,11 +32,12 @@ import type {
   MarketplaceSavedListingsRow,
 } from "@/modules/lib/database.types";
 import {
+  addSavedListingToComprar,
   deleteImportedProperty,
   discardSavedListing,
-  importSavedListing,
   restoreSavedListing,
 } from "@/modules/guardados/actions";
+import type { SavedListingWithPortalState } from "@/modules/guardados/queries";
 import { SavedPhotosOrderEditor } from "@/modules/guardados/components/saved-photos-order-editor";
 
 type View = "guardados" | "descartados";
@@ -125,7 +126,7 @@ type Feedback = {
 export function GuardadosClient({
   listings,
 }: {
-  listings: MarketplaceSavedListingsRow[];
+  listings: SavedListingWithPortalState[];
 }) {
   const [rows, setRows] = useState(listings);
   const [view, setView] = useState<View>("guardados");
@@ -161,7 +162,9 @@ export function GuardadosClient({
       guardados: rows.filter((r) => r.status !== "discarded").length,
       descartados: rows.filter((r) => r.status === "discarded").length,
       pendingProperties: rows.filter(
-        (r) => r.is_property && r.status === "active",
+        (r) =>
+          r.is_property &&
+          !(r.status === "imported" && r.portal_status === "active"),
       ).length,
     }),
     [rows],
@@ -276,17 +279,17 @@ export function GuardadosClient({
       "Publicación restaurada.",
     );
 
-  const handleImport = (row: MarketplaceSavedListingsRow) => {
+  const handleAddToComprar = (row: SavedListingWithPortalState) => {
     setPendingId(row.id);
     startTransition(async () => {
-      const res = await importSavedListing(row.id);
+      const res = await addSavedListingToComprar(row.id);
       setPendingId(null);
       if (!res.ok) {
         setFeedback((prev) => ({
           ...prev,
           [row.id]: {
             kind: "error",
-            message: res.error ?? "No se pudo importar la publicación.",
+            message: res.error ?? "No se pudo agregar la publicación.",
           },
         }));
         return;
@@ -294,7 +297,13 @@ export function GuardadosClient({
       setRows((prev) =>
         prev.map((r) =>
           r.id === row.id
-            ? { ...r, status: "imported", imported_property_id: res.data.propertyId }
+            ? {
+                ...r,
+                status: "imported",
+                imported_property_id: res.data.propertyId,
+                portal_status: "active",
+                portal_type: res.data.section === "Rentas" ? "rent" : "sale",
+              }
             : r,
         ),
       );
@@ -302,7 +311,7 @@ export function GuardadosClient({
         ...prev,
         [row.id]: {
           kind: "success",
-          message: `Publicada en ${res.data.section}.`,
+          message: `Agregada a ${res.data.section}.`,
           propertyId: res.data.propertyId,
           slug: res.data.slug,
         },
@@ -355,7 +364,7 @@ export function GuardadosClient({
           </button>
         ))}
         <span className="ml-auto hidden items-center text-sm text-muted-foreground sm:inline-flex">
-          {counts.pendingProperties} propiedades sin importar
+          {counts.pendingProperties} propiedades sin agregar a Comprar
         </span>
       </nav>
 
@@ -465,7 +474,7 @@ export function GuardadosClient({
                 feedback={feedback[row.id]}
                 onDiscard={() => handleDiscard(row)}
                 onRestore={() => handleRestore(row)}
-                onImport={() => handleImport(row)}
+                onAddToComprar={() => handleAddToComprar(row)}
                 onDeleteProperty={() => handleDeleteProperty(row)}
                 onPhotosReordered={(photoUrls) =>
                   handlePhotosReordered(row, photoUrls)
@@ -485,16 +494,16 @@ function SavedListingCard({
   feedback,
   onDiscard,
   onRestore,
-  onImport,
+  onAddToComprar,
   onDeleteProperty,
   onPhotosReordered,
 }: {
-  row: MarketplaceSavedListingsRow;
+  row: SavedListingWithPortalState;
   pending: boolean;
   feedback?: Feedback;
   onDiscard: () => void;
   onRestore: () => void;
-  onImport: () => void;
+  onAddToComprar: () => void;
   onDeleteProperty: () => void;
   onPhotosReordered: (photoUrls: string[]) => void;
 }) {
@@ -506,6 +515,8 @@ function SavedListingCard({
   const marketplaceUrl =
     row.source_url ?? `https://www.facebook.com/marketplace/item/${row.listing_id}`;
   const imported = row.status === "imported";
+  const inPortal = imported && row.portal_status === "active";
+  const portalSection = row.portal_type === "rent" ? "Rentas" : "Comprar";
 
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
@@ -538,11 +549,15 @@ function SavedListingCard({
             {photoCount} fotos
           </span>
         )}
-        {imported && (
+        {inPortal ? (
           <span className="absolute bottom-2 left-2 rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
-            Importada
+            En {portalSection}
           </span>
-        )}
+        ) : imported ? (
+          <span className="absolute bottom-2 left-2 rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-white">
+            Fuera del portal
+          </span>
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
@@ -630,14 +645,14 @@ function SavedListingCard({
               onSaved={onPhotosReordered}
             />
           )}
-          {row.is_property && row.status === "active" && (
-            <Button type="button" size="sm" onClick={onImport} disabled={pending}>
+          {row.is_property && !inPortal && (
+            <Button type="button" size="sm" onClick={onAddToComprar} disabled={pending}>
               {pending ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden />
               ) : (
-                <Import className="size-4" aria-hidden />
+                <ShoppingBag className="size-4" aria-hidden />
               )}
-              Publicar en el portal
+              Agregar a Comprar
             </Button>
           )}
           {imported && row.imported_property_id && (
