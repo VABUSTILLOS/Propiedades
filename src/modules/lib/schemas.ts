@@ -208,6 +208,10 @@ export const searchParamsSchema = paginationSchema.extend({
   minM2: z.coerce.number().min(0).optional(),
   maxM2: z.coerce.number().min(0).optional(),
   minBedrooms: z.coerce.number().int().min(0).max(20).optional(),
+  // How many listings the user had already loaded when they left for a
+  // property page; the list re-renders with that many at once on return
+  // instead of paginating in again (see InfiniteListings' URL sync).
+  loaded: z.coerce.number().int().min(0).max(500).optional(),
   sortBy: z.enum(["price_asc", "price_desc", "newest", "oldest", "score", "hot", "m2_const_asc", "m2_const_desc", "terreno_asc", "terreno_desc", "construccion_asc", "construccion_desc"]).default("newest"),
   bounds: boundsSchema.optional(),
   mapSearch: mapSearchSchema,
