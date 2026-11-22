@@ -1,6 +1,8 @@
 import { apiSearchParamsSchema, parseBoundsString } from "@/modules/lib/schemas";
 import type { SearchFilters } from "@/modules/search/queries";
 import { getListingMarkers } from "@/modules/search/queries";
+import { getCurrentUser } from "@/modules/auth/session";
+import { getMyFavoriteIds } from "@/modules/favorites/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +25,15 @@ export async function GET(request: Request) {
 
   const p = parsed.data;
 
+  // «Favoritas» tab: pins restricted to the signed-in user's favorites.
+  let favoriteIds: string[] | undefined;
+  if (p.favorites === "true") {
+    const user = await getCurrentUser();
+    favoriteIds = user ? [...(await getMyFavoriteIds(user.id))] : [];
+  }
+
   const filters: Omit<SearchFilters, "limit" | "sortBy"> = {
+    favoriteIds,
     query: p.query,
     type: p.type,
     category: p.category,

@@ -40,9 +40,22 @@ export async function GET(request: Request) {
   const offset = p.offset ?? 0;
   const limit = p.limit ?? 24;
 
+  // «Favoritas» tab: restrict to the signed-in user's favorite ids.
+  // Anonymous callers get an empty set, which matches nothing.
+  const favoritesOnly = p.favorites === "true";
+  let favoriteIds: string[] | undefined;
+  if (favoritesOnly) {
+    const user = await getCurrentUser();
+    favoriteIds = user ? [...(await getMyFavoriteIds(user.id))] : [];
+  }
+
   if (p.query) {
     const rows = await searchSemantic(p.query, limit);
-    const items = await withSavedFlags(await enrichWithHot(rows));
+    let items = await withSavedFlags(await enrichWithHot(rows));
+    if (favoriteIds !== undefined) {
+      const allowed = new Set(favoriteIds);
+      items = items.filter((item) => allowed.has(item.id));
+    }
     return Response.json({
       items,
       total: items.length,
@@ -53,6 +66,7 @@ export async function GET(request: Request) {
   }
 
   const filters: SearchFilters = {
+    favoriteIds,
     type: p.type,
     category: p.category,
     categories: p.categories

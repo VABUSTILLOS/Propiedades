@@ -47,6 +47,12 @@ export type SearchFilters = {
   bounds?: MapBounds;
   /** Row offset for paginated fetches (infinite scroll). */
   offset?: number;
+  /**
+   * Restrict to these property ids (the «Favoritas» tab passes the user's
+   * favorite ids). An empty array matches nothing — anonymous visitors and
+   * users without favorites see an empty tab, never the whole catalog.
+   */
+  favoriteIds?: string[];
 };
 
 /** Lightweight pin payload for the interactive city map. */
@@ -178,6 +184,9 @@ function applyFilters<Q extends FilterableQuery<Q>>(
   // asked for them to be addable from Guardados.)
   q = q.gte("image_count", 1);
 
+  if (filters.favoriteIds !== undefined) {
+    q = q.in("id", filters.favoriteIds);
+  }
   if (filters.type) {
     q = q.eq("type", filters.type);
   }
