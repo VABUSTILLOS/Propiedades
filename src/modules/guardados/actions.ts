@@ -320,6 +320,48 @@ export async function deleteImportedProperty(
 }
 
 /**
+ * Permanently delete a DISCARDED saved listing from Guardados. Only
+ * discarded rows qualify: they were never imported (imported rows are
+ * removed with deleteImportedProperty, which also deletes the live
+ * property), so this only drops the saved row itself. There is no
+ * undo; the sync baseline lives outside the table, so a deleted row
+ * does not come back on the next Marketplace sync.
+ */
+export async function deleteDiscardedSavedListing(
+  id: string,
+): Promise<ActionResult<{ id: string }>> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = parseInput(idSchema, id);
+  if (!parsed.success) return fail(parsed.error);
+
+  const supabase = await createSupabaseServerClient();
+  const { data: rows } = await supabase
+    .from("marketplace_saved_listings")
+    .select("status")
+    .eq("id", parsed.data)
+    .limit(1)
+    .returns<{ status: string }[]>();
+
+  const row = rows?.[0];
+  if (!row) return fail("No se encontró la publicación guardada.");
+  if (row.status !== "discarded") {
+    return fail("Solo se pueden borrar las publicaciones descartadas.");
+  }
+
+  const { error } = await supabase
+    .from("marketplace_saved_listings")
+    .delete()
+    .eq("id", parsed.data);
+
+  if (error) return fail(error.message);
+
+  revalidatePath("/admin/guardados");
+  return ok({ id: parsed.data });
+}
+
+/**
  * Reorder a saved listing's photos (master only). The first photo is the
  * cover everywhere. Only URLs already stored on the row are kept, in the
  * given order. When the listing was already imported, the property's
