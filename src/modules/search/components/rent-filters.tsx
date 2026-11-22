@@ -249,6 +249,18 @@ export function RentFiltersForm({ colonias }: { colonias: string[] }) {
               <SelectItem value="m2_const_desc">
                 Precio/m² construido (mayor → menor)
               </SelectItem>
+              <SelectItem value="terreno_desc">
+                Terreno (mayor → menor)
+              </SelectItem>
+              <SelectItem value="terreno_asc">
+                Terreno (menor → mayor)
+              </SelectItem>
+              <SelectItem value="construccion_desc">
+                Construcción (mayor → menor)
+              </SelectItem>
+              <SelectItem value="construccion_asc">
+                Construcción (menor → mayor)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

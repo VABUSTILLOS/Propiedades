@@ -39,7 +39,11 @@ export type SearchFilters = {
     | "score"
     | "hot"
     | "m2_const_asc"
-    | "m2_const_desc";
+    | "m2_const_desc"
+    | "terreno_asc"
+    | "terreno_desc"
+    | "construccion_asc"
+    | "construccion_desc";
   limit?: number;
   /** Only land listings: terreno_m2 > 0 and construccion_m2 = 0. */
   isLand?: boolean;
@@ -282,6 +286,33 @@ async function selectListingsPage(filters: SearchFilters): Promise<{
       break;
     case "m2_const_desc":
       query = query.order("precio_m2_const", {
+        ascending: false,
+        nullsFirst: false,
+      });
+      break;
+    case "terreno_asc":
+      // Total land area (Victor's ask, 2026-11-22). Rows without a land
+      // figure (null) always go last.
+      query = query.order("terreno_m2", {
+        ascending: true,
+        nullsFirst: false,
+      });
+      break;
+    case "terreno_desc":
+      query = query.order("terreno_m2", {
+        ascending: false,
+        nullsFirst: false,
+      });
+      break;
+    case "construccion_asc":
+      // Total constructed area, same nulls-last rule.
+      query = query.order("construccion_m2", {
+        ascending: true,
+        nullsFirst: false,
+      });
+      break;
+    case "construccion_desc":
+      query = query.order("construccion_m2", {
         ascending: false,
         nullsFirst: false,
       });
